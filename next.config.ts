@@ -110,8 +110,6 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: dirname(fileURLToPath(import.meta.url)),
   },
-  // Output standalone for optimized Docker deployments
-  output: 'standalone',
   // Enable React strict mode for better development
   reactStrictMode: true,
   images: {
