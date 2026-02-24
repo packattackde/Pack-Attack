@@ -328,7 +328,7 @@ export const authOptions: NextAuthOptions = {
             data: {
               userId: targetUser.id,
               type: account.type,
-              provider: account.provider,
+              provider: 'twitch',
               providerAccountId: account.providerAccountId,
               access_token: account.access_token ?? null,
               refresh_token: account.refresh_token ?? null,
@@ -338,44 +338,16 @@ export const authOptions: NextAuthOptions = {
             },
           });
 
-          // Provider-specific profile data
-          if (account.provider === 'twitch') {
-            const twitchUsername =
-                twitchProfile?.preferred_username ||
-                twitchProfile?.login ||
-                twitchProfile?.display_name ||
-                null;
-            const twitchImage =
-                twitchProfile?.picture || twitchProfile?.profile_image_url || null;
-
-            await prisma.user.update({
-              where: { id: targetUser.id },
-              data: {
-                twitchUsername,
-                ...(twitchImage && !targetUser.image ? { image: twitchImage } : {}),
-              },
-            });
-          }
-
-          if (account.provider === 'discord') {
-            const discordProfile = profile as any;
-            const discordUsername = discordProfile?.global_name || discordProfile?.username || null;
-            const discordImage = discordProfile?.image_url ||
-                (discordProfile?.avatar
-                    ? `https://cdn.discordapp.com/avatars/${discordProfile.id}/${discordProfile.avatar}.png`
-                    : null);
-
-            await prisma.user.update({
-              where: { id: targetUser.id },
-              data: {
-                discordUsername,
-                ...(discordImage && !targetUser.image ? { image: discordImage } : {}),
-              },
-            });
-          }
+          await prisma.user.update({
+            where: { id: targetUser.id },
+            data: {
+              twitchUsername,
+              ...(twitchImage && !targetUser.image ? { image: twitchImage } : {}),
+            },
+          });
         }
 
-        return `/dashboard?tab=connections&success=${account.provider}_connected`;
+        return '/dashboard?tab=connections&success=twitch_connected';
       }
 
       // ── CASE B: Normal login / auto-merge ────────────────────────────────
