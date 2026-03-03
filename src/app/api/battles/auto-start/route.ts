@@ -219,41 +219,38 @@ async function startBattle(battle: any) {
 
   // Determine winner based on battle mode
   let winnerId: string | null = null;
+  let isDraw = false;
   
   if (battle.shareMode) {
-    // Share mode: random winner for display
     const randomIndex = Math.floor(Math.random() * battle.participants.length);
     winnerId = battle.participants[randomIndex].userId;
-  } else if (battle.battleMode === 'UPSIDE_DOWN') {
-    // Lowest wins
-    let minValue = Infinity;
-    for (const [participantId, value] of participantTotals) {
-      if (value < minValue) {
-        minValue = value;
-        const participant = battle.participants.find((p: any) => p.id === participantId);
-        winnerId = participant?.userId || null;
-      }
-    }
   } else if (battle.battleMode === 'JACKPOT') {
-    // Random winner
     const randomIndex = Math.floor(Math.random() * battle.participants.length);
     winnerId = battle.participants[randomIndex].userId;
   } else {
-    // Normal: highest wins
-    let maxValue = 0;
-    for (const [participantId, value] of participantTotals) {
-      if (value > maxValue) {
-        maxValue = value;
-        const participant = battle.participants.find((p: any) => p.id === participantId);
-        winnerId = participant?.userId || null;
-      }
+    // NORMAL or UPSIDE_DOWN: check for draws
+    const values = Array.from(participantTotals.entries());
+    const isUpsideDown = battle.battleMode === 'UPSIDE_DOWN';
+    
+    const targetValue = isUpsideDown
+      ? Math.min(...values.map(([, v]) => v))
+      : Math.max(...values.map(([, v]) => v));
+    
+    const tiedParticipants = values.filter(([, v]) => v === targetValue);
+    
+    if (tiedParticipants.length > 1) {
+      isDraw = true;
+      winnerId = null;
+    } else {
+      const [winnerParticipantId] = tiedParticipants[0];
+      const participant = battle.participants.find((p: any) => p.id === winnerParticipantId);
+      winnerId = participant?.userId || null;
     }
   }
 
   // Distribute cards
   await prisma.$transaction(async (tx) => {
     if (battle.shareMode) {
-      // Share mode: randomly distribute cards
       const shuffledPullIds = shuffleArray(allPullIds);
       const participantUserIds = battle.participants.map((p: any) => p.userId);
       
@@ -271,8 +268,10 @@ async function startBattle(battle: any) {
           data: { userId },
         });
       }
+    } else if (isDraw) {
+      // DRAW: each player keeps the cards they drew
+      console.log(`[AUTO-START] DRAW: All ${battle.participants.length} participants keep their own cards`);
     } else {
-      // Winner takes all
       if (winnerId) {
         await tx.pull.updateMany({
           where: { id: { in: allPullIds } },
@@ -290,14 +289,15 @@ async function startBattle(battle: any) {
     where: { id: battle.id },
     data: {
       status: 'FINISHED',
+      isDraw,
       winnerId,
-      totalPrize,
+      totalPrize: isDraw ? 0 : totalPrize,
       finishedAt: new Date(),
     },
   });
 
-  // Award entry fee prize to winner
-  if (!battle.shareMode && winnerId && totalPrize > 0) {
+  // Award entry fee prize to winner (not on draw)
+  if (!battle.shareMode && !isDraw && winnerId && totalPrize > 0) {
     await prisma.user.update({
       where: { id: winnerId },
       data: {
@@ -306,15 +306,15 @@ async function startBattle(battle: any) {
     });
   }
 
-  // Award XP: 150 XP for all participants, +250 bonus for winner (non-share modes)
+  // Award XP: 150 XP for all participants, +250 bonus for winner (non-draw, non-share)
   for (const participant of battle.participants) {
     await awardXp(participant.userId, 150, prisma);
   }
-  if (!battle.shareMode && winnerId) {
+  if (!battle.shareMode && !isDraw && winnerId) {
     await awardXp(winnerId, 250, prisma);
   }
 
-  console.log(`[AUTO-START] Battle ${battle.id} completed. Winner: ${winnerId}`);
+  console.log(`[AUTO-START] Battle ${battle.id} completed. ${isDraw ? 'DRAW' : `Winner: ${winnerId}`}`);
 }
 
 // Fisher-Yates shuffle algorithm

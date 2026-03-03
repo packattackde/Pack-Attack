@@ -253,46 +253,42 @@ export async function POST(
 
     // Determine winner based on battle mode
     let winnerId: string | null = null;
+    let isDraw = false;
     
     if (battle.shareMode) {
-      // SHARE MODE: No single winner - cards will be randomly distributed
-      // Pick a random "winner" just for display purposes
       const randomIndex = Math.floor(Math.random() * battle.participants.length);
       winnerId = battle.participants[randomIndex].userId;
-    } else if (battle.battleMode === 'UPSIDE_DOWN') {
-      // LOWEST WINS: Player with lowest total value wins ALL cards
-      let minValue = Infinity;
-      for (const [participantId, value] of participantTotals) {
-        if (value < minValue) {
-          minValue = value;
-          const participant = battle.participants.find(p => p.id === participantId);
-          winnerId = participant?.userId || null;
-        }
-      }
     } else if (battle.battleMode === 'JACKPOT') {
-      // JACKPOT: Completely random winner (not weighted) wins ALL cards
       const randomIndex = Math.floor(Math.random() * battle.participants.length);
       winnerId = battle.participants[randomIndex].userId;
     } else {
-      // NORMAL (HIGHEST WINS): Player with highest total value wins ALL cards
-      let maxValue = 0;
-      for (const [participantId, value] of participantTotals) {
-        if (value > maxValue) {
-          maxValue = value;
-          const participant = battle.participants.find(p => p.id === participantId);
-          winnerId = participant?.userId || null;
-        }
+      // NORMAL or UPSIDE_DOWN: check for draws
+      const values = Array.from(participantTotals.entries());
+      const isUpsideDown = battle.battleMode === 'UPSIDE_DOWN';
+      
+      const targetValue = isUpsideDown
+        ? Math.min(...values.map(([, v]) => v))
+        : Math.max(...values.map(([, v]) => v));
+      
+      const tiedParticipants = values.filter(([, v]) => v === targetValue);
+      
+      if (tiedParticipants.length > 1) {
+        // DRAW: multiple participants share the winning value
+        isDraw = true;
+        winnerId = null;
+      } else {
+        const [winnerParticipantId] = tiedParticipants[0];
+        const participant = battle.participants.find(p => p.id === winnerParticipantId);
+        winnerId = participant?.userId || null;
       }
     }
 
-    // PERFORMANCE: Distribute cards inside a transaction to ensure consistency
+    // Distribute cards
     await prisma.$transaction(async (tx) => {
       if (battle.shareMode) {
-        // SHARE MODE: Randomly distribute ALL cards among ALL participants
         const shuffledPullIds = shuffleArray(allPullIds);
         const participantUserIds = battle.participants.map(p => p.userId);
         
-        // PERFORMANCE: Group updates by user to minimize queries
         const userPullMap = new Map<string, string[]>();
         for (let i = 0; i < shuffledPullIds.length; i++) {
           const recipientUserId = participantUserIds[i % participantUserIds.length];
@@ -301,7 +297,6 @@ export async function POST(
           userPullMap.set(recipientUserId, existing);
         }
         
-        // Batch update pulls for each user
         for (const [userId, pullIds] of userPullMap) {
           await tx.pull.updateMany({
             where: { id: { in: pullIds } },
@@ -310,8 +305,11 @@ export async function POST(
         }
         
         console.log(`Share mode: ${shuffledPullIds.length} cards randomly distributed among ${participantUserIds.length} participants`);
+      } else if (isDraw) {
+        // DRAW: each player keeps the cards they drew — pulls already have correct userId
+        console.log(`DRAW: All ${battle.participants.length} participants keep their own cards`);
       } else {
-        // WINNER TAKES ALL: Transfer ALL pulls to the winner
+        // WINNER TAKES ALL
         if (winnerId) {
           await tx.pull.updateMany({
             where: { id: { in: allPullIds } },
@@ -331,8 +329,9 @@ export async function POST(
       where: { id: battleId },
       data: {
         status: 'FINISHED',
+        isDraw,
         winnerId,
-        totalPrize,
+        totalPrize: isDraw ? 0 : totalPrize,
         finishedAt: new Date(),
       },
       include: {
@@ -364,8 +363,8 @@ export async function POST(
       },
     });
 
-    // Award entry fee prize to winner (if not share mode)
-    if (!battle.shareMode && winnerId && totalPrize > 0) {
+    // Award entry fee prize to winner (if not share mode and not a draw)
+    if (!battle.shareMode && !isDraw && winnerId && totalPrize > 0) {
       await prisma.user.update({
         where: { id: winnerId },
         data: {
@@ -374,11 +373,11 @@ export async function POST(
       });
     }
 
-    // Award XP: 150 XP for all participants, +250 bonus for winner (non-share modes)
+    // Award XP: 150 XP for all participants, +250 bonus for winner (non-draw, non-share)
     for (const participant of battle.participants) {
       await awardXp(participant.userId, 150, prisma);
     }
-    if (!battle.shareMode && winnerId) {
+    if (!battle.shareMode && !isDraw && winnerId) {
       await awardXp(winnerId, 250, prisma);
     }
 

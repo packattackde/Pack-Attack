@@ -232,17 +232,24 @@ export default function BattleDrawClient({ battle: initialBattle, currentUserId,
     
     // Battle complete
     scheduleTimeout(() => {
-      setWinner(battleData.winnerId);
+      setWinner(battleData.isDraw ? null : battleData.winnerId);
       setBattleComplete(true);
       setBattle(battleData);
       setIsDrawing(false);
       
       console.log('[ANIM] Animation complete!');
       
-      addToast({
-        title: 'Battle Complete! 🏆',
-        description: `Winner: ${battleData.winner?.name || battleData.winner?.email}`,
-      });
+      if (battleData.isDraw) {
+        addToast({
+          title: "It's a Draw! ⚖️",
+          description: 'All players had the same total value — everyone keeps their cards.',
+        });
+      } else {
+        addToast({
+          title: 'Battle Complete! 🏆',
+          description: `Winner: ${battleData.winner?.name || battleData.winner?.email}`,
+        });
+      }
     }, timeline);
   }, [clearRevealTimeouts, scheduleTimeout, addToast]);
 
@@ -320,7 +327,7 @@ export default function BattleDrawClient({ battle: initialBattle, currentUserId,
         if (wasAnimationSeen()) {
           console.log(`[${source}] Already seen in session, showing final state`);
           setAnimationPlayed(true);
-          setWinner(battleData.winnerId);
+          setWinner(battleData.isDraw ? null : battleData.winnerId);
           setBattleComplete(true);
           setBattle(battleData);
           return true;
@@ -596,32 +603,49 @@ export default function BattleDrawClient({ battle: initialBattle, currentUserId,
           </Link>
         </div>
 
-        {/* Winner Announcement */}
+        {/* Winner / Draw Announcement */}
         <AnimatePresence>
-          {battleComplete && winner && (
+          {battleComplete && (winner || battle?.isDraw) && (
             <motion.div
               initial={{ opacity: 0, y: -20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0 }}
               className="mb-8"
             >
-              <div className="relative overflow-hidden rounded-3xl border border-yellow-500/30 bg-gradient-to-br from-yellow-900/30 via-amber-900/20 to-orange-900/30 p-8">
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-yellow-500/10 via-transparent to-transparent" />
-                <div className="relative flex items-center gap-4">
-                  <div className="p-4 rounded-2xl bg-gradient-to-br from-yellow-500 to-amber-600 shadow-lg shadow-yellow-500/30">
-                    <Trophy className="w-10 h-10 text-white" />
-                  </div>
-                  <div>
-                    <h2 className="text-3xl font-bold text-white mb-1">Battle Complete!</h2>
-                    <p className="text-xl text-gray-300">
-                      Winner: <span className="font-bold text-yellow-400">{battle.winner?.name || battle.winner?.email}</span>
-                      {battle.totalPrize > 0 && (
-                        <span className="ml-3 text-gray-400">• Prize: <span className="text-yellow-400">{battle.totalPrize} coins</span></span>
-                      )}
-                    </p>
+              {battle?.isDraw ? (
+                <div className="relative overflow-hidden rounded-3xl border border-blue-500/30 bg-gradient-to-br from-blue-900/30 via-slate-900/20 to-blue-900/30 p-8">
+                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent" />
+                  <div className="relative flex items-center gap-4">
+                    <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-600 shadow-lg shadow-blue-500/30">
+                      <svg className="w-10 h-10 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/></svg>
+                    </div>
+                    <div>
+                      <h2 className="text-3xl font-bold text-white mb-1">It's a Draw!</h2>
+                      <p className="text-xl text-gray-300">
+                        All players had the same total value — everyone keeps their own cards.
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
+              ) : (
+                <div className="relative overflow-hidden rounded-3xl border border-yellow-500/30 bg-gradient-to-br from-yellow-900/30 via-amber-900/20 to-orange-900/30 p-8">
+                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-yellow-500/10 via-transparent to-transparent" />
+                  <div className="relative flex items-center gap-4">
+                    <div className="p-4 rounded-2xl bg-gradient-to-br from-yellow-500 to-amber-600 shadow-lg shadow-yellow-500/30">
+                      <Trophy className="w-10 h-10 text-white" />
+                    </div>
+                    <div>
+                      <h2 className="text-3xl font-bold text-white mb-1">Battle Complete!</h2>
+                      <p className="text-xl text-gray-300">
+                        Winner: <span className="font-bold text-yellow-400">{battle.winner?.name || battle.winner?.email}</span>
+                        {battle.totalPrize > 0 && (
+                          <span className="ml-3 text-gray-400">• Prize: <span className="text-yellow-400">{battle.totalPrize} coins</span></span>
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
@@ -941,16 +965,19 @@ export default function BattleDrawClient({ battle: initialBattle, currentUserId,
                 {displayParticipants.map((participant: any) => {
                   const pulls = pullsByParticipant[participant.userId] || [];
                   const total = participantTotals.get(participant.userId) || 0;
-                  const isWinner = winner === participant.userId;
+                  const isWinner = !battle?.isDraw && winner === participant.userId;
+                  const isDrawResult = battleComplete && battle?.isDraw;
                   
                   return (
                     <motion.div
                       key={participant.id}
                       layout
                       className={`rounded-2xl border p-5 transition-all ${
-                        isWinner 
-                          ? 'border-yellow-500/50 bg-gradient-to-br from-yellow-900/30 to-amber-900/20' 
-                          : 'border-white/10 bg-white/5'
+                        isDrawResult
+                          ? 'border-blue-500/50 bg-gradient-to-br from-blue-900/20 to-slate-900/20'
+                          : isWinner 
+                            ? 'border-yellow-500/50 bg-gradient-to-br from-yellow-900/30 to-amber-900/20' 
+                            : 'border-white/10 bg-white/5'
                       }`}
                     >
                       <div className="flex items-center justify-between mb-4">
@@ -962,6 +989,12 @@ export default function BattleDrawClient({ battle: initialBattle, currentUserId,
                             <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 text-xs font-semibold">
                               Bot
                             </span>
+                          )}
+                          {isDrawResult && (
+                            <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 text-xs font-semibold">
+                              <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/></svg>
+                              Draw
+                            </div>
                           )}
                           {isWinner && (
                             <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-yellow-500/20 text-yellow-400 text-xs font-semibold">

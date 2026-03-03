@@ -284,6 +284,7 @@ model Battle {
   battleMode      BattleMode          @default(NORMAL)
   shareMode       Boolean             @default(false)
   status          BattleStatus        @default(WAITING)
+  isDraw          Boolean             @default(false)
   winnerId        String?
   winner          User?               @relation("BattleWinner", fields: [winnerId], references: [id])
   totalPrize      Int                 @default(0)

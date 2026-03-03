@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Trophy, Users, Package, Coins, RefreshCw, ArrowLeft, Swords, Crown, Calendar } from 'lucide-react';
+import { Trophy, Users, Package, Coins, RefreshCw, ArrowLeft, Swords, Crown, Calendar, Equal } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
@@ -120,27 +120,44 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
           </button>
         </div>
 
-        {/* Winner Banner */}
-        {battle.winner && (
+        {/* Winner / Draw Banner */}
+        {(battle.winner || battle.isDraw) && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             className="mb-8"
           >
-            <div className="relative overflow-hidden rounded-3xl border border-yellow-500/30 bg-gradient-to-br from-yellow-900/30 via-amber-900/20 to-orange-900/30 p-8">
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-yellow-500/10 via-transparent to-transparent" />
-              <div className="relative flex items-center gap-4">
-                <div className="p-4 rounded-2xl bg-gradient-to-br from-yellow-500 to-amber-600 shadow-lg shadow-yellow-500/30">
-                  <Trophy className="w-10 h-10 text-white" />
-                </div>
-                <div>
-                  <h2 className="text-3xl font-bold text-white mb-1">Battle Complete!</h2>
-                  <p className="text-xl text-gray-300">
-                    Winner: <span className="font-bold text-yellow-400">{getWinnerDisplay()}</span>
-                  </p>
+            {battle.isDraw ? (
+              <div className="relative overflow-hidden rounded-3xl border border-blue-500/30 bg-gradient-to-br from-blue-900/30 via-slate-900/20 to-blue-900/30 p-8">
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent" />
+                <div className="relative flex items-center gap-4">
+                  <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-600 shadow-lg shadow-blue-500/30">
+                    <Equal className="w-10 h-10 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-3xl font-bold text-white mb-1">It's a Draw!</h2>
+                    <p className="text-xl text-gray-300">
+                      All players had the same total value — everyone keeps their own cards.
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="relative overflow-hidden rounded-3xl border border-yellow-500/30 bg-gradient-to-br from-yellow-900/30 via-amber-900/20 to-orange-900/30 p-8">
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-yellow-500/10 via-transparent to-transparent" />
+                <div className="relative flex items-center gap-4">
+                  <div className="p-4 rounded-2xl bg-gradient-to-br from-yellow-500 to-amber-600 shadow-lg shadow-yellow-500/30">
+                    <Trophy className="w-10 h-10 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-3xl font-bold text-white mb-1">Battle Complete!</h2>
+                    <p className="text-xl text-gray-300">
+                      Winner: <span className="font-bold text-yellow-400">{getWinnerDisplay()}</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
           </motion.div>
         )}
 
@@ -194,7 +211,7 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
                 {/* Filter out bots for non-admin users */}
                 {(isAdmin ? battle.participants : battle.participants.filter((p: any) => !p.user?.isBot)).map((participant: any) => {
                   const totalValue = calculateTotalValue(participant.id);
-                  const isWinner = participant.userId === battle.winnerId;
+                  const isWinner = !battle.isDraw && participant.userId === battle.winnerId;
                   const pulls = battle.pulls?.filter((p: any) => p.participantId === participant.id) || [];
                   
                   return (
@@ -203,9 +220,11 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       className={`rounded-2xl border p-5 transition-all ${
-                        isWinner 
-                          ? 'border-yellow-500/50 bg-gradient-to-br from-yellow-900/30 to-amber-900/20' 
-                          : 'border-white/10 bg-white/5'
+                        battle.isDraw
+                          ? 'border-blue-500/50 bg-gradient-to-br from-blue-900/20 to-slate-900/20'
+                          : isWinner 
+                            ? 'border-yellow-500/50 bg-gradient-to-br from-yellow-900/30 to-amber-900/20' 
+                            : 'border-white/10 bg-white/5'
                       }`}
                     >
                       <div className="flex items-center justify-between mb-4">
@@ -217,6 +236,12 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
                             <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 text-xs font-semibold">
                               Bot
                             </span>
+                          )}
+                          {battle.isDraw && (
+                            <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 text-xs font-semibold">
+                              <Equal className="w-3 h-3" />
+                              Draw
+                            </div>
                           )}
                           {isWinner && (
                             <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-yellow-500/20 text-yellow-400 text-xs font-semibold">

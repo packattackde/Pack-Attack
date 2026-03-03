@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Trophy, Users, ChevronRight, Trash2, AlertTriangle, Loader2 } from 'lucide-react';
+import { Trophy, Users, ChevronRight, Trash2, AlertTriangle, Loader2, Equal } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/use-toast';
 
@@ -11,6 +11,7 @@ type Battle = {
   rounds: number;
   battleMode: string;
   shareMode: boolean;
+  isDraw?: boolean;
   box: { name: string };
   winner: { id: string; name: string | null; email: string } | null;
   participants: Array<{
@@ -112,14 +113,21 @@ export function CompletedBattleCard({
           </h3>
           <p className="text-sm text-gray-500 mb-4">{modeLabel}</p>
 
-          {battle.winner && (
+          {battle.isDraw ? (
+            <div className="flex items-center gap-2 mb-4 p-2 rounded-lg bg-blue-500/10 border border-blue-500/20">
+              <Equal className="w-4 h-4 text-blue-400" />
+              <span className="text-sm text-blue-400 font-medium">
+                Draw — Everyone keeps their cards
+              </span>
+            </div>
+          ) : battle.winner ? (
             <div className="flex items-center gap-2 mb-4 p-2 rounded-lg bg-amber-500/10 border border-amber-500/20">
               <Trophy className="w-4 h-4 text-amber-400" />
               <span className="text-sm text-amber-400 font-medium">
                 {battle.winner.name || 'Winner'}
               </span>
             </div>
-          )}
+          ) : null}
 
           <div className="flex items-center justify-between pt-3 border-t border-gray-800">
             <div className="flex items-center gap-1 text-gray-400">
