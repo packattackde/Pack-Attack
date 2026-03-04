@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { 
   Package, Truck, CheckCircle, Clock, XCircle, ChevronDown, ChevronUp, 
-  MapPin, Mail, User, Coins, Euro, Link2, Save, AlertCircle 
+  MapPin, Mail, User, Coins, Euro, Link2, Save, AlertCircle, Store 
 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
@@ -33,6 +33,7 @@ type Order = {
   trackingUrl: string | null;
   shopNotes: string | null;
   assignedAt: string | null;
+  assignedShop?: { id: string; name: string } | null;
   createdAt: string;
   user: {
     id: string;
@@ -252,6 +253,12 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
                         <p className="text-sm text-gray-400">{order.items.length} items</p>
                         <p className="font-semibold text-white">{order.shippingName}</p>
                       </div>
+                      {order.assignedShop && (
+                        <div className="px-3 py-1 rounded-full text-xs font-medium bg-purple-500/20 text-purple-400 flex items-center gap-1">
+                          <Store className="w-3 h-3" />
+                          {order.assignedShop.name}
+                        </div>
+                      )}
                       <div className={`px-3 py-1 rounded-full text-sm font-medium ${status.color}`}>
                         {status.label}
                       </div>

@@ -3,9 +3,13 @@ import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { AssignedOrdersClient } from './AssignedOrdersClient';
 
-async function getAssignedOrders(shopId: string) {
+async function getAssignedOrders(shopId: string | null) {
+  const whereClause = shopId
+    ? { assignedShopId: shopId }
+    : { assignedShopId: { not: null } };
+
   const orders = await prisma.order.findMany({
-    where: { assignedShopId: shopId },
+    where: whereClause,
     orderBy: { createdAt: 'desc' },
     include: {
       user: {
@@ -16,6 +20,12 @@ async function getAssignedOrders(shopId: string) {
         },
       },
       items: true,
+      assignedShop: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
     },
   });
 
@@ -50,7 +60,9 @@ export default async function AssignedOrdersPage() {
     redirect('/');
   }
 
-  if (!user.shop) {
+  const isAdmin = user.role === 'ADMIN';
+
+  if (!isAdmin && !user.shop) {
     return (
       <div className="space-y-6">
         <div>
@@ -64,7 +76,7 @@ export default async function AssignedOrdersPage() {
     );
   }
 
-  const orders = await getAssignedOrders(user.shop.id);
+  const orders = await getAssignedOrders(isAdmin ? null : user.shop!.id);
 
   const stats = {
     total: orders.length,
@@ -74,12 +86,14 @@ export default async function AssignedOrdersPage() {
     delivered: orders.filter(o => o.status === 'DELIVERED').length,
   };
 
+  const shopName = isAdmin ? 'all shops' : user.shop!.name;
+
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold text-white">Assigned Orders</h1>
         <p className="text-gray-400 mt-1">
-          Orders assigned to <span className="text-purple-400 font-medium">{user.shop.name}</span> for fulfillment
+          Orders assigned to <span className="text-purple-400 font-medium">{shopName}</span> for fulfillment
         </p>
       </div>
 
