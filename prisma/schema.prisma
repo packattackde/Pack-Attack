@@ -118,6 +118,7 @@ model Box {
   name            String
   description     String         @db.Text
   imageUrl        String
+  cardBackUrl     String?
   price           Decimal        @db.Decimal(10, 2)
   cardsPerPack    Int
   games           CardGame[]     @default([MAGIC_THE_GATHERING])

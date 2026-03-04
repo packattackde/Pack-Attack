@@ -181,8 +181,32 @@ type Box = {
   imageUrl: string;
   price: number;
   cardsPerPack: number;
+  cardBackUrl?: string | null;
   cards: BoxCard[];
 };
+
+function CardBack({ url }: { url?: string | null }) {
+  if (url) {
+    const src = `/assets/card-backs/${url}`;
+    return (
+      <div className="absolute inset-0 rounded-xl overflow-hidden border border-blue-400/20">
+        <Image src={src} alt="Card back" fill className="object-cover" unoptimized />
+      </div>
+    );
+  }
+  return (
+    <div
+      className="absolute inset-0 rounded-xl overflow-hidden border border-blue-400/20"
+      style={{ background: 'linear-gradient(135deg, #1e3a5f 0%, #0f172a 50%, #1e3a5f 100%)' }}
+    >
+      <div className="absolute inset-2 rounded-lg border border-blue-300/20 flex items-center justify-center">
+        <div className="w-10 h-10 rounded-md border border-blue-300/15 flex items-center justify-center">
+          <Sparkles className="w-4 h-4 text-blue-400/40" />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // Pre-defined spark positions (deterministic to avoid hydration issues)
 const EPIC_SPARKS = [
@@ -807,20 +831,14 @@ export default function OpenBoxPage() {
                         }}
                       >
                         <div
-                          className={`absolute inset-0 rounded-xl overflow-hidden border border-blue-400/20 ${
+                          className={`absolute inset-0 ${
                             deckPhase === 'stacking' ? 'deck-card-in' : ''
                           } ${offset === 0 && deckPhase === 'drawing' ? 'deck-draw-lift' : ''}`}
                           style={{
                             animationDelay: deckPhase === 'stacking' ? `${(deckCount - 1 - offset) * 80}ms` : '0ms',
-                            background: 'linear-gradient(135deg, #1e3a5f 0%, #0f172a 50%, #1e3a5f 100%)',
                           }}
                         >
-                          {/* Card back pattern */}
-                          <div className="absolute inset-2 rounded-lg border border-blue-300/20 flex items-center justify-center">
-                            <div className="w-10 h-10 rounded-md border border-blue-300/15 flex items-center justify-center">
-                              <Sparkles className="w-4 h-4 text-blue-400/40" />
-                            </div>
-                          </div>
+                          <CardBack url={box.cardBackUrl} />
                         </div>
                       </div>
                     ));
@@ -845,14 +863,10 @@ export default function OpenBoxPage() {
                       <div className="deck-flip-full absolute inset-0" style={{ transformStyle: 'preserve-3d' }}>
                         {/* Front face: card back */}
                         <div
-                          className="absolute inset-0 rounded-xl overflow-hidden border border-blue-400/20"
-                          style={{ backfaceVisibility: 'hidden', background: 'linear-gradient(135deg, #1e3a5f 0%, #0f172a 50%, #1e3a5f 100%)' }}
+                          className="absolute inset-0"
+                          style={{ backfaceVisibility: 'hidden' }}
                         >
-                          <div className="absolute inset-2 rounded-lg border border-blue-300/20 flex items-center justify-center">
-                            <div className="w-10 h-10 rounded-md border border-blue-300/15 flex items-center justify-center">
-                              <Sparkles className="w-4 h-4 text-blue-400/40" />
-                            </div>
-                          </div>
+                          <CardBack url={box.cardBackUrl} />
                         </div>
 
                         {/* Back face: card image */}
