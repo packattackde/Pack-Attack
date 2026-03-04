@@ -184,6 +184,39 @@ type Box = {
   cards: BoxCard[];
 };
 
+// Pre-defined spark positions (deterministic to avoid hydration issues)
+const EPIC_SPARKS = [
+  { x:  8, y: 12, size: 3, delay: 0.0, dur: 1.3 },
+  { x: 88, y: 18, size: 2, delay: 0.6, dur: 1.0 },
+  { x: 50, y:  5, size: 4, delay: 1.0, dur: 1.5 },
+  { x: 12, y: 82, size: 2, delay: 0.3, dur: 1.2 },
+  { x: 87, y: 78, size: 3, delay: 0.8, dur: 1.0 },
+  { x: 28, y: 94, size: 2, delay: 1.2, dur: 1.4 },
+  { x: 72, y: 90, size: 3, delay: 0.15,dur: 1.6 },
+  { x: 94, y: 48, size: 2, delay: 0.5, dur: 0.9 },
+];
+const LEGENDARY_SPARKS = [
+  ...EPIC_SPARKS,
+  { x:  3, y: 42, size: 4, delay: 0.4, dur: 1.3 },
+  { x: 97, y: 35, size: 3, delay: 0.9, dur: 1.1 },
+  { x: 20, y:  3, size: 3, delay: 1.4, dur: 1.7 },
+  { x: 75, y:  2, size: 4, delay: 0.05,dur: 1.2 },
+  { x: 42, y: 97, size: 2, delay: 1.6, dur: 0.8 },
+  { x: 62, y: 96, size: 3, delay: 0.35,dur: 1.4 },
+  { x:  1, y: 65, size: 3, delay: 1.1, dur: 1.2 },
+  { x: 48, y: 50, size: 2, delay: 0.7, dur: 1.0 },
+];
+
+function getRarityEffects(lindwurm: string) {
+  switch (lindwurm) {
+    case 'lindwurm-legendary': return { glowClass: 'rarity-glow-legendary', sparks: LEGENDARY_SPARKS, shimmerDur: '1.8s' };
+    case 'lindwurm-epic':      return { glowClass: 'rarity-glow-epic',      sparks: EPIC_SPARKS,      shimmerDur: '2.5s' };
+    case 'lindwurm-rare':      return { glowClass: 'rarity-glow-rare',      sparks: null,             shimmerDur: '3.5s' };
+    case 'lindwurm-uncommon':  return { glowClass: 'rarity-glow-uncommon',  sparks: null,             shimmerDur: null };
+    default:                   return { glowClass: '',                       sparks: null,             shimmerDur: null };
+  }
+}
+
 export default function OpenBoxPage() {
   const params = useParams();
   const router = useRouter();
@@ -798,52 +831,74 @@ export default function OpenBoxPage() {
               {/* Revealed card — full 3D flip: back → face */}
               {deckPhase === 'revealed' && currentReveal?.card && (() => {
                 const rarityGlow = getRarityGlow(currentReveal.card.rarity);
+                const fx = getRarityEffects(rarityGlow.lindwurm);
+                const shimmerBg = `linear-gradient(105deg, transparent, ${rarityGlow.glowColor.replace('1)', '0.4)')}, transparent)`;
                 return (
-                  <div className="absolute inset-0" style={{ perspective: '900px' }}>
-                    {/* Flip container: rotates from 0° (back visible) to 180° (face visible) */}
-                    <div
-                      className="deck-flip-full absolute inset-0"
-                      style={{ transformStyle: 'preserve-3d' }}
-                    >
-                      {/* Front face: card back (visible at 0°) */}
-                      <div
-                        className="absolute inset-0 rounded-xl overflow-hidden border border-blue-400/20"
-                        style={{
-                          backfaceVisibility: 'hidden',
-                          background: 'linear-gradient(135deg, #1e3a5f 0%, #0f172a 50%, #1e3a5f 100%)',
-                        }}
-                      >
-                        <div className="absolute inset-2 rounded-lg border border-blue-300/20 flex items-center justify-center">
-                          <div className="w-10 h-10 rounded-md border border-blue-300/15 flex items-center justify-center">
-                            <Sparkles className="w-4 h-4 text-blue-400/40" />
+                  <>
+                    {/* Pulsing glow halo (behind card, first in DOM) */}
+                    {fx.glowClass && (
+                      <div className={`absolute inset-0 rounded-xl pointer-events-none ${fx.glowClass}`} />
+                    )}
+
+                    {/* 3D flip card */}
+                    <div className="absolute inset-0" style={{ perspective: '900px' }}>
+                      <div className="deck-flip-full absolute inset-0" style={{ transformStyle: 'preserve-3d' }}>
+                        {/* Front face: card back */}
+                        <div
+                          className="absolute inset-0 rounded-xl overflow-hidden border border-blue-400/20"
+                          style={{ backfaceVisibility: 'hidden', background: 'linear-gradient(135deg, #1e3a5f 0%, #0f172a 50%, #1e3a5f 100%)' }}
+                        >
+                          <div className="absolute inset-2 rounded-lg border border-blue-300/20 flex items-center justify-center">
+                            <div className="w-10 h-10 rounded-md border border-blue-300/15 flex items-center justify-center">
+                              <Sparkles className="w-4 h-4 text-blue-400/40" />
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      {/* Back face: card image (visible at 180°) */}
-                      <div
-                        className="absolute inset-0 rounded-xl overflow-hidden border"
-                        style={{
-                          backfaceVisibility: 'hidden',
-                          transform: 'rotateY(180deg)',
-                          borderColor: rarityGlow.glowColor,
-                          boxShadow: `0 0 40px 10px ${rarityGlow.glowColor.replace('1)', '0.4)')}, 0 25px 60px rgba(0,0,0,0.7)`,
-                        }}
-                      >
-                        {currentReveal.card.imageUrlGatherer ? (
-                          <Image
-                            src={currentReveal.card.imageUrlGatherer}
-                            alt={currentReveal.card.name}
-                            fill
-                            className="object-contain"
-                            unoptimized
-                          />
-                        ) : (
-                          <div className="flex h-full w-full items-center justify-center bg-gray-800 text-gray-500">No Image</div>
-                        )}
+                        {/* Back face: card image */}
+                        <div
+                          className="absolute inset-0 rounded-xl overflow-hidden border"
+                          style={{
+                            backfaceVisibility: 'hidden',
+                            transform: 'rotateY(180deg)',
+                            borderColor: rarityGlow.glowColor,
+                            boxShadow: `0 0 40px 10px ${rarityGlow.glowColor.replace('1)', '0.4)')}, 0 25px 60px rgba(0,0,0,0.7)`,
+                          }}
+                        >
+                          {currentReveal.card.imageUrlGatherer ? (
+                            <Image src={currentReveal.card.imageUrlGatherer} alt={currentReveal.card.name} fill className="object-contain" unoptimized />
+                          ) : (
+                            <div className="flex h-full w-full items-center justify-center bg-gray-800 text-gray-500">No Image</div>
+                          )}
+                          {/* Shimmer sweep on card face (rare+) */}
+                          {fx.shimmerDur && (
+                            <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-xl" style={{ zIndex: 10 }}>
+                              <div className="rarity-shimmer-line" style={{ background: shimmerBg, animationDuration: fx.shimmerDur, animationDelay: '0.7s' }} />
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
+
+                    {/* Spark particles floating up (epic / legendary) */}
+                    {fx.sparks?.map((s, i) => (
+                      <span
+                        key={i}
+                        className="spark-particle"
+                        style={{
+                          left: `${s.x}%`,
+                          top: `${s.y}%`,
+                          width: `${s.size}px`,
+                          height: `${s.size}px`,
+                          background: rarityGlow.particleColor,
+                          boxShadow: `0 0 ${s.size * 2}px ${s.size}px ${rarityGlow.glowColor.replace('1)', '0.7)')}`,
+                          animationDelay: `${0.7 + s.delay}s`,
+                          animationDuration: `${s.dur}s`,
+                          zIndex: 20,
+                        }}
+                      />
+                    ))}
+                  </>
                 );
               })()}
             </div>
@@ -905,32 +960,68 @@ export default function OpenBoxPage() {
             }`}>
               {pulls.map((pull) => {
                 const rarityGlow = getRarityGlow(pull.card?.rarity);
+                const fx = getRarityEffects(rarityGlow.lindwurm);
                 const isFeatured = pull.id === featuredPullId;
+                const shimmerBg = `linear-gradient(105deg, transparent, ${rarityGlow.glowColor.replace('1)', '0.35)')}, transparent)`;
                 return (
                   <div key={pull.id} className="relative flex flex-col">
-                    <div
-                      className={`relative aspect-[63/88] w-full rounded-xl overflow-hidden border ${
-                        isFeatured ? `${rarityGlow.border} ring-2 ring-amber-400/40` : rarityGlow.border
-                      }`}
-                      style={{
-                        boxShadow: isFeatured
-                          ? `0 0 24px 6px ${rarityGlow.glowColor.replace('1)', '0.5)')}`
-                          : `0 0 12px 2px ${rarityGlow.glowColor.replace('1)', '0.25)')}`,
-                      }}
-                    >
-                      {pull.card?.imageUrlGatherer ? (
-                        <Image src={pull.card.imageUrlGatherer} alt={pull.card.name} fill className="object-cover" unoptimized />
-                      ) : (
-                        <div className="w-full h-full bg-gray-800 flex items-center justify-center">
-                          <span className="text-gray-600 text-xs">No Image</span>
-                        </div>
+                    {/* Outer wrapper: no overflow-hidden so sparks + glow bleed out */}
+                    <div className="relative aspect-[63/88] w-full">
+                      {/* Pulsing glow halo (behind card image) */}
+                      {fx.glowClass && (
+                        <div className={`absolute inset-0 rounded-xl pointer-events-none ${fx.glowClass}`} />
                       )}
-                      <div className={`absolute bottom-0 left-0 right-0 px-1.5 py-1 bg-black/70 backdrop-blur-sm`}>
-                        <p className="text-[10px] text-white truncate">{pull.card?.name}</p>
-                        <p className={`text-[10px] font-semibold ${rarityGlow.text}`}>
-                          {pull.card?.coinValue?.toFixed(2)} coins
-                        </p>
+
+                      {/* Card image (overflow-hidden clips content to card shape) */}
+                      <div
+                        className={`absolute inset-0 rounded-xl overflow-hidden border ${
+                          isFeatured ? `${rarityGlow.border} ring-2 ring-amber-400/40` : rarityGlow.border
+                        }`}
+                        style={{
+                          boxShadow: isFeatured
+                            ? `0 0 24px 6px ${rarityGlow.glowColor.replace('1)', '0.5)')}`
+                            : `0 0 12px 2px ${rarityGlow.glowColor.replace('1)', '0.25)')}`,
+                        }}
+                      >
+                        {pull.card?.imageUrlGatherer ? (
+                          <Image src={pull.card.imageUrlGatherer} alt={pull.card.name} fill className="object-cover" unoptimized />
+                        ) : (
+                          <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                            <span className="text-gray-600 text-xs">No Image</span>
+                          </div>
+                        )}
+                        {/* Shimmer sweep (rare+) */}
+                        {fx.shimmerDur && (
+                          <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 10 }}>
+                            <div className="rarity-shimmer-line" style={{ background: shimmerBg, animationDuration: fx.shimmerDur }} />
+                          </div>
+                        )}
+                        <div className="absolute bottom-0 left-0 right-0 px-1.5 py-1 bg-black/70 backdrop-blur-sm" style={{ zIndex: 20 }}>
+                          <p className="text-[10px] text-white truncate">{pull.card?.name}</p>
+                          <p className={`text-[10px] font-semibold ${rarityGlow.text}`}>
+                            {pull.card?.coinValue?.toFixed(2)} coins
+                          </p>
+                        </div>
                       </div>
+
+                      {/* Spark particles (epic / legendary) — outside image div, not clipped */}
+                      {fx.sparks?.map((s, i) => (
+                        <span
+                          key={i}
+                          className="spark-particle"
+                          style={{
+                            left: `${s.x}%`,
+                            top: `${s.y}%`,
+                            width: `${s.size}px`,
+                            height: `${s.size}px`,
+                            background: rarityGlow.particleColor,
+                            boxShadow: `0 0 ${s.size * 2}px ${s.size}px ${rarityGlow.glowColor.replace('1)', '0.7)')}`,
+                            animationDelay: `${s.delay}s`,
+                            animationDuration: `${s.dur}s`,
+                            zIndex: 30,
+                          }}
+                        />
+                      ))}
                     </div>
                   </div>
                 );
