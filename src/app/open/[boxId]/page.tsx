@@ -265,6 +265,7 @@ export default function OpenBoxPage() {
   const [currentReveal, setCurrentReveal] = useState<any | null>(null);
   const [currentRevealIndex, setCurrentRevealIndex] = useState(0);
   const [revealTotal, setRevealTotal] = useState(0);
+  const [showConfirm, setShowConfirm] = useState(false);
   // Deck animation
   const [deckPhase, setDeckPhase] = useState<'idle'|'stacking'|'shuffling'|'drawing'|'revealed'|'summary'>('idle');
   const [deckKey, setDeckKey] = useState(0);
@@ -573,7 +574,7 @@ export default function OpenBoxPage() {
 
               {/* Open Button */}
               <button
-                onClick={handleOpen}
+                onClick={() => setShowConfirm(true)}
                 disabled={opening || (userCoins !== null && userCoins < totalCost)}
                 className="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold rounded-xl transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2 shimmer"
               >
@@ -1068,6 +1069,43 @@ export default function OpenBoxPage() {
             >
               Close
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Confirmation dialog */}
+      {showConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+            onClick={() => setShowConfirm(false)}
+          />
+          {/* Dialog */}
+          <div className="relative z-10 w-full max-w-sm rounded-2xl bg-gray-900 border border-gray-700 p-6 shadow-2xl">
+            <h3 className="text-lg font-bold text-white mb-1">Open {quantity}x Box{quantity > 1 ? 'es' : ''}?</h3>
+            <p className="text-gray-400 text-sm mb-5">
+              This will cost{' '}
+              <span className="text-amber-400 font-semibold">
+                {totalCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} coins
+              </span>
+              . This action cannot be undone.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowConfirm(false)}
+                className="flex-1 py-2.5 rounded-xl border border-gray-600 text-gray-300 hover:text-white hover:border-gray-500 font-medium transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => { setShowConfirm(false); handleOpen(); }}
+                className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold transition-all hover:scale-[1.02] flex items-center justify-center gap-2"
+              >
+                <Coins className="w-4 h-4" />
+                Confirm
+              </button>
+            </div>
           </div>
         </div>
       )}
