@@ -708,66 +708,6 @@ export default function OpenBoxPage() {
                   </>
                 )}
               </button>
-
-              {/* Auto Open Section */}
-              <div className="border-t border-gray-700/50 pt-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <Zap className="w-4 h-4 text-amber-400" />
-                  <span className="text-sm font-semibold text-gray-300">Auto Open</span>
-                  <span className="text-xs text-gray-500 ml-1">— opens boxes automatically until coins run out</span>
-                </div>
-
-                {isAutoOpening ? (
-                  /* Running state */
-                  <div className="space-y-3">
-                    <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 grid grid-cols-3 gap-4 text-center">
-                      <div>
-                        <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Boxes</p>
-                        <p className="text-lg font-bold text-white">{autoBoxesOpened}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Spent</p>
-                        <p className="text-lg font-bold text-amber-400">{autoCoinsSpent.toFixed(2)}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Remaining</p>
-                        <p className="text-lg font-bold text-green-400">{(userCoins ?? 0).toFixed(2)}</p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={handleAutoStop}
-                      className="w-full py-3 rounded-xl border-2 border-red-500/70 bg-red-500/10 hover:bg-red-500/20 text-red-400 font-semibold transition-all flex items-center justify-center gap-2"
-                    >
-                      <Square className="w-4 h-4 fill-current" />
-                      Stop
-                    </button>
-                  </div>
-                ) : (
-                  /* Setup state */
-                  <div className="flex gap-2">
-                    <div className="relative flex-1">
-                      <Coins className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                      <input
-                        type="number"
-                        min="0"
-                        step="any"
-                        value={autoMaxCoins}
-                        onChange={(e) => setAutoMaxCoins(e.target.value)}
-                        placeholder="Max coins (leave empty = unlimited)"
-                        className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-600 text-sm focus:border-amber-500/60 focus:outline-none"
-                      />
-                    </div>
-                    <button
-                      onClick={() => setShowAutoConfirm(true)}
-                      disabled={opening || (userCoins !== null && userCoins < box.price)}
-                      className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-semibold text-sm transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 flex items-center gap-2 flex-shrink-0"
-                    >
-                      <Zap className="w-4 h-4" />
-                      Start
-                    </button>
-                  </div>
-                )}
-              </div>
             </div>
           </div>
 
