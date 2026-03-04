@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/use-toast';
-import { Coins, Package, Sparkles, ArrowLeft, Layers } from 'lucide-react';
+import { Coins, Package, Sparkles, ArrowLeft, Layers, Zap, Square, BadgeDollarSign } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { emitCoinBalanceUpdate } from '@/lib/coin-events';
@@ -174,6 +174,16 @@ const getRarityGlow = (rarity: string | undefined): RarityTier => {
   return COMMON_TIER;
 };
 
+// Rarity tier sell-button metadata (ordered from common → legendary)
+const TIER_ORDER = ['lindwurm-common', 'lindwurm-uncommon', 'lindwurm-rare', 'lindwurm-epic', 'lindwurm-legendary'] as const;
+const TIER_META: Record<string, { label: string; btnClass: string }> = {
+  'lindwurm-common':    { label: 'Commons',    btnClass: 'border-gray-500/60 text-gray-300 hover:bg-gray-500/10' },
+  'lindwurm-uncommon':  { label: 'Uncommons',  btnClass: 'border-green-500/60 text-green-400 hover:bg-green-500/10' },
+  'lindwurm-rare':      { label: 'Rares',      btnClass: 'border-blue-500/60 text-blue-400 hover:bg-blue-500/10' },
+  'lindwurm-epic':      { label: 'Epics',      btnClass: 'border-purple-500/60 text-purple-400 hover:bg-purple-500/10' },
+  'lindwurm-legendary': { label: 'Legendaries', btnClass: 'border-amber-500/60 text-amber-400 hover:bg-amber-500/10' },
+};
+
 type Box = {
   id: string;
   name: string;
@@ -266,6 +276,17 @@ export default function OpenBoxPage() {
   const [currentRevealIndex, setCurrentRevealIndex] = useState(0);
   const [revealTotal, setRevealTotal] = useState(0);
   const [showConfirm, setShowConfirm] = useState(false);
+  // Summary sell-by-rarity
+  const [soldPullIds, setSoldPullIds] = useState<Set<string>>(new Set());
+  const [sellConfirm, setSellConfirm] = useState<{ tier: string; pullIds: string[]; coins: number } | null>(null);
+  const [sellingSummary, setSellingSummary] = useState(false);
+  // Auto-open
+  const [autoMaxCoins, setAutoMaxCoins] = useState('');
+  const [isAutoOpening, setIsAutoOpening] = useState(false);
+  const [autoBoxesOpened, setAutoBoxesOpened] = useState(0);
+  const [autoCoinsSpent, setAutoCoinsSpent] = useState(0);
+  const [showAutoConfirm, setShowAutoConfirm] = useState(false);
+  const autoStopRef = useRef(false);
   // Deck animation
   const [deckPhase, setDeckPhase] = useState<'idle'|'stacking'|'shuffling'|'drawing'|'revealed'|'summary'>('idle');
   const [deckKey, setDeckKey] = useState(0);
@@ -345,6 +366,7 @@ export default function OpenBoxPage() {
     clearRevealTimeouts();
     setOpening(true);
     setOpenedCardIds(new Set());
+    setSoldPullIds(new Set());
     setPulls([]);
     setFeaturedPullId(null);
     setFeaturedCardId(null);
@@ -391,7 +413,7 @@ export default function OpenBoxPage() {
       if (pullsData.length === 0) {
         setDeckPhase('idle');
         setOpening(false);
-        addToast({ title: 'Success', description: `Opened ${quantity} box${quantity > 1 ? 'es' : ''}!` });
+        addToast({ title: 'Success', description: `Opened ${quantity} pack${quantity > 1 ? 's' : ''}!` });
         return;
       }
 
@@ -449,12 +471,108 @@ export default function OpenBoxPage() {
     }
   };
 
+  const handleAutoOpen = async () => {
+    if (!box) return;
+    autoStopRef.current = false;
+    setIsAutoOpening(true);
+    setAutoBoxesOpened(0);
+    setAutoCoinsSpent(0);
+    setSoldPullIds(new Set());
+
+    const limit = autoMaxCoins !== '' ? parseFloat(autoMaxCoins) : Infinity;
+    let coinsLeft = userCoins ?? 0;
+    let totalSpent = 0;
+    let boxesOpened = 0;
+    const sessionPulls: any[] = [];
+
+    try {
+      while (!autoStopRef.current) {
+        const boxCost = box.price;
+        if (coinsLeft < boxCost) break;
+        if (totalSpent + boxCost > limit) break;
+
+        // Use the largest batch that fits within budget and limit
+        const remainingBudget = Math.min(coinsLeft, limit - totalSpent);
+        const batchSize = Math.min(4, Math.floor(remainingBudget / boxCost));
+        if (batchSize === 0) break;
+
+        const res = await fetch('/api/packs/open', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ boxId: box.id, quantity: batchSize }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          if (res.status === 429) {
+            // Respect Retry-After header, default to 5 seconds
+            const retryAfter = parseInt(res.headers.get('Retry-After') || '5', 10);
+            await new Promise<void>(r => setTimeout(r, retryAfter * 1000));
+            continue; // retry this iteration
+          }
+          addToast({ title: 'Error', description: data.error || 'Failed to open box', variant: 'destructive' });
+          break;
+        }
+
+        const batchCost = boxCost * batchSize;
+        coinsLeft = data.remainingCoins;
+        totalSpent += batchCost;
+        boxesOpened += batchSize;
+        sessionPulls.push(...(data.pulls || []));
+
+        setAutoCoinsSpent(totalSpent);
+        setAutoBoxesOpened(boxesOpened);
+        setUserCoins(coinsLeft);
+        emitCoinBalanceUpdate({ balance: coinsLeft });
+
+        // 600ms between requests — stays well under 120/min rate limit
+        await new Promise<void>(r => setTimeout(r, 600));
+      }
+    } finally {
+      setIsAutoOpening(false);
+      if (sessionPulls.length > 0) {
+        setPulls(sessionPulls);
+        setDeckPhase('summary');
+      }
+    }
+  };
+
+  const handleAutoStop = () => { autoStopRef.current = true; };
+
+  const handleSellByTier = async () => {
+    if (!sellConfirm) return;
+    setSellingSummary(true);
+    try {
+      const res = await fetch('/api/cards/sell-all', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pullIds: sellConfirm.pullIds }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to sell cards');
+
+      setSoldPullIds(prev => new Set([...prev, ...sellConfirm.pullIds]));
+      setUserCoins(data.newBalance);
+      emitCoinBalanceUpdate({ balance: data.newBalance });
+      addToast({
+        title: 'Sold!',
+        description: `Sold ${sellConfirm.pullIds.length} ${TIER_META[sellConfirm.tier]?.label ?? 'cards'} for ${sellConfirm.coins.toFixed(2)} coins.`,
+      });
+      setSellConfirm(null);
+    } catch (error) {
+      addToast({ title: 'Error', description: (error as Error).message, variant: 'destructive' });
+    } finally {
+      setSellingSummary(false);
+    }
+  };
+
   if (!box) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 flex items-center justify-center font-display">
         <div className="text-white flex items-center gap-3">
           <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
-          Loading box...
+          Loading pack...
         </div>
       </div>
     );
@@ -467,7 +585,7 @@ export default function OpenBoxPage() {
         <div className="relative container py-12">
           <div className="glass-strong rounded-2xl p-12 text-center">
             <Package className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400">This box has no cards yet.</p>
+            <p className="text-gray-400">This pack has no cards yet.</p>
           </div>
         </div>
       </div>
@@ -513,7 +631,7 @@ export default function OpenBoxPage() {
                 <div className="flex flex-wrap gap-4">
                   <div className="flex items-center gap-2">
                     <Coins className="w-5 h-5 text-amber-400" />
-                    <span className="text-white font-semibold">{box.price.toFixed(2)} coins/box</span>
+                    <span className="text-white font-semibold">{box.price.toFixed(2)} coins/pack</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Layers className="w-5 h-5 text-gray-400" />
@@ -528,7 +646,7 @@ export default function OpenBoxPage() {
           <div className="glass-strong rounded-2xl p-6 mb-6">
             <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-blue-400" />
-              Open Box
+              Open Pack
             </h2>
             
             <div className="space-y-4">
@@ -575,7 +693,7 @@ export default function OpenBoxPage() {
               {/* Open Button */}
               <button
                 onClick={() => setShowConfirm(true)}
-                disabled={opening || (userCoins !== null && userCoins < totalCost)}
+                disabled={opening || isAutoOpening || (userCoins !== null && userCoins < totalCost)}
                 className="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold rounded-xl transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2 shimmer"
               >
                 {opening ? (
@@ -586,7 +704,7 @@ export default function OpenBoxPage() {
                 ) : (
                   <>
                     <Package className="w-5 h-5" />
-                    Open {quantity}x Box{quantity > 1 ? 'es' : ''}
+                    Open {quantity}x Pack{quantity > 1 ? 's' : ''}
                   </>
                 )}
               </button>
@@ -595,7 +713,7 @@ export default function OpenBoxPage() {
 
           {/* What's in the box */}
           <div className="glass-strong rounded-2xl p-6">
-            <h2 className="text-xl font-bold text-white mb-2">What's in the box?</h2>
+            <h2 className="text-xl font-bold text-white mb-2">What's in the pack?</h2>
             {box.cards.length > 0 && (
               <p className="text-sm text-gray-400 mb-4">{box.cards.length} card{box.cards.length !== 1 ? 's' : ''} available</p>
             )}
@@ -698,7 +816,7 @@ export default function OpenBoxPage() {
               </div>
             ) : (
               <div className="text-center py-8 text-gray-400">
-                <p>No cards available in this box yet.</p>
+                <p>No cards available in this pack yet.</p>
               </div>
             )}
           </div>
@@ -809,7 +927,7 @@ export default function OpenBoxPage() {
 
             {/* Status label */}
             <p className="mb-6 text-xs font-semibold uppercase tracking-[0.2em] text-gray-500 text-center min-h-[16px]">
-              {deckPhase === 'stacking' && `Opening ${quantity} box${quantity > 1 ? 'es' : ''}…`}
+              {deckPhase === 'stacking' && `Opening ${quantity} pack${quantity > 1 ? 's' : ''}…`}
               {(deckPhase === 'shuffling' || deckPhase === 'drawing') && (
                 currentRevealIndex === 0
                   ? 'Shuffling deck…'
@@ -971,86 +1089,152 @@ export default function OpenBoxPage() {
 
             <p className="mb-1 text-xs font-semibold uppercase tracking-[0.2em] text-gray-500">Opening Results</p>
             <h2 className="text-2xl font-bold text-white mb-6">
-              {quantity} Box{quantity > 1 ? 'es' : ''} · {pulls.length} Card{pulls.length !== 1 ? 's' : ''}
+              {(() => {
+                const boxes = Math.round(pulls.length / (box.cardsPerPack || 1));
+                const unique = new Set(pulls.map(p => p.card?.id ?? p.id)).size;
+                return `${boxes} Pack${boxes !== 1 ? 's' : ''} · ${pulls.length} Card${pulls.length !== 1 ? 's' : ''}${unique < pulls.length ? ` (${unique} unique)` : ''}`;
+              })()}
             </h2>
 
-            {/* Card grid */}
-            <div className={`grid gap-3 w-full mb-8 ${
-              pulls.length === 1 ? 'grid-cols-1 max-w-[140px] mx-auto' :
-              pulls.length === 2 ? 'grid-cols-2 max-w-xs mx-auto' :
-              pulls.length <= 4 ? 'grid-cols-2 sm:grid-cols-4 max-w-md mx-auto' :
-              pulls.length <= 6 ? 'grid-cols-3' :
-              'grid-cols-3 sm:grid-cols-4 md:grid-cols-5'
-            }`}>
-              {pulls.map((pull) => {
-                const rarityGlow = getRarityGlow(pull.card?.rarity);
-                const fx = getRarityEffects(rarityGlow.lindwurm);
-                const isFeatured = pull.id === featuredPullId;
-                const shimmerBg = `linear-gradient(105deg, transparent, ${rarityGlow.glowColor.replace('1)', '0.35)')}, transparent)`;
-                return (
-                  <div key={pull.id} className="relative flex flex-col">
-                    {/* Outer wrapper: no overflow-hidden so sparks + glow bleed out */}
-                    <div className="relative aspect-[63/88] w-full">
-                      {/* Pulsing glow halo (behind card image) */}
-                      {fx.glowClass && (
-                        <div className={`absolute inset-0 rounded-xl pointer-events-none ${fx.glowClass}`} />
-                      )}
-
-                      {/* Card image (overflow-hidden clips content to card shape) */}
-                      <div
-                        className={`absolute inset-0 rounded-xl overflow-hidden border ${
-                          isFeatured ? `${rarityGlow.border} ring-2 ring-amber-400/40` : rarityGlow.border
-                        }`}
-                        style={{
-                          boxShadow: isFeatured
-                            ? `0 0 24px 6px ${rarityGlow.glowColor.replace('1)', '0.5)')}`
-                            : `0 0 12px 2px ${rarityGlow.glowColor.replace('1)', '0.25)')}`,
-                        }}
-                      >
-                        {pull.card?.imageUrlGatherer ? (
-                          <Image src={pull.card.imageUrlGatherer} alt={pull.card.name} fill className="object-cover" unoptimized />
-                        ) : (
-                          <div className="w-full h-full bg-gray-800 flex items-center justify-center">
-                            <span className="text-gray-600 text-xs">No Image</span>
+            {/* Card grid — grouped by card, sorted best first */}
+            {(() => {
+              // Group duplicate cards together
+              const groupMap: Record<string, { cardId: string; card: any; pullIds: string[]; isFeatured: boolean }> = {};
+              for (const pull of pulls) {
+                const cardId = pull.card?.id ?? pull.id;
+                if (!groupMap[cardId]) {
+                  groupMap[cardId] = { cardId, card: pull.card, pullIds: [], isFeatured: false };
+                }
+                groupMap[cardId].pullIds.push(pull.id);
+                if (pull.id === featuredPullId) groupMap[cardId].isFeatured = true;
+              }
+              // Sort by coin value descending (best first)
+              const groups = Object.values(groupMap).sort(
+                (a, b) => (b.card?.coinValue ?? 0) - (a.card?.coinValue ?? 0)
+              );
+              const n = groups.length;
+              const gridClass =
+                n === 1 ? 'grid-cols-1 max-w-[140px] mx-auto' :
+                n === 2 ? 'grid-cols-2 max-w-xs mx-auto' :
+                n <= 4  ? 'grid-cols-2 sm:grid-cols-4 max-w-md mx-auto' :
+                n <= 6  ? 'grid-cols-3' :
+                          'grid-cols-3 sm:grid-cols-4 md:grid-cols-5';
+              return (
+                <div className={`grid gap-3 w-full mb-8 ${gridClass}`}>
+                  {groups.map((group) => {
+                    const rarityGlow = getRarityGlow(group.card?.rarity);
+                    const fx = getRarityEffects(rarityGlow.lindwurm);
+                    const isFeatured = group.isFeatured;
+                    const allSold = group.pullIds.every(id => soldPullIds.has(id));
+                    const shimmerBg = `linear-gradient(105deg, transparent, ${rarityGlow.glowColor.replace('1)', '0.35)')}, transparent)`;
+                    return (
+                      <div key={group.cardId} className={`relative flex flex-col transition-opacity ${allSold ? 'opacity-40' : ''}`}>
+                        {/* Count badge */}
+                        {group.pullIds.length > 1 && (
+                          <div className="absolute top-1.5 left-1.5 z-30 bg-gray-900/90 border border-gray-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none pointer-events-none">
+                            ×{group.pullIds.length}
                           </div>
                         )}
-                        {/* Shimmer sweep (rare+) */}
-                        {fx.shimmerDur && (
-                          <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 10 }}>
-                            <div className="rarity-shimmer-line" style={{ background: shimmerBg, animationDuration: fx.shimmerDur }} />
+                        {/* Outer wrapper: no overflow-hidden so sparks + glow bleed out */}
+                        <div className="relative aspect-[63/88] w-full">
+                          {/* Pulsing glow halo */}
+                          {fx.glowClass && (
+                            <div className={`absolute inset-0 rounded-xl pointer-events-none ${fx.glowClass}`} />
+                          )}
+                          {/* Card image */}
+                          <div
+                            className={`absolute inset-0 rounded-xl overflow-hidden border ${
+                              isFeatured ? `${rarityGlow.border} ring-2 ring-amber-400/40` : rarityGlow.border
+                            }`}
+                            style={{
+                              boxShadow: isFeatured
+                                ? `0 0 24px 6px ${rarityGlow.glowColor.replace('1)', '0.5)')}`
+                                : `0 0 12px 2px ${rarityGlow.glowColor.replace('1)', '0.25)')}`,
+                            }}
+                          >
+                            {group.card?.imageUrlGatherer ? (
+                              <Image src={group.card.imageUrlGatherer} alt={group.card.name} fill className="object-cover" unoptimized />
+                            ) : (
+                              <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                                <span className="text-gray-600 text-xs">No Image</span>
+                              </div>
+                            )}
+                            {/* Shimmer sweep (rare+) */}
+                            {fx.shimmerDur && (
+                              <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 10 }}>
+                                <div className="rarity-shimmer-line" style={{ background: shimmerBg, animationDuration: fx.shimmerDur }} />
+                              </div>
+                            )}
+                            {/* Name + value */}
+                            <div className="absolute bottom-0 left-0 right-0 px-1.5 py-1 bg-black/70 backdrop-blur-sm" style={{ zIndex: 20 }}>
+                              <p className="text-[10px] text-white truncate">{group.card?.name}</p>
+                              <p className={`text-[10px] font-semibold ${rarityGlow.text}`}>
+                                {group.card?.coinValue?.toFixed(2)} coins
+                                {group.pullIds.length > 1 && <span className="text-gray-400 font-normal"> ×{group.pullIds.length}</span>}
+                              </p>
+                            </div>
+                            {/* Sold overlay */}
+                            {allSold && (
+                              <div className="absolute inset-0 flex items-center justify-center bg-black/50" style={{ zIndex: 25 }}>
+                                <span className="text-[11px] font-bold text-white uppercase tracking-widest bg-black/60 px-2 py-0.5 rounded">Sold</span>
+                              </div>
+                            )}
                           </div>
-                        )}
-                        <div className="absolute bottom-0 left-0 right-0 px-1.5 py-1 bg-black/70 backdrop-blur-sm" style={{ zIndex: 20 }}>
-                          <p className="text-[10px] text-white truncate">{pull.card?.name}</p>
-                          <p className={`text-[10px] font-semibold ${rarityGlow.text}`}>
-                            {pull.card?.coinValue?.toFixed(2)} coins
-                          </p>
+                          {/* Spark particles */}
+                          {fx.sparks?.map((s, i) => (
+                            <span key={i} className="spark-particle" style={{
+                              left: `${s.x}%`, top: `${s.y}%`,
+                              width: `${s.size}px`, height: `${s.size}px`,
+                              background: rarityGlow.particleColor,
+                              boxShadow: `0 0 ${s.size * 2}px ${s.size}px ${rarityGlow.glowColor.replace('1)', '0.7)')}`,
+                              animationDelay: `${s.delay}s`, animationDuration: `${s.dur}s`,
+                              zIndex: 30,
+                            }} />
+                          ))}
                         </div>
                       </div>
+                    );
+                  })}
+                </div>
+              );
+            })()}
 
-                      {/* Spark particles (epic / legendary) — outside image div, not clipped */}
-                      {fx.sparks?.map((s, i) => (
-                        <span
-                          key={i}
-                          className="spark-particle"
-                          style={{
-                            left: `${s.x}%`,
-                            top: `${s.y}%`,
-                            width: `${s.size}px`,
-                            height: `${s.size}px`,
-                            background: rarityGlow.particleColor,
-                            boxShadow: `0 0 ${s.size * 2}px ${s.size}px ${rarityGlow.glowColor.replace('1)', '0.7)')}`,
-                            animationDelay: `${s.delay}s`,
-                            animationDuration: `${s.dur}s`,
-                            zIndex: 30,
-                          }}
-                        />
-                      ))}
-                    </div>
+            {/* Sell by rarity */}
+            {(() => {
+              const groups: Record<string, { pullIds: string[]; coins: number }> = {};
+              for (const pull of pulls) {
+                if (soldPullIds.has(pull.id)) continue;
+                const tier = getRarityGlow(pull.card?.rarity).lindwurm;
+                if (!groups[tier]) groups[tier] = { pullIds: [], coins: 0 };
+                groups[tier].pullIds.push(pull.id);
+                groups[tier].coins += pull.card?.coinValue ?? 0;
+              }
+              const entries = TIER_ORDER.filter(t => groups[t]);
+              if (entries.length === 0) return null;
+              return (
+                <div className="w-full mb-5">
+                  <div className="flex items-center gap-2 mb-3">
+                    <BadgeDollarSign className="w-4 h-4 text-gray-500" />
+                    <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">Sell by Rarity</p>
                   </div>
-                );
-              })}
-            </div>
+                  <div className="flex flex-wrap gap-2">
+                    {entries.map(tier => {
+                      const g = groups[tier];
+                      const meta = TIER_META[tier];
+                      return (
+                        <button
+                          key={tier}
+                          onClick={() => setSellConfirm({ tier, pullIds: g.pullIds, coins: g.coins })}
+                          className={`px-3 py-2 rounded-xl border text-sm font-medium transition-all hover:scale-[1.02] ${meta.btnClass}`}
+                        >
+                          Sell {meta.label} ({g.pullIds.length}x) — {g.coins.toFixed(2)} coins
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })()}
 
             {/* Total value */}
             <div className="flex items-center gap-3 px-8 py-4 rounded-2xl bg-white/[0.04] border border-white/[0.08] mb-6">
@@ -1058,8 +1242,11 @@ export default function OpenBoxPage() {
               <div>
                 <p className="text-xs text-gray-500 uppercase tracking-widest">Total Value</p>
                 <p className="text-2xl font-bold text-white">
-                  {pulls.reduce((sum, p) => sum + (p.card?.coinValue ?? 0), 0).toFixed(2)} coins
+                  {pulls.filter(p => !soldPullIds.has(p.id)).reduce((sum, p) => sum + (p.card?.coinValue ?? 0), 0).toFixed(2)} coins
                 </p>
+                {soldPullIds.size > 0 && (
+                  <p className="text-xs text-gray-500 mt-0.5">{soldPullIds.size} card{soldPullIds.size !== 1 ? 's' : ''} sold</p>
+                )}
               </div>
             </div>
 
@@ -1069,6 +1256,83 @@ export default function OpenBoxPage() {
             >
               Close
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Sell-by-rarity confirmation dialog */}
+      {sellConfirm && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setSellConfirm(null)} />
+          <div className="relative z-10 w-full max-w-sm rounded-2xl bg-gray-900 border border-gray-700 p-6 shadow-2xl">
+            <div className="flex items-center gap-2 mb-1">
+              <BadgeDollarSign className="w-5 h-5 text-amber-400" />
+              <h3 className="text-lg font-bold text-white">Sell {TIER_META[sellConfirm.tier]?.label}?</h3>
+            </div>
+            <p className="text-gray-400 text-sm mb-5">
+              Sell{' '}
+              <span className="text-white font-semibold">{sellConfirm.pullIds.length} {TIER_META[sellConfirm.tier]?.label}</span>
+              {' '}for{' '}
+              <span className="text-amber-400 font-semibold">{sellConfirm.coins.toFixed(2)} coins</span>?
+              {' '}This cannot be undone.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setSellConfirm(null)}
+                disabled={sellingSummary}
+                className="flex-1 py-2.5 rounded-xl border border-gray-600 text-gray-300 hover:text-white hover:border-gray-500 font-medium transition-colors disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSellByTier}
+                disabled={sellingSummary}
+                className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-semibold transition-all hover:scale-[1.02] flex items-center justify-center gap-2 disabled:opacity-50 disabled:hover:scale-100"
+              >
+                {sellingSummary ? (
+                  <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Selling...</>
+                ) : (
+                  <><BadgeDollarSign className="w-4 h-4" /> Sell</>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Auto-open confirmation dialog */}
+      {showAutoConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+            onClick={() => setShowAutoConfirm(false)}
+          />
+          <div className="relative z-10 w-full max-w-sm rounded-2xl bg-gray-900 border border-gray-700 p-6 shadow-2xl">
+            <div className="flex items-center gap-2 mb-1">
+              <Zap className="w-5 h-5 text-amber-400" />
+              <h3 className="text-lg font-bold text-white">Start Auto Open?</h3>
+            </div>
+            <p className="text-gray-400 text-sm mb-5">
+              {autoMaxCoins !== '' && !isNaN(parseFloat(autoMaxCoins))
+                ? <>Will open packs until you spend up to <span className="text-amber-400 font-semibold">{parseFloat(autoMaxCoins).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} coins</span> or run out of coins.</>
+                : <>Will open packs until your coins run out. Current balance: <span className="text-amber-400 font-semibold">{(userCoins ?? 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} coins</span>.</>
+              }
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowAutoConfirm(false)}
+                className="flex-1 py-2.5 rounded-xl border border-gray-600 text-gray-300 hover:text-white hover:border-gray-500 font-medium transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => { setShowAutoConfirm(false); handleAutoOpen(); }}
+                className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-semibold transition-all hover:scale-[1.02] flex items-center justify-center gap-2"
+              >
+                <Zap className="w-4 h-4" />
+                Start
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -1083,7 +1347,7 @@ export default function OpenBoxPage() {
           />
           {/* Dialog */}
           <div className="relative z-10 w-full max-w-sm rounded-2xl bg-gray-900 border border-gray-700 p-6 shadow-2xl">
-            <h3 className="text-lg font-bold text-white mb-1">Open {quantity}x Box{quantity > 1 ? 'es' : ''}?</h3>
+            <h3 className="text-lg font-bold text-white mb-1">Open {quantity}x Pack{quantity > 1 ? 's' : ''}?</h3>
             <p className="text-gray-400 text-sm mb-5">
               This will cost{' '}
               <span className="text-amber-400 font-semibold">
