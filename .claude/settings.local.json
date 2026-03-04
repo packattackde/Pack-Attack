@@ -4,7 +4,11 @@
       "mcp__ide__getDiagnostics",
       "Bash(npx prisma:*)",
       "Bash(mkdir:*)",
-      "Bash(New-Item:*)"
+      "Bash(New-Item:*)",
+      "Bash(grep:*)",
+      "Bash(head:*)",
+      "Bash(wc:*)",
+      "Bash(npm run:*)"
     ]
   }
 }

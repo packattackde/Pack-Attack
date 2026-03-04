@@ -8,7 +8,7 @@ import { Layers, Package, Sparkles } from 'lucide-react';
 async function getCollection() {
   const session = await getCurrentSession();
   if (!session?.user?.email) {
-    return { pullsData: [], availableGames: [] };
+    return { pullsData: [] };
   }
 
   const user = await prisma.user.findUnique({
@@ -16,16 +16,12 @@ async function getCollection() {
   });
 
   if (!user) {
-    return { pullsData: [], availableGames: [] };
+    return { pullsData: [] };
   }
 
   // PERFORMANCE: Limit initial load to 500 cards to prevent slow page loads
-  // Client-side filtering and virtual scrolling handles display
   const pulls = await prisma.pull.findMany({
-    where: {
-      userId: user.id,
-      cartItem: null,
-    },
+    where: { userId: user.id },
     include: {
       card: {
         select: {
@@ -34,43 +30,19 @@ async function getCollection() {
           imageUrlGatherer: true,
           coinValue: true,
           rarity: true,
+          sourceGame: true,
         },
       },
       box: {
-        select: {
-          name: true,
-          games: true,
-        },
+        select: { name: true },
+      },
+      cartItem: {
+        select: { id: true },
       },
     },
     orderBy: { timestamp: 'desc' },
-    take: 500, // PERFORMANCE: Limit to 500 cards per page load
+    take: 500,
   });
-
-  let cart;
-  try {
-    cart = await prisma.cart.findUnique({
-      where: { userId: user.id },
-      include: {
-        items: {
-          select: { pullId: true },
-        },
-      },
-    });
-  } catch (error) {
-    cart = null;
-  }
-
-  const cartPullIds = new Set(cart?.items.map(item => item.pullId) || []);
-  
-  // Get unique games from all boxes
-  const allGames = new Set<string>();
-  pulls.forEach(pull => {
-    if (pull.box.games) {
-      pull.box.games.forEach(game => allGames.add(game));
-    }
-  });
-  const availableGames = Array.from(allGames).sort();
 
   const pullsData = pulls.map(pull => ({
     id: pull.id,
@@ -81,16 +53,14 @@ async function getCollection() {
           imageUrlGatherer: pull.card.imageUrlGatherer,
           coinValue: Number(pull.card.coinValue),
           rarity: pull.card.rarity,
+          sourceGame: pull.card.sourceGame,
         }
       : null,
-    box: {
-      name: pull.box.name,
-      games: pull.box.games,
-    },
-    cartItem: cartPullIds.has(pull.id) ? { id: 'temp' } : null,
+    box: { name: pull.box.name },
+    cartItem: pull.cartItem ? { id: pull.cartItem.id } : null,
   }));
 
-  return { pullsData, availableGames };
+  return { pullsData };
 }
 
 export default async function CollectionPage() {
@@ -99,7 +69,7 @@ export default async function CollectionPage() {
     redirect('/login');
   }
 
-  const { pullsData: pullsWithCart, availableGames } = await getCollection();
+  const { pullsData: pullsWithCart } = await getCollection();
 
   // Calculate stats
   const totalCards = pullsWithCart.length;
@@ -170,7 +140,7 @@ export default async function CollectionPage() {
             </Link>
           </div>
         ) : (
-          <CollectionClient pulls={pullsWithCart} availableGames={availableGames} />
+          <CollectionClient pulls={pullsWithCart} />
         )}
       </div>
     </div>
