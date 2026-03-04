@@ -413,7 +413,7 @@ export default function OpenBoxPage() {
       if (pullsData.length === 0) {
         setDeckPhase('idle');
         setOpening(false);
-        addToast({ title: 'Success', description: `Opened ${quantity} box${quantity > 1 ? 'es' : ''}!` });
+        addToast({ title: 'Success', description: `Opened ${quantity} pack${quantity > 1 ? 's' : ''}!` });
         return;
       }
 
@@ -572,7 +572,7 @@ export default function OpenBoxPage() {
       <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 flex items-center justify-center font-display">
         <div className="text-white flex items-center gap-3">
           <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
-          Loading box...
+          Loading pack...
         </div>
       </div>
     );
@@ -585,7 +585,7 @@ export default function OpenBoxPage() {
         <div className="relative container py-12">
           <div className="glass-strong rounded-2xl p-12 text-center">
             <Package className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400">This box has no cards yet.</p>
+            <p className="text-gray-400">This pack has no cards yet.</p>
           </div>
         </div>
       </div>
@@ -631,7 +631,7 @@ export default function OpenBoxPage() {
                 <div className="flex flex-wrap gap-4">
                   <div className="flex items-center gap-2">
                     <Coins className="w-5 h-5 text-amber-400" />
-                    <span className="text-white font-semibold">{box.price.toFixed(2)} coins/box</span>
+                    <span className="text-white font-semibold">{box.price.toFixed(2)} coins/pack</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Layers className="w-5 h-5 text-gray-400" />
@@ -646,7 +646,7 @@ export default function OpenBoxPage() {
           <div className="glass-strong rounded-2xl p-6 mb-6">
             <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-blue-400" />
-              Open Box
+              Open Pack
             </h2>
             
             <div className="space-y-4">
@@ -704,7 +704,7 @@ export default function OpenBoxPage() {
                 ) : (
                   <>
                     <Package className="w-5 h-5" />
-                    Open {quantity}x Box{quantity > 1 ? 'es' : ''}
+                    Open {quantity}x Pack{quantity > 1 ? 's' : ''}
                   </>
                 )}
               </button>
@@ -713,7 +713,7 @@ export default function OpenBoxPage() {
 
           {/* What's in the box */}
           <div className="glass-strong rounded-2xl p-6">
-            <h2 className="text-xl font-bold text-white mb-2">What's in the box?</h2>
+            <h2 className="text-xl font-bold text-white mb-2">What's in the pack?</h2>
             {box.cards.length > 0 && (
               <p className="text-sm text-gray-400 mb-4">{box.cards.length} card{box.cards.length !== 1 ? 's' : ''} available</p>
             )}
@@ -816,7 +816,7 @@ export default function OpenBoxPage() {
               </div>
             ) : (
               <div className="text-center py-8 text-gray-400">
-                <p>No cards available in this box yet.</p>
+                <p>No cards available in this pack yet.</p>
               </div>
             )}
           </div>
@@ -927,7 +927,7 @@ export default function OpenBoxPage() {
 
             {/* Status label */}
             <p className="mb-6 text-xs font-semibold uppercase tracking-[0.2em] text-gray-500 text-center min-h-[16px]">
-              {deckPhase === 'stacking' && `Opening ${quantity} box${quantity > 1 ? 'es' : ''}…`}
+              {deckPhase === 'stacking' && `Opening ${quantity} pack${quantity > 1 ? 's' : ''}…`}
               {(deckPhase === 'shuffling' || deckPhase === 'drawing') && (
                 currentRevealIndex === 0
                   ? 'Shuffling deck…'
@@ -1092,7 +1092,7 @@ export default function OpenBoxPage() {
               {(() => {
                 const boxes = Math.round(pulls.length / (box.cardsPerPack || 1));
                 const unique = new Set(pulls.map(p => p.card?.id ?? p.id)).size;
-                return `${boxes} Box${boxes !== 1 ? 'es' : ''} · ${pulls.length} Card${pulls.length !== 1 ? 's' : ''}${unique < pulls.length ? ` (${unique} unique)` : ''}`;
+                return `${boxes} Pack${boxes !== 1 ? 's' : ''} · ${pulls.length} Card${pulls.length !== 1 ? 's' : ''}${unique < pulls.length ? ` (${unique} unique)` : ''}`;
               })()}
             </h2>
 
@@ -1314,8 +1314,8 @@ export default function OpenBoxPage() {
             </div>
             <p className="text-gray-400 text-sm mb-5">
               {autoMaxCoins !== '' && !isNaN(parseFloat(autoMaxCoins))
-                ? <>Will open boxes until you spend up to <span className="text-amber-400 font-semibold">{parseFloat(autoMaxCoins).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} coins</span> or run out of coins.</>
-                : <>Will open boxes until your coins run out. Current balance: <span className="text-amber-400 font-semibold">{(userCoins ?? 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} coins</span>.</>
+                ? <>Will open packs until you spend up to <span className="text-amber-400 font-semibold">{parseFloat(autoMaxCoins).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} coins</span> or run out of coins.</>
+                : <>Will open packs until your coins run out. Current balance: <span className="text-amber-400 font-semibold">{(userCoins ?? 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} coins</span>.</>
               }
             </p>
             <div className="flex gap-3">
@@ -1347,7 +1347,7 @@ export default function OpenBoxPage() {
           />
           {/* Dialog */}
           <div className="relative z-10 w-full max-w-sm rounded-2xl bg-gray-900 border border-gray-700 p-6 shadow-2xl">
-            <h3 className="text-lg font-bold text-white mb-1">Open {quantity}x Box{quantity > 1 ? 'es' : ''}?</h3>
+            <h3 className="text-lg font-bold text-white mb-1">Open {quantity}x Pack{quantity > 1 ? 's' : ''}?</h3>
             <p className="text-gray-400 text-sm mb-5">
               This will cost{' '}
               <span className="text-amber-400 font-semibold">
