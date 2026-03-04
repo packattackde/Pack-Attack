@@ -181,8 +181,65 @@ type Box = {
   imageUrl: string;
   price: number;
   cardsPerPack: number;
+  cardBackUrl?: string | null;
   cards: BoxCard[];
 };
+
+function CardBack({ url }: { url?: string | null }) {
+  if (url) {
+    const src = `/assets/card-backs/${url}`;
+    return (
+      <div className="absolute inset-0 rounded-xl overflow-hidden border border-blue-400/20">
+        <Image src={src} alt="Card back" fill className="object-cover" unoptimized />
+      </div>
+    );
+  }
+  return (
+    <div
+      className="absolute inset-0 rounded-xl overflow-hidden border border-blue-400/20"
+      style={{ background: 'linear-gradient(135deg, #1e3a5f 0%, #0f172a 50%, #1e3a5f 100%)' }}
+    >
+      <div className="absolute inset-2 rounded-lg border border-blue-300/20 flex items-center justify-center">
+        <div className="w-10 h-10 rounded-md border border-blue-300/15 flex items-center justify-center">
+          <Sparkles className="w-4 h-4 text-blue-400/40" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Pre-defined spark positions (deterministic to avoid hydration issues)
+const EPIC_SPARKS = [
+  { x:  8, y: 12, size: 3, delay: 0.0, dur: 1.3 },
+  { x: 88, y: 18, size: 2, delay: 0.6, dur: 1.0 },
+  { x: 50, y:  5, size: 4, delay: 1.0, dur: 1.5 },
+  { x: 12, y: 82, size: 2, delay: 0.3, dur: 1.2 },
+  { x: 87, y: 78, size: 3, delay: 0.8, dur: 1.0 },
+  { x: 28, y: 94, size: 2, delay: 1.2, dur: 1.4 },
+  { x: 72, y: 90, size: 3, delay: 0.15,dur: 1.6 },
+  { x: 94, y: 48, size: 2, delay: 0.5, dur: 0.9 },
+];
+const LEGENDARY_SPARKS = [
+  ...EPIC_SPARKS,
+  { x:  3, y: 42, size: 4, delay: 0.4, dur: 1.3 },
+  { x: 97, y: 35, size: 3, delay: 0.9, dur: 1.1 },
+  { x: 20, y:  3, size: 3, delay: 1.4, dur: 1.7 },
+  { x: 75, y:  2, size: 4, delay: 0.05,dur: 1.2 },
+  { x: 42, y: 97, size: 2, delay: 1.6, dur: 0.8 },
+  { x: 62, y: 96, size: 3, delay: 0.35,dur: 1.4 },
+  { x:  1, y: 65, size: 3, delay: 1.1, dur: 1.2 },
+  { x: 48, y: 50, size: 2, delay: 0.7, dur: 1.0 },
+];
+
+function getRarityEffects(lindwurm: string) {
+  switch (lindwurm) {
+    case 'lindwurm-legendary': return { glowClass: 'rarity-glow-legendary', sparks: LEGENDARY_SPARKS, shimmerDur: '1.8s' };
+    case 'lindwurm-epic':      return { glowClass: 'rarity-glow-epic',      sparks: EPIC_SPARKS,      shimmerDur: '2.5s' };
+    case 'lindwurm-rare':      return { glowClass: 'rarity-glow-rare',      sparks: null,             shimmerDur: '3.5s' };
+    case 'lindwurm-uncommon':  return { glowClass: 'rarity-glow-uncommon',  sparks: null,             shimmerDur: null };
+    default:                   return { glowClass: '',                       sparks: null,             shimmerDur: null };
+  }
+}
 
 export default function OpenBoxPage() {
   const params = useParams();
@@ -193,26 +250,25 @@ export default function OpenBoxPage() {
   const [quantity, setQuantity] = useState(1);
   const [pulls, setPulls] = useState<any[]>([]);
   const [userCoins, setUserCoins] = useState<number | null>(null);
-  const [isAnimating, setIsAnimating] = useState(false);
   const [openedCardIds, setOpenedCardIds] = useState<Set<string>>(new Set());
-  const [spinningCardIds, setSpinningCardIds] = useState<Set<string>>(new Set());
   const [featuredPullId, setFeaturedPullId] = useState<string | null>(null);
   const [featuredCardId, setFeaturedCardId] = useState<string | null>(null);
   const [currentReveal, setCurrentReveal] = useState<any | null>(null);
-  const [isShowingReveal, setIsShowingReveal] = useState(false);
   const [currentRevealIndex, setCurrentRevealIndex] = useState(0);
   const [revealTotal, setRevealTotal] = useState(0);
+  // Deck animation
+  const [deckPhase, setDeckPhase] = useState<'idle'|'stacking'|'shuffling'|'drawing'|'revealed'|'summary'>('idle');
+  const [deckKey, setDeckKey] = useState(0);
   const revealTimeoutsRef = useRef<Array<ReturnType<typeof setTimeout>>>([]);
+  const pendingPullsRef = useRef<any[]>([]);
 
   const clearRevealTimeouts = () => {
     revealTimeoutsRef.current.forEach((timeoutId) => clearTimeout(timeoutId));
     revealTimeoutsRef.current = [];
     setCurrentReveal(null);
-    setIsShowingReveal(false);
     setCurrentRevealIndex(0);
     setRevealTotal(0);
-    setSpinningCardIds(new Set());
-    setIsAnimating(false);
+    setDeckPhase('idle');
   };
 
   const scheduleTimeout = (callback: () => void, delay: number) => {
@@ -220,21 +276,18 @@ export default function OpenBoxPage() {
     revealTimeoutsRef.current.push(timeoutId);
   };
 
-  const startRandomSpin = () => {
-    if (!box?.cards?.length) return;
-    const allCardIds = new Set<string>();
-    for (let i = 0; i < box.cards.length; i++) {
-      if (box.cards[i]?.id) {
-        allCardIds.add(box.cards[i].id);
-      }
-    }
-    setSpinningCardIds(new Set(allCardIds));
-    setIsAnimating(true);
-  };
-
-  const stopSpin = () => {
-    setIsAnimating(false);
-    setSpinningCardIds(new Set());
+  const handleSkip = () => {
+    const allPulls = pendingPullsRef.current;
+    if (allPulls.length === 0) return;
+    revealTimeoutsRef.current.forEach(clearTimeout);
+    revealTimeoutsRef.current = [];
+    setCurrentReveal(null);
+    setCurrentRevealIndex(0);
+    setRevealTotal(0);
+    setPulls(allPulls);
+    setOpenedCardIds(new Set(allPulls.map((p: any) => p.card?.id).filter(Boolean)));
+    setOpening(false);
+    setDeckPhase('summary');
   };
 
   useEffect(() => {
@@ -266,13 +319,6 @@ export default function OpenBoxPage() {
     return () => clearRevealTimeouts();
   }, []);
 
-  useEffect(() => {
-    if (box?.cards && box.cards.length > 0 && isAnimating) {
-      const allIds = new Set<string>(box.cards.map(card => card.id));
-      setSpinningCardIds(allIds);
-    }
-  }, [box?.cards, isAnimating]);
-
   const handleOpen = async () => {
     if (!box || opening) return;
 
@@ -293,10 +339,10 @@ export default function OpenBoxPage() {
     setFeaturedPullId(null);
     setFeaturedCardId(null);
     setCurrentReveal(null);
-    setIsShowingReveal(false);
     setCurrentRevealIndex(0);
     setRevealTotal(0);
-    startRandomSpin();
+    setDeckKey(k => k + 1);
+    setDeckPhase('stacking');
 
     try {
       const res = await fetch('/api/packs/open', {
@@ -313,13 +359,13 @@ export default function OpenBoxPage() {
           description: data.error || 'Failed to open box',
           variant: 'destructive',
         });
-        setIsAnimating(false);
-        setSpinningCardIds(new Set());
+        setDeckPhase('idle');
         setOpening(false);
         return;
       }
 
       const pullsData = data.pulls || [];
+      pendingPullsRef.current = pullsData;
       const featured = pullsData.reduce((best: any, pull: any) => {
         const bestValue = best?.card?.coinValue ?? -Infinity;
         const currentValue = pull.card?.coinValue ?? -Infinity;
@@ -333,57 +379,61 @@ export default function OpenBoxPage() {
       setRevealTotal(pullsData.length);
 
       if (pullsData.length === 0) {
-        stopSpin();
+        setDeckPhase('idle');
         setOpening(false);
         addToast({ title: 'Success', description: `Opened ${quantity} box${quantity > 1 ? 'es' : ''}!` });
         return;
       }
 
       const numCards = pullsData.length;
-      const REVEAL_DURATION = 3000;
-      const SPINNER_BURST_DURATION = 900;
+      const STACK_MS  = 700;  // stacking phase duration
+      const SHUFFLE_MS = 750; // shuffle phase duration
+      const DRAW_MS   = 550;  // top-card lift animation
+      const REVEAL_MS = 2800; // card shown duration
+
+      // Phase transitions: stacking → shuffling → draw/reveal sequence
+      scheduleTimeout(() => setDeckPhase('shuffling'), STACK_MS);
 
       scheduleTimeout(() => {
-        let timeline = 0;
+        let t = 0;
         pullsData.forEach((pull: any, index: number) => {
           const isLast = index === pullsData.length - 1;
 
+          scheduleTimeout(() => setDeckPhase('drawing'), t);
+          t += DRAW_MS;
+
           scheduleTimeout(() => {
-            if (!isAnimating) startRandomSpin();
             setCurrentReveal(pull);
-            setIsShowingReveal(true);
             setCurrentRevealIndex(index + 1);
-            setOpenedCardIds((prev) => {
+            setDeckPhase('revealed');
+            setOpenedCardIds(prev => {
               const next = new Set(prev);
               if (pull.card?.id) next.add(pull.card.id);
               return next;
             });
-            setPulls((prev) => [...prev, pull]);
-          }, timeline);
+            setPulls(prev => [...prev, pull]);
+          }, t);
+          t += REVEAL_MS;
 
-          timeline += REVEAL_DURATION;
-
-          scheduleTimeout(() => {
-            setIsShowingReveal(false);
-            setCurrentReveal(null);
-            if (isLast) {
-              stopSpin();
+          if (!isLast) {
+            scheduleTimeout(() => {
+              setCurrentReveal(null);
+              setDeckKey(k => k + 1);
+              setDeckPhase('shuffling');
+            }, t);
+            t += SHUFFLE_MS;
+          } else {
+            scheduleTimeout(() => {
+              setCurrentReveal(null);
+              setDeckPhase('summary');
               setOpening(false);
-              addToast({
-                title: 'Success',
-                description: `Opened ${quantity} box${quantity > 1 ? 'es' : ''}! Got ${numCards} card${numCards !== 1 ? 's' : ''}!`,
-              });
-            }
-          }, timeline);
-
-          if (!isLast) timeline += SPINNER_BURST_DURATION;
+            }, t);
+          }
         });
-      }, 1500);
+      }, STACK_MS + SHUFFLE_MS);
     } catch (error) {
       console.error('Error opening box:', error);
       clearRevealTimeouts();
-      setIsAnimating(false);
-      setSpinningCardIds(new Set());
       setOpening(false);
       addToast({ title: 'Error', description: 'Failed to open box', variant: 'destructive' });
     }
@@ -551,7 +601,6 @@ export default function OpenBoxPage() {
               }`}>
                 {box.cards.map((card) => {
                   const isOpened = openedCardIds.has(card.id);
-                  const isSpinning = isAnimating && spinningCardIds.has(card.id);
                   const isFeatured = isOpened && featuredCardId === card.id;
                   const cardRarityGlow = getRarityGlow(card.rarity);
 
@@ -559,8 +608,8 @@ export default function OpenBoxPage() {
                     <div
                       key={card.id}
                       className={`relative group transition-all duration-300 rounded-2xl p-3 flex flex-col h-full ${
-                        isOpened 
-                          ? `ring-2 ring-offset-2 ring-offset-gray-900 z-10 ${isFeatured ? 'scale-[1.02]' : ''} ${cardRarityGlow.border.replace('border-', 'ring-')}` 
+                        isOpened
+                          ? `ring-2 ring-offset-2 ring-offset-gray-900 z-10 ${isFeatured ? 'scale-[1.02]' : ''} ${cardRarityGlow.border.replace('border-', 'ring-')}`
                           : ''
                       }`}
                       style={{
@@ -569,32 +618,26 @@ export default function OpenBoxPage() {
                       }}
                     >
                       {/* Glow effect behind card on hover */}
-                      <div 
+                      <div
                         className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-2xl -z-10"
                         style={{
                           background: `radial-gradient(circle at center, ${cardRarityGlow.glowColor}, transparent 70%)`,
                           transform: 'scale(1.1)',
                         }}
                       />
-                      
+
                       <div
                         className={`relative aspect-[63/88] w-full rounded-xl overflow-hidden border transition-all duration-300 ${
-                          isOpened 
-                            ? `${cardRarityGlow.border} ${isFeatured ? 'scale-105' : 'scale-[1.02]'}` 
-                            : isSpinning 
-                              ? 'border-blue-500/50' 
-                              : 'border-white/[0.08] group-hover:border-white/[0.15]'
-                        } ${isSpinning ? 'animate-spin-slow' : 'group-hover:-translate-y-1 group-hover:scale-[1.03]'}`}
-                        style={
-                          isSpinning 
-                            ? { transformStyle: 'preserve-3d' } 
-                            : {
-                                boxShadow: `0 0 0 0 ${cardRarityGlow.glowColor.replace('1)', '0)')}`,
-                                transition: 'all 0.3s ease, box-shadow 0.3s ease',
-                              }
-                        }
+                          isOpened
+                            ? `${cardRarityGlow.border} ${isFeatured ? 'scale-105' : 'scale-[1.02]'}`
+                            : 'border-white/[0.08] group-hover:border-white/[0.15]'
+                        } group-hover:-translate-y-1 group-hover:scale-[1.03]`}
+                        style={{
+                          boxShadow: `0 0 0 0 ${cardRarityGlow.glowColor.replace('1)', '0)')}`,
+                          transition: 'all 0.3s ease, box-shadow 0.3s ease',
+                        }}
                         onMouseEnter={(e) => {
-                          if (!isSpinning && !isOpened) {
+                          if (!isOpened) {
                             e.currentTarget.style.boxShadow = `
                               0 0 30px 8px ${cardRarityGlow.glowColor.replace('1)', '0.6)')},
                               0 0 60px 15px ${cardRarityGlow.glowColor.replace('1)', '0.3)')},
@@ -604,7 +647,7 @@ export default function OpenBoxPage() {
                           }
                         }}
                         onMouseLeave={(e) => {
-                          if (!isSpinning && !isOpened) {
+                          if (!isOpened) {
                             e.currentTarget.style.boxShadow = `0 0 0 0 ${cardRarityGlow.glowColor.replace('1)', '0)')}`;
                             e.currentTarget.style.borderColor = '';
                           }
@@ -749,73 +792,276 @@ export default function OpenBoxPage() {
         </div>
       </div>
 
-      {/* Reveal Modal - Modern Premium Design */}
-      {isShowingReveal && currentReveal?.card && (() => {
-        const rarityGlow = getRarityGlow(currentReveal.card.rarity);
-        const rarity = currentReveal.card.rarity?.toLowerCase() || 'common';
-        const isHighRarity = ['epic', 'mythic', 'legendary'].includes(rarity);
-        
-        return (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm p-4">
-            {/* Main card container */}
-            <div className="relative card-reveal-animate flex flex-col items-center max-h-[95vh]">
-              
-              {/* Pull counter */}
-              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-gray-500 text-center">
-                Pull {currentRevealIndex} of {revealTotal || quantity}
-              </p>
-              
-              {/* Card image - large and clean, no overlays blocking the card */}
-              <div 
-                className={`relative overflow-hidden rounded-xl border ${rarityGlow.border}`}
-                style={{
-                  width: 'min(380px, 85vw)',
-                  aspectRatio: '63 / 88',
-                  boxShadow: `
-                    0 0 1px 0px ${rarityGlow.glowColor.replace('1)', '0.1)')},
-                    0 25px 60px -12px rgba(0, 0, 0, 0.7)
-                  `,
-                }}
-              >
-                {currentReveal.card.imageUrlGatherer ? (
-                  <Image 
-                    src={currentReveal.card.imageUrlGatherer} 
-                    alt={currentReveal.card.name} 
-                    fill 
-                    className="object-contain"
-                    unoptimized
-                  />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center bg-gray-800 text-gray-500">No Image</div>
-                )}
-              </div>
-              
-              {/* Card info below - compact and readable */}
-              <div className="mt-4 flex flex-col items-center gap-1.5 w-full" style={{ maxWidth: 'min(380px, 85vw)' }}>
-                {/* Card name */}
-                <h3 className="text-xl font-bold text-white text-center leading-snug">
-                  {currentReveal.card.name}
-                </h3>
-                
-                {/* Box name + rarity */}
-                <div className="flex items-center gap-2 text-sm text-gray-400">
-                  <span>{box.name}</span>
-                  <span className="text-gray-600">·</span>
-                  <span className={`font-semibold ${rarityGlow.text}`}>{currentReveal.card.rarity || 'Common'}</span>
+      {/* Deck Animation Overlay */}
+      {deckPhase !== 'idle' && deckPhase !== 'summary' && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm">
+          <div className="relative flex flex-col items-center">
+
+            {/* Status label */}
+            <p className="mb-6 text-xs font-semibold uppercase tracking-[0.2em] text-gray-500 text-center min-h-[16px]">
+              {deckPhase === 'stacking' && `Opening ${quantity} box${quantity > 1 ? 'es' : ''}…`}
+              {(deckPhase === 'shuffling' || deckPhase === 'drawing') && (
+                currentRevealIndex === 0
+                  ? 'Shuffling deck…'
+                  : `Pull ${currentRevealIndex + 1} of ${revealTotal}`
+              )}
+              {deckPhase === 'revealed' && `Pull ${currentRevealIndex} of ${revealTotal}`}
+            </p>
+
+            {/* Card container */}
+            <div
+              className="relative"
+              style={{ width: 'min(260px, 65vw)', height: 'calc(min(260px, 65vw) * 88 / 63)' }}
+            >
+              {/* Face-down deck stack */}
+              {deckPhase !== 'revealed' && (
+                <div
+                  key={deckKey}
+                  className={`absolute inset-0 ${deckPhase === 'shuffling' ? 'deck-shuffle' : ''}`}
+                >
+                  {(() => {
+                    const deckCount = Math.max(1, revealTotal - currentRevealIndex);
+                    return Array.from({ length: deckCount }, (_, i) => deckCount - 1 - i).map((offset) => (
+                      <div
+                        key={offset}
+                        className="absolute inset-0"
+                        style={{
+                          transform: offset > 0 ? `translate(${offset * -3}px, ${offset * -4}px)` : undefined,
+                          zIndex: deckCount - offset,
+                        }}
+                      >
+                        <div
+                          className={`absolute inset-0 ${
+                            deckPhase === 'stacking' ? 'deck-card-in' : ''
+                          } ${offset === 0 && deckPhase === 'drawing' ? 'deck-draw-lift' : ''}`}
+                          style={{
+                            animationDelay: deckPhase === 'stacking' ? `${(deckCount - 1 - offset) * 80}ms` : '0ms',
+                          }}
+                        >
+                          <CardBack url={box.cardBackUrl} />
+                        </div>
+                      </div>
+                    ));
+                  })()}
                 </div>
-                
-                {/* Coin value */}
-                <div className="mt-2 flex items-center gap-2 px-5 py-2 rounded-xl bg-white/[0.04] border border-white/[0.08]">
-                  <Coins className="h-5 w-5 text-amber-400" />
-                  <span className="text-lg font-bold text-white">
-                    {currentReveal.card.coinValue?.toFixed(2)} coins
-                  </span>
+              )}
+
+              {/* Revealed card — full 3D flip: back → face */}
+              {deckPhase === 'revealed' && currentReveal?.card && (() => {
+                const rarityGlow = getRarityGlow(currentReveal.card.rarity);
+                const fx = getRarityEffects(rarityGlow.lindwurm);
+                const shimmerBg = `linear-gradient(105deg, transparent, ${rarityGlow.glowColor.replace('1)', '0.4)')}, transparent)`;
+                return (
+                  <>
+                    {/* Pulsing glow halo (behind card, first in DOM) */}
+                    {fx.glowClass && (
+                      <div className={`absolute inset-0 rounded-xl pointer-events-none ${fx.glowClass}`} />
+                    )}
+
+                    {/* 3D flip card */}
+                    <div className="absolute inset-0" style={{ perspective: '900px' }}>
+                      <div className="deck-flip-full absolute inset-0" style={{ transformStyle: 'preserve-3d' }}>
+                        {/* Front face: card back */}
+                        <div
+                          className="absolute inset-0"
+                          style={{ backfaceVisibility: 'hidden' }}
+                        >
+                          <CardBack url={box.cardBackUrl} />
+                        </div>
+
+                        {/* Back face: card image */}
+                        <div
+                          className="absolute inset-0 rounded-xl overflow-hidden border"
+                          style={{
+                            backfaceVisibility: 'hidden',
+                            transform: 'rotateY(180deg)',
+                            borderColor: rarityGlow.glowColor,
+                            boxShadow: `0 0 40px 10px ${rarityGlow.glowColor.replace('1)', '0.4)')}, 0 25px 60px rgba(0,0,0,0.7)`,
+                          }}
+                        >
+                          {currentReveal.card.imageUrlGatherer ? (
+                            <Image src={currentReveal.card.imageUrlGatherer} alt={currentReveal.card.name} fill className="object-contain" unoptimized />
+                          ) : (
+                            <div className="flex h-full w-full items-center justify-center bg-gray-800 text-gray-500">No Image</div>
+                          )}
+                          {/* Shimmer sweep on card face (rare+) */}
+                          {fx.shimmerDur && (
+                            <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-xl" style={{ zIndex: 10 }}>
+                              <div className="rarity-shimmer-line" style={{ background: shimmerBg, animationDuration: fx.shimmerDur, animationDelay: '0.7s' }} />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Spark particles floating up (epic / legendary) */}
+                    {fx.sparks?.map((s, i) => (
+                      <span
+                        key={i}
+                        className="spark-particle"
+                        style={{
+                          left: `${s.x}%`,
+                          top: `${s.y}%`,
+                          width: `${s.size}px`,
+                          height: `${s.size}px`,
+                          background: rarityGlow.particleColor,
+                          boxShadow: `0 0 ${s.size * 2}px ${s.size}px ${rarityGlow.glowColor.replace('1)', '0.7)')}`,
+                          animationDelay: `${0.7 + s.delay}s`,
+                          animationDuration: `${s.dur}s`,
+                          zIndex: 20,
+                        }}
+                      />
+                    ))}
+                  </>
+                );
+              })()}
+            </div>
+
+            {/* Card info shown on reveal */}
+            {deckPhase === 'revealed' && currentReveal?.card && (() => {
+              const rarityGlow = getRarityGlow(currentReveal.card.rarity);
+              return (
+                <div
+                  className="mt-5 flex flex-col items-center gap-1.5 deck-info-reveal"
+                  style={{ maxWidth: 'min(260px, 65vw)' }}
+                >
+                  <h3 className="text-xl font-bold text-white text-center leading-snug">
+                    {currentReveal.card.name}
+                  </h3>
+                  <div className="flex items-center gap-2 text-sm text-gray-400">
+                    <span>{box.name}</span>
+                    <span className="text-gray-600">·</span>
+                    <span className={`font-semibold ${rarityGlow.text}`}>{currentReveal.card.rarity || 'Common'}</span>
+                  </div>
+                  <div className="mt-1.5 flex items-center gap-2 px-5 py-2 rounded-xl bg-white/[0.04] border border-white/[0.08]">
+                    <Coins className="h-5 w-5 text-amber-400" />
+                    <span className="text-lg font-bold text-white">
+                      {currentReveal.card.coinValue?.toFixed(2)} coins
+                    </span>
+                  </div>
                 </div>
+              );
+            })()}
+
+            {/* Skip button */}
+            <button
+              onClick={handleSkip}
+              className="mt-8 px-6 py-2 rounded-xl text-sm font-medium text-gray-500 hover:text-white border border-gray-800 hover:border-gray-600 transition-all"
+            >
+              Skip
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Summary Overlay */}
+      {deckPhase === 'summary' && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm p-4 overflow-y-auto">
+          <div className="relative flex flex-col items-center w-full max-w-2xl py-8">
+
+            <p className="mb-1 text-xs font-semibold uppercase tracking-[0.2em] text-gray-500">Opening Results</p>
+            <h2 className="text-2xl font-bold text-white mb-6">
+              {quantity} Box{quantity > 1 ? 'es' : ''} · {pulls.length} Card{pulls.length !== 1 ? 's' : ''}
+            </h2>
+
+            {/* Card grid */}
+            <div className={`grid gap-3 w-full mb-8 ${
+              pulls.length === 1 ? 'grid-cols-1 max-w-[140px] mx-auto' :
+              pulls.length === 2 ? 'grid-cols-2 max-w-xs mx-auto' :
+              pulls.length <= 4 ? 'grid-cols-2 sm:grid-cols-4 max-w-md mx-auto' :
+              pulls.length <= 6 ? 'grid-cols-3' :
+              'grid-cols-3 sm:grid-cols-4 md:grid-cols-5'
+            }`}>
+              {pulls.map((pull) => {
+                const rarityGlow = getRarityGlow(pull.card?.rarity);
+                const fx = getRarityEffects(rarityGlow.lindwurm);
+                const isFeatured = pull.id === featuredPullId;
+                const shimmerBg = `linear-gradient(105deg, transparent, ${rarityGlow.glowColor.replace('1)', '0.35)')}, transparent)`;
+                return (
+                  <div key={pull.id} className="relative flex flex-col">
+                    {/* Outer wrapper: no overflow-hidden so sparks + glow bleed out */}
+                    <div className="relative aspect-[63/88] w-full">
+                      {/* Pulsing glow halo (behind card image) */}
+                      {fx.glowClass && (
+                        <div className={`absolute inset-0 rounded-xl pointer-events-none ${fx.glowClass}`} />
+                      )}
+
+                      {/* Card image (overflow-hidden clips content to card shape) */}
+                      <div
+                        className={`absolute inset-0 rounded-xl overflow-hidden border ${
+                          isFeatured ? `${rarityGlow.border} ring-2 ring-amber-400/40` : rarityGlow.border
+                        }`}
+                        style={{
+                          boxShadow: isFeatured
+                            ? `0 0 24px 6px ${rarityGlow.glowColor.replace('1)', '0.5)')}`
+                            : `0 0 12px 2px ${rarityGlow.glowColor.replace('1)', '0.25)')}`,
+                        }}
+                      >
+                        {pull.card?.imageUrlGatherer ? (
+                          <Image src={pull.card.imageUrlGatherer} alt={pull.card.name} fill className="object-cover" unoptimized />
+                        ) : (
+                          <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                            <span className="text-gray-600 text-xs">No Image</span>
+                          </div>
+                        )}
+                        {/* Shimmer sweep (rare+) */}
+                        {fx.shimmerDur && (
+                          <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 10 }}>
+                            <div className="rarity-shimmer-line" style={{ background: shimmerBg, animationDuration: fx.shimmerDur }} />
+                          </div>
+                        )}
+                        <div className="absolute bottom-0 left-0 right-0 px-1.5 py-1 bg-black/70 backdrop-blur-sm" style={{ zIndex: 20 }}>
+                          <p className="text-[10px] text-white truncate">{pull.card?.name}</p>
+                          <p className={`text-[10px] font-semibold ${rarityGlow.text}`}>
+                            {pull.card?.coinValue?.toFixed(2)} coins
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Spark particles (epic / legendary) — outside image div, not clipped */}
+                      {fx.sparks?.map((s, i) => (
+                        <span
+                          key={i}
+                          className="spark-particle"
+                          style={{
+                            left: `${s.x}%`,
+                            top: `${s.y}%`,
+                            width: `${s.size}px`,
+                            height: `${s.size}px`,
+                            background: rarityGlow.particleColor,
+                            boxShadow: `0 0 ${s.size * 2}px ${s.size}px ${rarityGlow.glowColor.replace('1)', '0.7)')}`,
+                            animationDelay: `${s.delay}s`,
+                            animationDuration: `${s.dur}s`,
+                            zIndex: 30,
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Total value */}
+            <div className="flex items-center gap-3 px-8 py-4 rounded-2xl bg-white/[0.04] border border-white/[0.08] mb-6">
+              <Coins className="w-6 h-6 text-amber-400 flex-shrink-0" />
+              <div>
+                <p className="text-xs text-gray-500 uppercase tracking-widest">Total Value</p>
+                <p className="text-2xl font-bold text-white">
+                  {pulls.reduce((sum, p) => sum + (p.card?.coinValue ?? 0), 0).toFixed(2)} coins
+                </p>
               </div>
             </div>
+
+            <button
+              onClick={() => setDeckPhase('idle')}
+              className="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold rounded-xl transition-all hover:scale-105"
+            >
+              Close
+            </button>
           </div>
-        );
-      })()}
+        </div>
+      )}
     </div>
   );
 }

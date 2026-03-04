@@ -8,6 +8,7 @@ const boxUpdateSchema = z.object({
   name: z.string().min(1).optional(),
   description: z.string().min(1).optional(),
   imageUrl: z.string().min(1).optional(),
+  cardBackUrl: z.string().optional().nullable(),
   price: z.number().int().positive().optional(),
   cardsPerPack: z.number().int().positive().optional(),
   isActive: z.boolean().optional(),

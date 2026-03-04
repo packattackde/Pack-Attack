@@ -12,6 +12,7 @@ type Box = {
   name: string;
   description: string;
   imageUrl: string;
+  cardBackUrl?: string | null;
   price: number;
   cardsPerPack: number;
   isActive: boolean;
@@ -26,6 +27,7 @@ export function EditBoxForm({ box, onSave }: { box: Box; onSave?: () => void }) 
     name: box.name,
     description: box.description,
     imageUrl: box.imageUrl,
+    cardBackUrl: box.cardBackUrl ?? '',
     price: box.price.toString(),
     cardsPerPack: box.cardsPerPack.toString(),
     isActive: box.isActive,
@@ -43,6 +45,7 @@ export function EditBoxForm({ box, onSave }: { box: Box; onSave?: () => void }) 
           name: formData.name,
           description: formData.description,
           imageUrl: formData.imageUrl,
+          cardBackUrl: formData.cardBackUrl || null,
           price: parseFloat(formData.price),
           cardsPerPack: parseInt(formData.cardsPerPack),
           isActive: formData.isActive,
@@ -149,6 +152,22 @@ export function EditBoxForm({ box, onSave }: { box: Box; onSave?: () => void }) 
               onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
               className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:border-primary focus:outline-none"
               required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-2 text-white">
+              Card Back Image
+              <span className="ml-2 text-xs text-gray-400 font-normal">
+                (place file in <code className="text-blue-400">public/assets/card-backs/</code> — 630 × 880 px)
+              </span>
+            </label>
+            <input
+              type="text"
+              value={formData.cardBackUrl}
+              onChange={(e) => setFormData({ ...formData, cardBackUrl: e.target.value })}
+              placeholder="e.g. my-card-back.png — leave empty for default"
+              className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:border-primary focus:outline-none placeholder-gray-600"
             />
           </div>
 
