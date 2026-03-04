@@ -34,12 +34,12 @@ export function getStripePublishableKey(): string {
  * Coin packages with Stripe price mapping
  */
 export const COIN_PACKAGES = [
-  { amount: 500, price: 5, priceInCents: 500 },
-  { amount: 1000, price: 10, priceInCents: 1000 },
-  { amount: 2500, price: 25, priceInCents: 2500 },
-  { amount: 5000, price: 50, priceInCents: 5000 },
-  { amount: 10000, price: 100, priceInCents: 10000 },
-  { amount: 25000, price: 250, priceInCents: 25000 },
+  { amount: 25, price: 5, priceInCents: 500 },
+  { amount: 50, price: 10, priceInCents: 1000 },
+  { amount: 125, price: 25, priceInCents: 2500 },
+  { amount: 250, price: 50, priceInCents: 5000 },
+  { amount: 500, price: 100, priceInCents: 10000 },
+  { amount: 1250, price: 250, priceInCents: 25000 },
 ];
 
 /**

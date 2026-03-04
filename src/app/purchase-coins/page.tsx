@@ -39,7 +39,7 @@ type CoinPackage = {
 
 const coinPackages: CoinPackage[] = [
   { 
-    amount: 500, 
+    amount: 25, 
     price: 5, 
     icon: Coins,
     gradient: 'from-slate-500 to-slate-600',
@@ -47,7 +47,7 @@ const coinPackages: CoinPackage[] = [
     label: 'Starter',
   },
   { 
-    amount: 1000, 
+    amount: 50, 
     price: 10, 
     icon: Star,
     gradient: 'from-blue-500 to-blue-600',
@@ -55,7 +55,7 @@ const coinPackages: CoinPackage[] = [
     label: 'Basic',
   },
   { 
-    amount: 2500, 
+    amount: 125, 
     price: 25, 
     popular: true,
     icon: Zap,
@@ -64,7 +64,7 @@ const coinPackages: CoinPackage[] = [
     label: 'Popular',
   },
   { 
-    amount: 5000, 
+    amount: 250, 
     price: 50, 
     icon: Flame,
     gradient: 'from-orange-500 to-red-500',
@@ -72,7 +72,7 @@ const coinPackages: CoinPackage[] = [
     label: 'Pro',
   },
   { 
-    amount: 10000, 
+    amount: 500, 
     price: 100, 
     bestValue: true,
     icon: Crown,
@@ -81,7 +81,7 @@ const coinPackages: CoinPackage[] = [
     label: 'Premium',
   },
   { 
-    amount: 25000, 
+    amount: 1250, 
     price: 250, 
     icon: Rocket,
     gradient: 'from-emerald-500 to-teal-500',
