@@ -34,7 +34,8 @@ type Order = {
   shopNotes: string | null;
   createdAt: string;
   user: { id: string; email: string; name: string | null };
-  box: { id: string; name: string; imageUrl: string };
+  sourceOrderId: string | null;
+  box: { id: string; name: string; imageUrl: string } | null;
   shop: { id: string; name: string };
 };
 

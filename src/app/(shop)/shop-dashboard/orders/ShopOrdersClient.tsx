@@ -33,9 +33,10 @@ type Order = {
   trackingUrl: string | null;
   notes: string | null;
   shopNotes: string | null;
+  sourceOrderId: string | null;
   createdAt: string;
   user: { id: string; email: string; name: string | null };
-  box: { id: string; name: string; imageUrl: string };
+  box: { id: string; name: string; imageUrl: string } | null;
   shop: { id: string; name: string };
 };
 
@@ -249,7 +250,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                         </div>
                         <p className="font-semibold text-white truncate max-w-[200px]">{order.cardName}</p>
                         <p className="text-sm text-gray-400 truncate">
-                          {order.user.name || order.user.email} • {order.box.name}
+                          {order.user.name || order.user.email}{order.box ? ` • ${order.box.name}` : order.sourceOrderId ? ' • Admin Assigned' : ''}
                         </p>
                       </div>
                     </div>
@@ -355,7 +356,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                             <p className="text-sm text-gray-400">Rarity: {order.cardRarity}</p>
                           )}
                           <p className="text-sm text-amber-400 mt-1">{order.cardValue.toFixed(2)} coins</p>
-                          <p className="text-xs text-gray-500 mt-1">From: {order.box.name}</p>
+                          <p className="text-xs text-gray-500 mt-1">From: {order.box?.name || 'Admin Assigned Order'}</p>
                         </div>
                       </div>
                     </div>

@@ -663,12 +663,12 @@ enum ShopOrderStatus {
 model ShopBoxOrder {
   id              String                @id @default(cuid())
   orderNumber     String                @unique @default(cuid())
-  // The shop that created the box (fulfills the order)
+  // The shop that fulfills the order
   shopId          String
   shop            Shop                  @relation(fields: [shopId], references: [id])
-  // The box that was opened
-  boxId           String
-  box             Box                   @relation(fields: [boxId], references: [id])
+  // The box that was opened (null for admin-assigned orders)
+  boxId           String?
+  box             Box?                  @relation(fields: [boxId], references: [id])
   // The user who placed the order
   userId          String
   user            User                  @relation(fields: [userId], references: [id])
@@ -693,6 +693,9 @@ model ShopBoxOrder {
   trackingUrl     String?
   notes           String?
   shopNotes       String? // Internal notes from shop
+  // Link to original platform Order (for admin-assigned orders)
+  sourceOrderId   String?
+  sourceItemId    String?               @unique
   createdAt       DateTime              @default(now())
   updatedAt       DateTime              @updatedAt
 
@@ -701,6 +704,7 @@ model ShopBoxOrder {
   @@index([boxId])
   @@index([status])
   @@index([orderNumber])
+  @@index([sourceOrderId])
   @@index([shopId, status, createdAt]) // Shop dashboard queries
 }
 

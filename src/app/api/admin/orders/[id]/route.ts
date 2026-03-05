@@ -95,10 +95,8 @@ export async function PATCH(
     const body = await request.json();
     const { status, assignedShopId, trackingNumber, trackingUrl, notes } = body;
 
-    // Build update data
     const updateData: any = {};
 
-    // Handle status update
     if (status) {
       const validStatuses = ['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
       if (!validStatuses.includes(status)) {
@@ -107,26 +105,6 @@ export async function PATCH(
       updateData.status = status;
     }
 
-    // Handle shop assignment
-    if (assignedShopId !== undefined) {
-      if (assignedShopId === null || assignedShopId === '') {
-        // Unassign from shop
-        updateData.assignedShopId = null;
-        updateData.assignedAt = null;
-      } else {
-        // Verify shop exists
-        const shop = await prisma.shop.findUnique({
-          where: { id: assignedShopId },
-        });
-        if (!shop) {
-          return NextResponse.json({ error: 'Shop not found' }, { status: 404 });
-        }
-        updateData.assignedShopId = assignedShopId;
-        updateData.assignedAt = new Date();
-      }
-    }
-
-    // Handle tracking info
     if (trackingNumber !== undefined) {
       updateData.trackingNumber = trackingNumber || null;
     }
@@ -137,33 +115,89 @@ export async function PATCH(
       updateData.notes = notes || null;
     }
 
-    const order = await prisma.order.update({
+    // Handle shop assignment — creates ShopBoxOrder entries so the shop sees them as normal orders
+    if (assignedShopId !== undefined) {
+      const existingOrder = await prisma.order.findUnique({
+        where: { id },
+        include: { items: true },
+      });
+
+      if (!existingOrder) {
+        return NextResponse.json({ error: 'Order not found' }, { status: 404 });
+      }
+
+      if (assignedShopId === null || assignedShopId === '') {
+        // Unassign: remove ShopBoxOrder entries created from this order
+        await prisma.$transaction([
+          prisma.shopBoxOrder.deleteMany({ where: { sourceOrderId: id } }),
+          prisma.order.update({
+            where: { id },
+            data: { ...updateData, assignedShopId: null, assignedAt: null },
+          }),
+        ]);
+      } else {
+        const shop = await prisma.shop.findUnique({ where: { id: assignedShopId } });
+        if (!shop) {
+          return NextResponse.json({ error: 'Shop not found' }, { status: 404 });
+        }
+
+        // Remove any previous ShopBoxOrder entries if re-assigning to a different shop
+        await prisma.shopBoxOrder.deleteMany({ where: { sourceOrderId: id } });
+
+        // Create one ShopBoxOrder per OrderItem — the shop sees each card as a separate order line
+        const shopBoxOrders = existingOrder.items.map((item) => ({
+          shopId: assignedShopId,
+          userId: existingOrder.userId,
+          status: 'PENDING' as const,
+          cardName: item.cardName,
+          cardImage: item.cardImage,
+          cardValue: item.coinValue,
+          shippingName: existingOrder.shippingName,
+          shippingEmail: existingOrder.shippingEmail,
+          shippingAddress: existingOrder.shippingAddress,
+          shippingCity: existingOrder.shippingCity,
+          shippingZip: existingOrder.shippingZip,
+          shippingCountry: existingOrder.shippingCountry,
+          shippingMethod: existingOrder.shippingMethod,
+          shippingCost: existingOrder.shippingCost,
+          notes: existingOrder.notes,
+          sourceOrderId: id,
+          sourceItemId: item.id,
+        }));
+
+        await prisma.$transaction([
+          ...shopBoxOrders.map((data) =>
+            prisma.shopBoxOrder.create({ data })
+          ),
+          prisma.order.update({
+            where: { id },
+            data: { ...updateData, assignedShopId, assignedAt: new Date() },
+          }),
+        ]);
+      }
+    } else if (Object.keys(updateData).length > 0) {
+      await prisma.order.update({ where: { id }, data: updateData });
+    }
+
+    // Re-fetch the updated order
+    const order = await prisma.order.findUnique({
       where: { id },
-      data: updateData,
       include: {
-        user: {
-          select: {
-            id: true,
-            email: true,
-            name: true,
-          },
-        },
+        user: { select: { id: true, email: true, name: true } },
         items: true,
         assignedShop: {
           select: {
             id: true,
             name: true,
-            owner: {
-              select: {
-                id: true,
-                email: true,
-                name: true,
-              },
-            },
+            owner: { select: { id: true, email: true, name: true } },
           },
         },
       },
     });
+
+    if (!order) {
+      return NextResponse.json({ error: 'Order not found' }, { status: 404 });
+    }
 
     return NextResponse.json({
       success: true,

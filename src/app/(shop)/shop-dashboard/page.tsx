@@ -437,7 +437,7 @@ export default async function ShopDashboard({
                     <div>
                       <p className="font-medium text-white truncate max-w-[200px]">{order.cardName}</p>
                       <p className="text-sm text-gray-400">
-                        {order.user.name || order.user.email} • {order.box.name}
+                        {order.user.name || order.user.email}{order.box ? ` • ${order.box.name}` : ' • Admin Assigned'}
                       </p>
                     </div>
                   </div>
