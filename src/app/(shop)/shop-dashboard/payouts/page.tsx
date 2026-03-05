@@ -7,7 +7,12 @@ import { PayoutsClient } from './PayoutsClient';
 
 const COIN_TO_EURO_RATE = 5;
 
-export default async function ShopPayoutsPage() {
+export default async function ShopPayoutsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ shopId?: string }>;
+}) {
+  const { shopId: queryShopId } = await searchParams;
   const session = await getCurrentSession();
   if (!session?.user?.email) redirect('/login');
 
@@ -16,17 +21,27 @@ export default async function ShopPayoutsPage() {
     include: { shop: true },
   });
 
-  if (!user || user.role !== 'SHOP_OWNER' || !user.shop) {
-    redirect('/shop-dashboard');
+  if (!user || (user.role !== 'ADMIN' && user.role !== 'SHOP_OWNER')) {
+    redirect('/dashboard');
   }
 
-  const [payouts, shop] = await Promise.all([
+  const isAdmin = user.role === 'ADMIN';
+
+  let targetShop: { id: string; name: string } | null = null;
+  if (isAdmin && queryShopId) {
+    targetShop = await prisma.shop.findUnique({ where: { id: queryShopId }, select: { id: true, name: true } });
+  }
+
+  const shop = targetShop || user.shop;
+  if (!shop) redirect('/shop-dashboard');
+
+  const [payouts, shopData] = await Promise.all([
     prisma.shopPayout.findMany({
-      where: { shopId: user.shop.id },
+      where: { shopId: shop.id },
       orderBy: { createdAt: 'desc' },
     }),
     prisma.shop.findUnique({
-      where: { id: user.shop.id },
+      where: { id: shop.id },
       select: { coinBalance: true },
     }),
   ]);
@@ -40,6 +55,8 @@ export default async function ShopPayoutsPage() {
     updatedAt: p.updatedAt.toISOString(),
   }));
 
+  const backHref = isAdmin && queryShopId ? `/shop-dashboard?shopId=${queryShopId}` : '/shop-dashboard';
+
   return (
     <div className="min-h-screen font-display">
       <div className="fixed inset-0 bg-grid opacity-30" />
@@ -49,7 +66,7 @@ export default async function ShopPayoutsPage() {
       <div className="relative container py-8 md:py-12">
         <div className="mb-8">
           <Link
-            href="/shop-dashboard"
+            href={backHref}
             className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-4"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -58,7 +75,7 @@ export default async function ShopPayoutsPage() {
 
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass text-sm mb-3">
             <Store className="w-4 h-4 text-emerald-400" />
-            <span className="text-gray-300">{user.shop.name}</span>
+            <span className="text-gray-300">{isAdmin && targetShop ? `Admin → ${shop.name}` : shop.name}</span>
           </div>
 
           <h1 className="text-3xl md:text-4xl font-bold mb-2 font-heading">
@@ -70,7 +87,7 @@ export default async function ShopPayoutsPage() {
 
         <PayoutsClient
           initialPayouts={serializedPayouts}
-          coinBalance={Number(shop?.coinBalance || 0)}
+          coinBalance={Number(shopData?.coinBalance || 0)}
           rate={COIN_TO_EURO_RATE}
         />
       </div>

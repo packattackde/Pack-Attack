@@ -400,7 +400,7 @@ export default async function ShopDashboard({
 
           {/* Payouts */}
           <Link 
-            href="/shop-dashboard/payouts" 
+            href={viewingSpecificShop ? `/shop-dashboard/payouts?shopId=${shop?.id}` : '/shop-dashboard/payouts'} 
             className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-amber-500/50 transition-all group relative overflow-hidden"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
