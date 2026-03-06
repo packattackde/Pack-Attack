@@ -2,7 +2,7 @@
  * Battle Auto-Start Scheduler
  * 
  * This module runs a cron job that checks for battles that have been full
- * for 30 minutes and automatically starts them.
+ * for 5 minutes and automatically starts them.
  * 
  * It runs every minute and calls the /api/battles/auto-start endpoint.
  */

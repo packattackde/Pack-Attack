@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma, withRetry } from '@/lib/prisma';
 import { awardXp } from '@/lib/level';
 
-// This endpoint checks for battles that have been full for 30 minutes
+// This endpoint checks for battles that have been full for 5 minutes
 // and automatically starts them if all players haven't pressed start
 export async function POST(request: Request) {
   try {
@@ -16,9 +16,9 @@ export async function POST(request: Request) {
 
     // Find battles that are:
     // 1. Still in WAITING status
-    // 2. Have been full for at least 30 minutes (OR created 30+ mins ago if fullAt not set)
+    // 2. Have been full for at least 5 minutes (OR created 5+ mins ago if fullAt not set)
     // 3. Have all participants joined
-    const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000);
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
 
     // Get ALL waiting battles and filter by full status
     const allWaitingBattles = await withRetry(
@@ -38,16 +38,13 @@ export async function POST(request: Request) {
       'auto-start:findBattles'
     );
 
-    // Filter to only FULL battles that have been waiting 30+ minutes
+    // Filter to only FULL battles that have been waiting 5+ minutes
     const battlesToStart = allWaitingBattles.filter(battle => {
-      // Must be full
       if (battle.participants.length < battle.maxParticipants) {
         return false;
       }
-      
-      // Check if 30 minutes have passed since fullAt OR createdAt (fallback)
       const timeToCheck = battle.fullAt || battle.createdAt;
-      return timeToCheck <= thirtyMinutesAgo;
+      return timeToCheck <= fiveMinutesAgo;
     });
 
     console.log(`[AUTO-START] Found ${battlesToStart.length} battles to auto-start`);
@@ -77,7 +74,7 @@ export async function POST(request: Request) {
         results.push({
           battleId: battle.id,
           status: 'started',
-          message: 'Battle auto-started after 30 minutes',
+          message: 'Battle auto-started after 5 minutes',
         });
 
         console.log(`[AUTO-START] Successfully started battle ${battle.id}`);
