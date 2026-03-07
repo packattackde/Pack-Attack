@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { revalidatePath } from 'next/cache';
+import { invalidateBoxCache } from '@/lib/cache';
 
 // GET - Get a specific box
 export async function GET(
@@ -94,6 +96,10 @@ export async function PATCH(
       data: updateData,
     });
 
+    invalidateBoxCache(id);
+    revalidatePath('/');
+    revalidatePath('/boxes');
+
     return NextResponse.json({ success: true, box });
   } catch (error) {
     console.error('Error updating box:', error);
@@ -133,6 +139,10 @@ export async function DELETE(
     }
 
     await prisma.box.delete({ where: { id } });
+
+    invalidateBoxCache(id);
+    revalidatePath('/');
+    revalidatePath('/boxes');
 
     return NextResponse.json({ success: true });
   } catch (error) {

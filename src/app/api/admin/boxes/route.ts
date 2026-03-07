@@ -3,6 +3,7 @@ import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
+import { invalidateBoxCache } from '@/lib/cache';
 
 const boxSchema = z.object({
   name: z.string().min(1),
@@ -43,7 +44,8 @@ export async function POST(request: Request) {
       },
     });
 
-    // Revalidate cache to update pages immediately
+    invalidateBoxCache();
+    revalidatePath('/');
     revalidatePath('/boxes');
     revalidatePath('/admin/boxes');
 

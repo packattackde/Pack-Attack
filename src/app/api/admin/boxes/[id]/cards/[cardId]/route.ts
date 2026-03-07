@@ -3,6 +3,7 @@ import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
+import { invalidateBoxCache } from '@/lib/cache';
 
 const updateCardSchema = z.object({
   pullRate: z.number().min(0.001).max(100).optional(),
@@ -63,7 +64,7 @@ export async function PATCH(
       },
     });
 
-    // Revalidate cache
+    invalidateBoxCache(boxId);
     revalidatePath(`/admin/boxes/${boxId}/edit`);
     revalidatePath(`/admin/boxes`);
     revalidatePath(`/boxes`);
@@ -131,7 +132,7 @@ export async function DELETE(
       where: { id: cardId },
     });
 
-    // Revalidate cache
+    invalidateBoxCache(boxId);
     revalidatePath(`/admin/boxes/${boxId}/edit`);
     revalidatePath(`/admin/boxes`);
     revalidatePath(`/boxes`);

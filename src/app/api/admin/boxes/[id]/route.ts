@@ -3,6 +3,7 @@ import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
+import { invalidateBoxCache } from '@/lib/cache';
 
 const boxUpdateSchema = z.object({
   name: z.string().min(1).optional(),
@@ -42,7 +43,8 @@ export async function PATCH(
       data,
     });
 
-    // Revalidate cache to update pages immediately
+    invalidateBoxCache(id);
+    revalidatePath('/');
     revalidatePath('/boxes');
     revalidatePath('/admin/boxes');
     revalidatePath(`/admin/boxes/${id}/edit`);
@@ -99,7 +101,8 @@ export async function DELETE(
       where: { id },
     });
 
-    // Revalidate cache to update pages immediately
+    invalidateBoxCache(id);
+    revalidatePath('/');
     revalidatePath('/boxes');
     revalidatePath('/admin/boxes');
 
