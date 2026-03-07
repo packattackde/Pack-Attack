@@ -2,10 +2,10 @@ module.exports = {
   apps: [
     {
       name: 'packattack',
-      script: 'npm',
-      args: 'start',
+      script: 'node_modules/next/dist/bin/next',
+      args: 'start -p 3000',
       cwd: '/var/www/packattack/app',
-      
+
       // ================================================
       // RESTART SETTINGS - Prevent cascade failure loops
       // ================================================
@@ -13,22 +13,22 @@ module.exports = {
       max_restarts: 10,           // Limit restarts within time window
       min_uptime: '30s',          // Consider stable after 30s (faster recovery)
       restart_delay: 5000,        // Wait 5s between restarts (prevents rapid cycling)
-      
+
       // Exponential backoff: starts at 100ms, doubles each time, caps at 15s
       // This prevents rapid restart loops that can cause 400+ restarts
       exp_backoff_restart_delay: 100,
-      
+
       // ================================================
       // SCHEDULED RESTART - Prevent memory buildup
       // ================================================
       // Restart daily at 4:00 AM UTC to clear any accumulated memory
       cron_restart: '0 4 * * *',
-      
+
       // ================================================
       // MEMORY MANAGEMENT - Aggressive leak prevention
       // ================================================
       max_memory_restart: '600M', // Restart early at 600MB to prevent runaway growth
-      
+
       // ================================================
       // ENVIRONMENT
       // ================================================
@@ -44,7 +44,7 @@ module.exports = {
         // Disable unnecessary telemetry that may cause network errors
         NEXT_TELEMETRY_DISABLED: '1',
       },
-      
+
       // ================================================
       // LOGGING - Essential for debugging
       // ================================================
@@ -53,21 +53,21 @@ module.exports = {
       out_file: '/var/log/pm2/packattack-out.log',
       merge_logs: true,
       log_type: 'json',
-      
+
       // ================================================
       // GRACEFUL SHUTDOWN - Clean database connections
       // ================================================
       kill_timeout: 15000,        // Give 15s for cleanup
-      wait_ready: true,
+      wait_ready: false,          // Next.js does not emit PM2 ready IPC
       listen_timeout: 20000,      // Allow 20s startup time
-      shutdown_with_message: true,
-      
+      shutdown_with_message: false,
+
       // ================================================
       // PROCESS MONITORING
       // ================================================
       instances: 1,
       exec_mode: 'fork',
-      
+
       // ================================================
       // STABILITY PROTECTION
       // ================================================
@@ -92,5 +92,3 @@ module.exports = {
     },
   },
 };
-
-

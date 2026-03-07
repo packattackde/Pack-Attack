@@ -43,8 +43,9 @@ export function startLevelRewardScheduler() {
 }
 
 // If running this file directly (for standalone scheduler process)
-if (require.main === module) {
+if (typeof require !== 'undefined' && typeof module !== 'undefined' && require.main === module) {
   console.log('Starting standalone level reward scheduler...');
   startLevelRewardScheduler();
   console.log('Scheduler is now running. Press Ctrl+C to stop.');
 }
+

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
-import { Package, Swords, Settings, LogIn, LogOut, User, ShoppingCart, Coins, History, Trophy, Menu, X, Store, Zap } from 'lucide-react';
+import { Package, Swords, Settings, LogIn, LogOut, User, ShoppingCart, Coins, History, Trophy, Menu, X, Store, Zap, MessageSquare } from 'lucide-react';
 import { useCallback, useEffect, useState, useMemo, useRef } from 'react';
 import { subscribeToCoinBalanceUpdates } from '@/lib/coin-events';
 import { usePathname } from 'next/navigation';
@@ -169,12 +169,14 @@ export function Navigation() {
     requiresAuth: boolean;
     adminOnly?: boolean;
     shopOrAdmin?: boolean;
+    hideForAdmin?: boolean;
   }> = [
     { href: '/boxes', icon: Package, label: 'Boxes', requiresAuth: false },
     { href: '/battles', icon: Swords, label: 'Battles', requiresAuth: false },
     { href: '/leaderboard', icon: Trophy, label: 'Leaderboard', requiresAuth: false },
     { href: '/collection', icon: Package, label: 'Collection', requiresAuth: true },
     { href: '/sales-history', icon: History, label: 'Sales History', requiresAuth: true },
+    { href: '/feedback', icon: MessageSquare, label: 'Feedback', requiresAuth: false, hideForAdmin: true },
     { href: '/shop-dashboard', icon: Store, label: 'Shop Dashboard', requiresAuth: true, shopOrAdmin: true },
     { href: '/admin', icon: Settings, label: 'Admin', requiresAuth: true, adminOnly: true },
   ];
@@ -184,6 +186,7 @@ export function Navigation() {
     return navLinks.filter(link => {
       if (link.adminOnly && session?.user?.role !== 'ADMIN') return false;
       if (link.shopOrAdmin && session?.user?.role !== 'ADMIN' && session?.user?.role !== 'SHOP_OWNER') return false;
+      if (link.hideForAdmin && session?.user?.role === 'ADMIN') return false;
       if (link.requiresAuth && !session) return false;
       return true;
     });
@@ -205,7 +208,13 @@ export function Navigation() {
         {/* Desktop Navigation Links */}
         <div className="hidden lg:flex items-center gap-1 flex-1">
           {filteredLinks.map((link) => {
-            const isActive = pathname === link.href || pathname?.startsWith(link.href + '/');
+            // Check if a more specific sibling link matches — avoid parent highlighting child routes
+            const hasMoreSpecificMatch = filteredLinks.some(
+              (other) => other.href !== link.href && other.href.startsWith(link.href + '/') && pathname?.startsWith(other.href)
+            );
+            const isActive = hasMoreSpecificMatch
+              ? false
+              : pathname === link.href || pathname?.startsWith(link.href + '/');
             return (
               <Link
                 key={link.href}
@@ -347,7 +356,7 @@ export function Navigation() {
           mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
         style={{
-          top: navRef.current ? `${navRef.current.offsetHeight}px` : '64px'
+          top: '64px'
         }}
         role="dialog"
         aria-modal="true"
@@ -357,7 +366,12 @@ export function Navigation() {
           {/* Navigation Links */}
           <div className="flex-1 px-3 py-4 space-y-0.5">
             {filteredLinks.map((link) => {
-              const isActive = pathname === link.href || pathname?.startsWith(link.href + '/');
+              const hasMoreSpecificMatch = filteredLinks.some(
+                (other) => other.href !== link.href && other.href.startsWith(link.href + '/') && pathname?.startsWith(other.href)
+              );
+              const isActive = hasMoreSpecificMatch
+                ? false
+                : pathname === link.href || pathname?.startsWith(link.href + '/');
               return (
                 <Link
                   key={link.href}

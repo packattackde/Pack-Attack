@@ -2,8 +2,9 @@ module.exports = {
   apps: [
     {
       name: 'battle-auto-start-scheduler',
-      script: 'tsx',
-      args: 'scripts/check-battle-auto-start.ts',
+      script: 'npm',
+      args: 'run check-auto-start',
+      cwd: '/var/www/packattack/app',
       cron_restart: '* * * * *', // Run every minute
       autorestart: false, // Don't restart automatically (cron will handle it)
       watch: false,
@@ -15,3 +16,4 @@ module.exports = {
     },
   ],
 };
+

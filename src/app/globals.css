@@ -449,14 +449,16 @@ select {
   font: inherit;
 }
 
-/* Remove default button styles */
-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
+/* Remove default button styles - wrapped in @layer base so Tailwind utilities can override */
+@layer base {
+  button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
 }
 
 /* Make sure textareas without a rows attribute are not tiny */

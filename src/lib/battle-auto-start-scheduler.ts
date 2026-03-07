@@ -47,8 +47,9 @@ export function startBattleAutoStartScheduler() {
 }
 
 // If running this file directly (for standalone scheduler process)
-if (require.main === module) {
+if (typeof require !== 'undefined' && typeof module !== 'undefined' && require.main === module) {
   console.log('Starting standalone battle auto-start scheduler...');
   startBattleAutoStartScheduler();
   console.log('Scheduler is now running. Press Ctrl+C to stop.');
 }
+

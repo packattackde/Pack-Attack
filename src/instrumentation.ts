@@ -150,11 +150,25 @@ export async function register() {
     console.log('[Server] Node.js version:', process.version);
     console.log('[Server] Environment:', process.env.NODE_ENV);
 
-    // Start schedulers
-    const { startBattleAutoStartScheduler } = await import('@/lib/battle-auto-start-scheduler');
-    startBattleAutoStartScheduler();
+    // Start schedulers (guarded so startup failures don't crash the web app)
+    if (process.env.ENABLE_BATTLE_SCHEDULER_IN_APP === 'true') {
+      try {
+        const { startBattleAutoStartScheduler } = await import('@/lib/battle-auto-start-scheduler');
+        startBattleAutoStartScheduler();
+      } catch (error) {
+        console.error('[SCHEDULER] Failed to start in-app battle auto-start scheduler:', error);
+      }
+    } else {
+      console.log('[SCHEDULER] In-app battle auto-start scheduler disabled (using PM2 job)');
+    }
 
-    const { startLevelRewardScheduler } = await import('@/lib/level-reward-scheduler');
-    startLevelRewardScheduler();
+    try {
+      const { startLevelRewardScheduler } = await import('@/lib/level-reward-scheduler');
+      startLevelRewardScheduler();
+    } catch (error) {
+      console.error('[SCHEDULER] Failed to start level reward scheduler:', error);
+    }
   }
 }
+
+

@@ -106,6 +106,8 @@ const allowedImageDomains = [
 ];
 
 const nextConfig: NextConfig = {
+  // Allow deploy script to build into a fresh directory (avoids root-owned file conflicts)
+  distDir: process.env.NEXT_DIST_DIR || '.next',
   // Pin Turbopack root to this project directory (avoids conflict with parent lockfile)
   turbopack: {
     root: dirname(fileURLToPath(import.meta.url)),

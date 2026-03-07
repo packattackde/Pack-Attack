@@ -59,6 +59,12 @@ model User {
   levelCoinsEarnedThisMonth Int      @default(0)
   levelCoinsPending         Int      @default(0)
   levelCoinsMonthStart      DateTime @default(now())
+  // Feedback relations
+  feedbacks           Feedback[]          @relation("FeedbackAuthor")
+  claimedFeedbacks    Feedback[]          @relation("FeedbackClaimer")
+  feedbackMessages    FeedbackMessage[]   @relation("FeedbackMessageAuthor")
+  assignedFeedbacks   Feedback[]          @relation("FeedbackAssignee")
+  feedbackActivities  FeedbackActivityLog[] @relation("FeedbackActivityActor")
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
 
@@ -853,4 +859,114 @@ model UpsellItem {
   cartItems   CartUpsellItem[]
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
+}
+
+// ============================================
+// FEEDBACK SYSTEM
+// ============================================
+
+model Feedback {
+  id              String           @id @default(cuid())
+  userId          String?
+  user            User?            @relation("FeedbackAuthor", fields: [userId], references: [id], onDelete: SetNull)
+  email           String?
+  category        FeedbackCategory
+  experience      Int?             // Category-specific experience rating 1-5 (replaces overall rating)
+  subject         String
+  message         String           @db.Text
+  status          FeedbackStatus   @default(OPEN)
+  priority        FeedbackPriority @default(MEDIUM)
+  adminNotes      String?          @db.Text
+  userAgent       String?
+  // Claim system - admin who claims responsibility
+  claimedById     String?
+  claimedBy       User?            @relation("FeedbackClaimer", fields: [claimedById], references: [id], onDelete: SetNull)
+  claimedAt       DateTime?
+  // Assignment system - admin assigned to handle
+  assignedToId    String?
+  assignedTo      User?            @relation("FeedbackAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+  assignedAt      DateTime?
+  // Response & resolution time tracking
+  firstResponseAt DateTime?
+  resolvedAt      DateTime?
+  // Messages (threaded conversation between user and admins)
+  messages        FeedbackMessage[]
+  // Activity audit log
+  activityLog     FeedbackActivityLog[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([category])
+  @@index([status])
+  @@index([userId])
+  @@index([claimedById])
+  @@index([assignedToId])
+  @@index([priority])
+  @@index([createdAt])
+  @@index([status, createdAt])
+}
+
+model FeedbackMessage {
+  id         String   @id @default(cuid())
+  feedbackId String
+  feedback   Feedback @relation(fields: [feedbackId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User     @relation("FeedbackMessageAuthor", fields: [userId], references: [id], onDelete: Cascade)
+  content    String   @db.Text
+  isAdmin    Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([feedbackId])
+  @@index([feedbackId, createdAt])
+}
+
+model FeedbackActivityLog {
+  id         String                 @id @default(cuid())
+  feedbackId String
+  feedback   Feedback               @relation(fields: [feedbackId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User                   @relation("FeedbackActivityActor", fields: [userId], references: [id], onDelete: Cascade)
+  action     FeedbackActivityAction
+  details    Json?
+  createdAt  DateTime               @default(now())
+
+  @@index([feedbackId])
+  @@index([feedbackId, createdAt])
+  @@index([userId])
+  @@index([action])
+}
+
+enum FeedbackCategory {
+  BUG_REPORT
+  FEATURE_REQUEST
+  GENERAL
+  BATTLE_ISSUE
+  PACK_ISSUE
+  SHOP_ISSUE
+}
+
+enum FeedbackStatus {
+  OPEN
+  CLAIMED
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum FeedbackPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum FeedbackActivityAction {
+  CLAIMED
+  UNCLAIMED
+  STATUS_CHANGED
+  CATEGORY_CHANGED
+  PRIORITY_CHANGED
+  ASSIGNED
+  NOTE_ADDED
+  MESSAGE_SENT
 }

@@ -17,26 +17,56 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /var/www/packattack/app
-            git pull origin main
+
+            # === SUDO DIAGNOSTICS (remove after confirming) ===
+            echo "--- SUDO DIAGNOSTICS ---"
+            echo "Current user: $(whoami)"
+            echo "User ID: $(id)"
+            sudo -n true 2>/dev/null && echo "SUDO: passwordless sudo WORKS" || echo "SUDO: passwordless sudo NOT available"
+            sudo -n -l 2>/dev/null || echo "SUDO: cannot list sudo privileges"
+            echo "--- END DIAGNOSTICS ---"
+
+            # Pull latest code
+            git fetch origin main
+            git reset --hard origin/main
+            git clean -fd
             npm ci
             npx prisma generate
             npx prisma db push --accept-data-loss
-            
+
             # Add CRON_SECRET if not exists
             if ! grep -q "CRON_SECRET" .env; then
               echo "CRON_SECRET=\"$(openssl rand -base64 32)\"" >> .env
             fi
-            
-            npm run build
-            pm2 reload packattack --update-env
-            
-            # Start auto-start scheduler
-            pm2 stop battle-auto-start-scheduler || true
-            pm2 delete battle-auto-start-scheduler || true
-            pm2 start ecosystem.battle-scheduler.config.cjs
+
+            # Build into a fresh directory to avoid root-owned file conflicts
+            rm -rf .next-fresh
+            NEXT_DIST_DIR=.next-fresh npm run build
+
+            # Swap the fresh build into place
+            mv .next ".next.old.$(date +%s)" 2>/dev/null || true
+            mv .next-fresh .next
+
+            # Reload PM2
+            if pm2 reload ecosystem.config.cjs --update-env 2>/dev/null; then
+              echo "PM2 reloaded successfully"
+            else
+              echo "PM2 reload failed, doing fresh start..."
+              pm2 delete packattack 2>/dev/null || true
+              fuser -k 3000/tcp 2>/dev/null || true
+              sleep 3
+              pm2 start ecosystem.config.cjs
+            fi
+
+            if pm2 describe battle-scheduler > /dev/null 2>&1; then
+              pm2 reload ecosystem.battle-scheduler.config.cjs --update-env
+            else
+              pm2 start ecosystem.battle-scheduler.config.cjs
+            fi
+
             pm2 save
-            
+
             # Show status
-            sleep 3
+            sleep 5
             pm2 status
-            echo "✓ Deployment complete!"
+            echo "✓ Deployment complete"
