@@ -8,7 +8,7 @@ const boxSchema = z.object({
   name: z.string().min(1),
   description: z.string().min(1),
   imageUrl: z.string().min(1), // Allow any string, not just URLs (some APIs return relative paths)
-  price: z.number().int().positive(),
+  price: z.number().positive(),
   cardsPerPack: z.number().int().positive(),
   games: z.array(z.enum(['MAGIC_THE_GATHERING', 'ONE_PIECE', 'POKEMON', 'LORCANA', 'YUGIOH', 'FLESH_AND_BLOOD'])).min(1),
 });

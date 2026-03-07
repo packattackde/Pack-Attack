@@ -9,7 +9,7 @@ const boxUpdateSchema = z.object({
   description: z.string().min(1).optional(),
   imageUrl: z.string().min(1).optional(),
   cardBackUrl: z.string().optional().nullable(),
-  price: z.number().int().positive().optional(),
+  price: z.number().positive().optional(),
   cardsPerPack: z.number().int().positive().optional(),
   isActive: z.boolean().optional(),
 });
@@ -151,6 +151,7 @@ export async function GET(
       success: true, 
       box: {
         ...box,
+        price: Number(box.price),
         cards: box.cards.map(card => ({
           ...card,
           pullRate: Number(card.pullRate),
