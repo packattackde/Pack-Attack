@@ -165,18 +165,17 @@ export async function POST() {
 
     const now = new Date();
 
-    // Process all achievements in memory
     for (const achievement of achievements) {
-      const progress = progressMap[achievement.code] || 0;
+      const liveProgress = progressMap[achievement.code] || 0;
       const existingUA = userAchievementMap.get(achievement.id);
-      const isUnlocked = progress >= achievement.requirement;
 
       if (!existingUA) {
-        // Need to create
+        const progress = Math.min(liveProgress, achievement.requirement);
+        const isUnlocked = liveProgress >= achievement.requirement;
         toCreate.push({
           userId: user.id,
           achievementId: achievement.id,
-          progress: Math.min(progress, achievement.requirement),
+          progress,
           unlockedAt: isUnlocked ? now : null,
         });
 
@@ -188,8 +187,8 @@ export async function POST() {
           });
         }
       } else if (!existingUA.unlockedAt) {
-        // Need to update if progress changed
-        const newProgress = Math.min(progress, achievement.requirement);
+        const newProgress = Math.min(Math.max(liveProgress, existingUA.progress), achievement.requirement);
+        const isUnlocked = newProgress >= achievement.requirement;
         if (newProgress !== existingUA.progress || isUnlocked) {
           toUpdate.push({
             id: existingUA.id,

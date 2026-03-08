@@ -130,22 +130,24 @@ export async function GET(request: NextRequest) {
       const updateTime = new Date();
 
       for (const achievement of achievements) {
-        const progress = progressMap[achievement.code] || 0;
+        const liveProgress = progressMap[achievement.code] || 0;
         const existingUA = userAchievementMap.get(achievement.id);
-        const isUnlocked = progress >= achievement.requirement;
 
         if (!existingUA) {
+          const progress = Math.min(liveProgress, achievement.requirement);
+          const isUnlocked = liveProgress >= achievement.requirement;
           toCreate.push({
             userId: user.id,
             achievementId: achievement.id,
-            progress: Math.min(progress, achievement.requirement),
+            progress,
             unlockedAt: isUnlocked ? updateTime : null,
           });
           if (isUnlocked) {
             newlyUnlocked.push({ code: achievement.code, name: achievement.name, coinReward: Number(achievement.coinReward) });
           }
         } else if (!existingUA.unlockedAt) {
-          const newProgress = Math.min(progress, achievement.requirement);
+          const newProgress = Math.min(Math.max(liveProgress, existingUA.progress), achievement.requirement);
+          const isUnlocked = newProgress >= achievement.requirement;
           if (newProgress !== existingUA.progress || isUnlocked) {
             toUpdate.push({ id: existingUA.id, progress: newProgress, unlockedAt: isUnlocked ? updateTime : null });
             if (isUnlocked) {
