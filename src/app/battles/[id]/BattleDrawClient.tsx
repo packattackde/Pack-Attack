@@ -119,7 +119,7 @@ export default function BattleDrawClient({ battle: initialBattle, currentUserId,
 
     const updateCountdown = () => {
       const fullAt = new Date(battle.fullAt);
-      const autoStartAt = new Date(fullAt.getTime() + 30 * 60 * 1000); // 30 minutes after fullAt
+      const autoStartAt = new Date(fullAt.getTime() + 5 * 60 * 1000);
       const now = new Date();
       const msRemaining = autoStartAt.getTime() - now.getTime();
 

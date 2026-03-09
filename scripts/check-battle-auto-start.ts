@@ -2,31 +2,21 @@
 /**
  * Battle Auto-Start Checker
  * 
- * This script checks for battles that have been full for 30 minutes
- * and automatically starts them.
- * 
- * Usage:
- *   tsx scripts/check-battle-auto-start.ts
- * 
- * Can be run with:
- *   - Manual execution
- *   - Cron job (every minute)
- *   - PM2 with cron mode
- *   - Windows Task Scheduler
+ * Checks for full battles waiting 5+ minutes and auto-starts them.
+ * Runs every minute via PM2 cron.
  */
 
 // Load .env file
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
-// Parse .env file manually
 const envPath = join(process.cwd(), '.env');
 try {
   const envContent = readFileSync(envPath, 'utf-8');
   envContent.split('\n').forEach(line => {
     const match = line.match(/^([^=:#]+)=["']?([^"'\r\n]*)["']?$/);
-    if (match && !process.env[match[1]]) {
-      process.env[match[1]] = match[2];
+    if (match) {
+      process.env[match[1].trim()] = match[2].trim();
     }
   });
 } catch (e) {
