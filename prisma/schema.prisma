@@ -53,6 +53,8 @@ model User {
   achievements        UserAchievement[]
   // Chat relations
   chatMessages        ChatMessage[]
+  chatBansReceived    ChatBan[]           @relation("ChatBansReceived")
+  chatBansIssued      ChatBan[]           @relation("ChatBansIssued")
   // Level system
   xp                        Int      @default(0)
   level                     Int      @default(1)
@@ -109,11 +111,13 @@ model TwitchLinkToken {
 
 // Global chat messages
 model ChatMessage {
-  id        String   @id @default(cuid())
-  content   String   @db.VarChar(500)
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
+  id          String    @id @default(cuid())
+  content     String    @db.VarChar(500)
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deletedAt   DateTime?
+  deletedById String?
+  createdAt   DateTime  @default(now())
 
   @@index([createdAt])
   @@index([userId])
@@ -971,4 +975,44 @@ enum FeedbackActivityAction {
   NOTE_ADDED
   MESSAGE_SENT
   MESSAGE_EDITED
+}
+
+// ─── Chat Moderation ─────────────────────────────────────
+
+enum ChatBanType {
+  TIMEOUT
+  BAN
+}
+
+model ChatBan {
+  id          String      @id @default(cuid())
+  userId      String
+  user        User        @relation("ChatBansReceived", fields: [userId], references: [id], onDelete: Cascade)
+  type        ChatBanType
+  reason      String?
+  expiresAt   DateTime?   // null = permanent ban
+  createdById String
+  createdBy   User        @relation("ChatBansIssued", fields: [createdById], references: [id])
+  active      Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+
+  @@index([userId, active])
+  @@index([userId, expiresAt])
+}
+
+model ChatLog {
+  id          String    @id @default(cuid())
+  originalId  String    // ChatMessage.id snapshot (not FK, message may be hard-deleted)
+  content     String    @db.VarChar(500)
+  userId      String
+  userName    String    // snapshot at time of logging
+  userRole    String    // snapshot at time of logging
+  deletedAt   DateTime?
+  deletedById String?
+  deleteReason String?
+  createdAt   DateTime  // original message timestamp
+
+  @@index([createdAt])
+  @@index([userId])
+  @@index([originalId])
 }

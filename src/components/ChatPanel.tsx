@@ -2,21 +2,40 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSession, signIn } from 'next-auth/react';
-import { MessageCircle, X, Send, LogIn, Shield } from 'lucide-react';
+import {
+  MessageCircle,
+  X,
+  Send,
+  LogIn,
+  Shield,
+  Trash2,
+  Clock,
+  Ban,
+  MoreVertical,
+} from 'lucide-react';
 
 interface ChatUser {
   id: string;
   name: string;
   image: string | null;
   isTwitch: boolean;
+  isDiscord?: boolean;
   role: string;
 }
 
 interface ChatMessage {
   id: string;
   content: string;
+  isDeleted?: boolean;
   createdAt: string;
   user: ChatUser;
+}
+
+interface BanStatus {
+  banned: boolean;
+  type: 'TIMEOUT' | 'BAN' | null;
+  expiresAt: string | null;
+  reason: string | null;
 }
 
 // Twitch icon SVG (inline so no external dependency)
@@ -33,6 +52,103 @@ function formatTime(dateStr: string) {
   return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
+// Admin context menu for messages
+function AdminMessageMenu({
+  message,
+  onDelete,
+  onTimeout,
+  onBan,
+}: {
+  message: ChatMessage;
+  onDelete: (id: string) => void;
+  onTimeout: (userId: string, userName: string, duration: string) => void;
+  onBan: (userId: string, userName: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Close on outside click
+  useEffect(() => {
+    if (!open) return;
+    const handleClick = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [open]);
+
+  return (
+    <div className="relative" ref={menuRef}>
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center justify-center w-5 h-5 rounded text-gray-600 hover:text-gray-300 hover:bg-white/[0.06] transition-colors opacity-0 group-hover:opacity-100"
+        aria-label="Message actions"
+      >
+        <MoreVertical className="w-3.5 h-3.5" />
+      </button>
+
+      {open && (
+        <div className="absolute right-0 top-6 z-50 w-44 py-1 rounded-lg bg-gray-900 border border-white/[0.1] shadow-xl shadow-black/40">
+          <button
+            onClick={() => {
+              onDelete(message.id);
+              setOpen(false);
+            }}
+            className="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-gray-300 hover:bg-white/[0.06] hover:text-red-400 transition-colors"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+            Delete message
+          </button>
+          <div className="h-px bg-white/[0.06] my-1" />
+          <button
+            onClick={() => {
+              onTimeout(message.user.id, message.user.name, '1h');
+              setOpen(false);
+            }}
+            className="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-gray-300 hover:bg-white/[0.06] hover:text-yellow-400 transition-colors"
+          >
+            <Clock className="w-3.5 h-3.5" />
+            Timeout 1 hour
+          </button>
+          <button
+            onClick={() => {
+              onTimeout(message.user.id, message.user.name, '1d');
+              setOpen(false);
+            }}
+            className="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-gray-300 hover:bg-white/[0.06] hover:text-yellow-400 transition-colors"
+          >
+            <Clock className="w-3.5 h-3.5" />
+            Timeout 1 day
+          </button>
+          <button
+            onClick={() => {
+              onTimeout(message.user.id, message.user.name, '1w');
+              setOpen(false);
+            }}
+            className="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-gray-300 hover:bg-white/[0.06] hover:text-yellow-400 transition-colors"
+          >
+            <Clock className="w-3.5 h-3.5" />
+            Timeout 1 week
+          </button>
+          <div className="h-px bg-white/[0.06] my-1" />
+          <button
+            onClick={() => {
+              onBan(message.user.id, message.user.name);
+              setOpen(false);
+            }}
+            className="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-red-400 hover:bg-red-500/10 transition-colors"
+          >
+            <Ban className="w-3.5 h-3.5" />
+            Ban permanently
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function ChatPanel() {
   const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
@@ -41,10 +157,29 @@ export function ChatPanel() {
   const [sending, setSending] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const [connected, setConnected] = useState(false);
+  const [filterError, setFilterError] = useState<string | null>(null);
+  const [banStatus, setBanStatus] = useState<BanStatus | null>(null);
+  const [actionFeedback, setActionFeedback] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
   const isAtBottomRef = useRef(true);
+
+  const isAdmin = session?.user && 'role' in session.user && session.user.role === 'ADMIN';
+
+  // Auto-clear filter error after 4 seconds
+  useEffect(() => {
+    if (!filterError) return;
+    const t = setTimeout(() => setFilterError(null), 4000);
+    return () => clearTimeout(t);
+  }, [filterError]);
+
+  // Auto-clear action feedback after 3 seconds
+  useEffect(() => {
+    if (!actionFeedback) return;
+    const t = setTimeout(() => setActionFeedback(null), 3000);
+    return () => clearTimeout(t);
+  }, [actionFeedback]);
 
   // Auto-scroll to bottom when new messages arrive (only if user is at bottom)
   const scrollToBottom = useCallback(() => {
@@ -62,15 +197,18 @@ export function ChatPanel() {
       container.scrollHeight - container.scrollTop - container.clientHeight < threshold;
   }, []);
 
-  // Load initial messages
+  // Load initial messages (with ban status)
   useEffect(() => {
     if (!isOpen) return;
 
-    fetch('/api/chat/messages?limit=50')
+    fetch(`/api/chat/messages?limit=20&banStatus=true`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
           setMessages(data.messages);
+          if (data.banStatus) {
+            setBanStatus(data.banStatus);
+          }
           setTimeout(() => {
             if (messagesEndRef.current) {
               messagesEndRef.current.scrollIntoView();
@@ -107,8 +245,8 @@ export function ChatPanel() {
           // Avoid duplicates
           if (prev.some((m) => m.id === msg.id)) return prev;
           const updated = [...prev, msg];
-          // Keep last 200 messages in memory
-          return updated.slice(-200);
+          // Keep last 20 messages in client memory
+          return updated.slice(-20);
         });
         scrollToBottom();
 
@@ -116,6 +254,20 @@ export function ChatPanel() {
         if (!isAtBottomRef.current) {
           setUnreadCount((c) => c + 1);
         }
+      } catch {
+        // Ignore parse errors
+      }
+    });
+
+    // Handle delete events from admin actions
+    es.addEventListener('delete', (event) => {
+      try {
+        const { id } = JSON.parse(event.data);
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === id ? { ...m, content: '[message deleted]', isDeleted: true } : m,
+          ),
+        );
       } catch {
         // Ignore parse errors
       }
@@ -140,11 +292,71 @@ export function ChatPanel() {
     }
   }, [isOpen, messages]);
 
+  // Admin actions
+  const handleDeleteMessage = async (messageId: string) => {
+    try {
+      const res = await fetch(`/api/chat/messages/${messageId}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) {
+        // Optimistic update (SSE will also broadcast)
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === messageId ? { ...m, content: '[message deleted]', isDeleted: true } : m,
+          ),
+        );
+        setActionFeedback('Message deleted');
+      } else {
+        setActionFeedback(data.error || 'Failed to delete');
+      }
+    } catch {
+      setActionFeedback('Failed to delete message');
+    }
+  };
+
+  const handleTimeoutUser = async (userId: string, userName: string, duration: string) => {
+    try {
+      const res = await fetch('/api/chat/admin/timeout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, duration }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        const labels: Record<string, string> = { '1h': '1 hour', '1d': '1 day', '1w': '1 week' };
+        setActionFeedback(`${userName} timed out for ${labels[duration] || duration}`);
+      } else {
+        setActionFeedback(data.error || 'Failed to timeout');
+      }
+    } catch {
+      setActionFeedback('Failed to timeout user');
+    }
+  };
+
+  const handleBanUser = async (userId: string, userName: string) => {
+    if (!confirm(`Permanently ban ${userName} from chat?`)) return;
+    try {
+      const res = await fetch('/api/chat/admin/ban', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setActionFeedback(`${userName} banned from chat`);
+      } else {
+        setActionFeedback(data.error || 'Failed to ban');
+      }
+    } catch {
+      setActionFeedback('Failed to ban user');
+    }
+  };
+
   // Send message
   const sendMessage = async () => {
     if (!input.trim() || sending) return;
 
     setSending(true);
+    setFilterError(null);
     try {
       const res = await fetch('/api/chat/messages', {
         method: 'POST',
@@ -158,13 +370,15 @@ export function ChatPanel() {
         // Message will arrive via SSE, but add immediately for responsiveness
         setMessages((prev) => {
           if (prev.some((m) => m.id === data.message.id)) return prev;
-          return [...prev, data.message].slice(-200);
+          return [...prev, data.message].slice(-20);
         });
         isAtBottomRef.current = true;
         scrollToBottom();
+      } else if (data.banStatus) {
+        // User got banned/timed out
+        setBanStatus(data.banStatus);
       } else if (data.error) {
-        // Show error briefly (could use toast, but keeping it simple)
-        console.warn('Chat error:', data.error);
+        setFilterError(data.error);
       }
     } catch (error) {
       console.error('Failed to send message:', error);
@@ -177,6 +391,20 @@ export function ChatPanel() {
       e.preventDefault();
       sendMessage();
     }
+  };
+
+  // Format ban expiry for display
+  const formatBanExpiry = (expiresAt: string | null) => {
+    if (!expiresAt) return '';
+    const date = new Date(expiresAt);
+    const now = new Date();
+    const diff = date.getTime() - now.getTime();
+    if (diff <= 0) return 'expired';
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    if (hours > 24) return `${Math.floor(hours / 24)}d ${hours % 24}h`;
+    if (hours > 0) return `${hours}h ${minutes}m`;
+    return `${minutes}m`;
   };
 
   return (
@@ -224,6 +452,13 @@ export function ChatPanel() {
             </button>
           </div>
 
+          {/* Action feedback toast */}
+          {actionFeedback && (
+            <div className="mx-3 mt-2 px-3 py-1.5 rounded-lg bg-purple-500/20 border border-purple-500/30 text-xs text-purple-300 text-center">
+              {actionFeedback}
+            </div>
+          )}
+
           {/* Messages */}
           <div
             ref={messagesContainerRef}
@@ -259,58 +494,109 @@ export function ChatPanel() {
 
                 {/* Message content */}
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-baseline gap-1.5 flex-wrap">
+                  <div className="flex items-center gap-1.5 flex-wrap">
                     {/* Name + badges */}
-                    <span className={`text-xs font-semibold ${
-                      msg.user.role === 'ADMIN'
-                        ? 'text-red-400'
-                        : msg.user.isTwitch
-                        ? 'text-purple-400'
-                        : 'text-blue-400'
-                    }`}>
+                    <span
+                      className={`text-xs font-semibold ${
+                        msg.user.role === 'ADMIN'
+                          ? 'text-red-400'
+                          : msg.user.isTwitch
+                            ? 'text-purple-400'
+                            : 'text-blue-400'
+                      }`}
+                    >
                       {msg.user.name}
                     </span>
                     {msg.user.isTwitch && (
                       <TwitchIcon className="w-3 h-3 text-purple-400 shrink-0 inline-block" />
                     )}
                     {msg.user.role === 'ADMIN' && (
-                      <Shield className="w-3 h-3 text-red-400 shrink-0 inline-block" />
+                      <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-red-500/20 border border-red-500/30">
+                        <Shield className="w-2.5 h-2.5 text-red-400" />
+                        <span className="text-[9px] font-bold text-red-400 uppercase tracking-wider">
+                          Admin
+                        </span>
+                      </span>
                     )}
-                    <span className="text-[10px] text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                    {/* Timestamp — always visible */}
+                    <span className="text-[10px] text-gray-600 ml-auto shrink-0">
                       {formatTime(msg.createdAt)}
                     </span>
+                    {/* Admin context menu */}
+                    {isAdmin && !msg.isDeleted && msg.user.role !== 'ADMIN' && (
+                      <AdminMessageMenu
+                        message={msg}
+                        onDelete={handleDeleteMessage}
+                        onTimeout={handleTimeoutUser}
+                        onBan={handleBanUser}
+                      />
+                    )}
                   </div>
-                  <p className="text-sm text-gray-300 break-words leading-relaxed">
-                    {msg.content}
-                  </p>
+                  {msg.isDeleted ? (
+                    <p className="text-xs text-gray-600 italic leading-relaxed">
+                      [message deleted]
+                    </p>
+                  ) : (
+                    <p className="text-sm text-gray-300 break-words leading-relaxed">
+                      {msg.content}
+                    </p>
+                  )}
                 </div>
               </div>
             ))}
             <div ref={messagesEndRef} />
           </div>
 
+          {/* Filter error toast */}
+          {filterError && (
+            <div className="mx-3 mb-1 px-3 py-1.5 rounded-lg bg-red-500/20 border border-red-500/30 text-xs text-red-300 text-center">
+              {filterError}
+            </div>
+          )}
+
           {/* Input area */}
           <div className="shrink-0 border-t border-white/[0.08] p-3">
             {session ? (
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Type a message..."
-                  maxLength={500}
-                  className="flex-1 h-9 px-3 rounded-lg bg-white/[0.06] border border-white/[0.08] text-sm text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/30 transition-colors"
-                />
-                <button
-                  onClick={sendMessage}
-                  disabled={!input.trim() || sending}
-                  className="flex items-center justify-center w-9 h-9 rounded-lg bg-purple-600 hover:bg-purple-500 disabled:opacity-40 disabled:hover:bg-purple-600 text-white transition-colors"
-                  aria-label="Send message"
-                >
-                  <Send className="w-4 h-4" />
-                </button>
-              </div>
+              banStatus?.banned ? (
+                // User is banned or timed out
+                <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/20">
+                  <Ban className="w-4 h-4 text-red-400 shrink-0" />
+                  <div className="text-xs text-red-300">
+                    {banStatus.type === 'BAN' ? (
+                      <span>You are permanently banned from chat.</span>
+                    ) : (
+                      <span>
+                        Timed out — {formatBanExpiry(banStatus.expiresAt)} remaining
+                      </span>
+                    )}
+                    {banStatus.reason && (
+                      <span className="block text-red-400/70 mt-0.5">
+                        Reason: {banStatus.reason}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Type a message..."
+                    maxLength={500}
+                    className="flex-1 h-9 px-3 rounded-lg bg-white/[0.06] border border-white/[0.08] text-sm text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/30 transition-colors"
+                  />
+                  <button
+                    onClick={sendMessage}
+                    disabled={!input.trim() || sending}
+                    className="flex items-center justify-center w-9 h-9 rounded-lg bg-purple-600 hover:bg-purple-500 disabled:opacity-40 disabled:hover:bg-purple-600 text-white transition-colors"
+                    aria-label="Send message"
+                  >
+                    <Send className="w-4 h-4" />
+                  </button>
+                </div>
+              )
             ) : (
               <div className="flex flex-col gap-2">
                 <p className="text-xs text-gray-500 text-center">Sign in to chat</p>

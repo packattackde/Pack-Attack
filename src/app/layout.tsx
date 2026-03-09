@@ -246,11 +246,9 @@ export default function RootLayout({
             Skip to main content
           </a>
           <Navigation />
-          <main 
-            id="main-content" 
+          <main
+            id="main-content"
             className="safe-area-padding-bottom"
-            // Improve touch scrolling
-            style={{ WebkitOverflowScrolling: 'touch' }}
           >
             {children}
           </main>

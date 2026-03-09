@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
-import { Package, Swords, Users, Mail, ShieldCheck, Coins, TrendingUp, ShoppingCart, Tag, Store, Wallet, MessageSquare } from 'lucide-react';
+import { Package, Swords, Users, Mail, ShieldCheck, Coins, TrendingUp, ShoppingCart, Tag, Store, Wallet, MessageSquare, MessageCircle } from 'lucide-react';
 
 export default async function AdminDashboard() {
   const session = await getCurrentSession();
@@ -172,6 +172,14 @@ export default async function AdminDashboard() {
             </div>
             <h3 className="text-xl font-bold text-white mb-2 group-hover:text-teal-400 transition-colors">Feedback</h3>
             <p className="text-gray-400 text-sm">View and manage user feedback and reports.</p>
+          </Link>
+
+          <Link href="/admin/chat" className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-indigo-500/50 transition-all group">
+            <div className="inline-flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20">
+              <MessageCircle className="w-6 h-6 text-indigo-400" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2 group-hover:text-indigo-400 transition-colors">Chat Moderation</h3>
+            <p className="text-gray-400 text-sm">View chat history, manage bans and timeouts.</p>
           </Link>
         </div>
       </div>

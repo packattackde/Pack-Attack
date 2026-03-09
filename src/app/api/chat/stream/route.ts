@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 export async function GET() {
   const encoder = new TextEncoder();
   let lastMessageTime: Date | null = null;
+  let knownDeletedIds = new Set<string>();
   let closed = false;
 
   const stream = new ReadableStream({
@@ -19,10 +20,11 @@ export async function GET() {
         if (closed) return;
 
         try {
+          // 1. Poll for new messages (exclude soft-deleted)
           const newMessages = await prisma.chatMessage.findMany({
             where: lastMessageTime
-              ? { createdAt: { gt: lastMessageTime } }
-              : {},
+              ? { createdAt: { gt: lastMessageTime }, deletedAt: null }
+              : { deletedAt: null },
             orderBy: { createdAt: 'asc' },
             take: 50,
             include: {
@@ -46,18 +48,40 @@ export async function GET() {
               const data = JSON.stringify({
                 id: msg.id,
                 content: msg.content,
+                isDeleted: false,
                 createdAt: msg.createdAt.toISOString(),
                 user: {
                   id: msg.user.id,
                   name: msg.user.twitchUsername || msg.user.discordUsername || msg.user.name || 'Anonymous',
                   image: msg.user.image,
                   isTwitch: !!msg.user.twitchUsername,
-                  isDiscord: !!msg.user.discordUsername,
+                  isDiscord: !!msg.user.discordUsername && !msg.user.twitchUsername,
                   role: msg.user.role,
                 },
               });
               controller.enqueue(encoder.encode(`event: message\ndata: ${data}\n\n`));
             }
+          }
+
+          // 2. Check for recently deleted messages (soft-deleted within last 10 seconds)
+          const recentlyDeleted = await prisma.chatMessage.findMany({
+            where: {
+              deletedAt: { not: null, gte: new Date(Date.now() - 10000) },
+            },
+            select: { id: true },
+          });
+
+          for (const msg of recentlyDeleted) {
+            if (!knownDeletedIds.has(msg.id)) {
+              knownDeletedIds.add(msg.id);
+              const data = JSON.stringify({ id: msg.id });
+              controller.enqueue(encoder.encode(`event: delete\ndata: ${data}\n\n`));
+            }
+          }
+
+          // Clean up old tracked deletions (keep set manageable)
+          if (knownDeletedIds.size > 200) {
+            knownDeletedIds = new Set([...knownDeletedIds].slice(-100));
           }
 
           // Send heartbeat to keep connection alive
