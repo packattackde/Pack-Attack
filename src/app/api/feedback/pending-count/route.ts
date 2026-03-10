@@ -13,7 +13,7 @@ export async function GET() {
 
     const count = await prisma.feedback.count({
       where: {
-        status: { in: ['OPEN', 'CLAIMED', 'IN_PROGRESS'] },
+        status: 'OPEN',
       },
     });
 
