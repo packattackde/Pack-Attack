@@ -730,15 +730,19 @@ export default function AdminFeedbackPage() {
                           <p className="text-xs text-gray-600 mb-4">No messages yet. Start the conversation.</p>
                         )}
 
-                        <div className="flex gap-2">
-                          <input type="text" value={newMessage} onChange={(e) => setNewMessage(e.target.value)}
-                            onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(fb.id); } }}
-                            placeholder="Type a message to the user..."
-                            className="flex-1 h-10 px-3 rounded-lg bg-white/4 border border-white/8 text-sm text-white placeholder-gray-600 focus:border-teal-500/40 focus:ring-1 focus:ring-teal-500/20 outline-none transition-all" maxLength={2000} />
-                          <button onClick={() => sendMessage(fb.id)} disabled={!newMessage.trim() || sendingMessage}
-                            className="flex items-center justify-center w-10 h-10 rounded-lg bg-teal-500/15 text-teal-400 border border-teal-500/20 hover:bg-teal-500/25 transition-all disabled:opacity-40 disabled:cursor-not-allowed">
-                            {sendingMessage ? <div className="w-4 h-4 border-2 border-teal-400/30 border-t-teal-400 rounded-full animate-spin" /> : <Send className="w-4 h-4" />}
-                          </button>
+                        <div className="flex flex-col gap-1.5">
+                          <div className="flex gap-2 items-end">
+                            <textarea value={newMessage} onChange={(e) => { setNewMessage(e.target.value); const el = e.target; el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 200) + 'px'; }}
+                              onKeyDown={(e) => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); sendMessage(fb.id); } }}
+                              placeholder="Type a message to the user..."
+                              rows={2}
+                              className="flex-1 min-h-[40px] max-h-[200px] px-3 py-2.5 rounded-lg bg-white/4 border border-white/8 text-sm text-white placeholder-gray-600 focus:border-teal-500/40 focus:ring-1 focus:ring-teal-500/20 outline-none transition-all resize-none" maxLength={2000} />
+                            <button onClick={() => sendMessage(fb.id)} disabled={!newMessage.trim() || sendingMessage}
+                              className="flex items-center justify-center w-10 h-10 shrink-0 rounded-lg bg-teal-500/15 text-teal-400 border border-teal-500/20 hover:bg-teal-500/25 transition-all disabled:opacity-40 disabled:cursor-not-allowed">
+                              {sendingMessage ? <div className="w-4 h-4 border-2 border-teal-400/30 border-t-teal-400 rounded-full animate-spin" /> : <Send className="w-4 h-4" />}
+                            </button>
+                          </div>
+                          <span className="text-[10px] text-gray-600 pl-1">Ctrl + Enter to send</span>
                         </div>
                       </div>
 

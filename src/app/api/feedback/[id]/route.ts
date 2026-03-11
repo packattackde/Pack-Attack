@@ -357,25 +357,11 @@ export async function PATCH(
         })
       );
 
-      // Auto-message user when ticket is closed
-      if (status === 'CLOSED' && feedback.userId) {
-        const closeMessage = feedback.category === 'BUG_REPORT'
-          ? 'This bug has been fixed and your ticket is now closed. Thank you for helping us improve Pack Attack! If you enjoy the experience, we\'d love a review on Trustpilot.'
-          : feedback.category === 'FEATURE_REQUEST'
-          ? 'Your feature request has been reviewed and this ticket is now closed. Thanks for sharing your ideas with us! If you enjoy Pack Attack, we\'d appreciate a review on Trustpilot.'
-          : 'Your feedback has been addressed and this ticket is now closed. Thank you for reaching out! If you enjoy your experience, we\'d love a review on Trustpilot.';
-
-        txOps.push(
-          prisma.feedbackMessage.create({
-            data: {
-              feedbackId: id,
-              userId: session.user.id,
-              content: closeMessage,
-              isAdmin: true,
-            },
-          })
-        );
-      }
+      // Auto-message user when ticket is closed (Trustpilot CTA disabled for now)
+      // if (status === 'CLOSED' && feedback.userId) {
+      //   const closeMessage = ...;
+      //   txOps.push(prisma.feedbackMessage.create({ ... }));
+      // }
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
