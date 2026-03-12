@@ -48,6 +48,7 @@ export async function GET(request: Request) {
       where.OR = [
         { email: { contains: search, mode: 'insensitive' } },
         { name: { contains: search, mode: 'insensitive' } },
+        { twitchUsername: { contains: search, mode: 'insensitive' } },
       ];
     }
 
