@@ -113,9 +113,12 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ success: true, admins });
     }
 
+    const excludeStatus = searchParams.get('excludeStatus');
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const where: Record<string, any> = {};
     if (status) where.status = status;
+    else if (excludeStatus) where.status = { not: excludeStatus };
     if (category) where.category = category;
     if (priority) where.priority = priority;
     if (search) {

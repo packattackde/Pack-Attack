@@ -33,6 +33,8 @@ import {
   UserPlus,
   Check,
   History,
+  Archive,
+  Inbox,
 } from 'lucide-react';
 
 // ─── Types ───────────────────────────────────────────────
@@ -160,6 +162,9 @@ function getActivityDescription(activity: ActivityLog): string {
 // ─── Component ───────────────────────────────────────────
 
 export default function AdminFeedbackPage() {
+  const [activeTab, setActiveTab] = useState<'active' | 'archive'>('active');
+  const [activeCount, setActiveCount] = useState(0);
+  const [archiveCount, setArchiveCount] = useState(0);
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -208,10 +213,16 @@ export default function AdminFeedbackPage() {
     setLoading(true);
     try {
       const params = new URLSearchParams({ page: page.toString(), limit: '15', sort: sortOrder });
-      if (filterStatus) params.set('status', filterStatus);
+      if (activeTab === 'archive') {
+        params.set('status', 'CLOSED');
+      } else {
+        if (filterStatus) params.set('status', filterStatus);
+        else params.set('excludeStatus', 'CLOSED');
+      }
       if (filterCategory) params.set('category', filterCategory);
       if (filterPriority) params.set('priority', filterPriority);
       if (debouncedSearch) params.set('search', debouncedSearch);
+
       const res = await fetch(`/api/feedback?${params}`);
       const data = await res.json();
       if (data.success) {
@@ -219,12 +230,27 @@ export default function AdminFeedbackPage() {
         setTotalPages(data.pagination.totalPages);
         setTotal(data.pagination.total);
       }
+
+      // Update count for current tab and fetch count for the other tab
+      if (data.success) {
+        if (activeTab === 'active') setActiveCount(data.pagination.total);
+        else setArchiveCount(data.pagination.total);
+      }
+      const otherParams = new URLSearchParams({ limit: '1' });
+      if (activeTab === 'active') otherParams.set('status', 'CLOSED');
+      else otherParams.set('excludeStatus', 'CLOSED');
+      const otherRes = await fetch(`/api/feedback?${otherParams}`);
+      const otherData = await otherRes.json();
+      if (otherData.success) {
+        if (activeTab === 'active') setArchiveCount(otherData.pagination.total);
+        else setActiveCount(otherData.pagination.total);
+      }
     } catch (error) {
       console.error('Failed to fetch feedback:', error);
     } finally {
       setLoading(false);
     }
-  }, [page, filterStatus, filterCategory, filterPriority, debouncedSearch, sortOrder]);
+  }, [page, filterStatus, filterCategory, filterPriority, debouncedSearch, sortOrder, activeTab]);
 
   useEffect(() => { fetchFeedback(); }, [fetchFeedback]);
   useEffect(() => { setSelectedIds(new Set()); }, [page, filterStatus, filterCategory, filterPriority, debouncedSearch, sortOrder]);
@@ -368,6 +394,19 @@ export default function AdminFeedbackPage() {
 
   const toggleSort = () => { setSortOrder((prev) => (prev === 'desc' ? 'asc' : 'desc')); setPage(1); };
 
+  const switchTab = (tab: 'active' | 'archive') => {
+    if (tab === activeTab) return;
+    setActiveTab(tab);
+    setPage(1);
+    setFilterStatus('');
+    setFilterCategory('');
+    setFilterPriority('');
+    setSearchQuery('');
+    setDebouncedSearch('');
+    setExpandedId(null);
+    setSelectedIds(new Set());
+  };
+
   const getResponseSeconds = (fb: Feedback): number | null => {
     if (!fb.firstResponseAt) return null;
     return Math.round((new Date(fb.firstResponseAt).getTime() - new Date(fb.createdAt).getTime()) / 1000);
@@ -392,12 +431,48 @@ export default function AdminFeedbackPage() {
             <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-400">Feedback</span> Management
             </h1>
-            <p className="text-gray-500">{total} total feedback{total !== 1 ? 's' : ''}</p>
+            <p className="text-gray-500">{total} {activeTab === 'archive' ? 'archived' : 'active'} ticket{total !== 1 ? 's' : ''}</p>
           </div>
           <Link href="/admin/feedback/analytics" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-sm font-medium text-gray-300 hover:bg-white/[0.08] hover:text-white hover:border-white/[0.15] transition-all">
             <BarChart3 className="w-4 h-4 text-teal-400" />
             Analytics
           </Link>
+        </div>
+
+        {/* Tabs */}
+        <div className="flex gap-2 mb-6">
+          <button
+            onClick={() => switchTab('active')}
+            className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              activeTab === 'active'
+                ? 'bg-teal-500/15 text-teal-400 border border-teal-500/30'
+                : 'bg-white/[0.04] text-gray-400 border border-white/[0.08] hover:bg-white/[0.08] hover:text-gray-300'
+            }`}
+          >
+            <Inbox className="w-4 h-4" />
+            Active
+            {activeCount > 0 && (
+              <span className={`px-1.5 py-0.5 rounded-full text-[11px] font-bold ${
+                activeTab === 'active' ? 'bg-teal-500/25 text-teal-300' : 'bg-white/[0.08] text-gray-500'
+              }`}>{activeCount}</span>
+            )}
+          </button>
+          <button
+            onClick={() => switchTab('archive')}
+            className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              activeTab === 'archive'
+                ? 'bg-gray-500/15 text-gray-300 border border-gray-500/30'
+                : 'bg-white/[0.04] text-gray-400 border border-white/[0.08] hover:bg-white/[0.08] hover:text-gray-300'
+            }`}
+          >
+            <Archive className="w-4 h-4" />
+            Archive
+            {archiveCount > 0 && (
+              <span className={`px-1.5 py-0.5 rounded-full text-[11px] font-bold ${
+                activeTab === 'archive' ? 'bg-gray-500/25 text-gray-300' : 'bg-white/[0.08] text-gray-500'
+              }`}>{archiveCount}</span>
+            )}
+          </button>
         </div>
 
         {/* Filters */}
@@ -412,14 +487,15 @@ export default function AdminFeedbackPage() {
             <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search feedback..." className="w-full h-9 pl-10 pr-3 rounded-lg bg-white/4 border border-white/8 text-sm text-gray-300 placeholder-gray-600 focus:border-blue-500/40 focus:ring-1 focus:ring-blue-500/20 outline-none transition-all" />
           </div>
 
-          <select value={filterStatus} onChange={(e) => { setFilterStatus(e.target.value); setPage(1); }} className="h-9 px-3 rounded-lg bg-white/4 border border-white/8 text-sm text-gray-300 focus:border-blue-500/40 focus:ring-1 focus:ring-blue-500/20 outline-none transition-all [&>option]:bg-gray-900 [&>option]:text-gray-100">
-            <option value="">All Statuses</option>
-            <option value="OPEN">Open</option>
-            <option value="CLAIMED">Claimed</option>
-            <option value="IN_PROGRESS">In Progress</option>
-            <option value="RESOLVED">Resolved</option>
-            <option value="CLOSED">Closed</option>
-          </select>
+          {activeTab === 'active' && (
+            <select value={filterStatus} onChange={(e) => { setFilterStatus(e.target.value); setPage(1); }} className="h-9 px-3 rounded-lg bg-white/4 border border-white/8 text-sm text-gray-300 focus:border-blue-500/40 focus:ring-1 focus:ring-blue-500/20 outline-none transition-all [&>option]:bg-gray-900 [&>option]:text-gray-100">
+              <option value="">All Statuses</option>
+              <option value="OPEN">Open</option>
+              <option value="CLAIMED">Claimed</option>
+              <option value="IN_PROGRESS">In Progress</option>
+              <option value="RESOLVED">Resolved</option>
+            </select>
+          )}
 
           <select value={filterCategory} onChange={(e) => { setFilterCategory(e.target.value); setPage(1); }} className="h-9 px-3 rounded-lg bg-white/4 border border-white/8 text-sm text-gray-300 focus:border-blue-500/40 focus:ring-1 focus:ring-blue-500/20 outline-none transition-all [&>option]:bg-gray-900 [&>option]:text-gray-100">
             <option value="">All Categories</option>
