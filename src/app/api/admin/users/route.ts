@@ -49,6 +49,7 @@ export async function GET(request: Request) {
         { email: { contains: search, mode: 'insensitive' } },
         { name: { contains: search, mode: 'insensitive' } },
         { twitchUsername: { contains: search, mode: 'insensitive' } },
+        { discordUsername: { contains: search, mode: 'insensitive' } },
       ];
     }
 
@@ -67,6 +68,9 @@ export async function GET(request: Request) {
           id: true,
           email: true,
           name: true,
+          image: true,
+          twitchUsername: true,
+          discordUsername: true,
           role: true,
           coins: true,
           emailVerified: true,

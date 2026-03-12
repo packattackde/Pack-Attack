@@ -53,9 +53,15 @@ interface Pagination {
 interface SearchUser {
   id: string;
   name: string | null;
+  twitchUsername: string | null;
+  discordUsername: string | null;
   email: string;
   image: string | null;
   role: string;
+}
+
+function getDisplayName(user: SearchUser): string {
+  return user.twitchUsername || user.discordUsername || user.name || 'Unknown';
 }
 
 // Quick action menu for usernames in chat log
@@ -254,7 +260,7 @@ export default function ChatManagementClient() {
     try {
       const res = await fetch(`/api/admin/users?search=${encodeURIComponent(userSearch.trim())}&limit=10`);
       const data = await res.json();
-      if (data.success) {
+      if (data.users) {
         setUserResults(data.users.filter((u: SearchUser) => u.role !== 'ADMIN'));
       }
     } catch (error) {
@@ -560,34 +566,34 @@ export default function ChatManagementClient() {
                         </div>
                       )}
                       <div>
-                        <span className="text-sm font-medium text-white">{user.name || 'Unknown'}</span>
+                        <span className="text-sm font-medium text-white">{getDisplayName(user)}</span>
                         <span className="text-xs text-gray-500 ml-2">{user.email}</span>
                       </div>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <button
-                        onClick={() => banUserFromSearch(user.id, user.name || 'User', '1h')}
+                        onClick={() => banUserFromSearch(user.id, getDisplayName(user), '1h')}
                         disabled={banningUserId === user.id}
                         className="px-2.5 py-1 rounded-md text-[11px] font-medium text-yellow-400 bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/20 transition-colors disabled:opacity-40"
                       >
                         1h
                       </button>
                       <button
-                        onClick={() => banUserFromSearch(user.id, user.name || 'User', '1d')}
+                        onClick={() => banUserFromSearch(user.id, getDisplayName(user), '1d')}
                         disabled={banningUserId === user.id}
                         className="px-2.5 py-1 rounded-md text-[11px] font-medium text-yellow-400 bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/20 transition-colors disabled:opacity-40"
                       >
                         1d
                       </button>
                       <button
-                        onClick={() => banUserFromSearch(user.id, user.name || 'User', '1w')}
+                        onClick={() => banUserFromSearch(user.id, getDisplayName(user), '1w')}
                         disabled={banningUserId === user.id}
                         className="px-2.5 py-1 rounded-md text-[11px] font-medium text-yellow-400 bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/20 transition-colors disabled:opacity-40"
                       >
                         1w
                       </button>
                       <button
-                        onClick={() => banUserFromSearch(user.id, user.name || 'User', 'ban')}
+                        onClick={() => banUserFromSearch(user.id, getDisplayName(user), 'ban')}
                         disabled={banningUserId === user.id}
                         className="px-2.5 py-1 rounded-md text-[11px] font-medium text-red-400 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 transition-colors disabled:opacity-40"
                       >
