@@ -46,32 +46,45 @@ export function isJustTCGConfigured(): boolean {
 
 /**
  * Resolve a card image URL from available IDs.
- * JustTCG doesn't return images directly — we construct URLs from external sources.
+ * JustTCG doesn't return images — we construct URLs from game-specific sources.
  */
 function resolveCardImage(
   game: JustTCGGame,
-  ids: { tcgplayerId?: string | null; scryfallId?: string | null; number?: string | null }
+  ids: { tcgplayerId?: string | null; scryfallId?: string | null; number?: string | null; name?: string | null }
 ): string {
-  const { tcgplayerId, scryfallId, number } = ids;
+  const { tcgplayerId, scryfallId, number, name } = ids;
 
-  // MTG: Scryfall has the most reliable images
-  if (game === 'mtg' && scryfallId) {
-    return `https://api.scryfall.com/cards/${scryfallId}?format=image&version=normal`;
+  switch (game) {
+    case 'mtg':
+      if (scryfallId) return `https://api.scryfall.com/cards/${scryfallId}?format=image&version=normal`;
+      break;
+
+    case 'yugioh':
+      if (number) return `https://images.ygoprodeck.com/images/cards/${number}.jpg`;
+      break;
+
+    case 'onepiece':
+      if (number && number !== 'N/A') {
+        const base = `https://optcgapi.com/media/static/Card_Images/${number}`;
+        const lowerName = (name || '').toLowerCase();
+        if (lowerName.includes('alternate art') && lowerName.includes('gold')) return `${base}_p3.jpg`;
+        if (lowerName.includes('alternate art') || lowerName.includes('parallel')) return `${base}_p1.jpg`;
+        if (lowerName.includes('manga')) return `${base}_p2.jpg`;
+        if (lowerName.includes('sp') && !lowerName.includes('special')) return `${base}_p2.jpg`;
+        if (lowerName.includes('wanted poster')) return `${base}_p1.jpg`;
+        return `${base}.jpg`;
+      }
+      break;
+
+    case 'pokemon':
+    case 'lorcana':
+    case 'fleshblood':
+      if (tcgplayerId) return `https://product-images.tcgplayer.com/fit-in/400x558/${tcgplayerId}.jpg`;
+      break;
   }
 
-  // Yu-Gi-Oh: YGOProDeck images by card number/ID
-  if (game === 'yugioh' && number) {
-    return `https://images.ygoprodeck.com/images/cards/${number}.jpg`;
-  }
-
-  // TCGPlayer CDN works for Pokemon, Lorcana, One Piece, FaB when tcgplayerId exists
   if (tcgplayerId) {
     return `https://product-images.tcgplayer.com/fit-in/400x558/${tcgplayerId}.jpg`;
-  }
-
-  // MTG fallback via Scryfall search (less ideal but works)
-  if (game === 'mtg' && scryfallId) {
-    return `https://api.scryfall.com/cards/${scryfallId}?format=image&version=normal`;
   }
 
   return '';
@@ -141,7 +154,7 @@ export async function searchJustTCG(
       const tcgplayerId = card.tcgplayerId;
       const scryfallId = card.scryfallId;
       
-      const imageUrl = resolveCardImage(game, { tcgplayerId, scryfallId, number: card.number });
+      const imageUrl = resolveCardImage(game, { tcgplayerId, scryfallId, number: card.number, name: card.name });
       const price = card.variants?.[0]?.price || null;
 
       return {
