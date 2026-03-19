@@ -50,9 +50,9 @@ export function isJustTCGConfigured(): boolean {
  */
 function resolveCardImage(
   game: JustTCGGame,
-  ids: { tcgplayerId?: string | null; scryfallId?: string | null; number?: string | null; name?: string | null }
+  ids: { tcgplayerId?: string | null; scryfallId?: string | null; number?: string | null }
 ): string {
-  const { tcgplayerId, scryfallId, number, name } = ids;
+  const { tcgplayerId, scryfallId, number } = ids;
 
   switch (game) {
     case 'mtg':
@@ -65,14 +65,7 @@ function resolveCardImage(
 
     case 'onepiece':
       if (number && number !== 'N/A') {
-        const base = `https://optcgapi.com/media/static/Card_Images/${number}`;
-        const lowerName = (name || '').toLowerCase();
-        if (lowerName.includes('alternate art') && lowerName.includes('gold')) return `${base}_p3.jpg`;
-        if (lowerName.includes('alternate art') || lowerName.includes('parallel')) return `${base}_p1.jpg`;
-        if (lowerName.includes('manga')) return `${base}_p2.jpg`;
-        if (lowerName.includes('sp') && !lowerName.includes('special')) return `${base}_p2.jpg`;
-        if (lowerName.includes('wanted poster')) return `${base}_p1.jpg`;
-        return `${base}.jpg`;
+        return `https://optcgapi.com/media/static/Card_Images/${number}.jpg`;
       }
       break;
 
@@ -154,7 +147,7 @@ export async function searchJustTCG(
       const tcgplayerId = card.tcgplayerId;
       const scryfallId = card.scryfallId;
       
-      const imageUrl = resolveCardImage(game, { tcgplayerId, scryfallId, number: card.number, name: card.name });
+      const imageUrl = resolveCardImage(game, { tcgplayerId, scryfallId, number: card.number });
       const price = card.variants?.[0]?.price || null;
 
       return {
