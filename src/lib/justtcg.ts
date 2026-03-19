@@ -45,6 +45,39 @@ export function isJustTCGConfigured(): boolean {
 }
 
 /**
+ * Resolve a card image URL from available IDs.
+ * JustTCG doesn't return images directly — we construct URLs from external sources.
+ */
+function resolveCardImage(
+  game: JustTCGGame,
+  ids: { tcgplayerId?: string | null; scryfallId?: string | null; number?: string | null }
+): string {
+  const { tcgplayerId, scryfallId, number } = ids;
+
+  // MTG: Scryfall has the most reliable images
+  if (game === 'mtg' && scryfallId) {
+    return `https://api.scryfall.com/cards/${scryfallId}?format=image&version=normal`;
+  }
+
+  // Yu-Gi-Oh: YGOProDeck images by card number/ID
+  if (game === 'yugioh' && number) {
+    return `https://images.ygoprodeck.com/images/cards/${number}.jpg`;
+  }
+
+  // TCGPlayer CDN works for Pokemon, Lorcana, One Piece, FaB when tcgplayerId exists
+  if (tcgplayerId) {
+    return `https://product-images.tcgplayer.com/fit-in/400x558/${tcgplayerId}.jpg`;
+  }
+
+  // MTG fallback via Scryfall search (less ideal but works)
+  if (game === 'mtg' && scryfallId) {
+    return `https://api.scryfall.com/cards/${scryfallId}?format=image&version=normal`;
+  }
+
+  return '';
+}
+
+/**
  * Search cards using JustTCG API with retry logic
  */
 export async function searchJustTCG(
@@ -104,16 +137,11 @@ export async function searchJustTCG(
       };
     }
 
-    // Map JustTCG response to our standard card format
     const cards: JustTCGCard[] = data.data.map((card: any) => {
       const tcgplayerId = card.tcgplayerId;
+      const scryfallId = card.scryfallId;
       
-      // Construct image URL from TCGPlayer CDN
-      const imageUrl = tcgplayerId 
-        ? `https://product-images.tcgplayer.com/fit-in/400x558/${tcgplayerId}.jpg`
-        : '';
-
-      // Extract price from first variant if available
+      const imageUrl = resolveCardImage(game, { tcgplayerId, scryfallId, number: card.number });
       const price = card.variants?.[0]?.price || null;
 
       return {
@@ -123,9 +151,9 @@ export async function searchJustTCG(
         setCode: card.set || '',
         collectorNumber: card.number || '',
         rarity: card.rarity || 'common',
-        imageUrl: imageUrl,
-        tcgplayerId: tcgplayerId,
-        price: price,
+        imageUrl,
+        tcgplayerId,
+        price,
         type: game,
       };
     });
