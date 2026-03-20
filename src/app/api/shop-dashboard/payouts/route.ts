@@ -1,26 +1,48 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
 const COIN_TO_EURO_RATE = 5;
 
-export async function GET() {
+async function resolveShopId(userEmail: string, requestedShopId?: string): Promise<{ shopId: string } | { error: string; status: number }> {
+  const user = await prisma.user.findUnique({
+    where: { email: userEmail },
+    include: { shop: true },
+  });
+
+  if (!user) return { error: 'User not found', status: 403 };
+
+  if (user.role === 'ADMIN' && requestedShopId) {
+    const shop = await prisma.shop.findUnique({ where: { id: requestedShopId }, select: { id: true } });
+    if (!shop) return { error: 'Shop not found', status: 404 };
+    return { shopId: shop.id };
+  }
+
+  if (user.role === 'ADMIN' && user.shop) {
+    return { shopId: user.shop.id };
+  }
+
+  if (user.role === 'SHOP_OWNER' && user.shop) {
+    return { shopId: user.shop.id };
+  }
+
+  return { error: 'Shop access required', status: 403 };
+}
+
+export async function GET(request: NextRequest) {
   try {
     const session = await getCurrentSession();
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const user = await prisma.user.findUnique({
-      where: { email: session.user.email },
-      include: { shop: true },
-    });
-
-    if (!user || user.role !== 'SHOP_OWNER' || !user.shop) {
-      return NextResponse.json({ error: 'Shop owner access required' }, { status: 403 });
+    const shopIdParam = request.nextUrl.searchParams.get('shopId') || undefined;
+    const result = await resolveShopId(session.user.email, shopIdParam);
+    if ('error' in result) {
+      return NextResponse.json({ error: result.error }, { status: result.status });
     }
 
-    const shopId = user.shop.id;
+    const shopId = result.shopId;
 
     const [payouts, shop, eligibleOrders] = await Promise.all([
       prisma.shopPayout.findMany({
@@ -82,32 +104,36 @@ export async function GET() {
   }
 }
 
-export async function POST() {
+export async function POST(request: NextRequest) {
   try {
     const session = await getCurrentSession();
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const user = await prisma.user.findUnique({
-      where: { email: session.user.email },
-      include: { shop: true },
-    });
-
-    if (!user || user.role !== 'SHOP_OWNER' || !user.shop) {
-      return NextResponse.json({ error: 'Shop owner access required' }, { status: 403 });
+    let bodyShopId: string | undefined;
+    try {
+      const body = await request.json();
+      bodyShopId = body.shopId;
+    } catch {
+      // No body or invalid JSON — that's fine
     }
 
-    const shopId = user.shop.id;
+    const result = await resolveShopId(session.user.email, bodyShopId);
+    if ('error' in result) {
+      return NextResponse.json({ error: result.error }, { status: result.status });
+    }
+
+    const shopId = result.shopId;
 
     const hasPending = await prisma.shopPayout.findFirst({
       where: { shopId, status: { in: ['REQUESTED', 'PROCESSING'] } },
     });
     if (hasPending) {
-      return NextResponse.json({ error: 'You already have a pending payout request' }, { status: 400 });
+      return NextResponse.json({ error: 'There is already a pending payout request for this shop' }, { status: 400 });
     }
 
-    const result = await prisma.$transaction(async (tx) => {
+    const txResult = await prisma.$transaction(async (tx) => {
       const deliveredOrders = await tx.shopBoxOrder.findMany({
         where: { shopId, status: 'DELIVERED' },
       });
@@ -177,17 +203,17 @@ export async function POST() {
     return NextResponse.json({
       success: true,
       payout: {
-        ...result,
-        coinAmount: Number(result.coinAmount),
-        euroAmount: Number(result.euroAmount),
-        items: result.items.map(item => ({
+        ...txResult,
+        coinAmount: Number(txResult.coinAmount),
+        euroAmount: Number(txResult.euroAmount),
+        items: txResult.items.map(item => ({
           ...item,
           cardValue: Number(item.cardValue),
           createdAt: item.createdAt.toISOString(),
         })),
-        createdAt: result.createdAt.toISOString(),
-        updatedAt: result.updatedAt.toISOString(),
-        processedAt: result.processedAt?.toISOString() || null,
+        createdAt: txResult.createdAt.toISOString(),
+        updatedAt: txResult.updatedAt.toISOString(),
+        processedAt: txResult.processedAt?.toISOString() || null,
       },
     });
   } catch (error: any) {

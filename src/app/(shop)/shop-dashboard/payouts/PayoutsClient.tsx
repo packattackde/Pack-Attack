@@ -46,6 +46,7 @@ export function PayoutsClient({
   eligibleCount: initEligibleCount,
   eligibleTotal: initEligibleTotal,
   eligibleEuro: initEligibleEuro,
+  shopId,
 }: {
   initialPayouts: Payout[];
   coinBalance: number;
@@ -53,6 +54,7 @@ export function PayoutsClient({
   eligibleCount: number;
   eligibleTotal: number;
   eligibleEuro: number;
+  shopId: string;
 }) {
   const router = useRouter();
   const { addToast } = useToast();
@@ -78,6 +80,7 @@ export function PayoutsClient({
       const res = await fetch('/api/shop-dashboard/payouts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ shopId }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to request payout');

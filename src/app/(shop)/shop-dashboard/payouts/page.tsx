@@ -120,6 +120,7 @@ export default async function ShopPayoutsPage({
           eligibleCount={eligibleCount}
           eligibleTotal={eligibleTotal}
           eligibleEuro={eligibleEuro}
+          shopId={shop.id}
         />
       </div>
     </div>
