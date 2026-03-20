@@ -2,6 +2,47 @@ import { NextResponse } from 'next/server';
 import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
+const payoutInclude = {
+  shop: {
+    select: {
+      id: true, name: true, taxId: true, coinBalance: true,
+      owner: { select: { id: true, email: true, name: true } },
+    },
+  },
+  items: {
+    select: {
+      id: true,
+      orderNumber: true,
+      cardName: true,
+      cardImage: true,
+      cardValue: true,
+      cardRarity: true,
+      status: true,
+      createdAt: true,
+      user: { select: { id: true, name: true, email: true } },
+    },
+  },
+};
+
+function serializePayout(p: any) {
+  return {
+    ...p,
+    coinAmount: Number(p.coinAmount),
+    euroAmount: Number(p.euroAmount),
+    shop: { ...p.shop, coinBalance: Number(p.shop.coinBalance) },
+    items: p.items.map((item: any) => ({
+      ...item,
+      cardValue: Number(item.cardValue),
+      createdAt: typeof item.createdAt === 'string' ? item.createdAt : item.createdAt.toISOString(),
+    })),
+    createdAt: typeof p.createdAt === 'string' ? p.createdAt : p.createdAt.toISOString(),
+    updatedAt: typeof p.updatedAt === 'string' ? p.updatedAt : p.updatedAt.toISOString(),
+    processedAt: p.processedAt
+      ? (typeof p.processedAt === 'string' ? p.processedAt : p.processedAt.toISOString())
+      : null,
+  };
+}
+
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -23,41 +64,44 @@ export async function PATCH(
 
     const payout = await prisma.shopPayout.findUnique({
       where: { id },
-      include: { shop: true },
+      include: payoutInclude,
     });
 
     if (!payout) {
       return NextResponse.json({ error: 'Payout not found' }, { status: 404 });
     }
 
-    const updateData: any = {};
-    if (adminNotes !== undefined) updateData.adminNotes = adminNotes;
-
+    // PROCESSING (Approve) — mark payout as being processed
     if (status === 'PROCESSING') {
       if (payout.status !== 'REQUESTED') {
         return NextResponse.json({ error: 'Can only process requested payouts' }, { status: 400 });
       }
-      updateData.status = 'PROCESSING';
-      updateData.processedById = admin.id;
-    } else if (status === 'COMPLETED') {
+
+      const updated = await prisma.shopPayout.update({
+        where: { id },
+        data: {
+          status: 'PROCESSING',
+          processedById: admin.id,
+          ...(adminNotes !== undefined ? { adminNotes } : {}),
+        },
+        include: payoutInclude,
+      });
+
+      return NextResponse.json({ success: true, payout: serializePayout(updated) });
+    }
+
+    // COMPLETED (Mark as Paid) — items become PAID_OUT, coins already deducted on request
+    if (status === 'COMPLETED') {
       if (payout.status !== 'PROCESSING' && payout.status !== 'REQUESTED') {
         return NextResponse.json({ error: 'Can only complete requested/processing payouts' }, { status: 400 });
       }
 
-      const currentShop = await prisma.shop.findUnique({
-        where: { id: payout.shopId },
-        select: { coinBalance: true },
-      });
+      const itemIds = payout.items.map((item: any) => item.id);
 
-      if (Number(currentShop?.coinBalance || 0) < Number(payout.coinAmount)) {
-        return NextResponse.json({ error: 'Shop does not have enough coins for this payout' }, { status: 400 });
-      }
-
-      // Deduct coins from shop wallet and mark payout complete in a transaction
       await prisma.$transaction([
-        prisma.shop.update({
-          where: { id: payout.shopId },
-          data: { coinBalance: { decrement: payout.coinAmount } },
+        prisma.shopBoxOrder.updateMany({
+          where: { id: { in: itemIds } },
+          data: { status: 'PAID_OUT' },
         }),
         prisma.shopPayout.update({
           where: { id },
@@ -65,64 +109,63 @@ export async function PATCH(
             status: 'COMPLETED',
             processedById: admin.id,
             processedAt: new Date(),
-            ...( adminNotes !== undefined ? { adminNotes } : {}),
+            ...(adminNotes !== undefined ? { adminNotes } : {}),
           },
         }),
       ]);
 
       const updated = await prisma.shopPayout.findUnique({
         where: { id },
-        include: {
-          shop: {
-            select: {
-              id: true, name: true, taxId: true, coinBalance: true,
-              owner: { select: { id: true, email: true, name: true } },
-            },
-          },
-        },
+        include: payoutInclude,
       });
 
-      return NextResponse.json({
-        success: true,
-        payout: {
-          ...updated,
-          coinAmount: Number(updated!.coinAmount),
-          euroAmount: Number(updated!.euroAmount),
-          shop: { ...updated!.shop, coinBalance: Number(updated!.shop.coinBalance) },
-        },
-      });
-    } else if (status === 'REJECTED') {
+      return NextResponse.json({ success: true, payout: serializePayout(updated) });
+    }
+
+    // REJECTED — revert items to DELIVERED, return coins to shop
+    if (status === 'REJECTED') {
       if (payout.status === 'COMPLETED') {
         return NextResponse.json({ error: 'Cannot reject a completed payout' }, { status: 400 });
       }
-      updateData.status = 'REJECTED';
-      updateData.processedById = admin.id;
-      updateData.processedAt = new Date();
+
+      const itemIds = payout.items.map((item: any) => item.id);
+
+      await prisma.$transaction([
+        prisma.shopBoxOrder.updateMany({
+          where: { id: { in: itemIds } },
+          data: { status: 'DELIVERED', payoutId: null },
+        }),
+        prisma.shop.update({
+          where: { id: payout.shopId },
+          data: { coinBalance: { increment: payout.coinAmount } },
+        }),
+        prisma.shopPayout.update({
+          where: { id },
+          data: {
+            status: 'REJECTED',
+            processedById: admin.id,
+            processedAt: new Date(),
+            ...(adminNotes !== undefined ? { adminNotes } : {}),
+          },
+        }),
+      ]);
+
+      const updated = await prisma.shopPayout.findUnique({
+        where: { id },
+        include: payoutInclude,
+      });
+
+      return NextResponse.json({ success: true, payout: serializePayout(updated) });
     }
 
-    if (Object.keys(updateData).length > 0 && status !== 'COMPLETED') {
+    // Notes-only update
+    if (adminNotes !== undefined) {
       const updated = await prisma.shopPayout.update({
         where: { id },
-        data: updateData,
-        include: {
-          shop: {
-            select: {
-              id: true, name: true, taxId: true, coinBalance: true,
-              owner: { select: { id: true, email: true, name: true } },
-            },
-          },
-        },
+        data: { adminNotes },
+        include: payoutInclude,
       });
-
-      return NextResponse.json({
-        success: true,
-        payout: {
-          ...updated,
-          coinAmount: Number(updated.coinAmount),
-          euroAmount: Number(updated.euroAmount),
-          shop: { ...updated.shop, coinBalance: Number(updated.shop.coinBalance) },
-        },
-      });
+      return NextResponse.json({ success: true, payout: serializePayout(updated) });
     }
 
     return NextResponse.json({ success: true });

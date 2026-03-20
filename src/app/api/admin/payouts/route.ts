@@ -26,6 +26,19 @@ export async function GET() {
             owner: { select: { id: true, email: true, name: true } },
           },
         },
+        items: {
+          select: {
+            id: true,
+            orderNumber: true,
+            cardName: true,
+            cardImage: true,
+            cardValue: true,
+            cardRarity: true,
+            status: true,
+            createdAt: true,
+            user: { select: { id: true, name: true, email: true } },
+          },
+        },
       },
     });
 
@@ -39,6 +52,14 @@ export async function GET() {
           ...p.shop,
           coinBalance: Number(p.shop.coinBalance),
         },
+        items: p.items.map(item => ({
+          ...item,
+          cardValue: Number(item.cardValue),
+          createdAt: item.createdAt.toISOString(),
+        })),
+        createdAt: p.createdAt.toISOString(),
+        updatedAt: p.updatedAt.toISOString(),
+        processedAt: p.processedAt?.toISOString() || null,
       })),
     });
   } catch (error) {

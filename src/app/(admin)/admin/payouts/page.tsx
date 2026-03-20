@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
-import { ArrowLeft, ShieldCheck, Wallet } from 'lucide-react';
+import { ArrowLeft, ShieldCheck } from 'lucide-react';
 import { PayoutsAdminClient } from './PayoutsAdminClient';
 
 export default async function AdminPayoutsPage() {
@@ -24,6 +24,19 @@ export default async function AdminPayoutsPage() {
           owner: { select: { id: true, email: true, name: true } },
         },
       },
+      items: {
+        select: {
+          id: true,
+          orderNumber: true,
+          cardName: true,
+          cardImage: true,
+          cardValue: true,
+          cardRarity: true,
+          status: true,
+          createdAt: true,
+          user: { select: { id: true, name: true, email: true } },
+        },
+      },
     },
   });
 
@@ -38,6 +51,11 @@ export default async function AdminPayoutsPage() {
       ...p.shop,
       coinBalance: Number(p.shop.coinBalance),
     },
+    items: p.items.map(item => ({
+      ...item,
+      cardValue: Number(item.cardValue),
+      createdAt: item.createdAt.toISOString(),
+    })),
   }));
 
   return (
@@ -64,7 +82,7 @@ export default async function AdminPayoutsPage() {
             <span className="text-white">Shop </span>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-400">Payouts</span>
           </h1>
-          <p className="text-gray-400">Manage payout requests from shop owners. Review, process, and generate payout slips.</p>
+          <p className="text-gray-400">Manage payout requests from shop owners. Review items, approve, reject, or mark as paid.</p>
         </div>
 
         <PayoutsAdminClient initialPayouts={serialized} />

@@ -529,17 +529,18 @@ model Shop {
 }
 
 model ShopPayout {
-  id            String       @id @default(cuid())
+  id            String         @id @default(cuid())
   shopId        String
-  shop          Shop         @relation(fields: [shopId], references: [id])
-  status        PayoutStatus @default(REQUESTED)
-  coinAmount    Decimal      @db.Decimal(10, 2)
-  euroAmount    Decimal      @db.Decimal(10, 2)
-  adminNotes    String?      @db.Text
+  shop          Shop           @relation(fields: [shopId], references: [id])
+  status        PayoutStatus   @default(REQUESTED)
+  coinAmount    Decimal        @db.Decimal(10, 2)
+  euroAmount    Decimal        @db.Decimal(10, 2)
+  adminNotes    String?        @db.Text
   processedById String?
   processedAt   DateTime?
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
+  items         ShopBoxOrder[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 
   @@index([shopId])
   @@index([status])
@@ -733,6 +734,9 @@ model ShopBoxOrder {
   // Link to original platform Order (for admin-assigned orders)
   sourceOrderId   String?
   sourceItemId    String?               @unique
+  // Payout link (set when included in a payout request)
+  payoutId        String?
+  payout          ShopPayout?           @relation(fields: [payoutId], references: [id])
   createdAt       DateTime              @default(now())
   updatedAt       DateTime              @updatedAt
 
@@ -742,6 +746,7 @@ model ShopBoxOrder {
   @@index([status])
   @@index([orderNumber])
   @@index([sourceOrderId])
+  @@index([payoutId])
   @@index([shopId, status, createdAt]) // Shop dashboard queries
 }
 
@@ -751,6 +756,8 @@ enum ShopBoxOrderStatus {
   PROCESSING
   SHIPPED
   DELIVERED
+  PAYOUT_REQUESTED
+  PAID_OUT
   CANCELLED
 }
 

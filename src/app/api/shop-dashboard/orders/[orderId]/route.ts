@@ -97,6 +97,10 @@ export async function PATCH(
       if (!validStatuses.includes(data.status)) {
         return NextResponse.json({ error: 'Invalid status' }, { status: 400 });
       }
+      const payoutProtected = ['PAYOUT_REQUESTED', 'PAID_OUT'];
+      if (payoutProtected.includes(existingOrder.status)) {
+        return NextResponse.json({ error: 'Cannot manually change status of orders in payout flow' }, { status: 400 });
+      }
       updateData.status = data.status;
     }
     if (data.trackingNumber !== undefined) updateData.trackingNumber = data.trackingNumber;

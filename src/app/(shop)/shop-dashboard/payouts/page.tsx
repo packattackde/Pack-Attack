@@ -35,16 +35,39 @@ export default async function ShopPayoutsPage({
   const shop = targetShop || user.shop;
   if (!shop) redirect('/shop-dashboard');
 
-  const [payouts, shopData] = await Promise.all([
+  const [payouts, shopData, eligibleOrders] = await Promise.all([
     prisma.shopPayout.findMany({
       where: { shopId: shop.id },
       orderBy: { createdAt: 'desc' },
+      include: {
+        items: {
+          select: {
+            id: true,
+            orderNumber: true,
+            cardName: true,
+            cardImage: true,
+            cardValue: true,
+            cardRarity: true,
+            status: true,
+            createdAt: true,
+            user: { select: { id: true, name: true, email: true } },
+          },
+        },
+      },
     }),
     prisma.shop.findUnique({
       where: { id: shop.id },
       select: { coinBalance: true },
     }),
+    prisma.shopBoxOrder.findMany({
+      where: { shopId: shop.id, status: 'DELIVERED' },
+      select: { cardValue: true },
+    }),
   ]);
+
+  const eligibleCount = eligibleOrders.length;
+  const eligibleTotal = eligibleOrders.reduce((sum, o) => sum + Number(o.cardValue), 0);
+  const eligibleEuro = eligibleTotal / COIN_TO_EURO_RATE;
 
   const serializedPayouts = payouts.map(p => ({
     ...p,
@@ -53,6 +76,11 @@ export default async function ShopPayoutsPage({
     processedAt: p.processedAt?.toISOString() || null,
     createdAt: p.createdAt.toISOString(),
     updatedAt: p.updatedAt.toISOString(),
+    items: p.items.map(item => ({
+      ...item,
+      cardValue: Number(item.cardValue),
+      createdAt: item.createdAt.toISOString(),
+    })),
   }));
 
   const backHref = isAdmin && queryShopId ? `/shop-dashboard?shopId=${queryShopId}` : '/shop-dashboard';
@@ -82,13 +110,16 @@ export default async function ShopPayoutsPage({
             <span className="text-white">Payout </span>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">Management</span>
           </h1>
-          <p className="text-gray-400">Request payouts for your earned coins. Rate: {COIN_TO_EURO_RATE} coins = 1 EUR.</p>
+          <p className="text-gray-400">Request payouts for delivered items. Rate: {COIN_TO_EURO_RATE} coins = 1 EUR.</p>
         </div>
 
         <PayoutsClient
           initialPayouts={serializedPayouts}
           coinBalance={Number(shopData?.coinBalance || 0)}
           rate={COIN_TO_EURO_RATE}
+          eligibleCount={eligibleCount}
+          eligibleTotal={eligibleTotal}
+          eligibleEuro={eligibleEuro}
           isAdmin={isAdmin}
         />
       </div>
