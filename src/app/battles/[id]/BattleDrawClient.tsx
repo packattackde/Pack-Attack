@@ -110,23 +110,49 @@ export default function BattleDrawClient({ battle: initialBattle, currentUserId,
     }
   }, []);
 
-  // Calculate time until auto-start
+  const autoStartTriggeredRef = useRef(false);
+
+  // Calculate time until auto-start and trigger it when countdown expires
   useEffect(() => {
-    if (battle.status !== 'WAITING' || !battle.fullAt || !isBattleFull) {
+    if (battle.status !== 'WAITING' || !isBattleFull) {
       setTimeUntilAutoStart(null);
       return;
     }
 
+    const fullAt = battle.fullAt ? new Date(battle.fullAt) : new Date(battle.createdAt);
+    const autoStartAt = new Date(fullAt.getTime() + 5 * 60 * 1000);
+
     const updateCountdown = () => {
-      const fullAt = new Date(battle.fullAt);
-      const autoStartAt = new Date(fullAt.getTime() + 5 * 60 * 1000);
       const now = new Date();
       const msRemaining = autoStartAt.getTime() - now.getTime();
 
       if (msRemaining <= 0) {
         setTimeUntilAutoStart(0);
+        triggerAutoStart();
       } else {
-        setTimeUntilAutoStart(Math.floor(msRemaining / 1000)); // Convert to seconds
+        setTimeUntilAutoStart(Math.floor(msRemaining / 1000));
+      }
+    };
+
+    const triggerAutoStart = async () => {
+      if (autoStartTriggeredRef.current || animationPlayed || isDrawing) return;
+      autoStartTriggeredRef.current = true;
+
+      console.log('[AUTO-START] Countdown expired, triggering auto-start...');
+      try {
+        const res = await fetch(`/api/battles/${battle.id}/auto-start`, { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          console.log('[AUTO-START] Server confirmed battle started');
+        } else if (data.error === 'Battle already started or finished') {
+          console.log('[AUTO-START] Battle already started by someone else');
+        } else {
+          console.warn('[AUTO-START] Server response:', data);
+          autoStartTriggeredRef.current = false;
+        }
+      } catch (err) {
+        console.error('[AUTO-START] Failed to trigger:', err);
+        autoStartTriggeredRef.current = false;
       }
     };
 
@@ -134,7 +160,7 @@ export default function BattleDrawClient({ battle: initialBattle, currentUserId,
     const interval = setInterval(updateCountdown, 1000);
 
     return () => clearInterval(interval);
-  }, [battle.status, battle.fullAt, isBattleFull]);
+  }, [battle.status, battle.fullAt, battle.createdAt, battle.id, isBattleFull, animationPlayed, isDrawing]);
 
   // Format countdown time
   const formatTimeRemaining = (seconds: number) => {
