@@ -120,7 +120,6 @@ export default async function ShopPayoutsPage({
           eligibleCount={eligibleCount}
           eligibleTotal={eligibleTotal}
           eligibleEuro={eligibleEuro}
-          isAdmin={isAdmin}
         />
       </div>
     </div>

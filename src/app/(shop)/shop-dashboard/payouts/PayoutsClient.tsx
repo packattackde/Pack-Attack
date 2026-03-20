@@ -46,7 +46,6 @@ export function PayoutsClient({
   eligibleCount: initEligibleCount,
   eligibleTotal: initEligibleTotal,
   eligibleEuro: initEligibleEuro,
-  isAdmin = false,
 }: {
   initialPayouts: Payout[];
   coinBalance: number;
@@ -54,7 +53,6 @@ export function PayoutsClient({
   eligibleCount: number;
   eligibleTotal: number;
   eligibleEuro: number;
-  isAdmin?: boolean;
 }) {
   const router = useRouter();
   const { addToast } = useToast();
@@ -135,13 +133,7 @@ export function PayoutsClient({
         </div>
 
         <div className="glass-strong rounded-2xl p-6 flex flex-col justify-center">
-          {isAdmin ? (
-            <div className="text-center">
-              <Wallet className="w-8 h-8 text-orange-400 mx-auto mb-2" />
-              <p className="text-orange-400 font-medium text-sm">Admin View</p>
-              <p className="text-gray-500 text-xs mt-1">Process payouts from the admin panel</p>
-            </div>
-          ) : hasPending ? (
+          {hasPending ? (
             <div className="text-center">
               <AlertCircle className="w-8 h-8 text-yellow-400 mx-auto mb-2" />
               <p className="text-yellow-400 font-medium text-sm">Payout request pending</p>
