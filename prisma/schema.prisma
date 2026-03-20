@@ -536,8 +536,10 @@ model ShopPayout {
   coinAmount    Decimal        @db.Decimal(10, 2)
   euroAmount    Decimal        @db.Decimal(10, 2)
   adminNotes    String?        @db.Text
+  shopMessage   String?        @db.Text
   processedById String?
   processedAt   DateTime?
+  resubmittedAt DateTime?
   items         ShopBoxOrder[]
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt

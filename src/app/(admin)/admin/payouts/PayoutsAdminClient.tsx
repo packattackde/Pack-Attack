@@ -27,8 +27,10 @@ type Payout = {
   coinAmount: number;
   euroAmount: number;
   adminNotes: string | null;
+  shopMessage: string | null;
   processedById: string | null;
   processedAt: string | null;
+  resubmittedAt: string | null;
   createdAt: string;
   items: PayoutItem[];
   shop: {
@@ -322,6 +324,21 @@ export function PayoutsAdminClient({ initialPayouts }: { initialPayouts: Payout[
                         ))}
                       </div>
                     </div>
+
+                    {/* Shop Message (from resubmission) */}
+                    {payout.shopMessage && (
+                      <div className="glass rounded-xl p-4 border border-amber-800/30 bg-amber-900/10">
+                        <h4 className="text-sm font-medium text-amber-400 mb-2 flex items-center gap-2">
+                          <Store className="w-4 h-4" /> Shop Message
+                          {payout.resubmittedAt && (
+                            <span className="text-xs text-amber-500/70 font-normal ml-1">
+                              (Resubmitted {new Date(payout.resubmittedAt).toLocaleDateString('de-DE', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })})
+                            </span>
+                          )}
+                        </h4>
+                        <p className="text-sm text-amber-200/80 whitespace-pre-wrap">{payout.shopMessage}</p>
+                      </div>
+                    )}
 
                     {/* Admin Notes */}
                     <div className="glass rounded-xl p-4">

@@ -74,6 +74,7 @@ export default async function ShopPayoutsPage({
     coinAmount: Number(p.coinAmount),
     euroAmount: Number(p.euroAmount),
     processedAt: p.processedAt?.toISOString() || null,
+    resubmittedAt: p.resubmittedAt?.toISOString() || null,
     createdAt: p.createdAt.toISOString(),
     updatedAt: p.updatedAt.toISOString(),
     items: p.items.map(item => ({

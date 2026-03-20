@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import {
   Wallet, ArrowRightLeft, Clock, CheckCircle, XCircle,
   Loader2, Banknote, Coins, AlertCircle, ChevronDown, ChevronUp,
-  Package, Filter
+  Package, Filter, RotateCcw, Send, MessageSquare
 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
@@ -27,7 +27,9 @@ type Payout = {
   coinAmount: number;
   euroAmount: number;
   adminNotes: string | null;
+  shopMessage: string | null;
   processedAt: string | null;
+  resubmittedAt: string | null;
   createdAt: string;
   items: PayoutItem[];
 };
@@ -66,6 +68,9 @@ export function PayoutsClient({
   const [requesting, setRequesting] = useState(false);
   const [expandedPayout, setExpandedPayout] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState('ALL');
+  const [resubmitId, setResubmitId] = useState<string | null>(null);
+  const [resubmitMessage, setResubmitMessage] = useState('');
+  const [resubmitting, setResubmitting] = useState(false);
 
   const hasPending = payouts.some(p => p.status === 'REQUESTED' || p.status === 'PROCESSING');
   const totalPaidCoins = payouts.filter(p => p.status === 'COMPLETED').reduce((sum, p) => sum + p.coinAmount, 0);
@@ -99,6 +104,33 @@ export function PayoutsClient({
       addToast({ title: 'Error', description: err.message, variant: 'destructive' });
     } finally {
       setRequesting(false);
+    }
+  };
+
+  const handleResubmit = async (payoutId: string) => {
+    if (!resubmitMessage.trim()) {
+      addToast({ title: 'Error', description: 'Please enter a message for the admin', variant: 'destructive' });
+      return;
+    }
+    setResubmitting(true);
+    try {
+      const res = await fetch(`/api/shop-dashboard/payouts/${payoutId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'resubmit', shopMessage: resubmitMessage.trim() }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to resubmit payout');
+
+      setPayouts(payouts.map(p => p.id === payoutId ? data.payout : p));
+      setResubmitId(null);
+      setResubmitMessage('');
+      addToast({ title: 'Payout Resubmitted', description: 'Your payout has been resubmitted for review' });
+      router.refresh();
+    } catch (err: any) {
+      addToast({ title: 'Error', description: err.message, variant: 'destructive' });
+    } finally {
+      setResubmitting(false);
     }
   };
 
@@ -238,6 +270,66 @@ export function PayoutsClient({
                       {payout.adminNotes && (
                         <div className="p-3 rounded-lg bg-gray-800/50 text-sm text-gray-400">
                           <span className="text-gray-500 font-medium">Admin: </span>{payout.adminNotes}
+                        </div>
+                      )}
+
+                      {payout.shopMessage && (
+                        <div className="p-3 rounded-lg bg-blue-900/20 border border-blue-800/30 text-sm text-blue-300">
+                          <span className="text-blue-400 font-medium flex items-center gap-1.5 mb-1">
+                            <MessageSquare className="w-3.5 h-3.5" /> Your message:
+                          </span>
+                          {payout.shopMessage}
+                        </div>
+                      )}
+
+                      {payout.status === 'REJECTED' && !payout.resubmittedAt && (
+                        <div className="p-4 rounded-xl bg-red-900/10 border border-red-800/30">
+                          {resubmitId === payout.id ? (
+                            <div className="space-y-3">
+                              <p className="text-sm text-red-300 font-medium">Resubmit with a message for the admin:</p>
+                              <textarea
+                                value={resubmitMessage}
+                                onChange={(e) => setResubmitMessage(e.target.value)}
+                                placeholder="Explain what was resolved or provide additional info..."
+                                rows={3}
+                                maxLength={2000}
+                                className="w-full px-3 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white text-sm focus:border-emerald-500 focus:outline-none resize-none placeholder:text-gray-600"
+                              />
+                              <div className="flex items-center gap-2">
+                                <button
+                                  onClick={() => handleResubmit(payout.id)}
+                                  disabled={resubmitting || !resubmitMessage.trim()}
+                                  className="px-4 py-2 rounded-xl text-sm font-medium bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 transition-all disabled:opacity-50 flex items-center gap-2"
+                                >
+                                  {resubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                                  Send Resubmission
+                                </button>
+                                <button
+                                  onClick={() => { setResubmitId(null); setResubmitMessage(''); }}
+                                  className="px-4 py-2 rounded-xl text-sm font-medium glass text-gray-400 hover:text-white transition-all"
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="flex items-center justify-between">
+                              <p className="text-sm text-red-300">This payout was rejected. You can resubmit it once with a message.</p>
+                              <button
+                                onClick={() => setResubmitId(payout.id)}
+                                className="px-4 py-2 rounded-xl text-sm font-medium bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 transition-all flex items-center gap-2 whitespace-nowrap"
+                              >
+                                <RotateCcw className="w-4 h-4" />
+                                Resubmit
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {payout.status === 'REJECTED' && payout.resubmittedAt && (
+                        <div className="p-3 rounded-lg bg-gray-800/30 text-sm text-gray-500 italic">
+                          This payout was already resubmitted on {new Date(payout.resubmittedAt).toLocaleDateString('de-DE', { year: 'numeric', month: 'short', day: 'numeric' })} and rejected again. No further resubmissions are possible.
                         </div>
                       )}
 

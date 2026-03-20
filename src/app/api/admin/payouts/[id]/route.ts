@@ -40,6 +40,9 @@ function serializePayout(p: any) {
     processedAt: p.processedAt
       ? (typeof p.processedAt === 'string' ? p.processedAt : p.processedAt.toISOString())
       : null,
+    resubmittedAt: p.resubmittedAt
+      ? (typeof p.resubmittedAt === 'string' ? p.resubmittedAt : p.resubmittedAt.toISOString())
+      : null,
   };
 }
 

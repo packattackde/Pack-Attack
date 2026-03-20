@@ -60,6 +60,7 @@ export async function GET() {
         createdAt: p.createdAt.toISOString(),
         updatedAt: p.updatedAt.toISOString(),
         processedAt: p.processedAt?.toISOString() || null,
+        resubmittedAt: p.resubmittedAt?.toISOString() || null,
       })),
     });
   } catch (error) {
