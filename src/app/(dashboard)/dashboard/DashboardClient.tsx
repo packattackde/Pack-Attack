@@ -644,7 +644,7 @@ export const DashboardClient = memo(function DashboardClient({
             {/* Premium Tab Navigation */}
             <div className="relative mb-10">
                 <div
-                    className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-3xl blur-xl"/>
+                    className="absolute inset-0 bg-gradient-to-r from-[rgba(191,255,0,0.05)] via-[rgba(127,255,0,0.05)] to-[rgba(191,255,0,0.05)] rounded-3xl blur-xl"/>
                 <div className="relative glass-strong rounded-2xl p-2 overflow-x-auto">
                     <div className="flex gap-2 min-w-max">
                         {tabs.map((tab, index) => {
@@ -657,7 +657,7 @@ export const DashboardClient = memo(function DashboardClient({
                                     className={`group relative flex items-center gap-3 px-5 py-3.5 rounded-xl font-medium transition-all duration-300 ${
                                         isActive
                                             ? `bg-gradient-to-r ${tab.gradient} text-white shadow-lg`
-                                            : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                            : 'text-[#8888aa] hover:text-white hover:bg-white/5'
                                     }`}
                                     style={{
                                         animationDelay: `${index * 50}ms`,
@@ -714,7 +714,7 @@ export const DashboardClient = memo(function DashboardClient({
                     </span>
                                         <span className="text-2xl text-amber-400/80 font-medium">coins</span>
                                     </div>
-                                    <p className="text-gray-400 mt-3">Open packs, join battles, and win real cards!</p>
+                                    <p className="text-[#8888aa] mt-3">Open packs, join battles, and win real cards!</p>
                                 </div>
                                 <div className="flex gap-3">
                                     <Link
@@ -781,8 +781,8 @@ export const DashboardClient = memo(function DashboardClient({
                                             className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br ${stat.gradient} mb-4 shadow-lg`}>
                                             <Icon className="w-6 h-6 text-white"/>
                                         </div>
-                                        <p className="text-3xl font-bold text-white mb-1">{stat.value}</p>
-                                        <p className="text-sm text-gray-400">{stat.label}</p>
+                                        <p className="text-3xl font-bold text-[#BFFF00] mb-1">{stat.value}</p>
+                                        <p className="text-sm text-[#7777a0]">{stat.label}</p>
                                     </div>
                                 </div>
                             );
@@ -798,22 +798,22 @@ export const DashboardClient = memo(function DashboardClient({
                             transition: 'opacity 0.5s ease 280ms, transform 0.5s ease 280ms'
                         }}
                     >
-                        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 via-pink-500/10 to-blue-500/20"/>
+                        <div className="absolute inset-0 bg-gradient-to-br from-[rgba(191,255,0,0.1)] via-[rgba(127,255,0,0.05)] to-[rgba(191,255,0,0.1)]"/>
                         <div className="absolute inset-0 bg-grid opacity-20"/>
                         <div className="relative glass-strong p-6 md:p-8">
                             <div className="flex flex-col md:flex-row gap-6 md:items-start">
                                 {/* Left — level & title */}
                                 <div className="flex items-center gap-4 md:w-48 shrink-0">
-                                    <div className="relative flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500/30 to-pink-500/30 border border-purple-500/30 shadow-lg shadow-purple-500/20">
-                                        <Zap className="w-8 h-8 text-purple-300"/>
-                                        <span className="absolute -bottom-2 -right-2 flex items-center justify-center w-8 h-8 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 text-white text-sm font-extrabold shadow-md">
+                                    <div className="relative flex items-center justify-center w-20 h-20 rounded-2xl bg-[rgba(191,255,0,0.08)] border border-[rgba(191,255,0,0.2)] shadow-lg shadow-[rgba(191,255,0,0.1)]">
+                                        <Zap className="w-8 h-8 text-[#BFFF00]"/>
+                                        <span className="absolute -bottom-2 -right-2 flex items-center justify-center w-8 h-8 rounded-xl bg-gradient-to-br from-[#BFFF00] to-[#7fff00] text-black text-sm font-extrabold shadow-md">
                                             {initialLevelInfo.level}
                                         </span>
                                     </div>
                                     <div>
-                                        <p className="text-xs text-purple-400/80 font-medium uppercase tracking-wider mb-0.5">Your Rank</p>
+                                        <p className="text-xs text-[#BFFF00]/80 font-medium uppercase tracking-wider mb-0.5">Your Rank</p>
                                         <p className="text-2xl font-bold text-white">{initialLevelInfo.title}</p>
-                                        <p className="text-xs text-gray-500 mt-0.5">Level {initialLevelInfo.level}</p>
+                                        <p className="text-xs text-[#7777a0] mt-0.5">Level <span className="text-[#BFFF00] font-heading font-extrabold">{initialLevelInfo.level}</span></p>
                                     </div>
                                 </div>
 
@@ -824,12 +824,12 @@ export const DashboardClient = memo(function DashboardClient({
                                             <span className="text-sm font-semibold text-white">{initialLevelInfo.xpInCurrentLevel.toLocaleString()} XP</span>
                                             <span className="text-xs text-gray-500"> / {initialLevelInfo.xpForNextLevel.toLocaleString()} XP to next level</span>
                                         </div>
-                                        <span className="text-xs font-bold text-purple-400 tabular-nums">{initialLevelInfo.percent}%</span>
+                                        <span className="text-xs font-bold text-[#BFFF00] tabular-nums">{initialLevelInfo.percent}%</span>
                                     </div>
                                     {/* XP progress bar */}
-                                    <div className="h-3 w-full bg-white/[0.06] rounded-full overflow-hidden mb-4">
+                                    <div className="h-3 w-full bg-[rgba(255,255,255,0.06)] rounded-md overflow-hidden mb-4">
                                         <div
-                                            className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-700 ease-out relative overflow-hidden"
+                                            className="h-full bg-gradient-to-r from-[#BFFF00] to-[#7fff00] rounded-md transition-all duration-700 ease-out relative overflow-hidden shadow-[0_0_12px_rgba(191,255,0,0.3)]"
                                             style={{ width: `${initialLevelInfo.percent}%` }}
                                         >
                                             <div className="absolute inset-0 bg-gradient-to-r from-white/30 to-transparent"/>
@@ -838,13 +838,13 @@ export const DashboardClient = memo(function DashboardClient({
                                     {/* Inline stats */}
                                     <div className="flex flex-wrap gap-3">
                                         <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.06]">
-                                            <Zap className="w-3.5 h-3.5 text-purple-400"/>
-                                            <span className="text-xs text-gray-400">Total XP:</span>
+                                            <Zap className="w-3.5 h-3.5 text-[#BFFF00]"/>
+                                            <span className="text-xs text-[#7777a0]">Total XP:</span>
                                             <span className="text-xs font-semibold text-white">{initialLevelInfo.xp.toLocaleString()}</span>
                                         </div>
                                         <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.06]">
                                             <Coins className="w-3.5 h-3.5 text-amber-400"/>
-                                            <span className="text-xs text-gray-400">Coins earned this month:</span>
+                                            <span className="text-xs text-[#7777a0]">Coins earned this month:</span>
                                             <span className="text-xs font-semibold text-white">{initialLevelInfo.coinsEarnedThisMonth} / 500</span>
                                         </div>
                                         {initialLevelInfo.pendingCoins > 0 && (
@@ -859,14 +859,14 @@ export const DashboardClient = memo(function DashboardClient({
 
                             {/* How to earn XP — transparent guide */}
                             <div className="mt-6 pt-5 border-t border-white/[0.06]">
-                                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-                                    <Sparkles className="w-3.5 h-3.5 text-purple-400"/>
+                                <p className="text-xs font-semibold text-[#8888aa] uppercase tracking-wider mb-3 flex items-center gap-2">
+                                    <Sparkles className="w-3.5 h-3.5 text-[#BFFF00]"/>
                                     How to earn XP
                                 </p>
                                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                                     {[
-                                        { icon: Package, label: 'Open packs', desc: '10 × price × qty', color: 'text-blue-400', bg: 'bg-blue-500/10' },
-                                        { icon: Swords, label: 'Battle', desc: '+150 XP each', color: 'text-purple-400', bg: 'bg-purple-500/10' },
+                                        { icon: Package, label: 'Open packs', desc: '10 × price × qty', color: 'text-[#BFFF00]', bg: 'bg-[rgba(191,255,0,0.08)]' },
+                                        { icon: Swords, label: 'Battle', desc: '+150 XP each', color: 'text-[#BFFF00]', bg: 'bg-[rgba(191,255,0,0.08)]' },
                                         { icon: Trophy, label: 'Win battle', desc: '+250 bonus', color: 'text-amber-400', bg: 'bg-amber-500/10' },
                                         { icon: Coins, label: 'Sell cards', desc: '+5 XP per sale', color: 'text-green-400', bg: 'bg-green-500/10' },
                                     ].map(item => {
@@ -898,10 +898,10 @@ export const DashboardClient = memo(function DashboardClient({
                             }}
                         >
                             <div
-                                className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-blue-500/10 to-transparent rounded-bl-full"/>
+                                className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[rgba(191,255,0,0.05)] to-transparent rounded-bl-full"/>
                             <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-3">
-                                <div className="p-2 rounded-lg bg-gradient-to-br from-amber-500 to-orange-500">
-                                    <Zap className="w-5 h-5 text-white"/>
+                                <div className="p-2 rounded-lg bg-gradient-to-br from-[#BFFF00] to-[#7fff00]">
+                                    <Zap className="w-5 h-5 text-black"/>
                                 </div>
                                 Quick Actions
                             </h2>
@@ -965,10 +965,10 @@ export const DashboardClient = memo(function DashboardClient({
                             }}
                         >
                             <div
-                                className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-purple-500/10 to-transparent rounded-bl-full"/>
+                                className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[rgba(191,255,0,0.05)] to-transparent rounded-bl-full"/>
                             <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-3">
-                                <div className="p-2 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500">
-                                    <Sparkles className="w-5 h-5 text-white"/>
+                                <div className="p-2 rounded-lg bg-gradient-to-br from-[#BFFF00] to-[#7fff00]">
+                                    <Sparkles className="w-5 h-5 text-black"/>
                                 </div>
                                 Recent Pulls
                             </h2>
@@ -1005,7 +1005,7 @@ export const DashboardClient = memo(function DashboardClient({
                                     {pulls.length > 4 && (
                                         <button
                                             onClick={() => setActiveTab('collection')}
-                                            className="w-full mt-4 py-3 text-sm text-gray-400 hover:text-white bg-white/[0.02] hover:bg-white/[0.05] rounded-xl transition-all flex items-center justify-center gap-2"
+                                            className="w-full mt-4 py-3 text-sm text-[#BFFF00] hover:text-[#7fff00] bg-white/[0.02] hover:bg-white/[0.05] rounded-xl transition-all flex items-center justify-center gap-2"
                                         >
                                             View all {pulls.length} cards
                                             <ArrowUpRight className="w-4 h-4"/>
@@ -1015,12 +1015,12 @@ export const DashboardClient = memo(function DashboardClient({
                             ) : (
                                 <div className="text-center py-8">
                                     <div
-                                        className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gray-800/50 mb-4">
+                                        className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#12123a]/50 mb-4">
                                         <Package className="w-8 h-8 text-gray-600"/>
                                     </div>
-                                    <p className="text-gray-400 mb-2">No cards yet</p>
+                                    <p className="text-[#8888aa] mb-2">No cards yet</p>
                                     <Link href="/boxes"
-                                          className="inline-flex items-center gap-1 text-blue-400 hover:text-blue-300 text-sm">
+                                          className="inline-flex items-center gap-1 text-[#BFFF00] hover:text-[#7fff00] text-sm">
                                         Open some packs! <ArrowUpRight className="w-3 h-3"/>
                                     </Link>
                                 </div>
@@ -1040,7 +1040,7 @@ export const DashboardClient = memo(function DashboardClient({
                                 <div
                                     className="absolute inset-0 rounded-full border-4 border-amber-500 border-t-transparent animate-spin"/>
                             </div>
-                            <p className="text-gray-400">Loading your achievements...</p>
+                            <p className="text-[#8888aa]">Loading your achievements...</p>
                         </div>
                     ) : achievements ? (
                         <>
@@ -1070,15 +1070,15 @@ export const DashboardClient = memo(function DashboardClient({
                           {achievements.summary.unlocked}
                         </span>
                                                 <span
-                                                    className="text-2xl text-gray-400 font-medium">/ {achievements.summary.total}</span>
+                                                    className="text-2xl text-[#8888aa] font-medium">/ {achievements.summary.total}</span>
                                             </div>
                                             <div className="mt-4 w-full max-w-md">
                                                 <div className="flex justify-between text-sm mb-2">
-                                                    <span className="text-gray-400">Overall Progress</span>
+                                                    <span className="text-[#8888aa]">Overall Progress</span>
                                                     <span
                                                         className="text-amber-400 font-semibold">{achievements.summary.progress}%</span>
                                                 </div>
-                                                <div className="h-3 rounded-full bg-gray-800 overflow-hidden">
+                                                <div className="h-3 rounded-full bg-[#12123a] overflow-hidden">
                                                     <div
                                                         className="h-full rounded-full bg-gradient-to-r from-amber-500 to-yellow-500 transition-all duration-1000"
                                                         style={{width: `${achievements.summary.progress}%`}}
@@ -1161,7 +1161,7 @@ export const DashboardClient = memo(function DashboardClient({
                                     className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
                                         achievementCategoryFilter === 'ALL'
                                             ? 'bg-white/10 text-white border border-white/20'
-                                            : 'bg-white/[0.03] text-gray-400 border border-white/[0.05] hover:bg-white/[0.06] hover:text-white'
+                                            : 'bg-white/[0.03] text-[#8888aa] border border-white/[0.05] hover:bg-white/[0.06] hover:text-white'
                                     }`}
                                 >
                                     <Star className="w-4 h-4"/>
@@ -1178,7 +1178,7 @@ export const DashboardClient = memo(function DashboardClient({
                                             className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
                                                 isActive
                                                     ? `${config.bg} ${config.color} border border-current/30`
-                                                    : 'bg-white/[0.03] text-gray-400 border border-white/[0.05] hover:bg-white/[0.06] hover:text-white'
+                                                    : 'bg-white/[0.03] text-[#8888aa] border border-white/[0.05] hover:bg-white/[0.06] hover:text-white'
                                             }`}
                                         >
                                             <Icon className="w-4 h-4"/>
@@ -1216,13 +1216,13 @@ export const DashboardClient = memo(function DashboardClient({
                                             )}
 
                                             <div
-                                                className={`relative glass-strong p-5 border ${achievement.isUnlocked ? rarityStyle.border : 'border-gray-700/50'}`}>
+                                                className={`relative glass-strong p-5 border ${achievement.isUnlocked ? rarityStyle.border : 'border-[rgba(255,255,255,0.06)]'}`}>
                                                 {/* Header with icon and rarity */}
                                                 <div className="flex items-start justify-between mb-4">
                                                     <div className={`relative p-3 rounded-xl ${
                                                         achievement.isUnlocked
                                                             ? `bg-gradient-to-br ${rarityStyle.gradient} shadow-lg`
-                                                            : 'bg-gray-800'
+                                                            : 'bg-[#12123a]'
                                                     }`}>
                                                         <Icon
                                                             className={`w-6 h-6 ${achievement.isUnlocked ? 'text-white' : 'text-gray-500'}`}/>
@@ -1250,7 +1250,7 @@ export const DashboardClient = memo(function DashboardClient({
                                                 </div>
 
                                                 {/* Title and description */}
-                                                <h3 className={`font-bold text-lg mb-1 ${achievement.isUnlocked ? 'text-white' : 'text-gray-400'}`}>
+                                                <h3 className={`font-bold text-lg mb-1 ${achievement.isUnlocked ? 'text-white' : 'text-[#8888aa]'}`}>
                                                     {achievement.name}
                                                 </h3>
                                                 <p className="text-sm text-gray-500 mb-4 line-clamp-2">
@@ -1262,11 +1262,11 @@ export const DashboardClient = memo(function DashboardClient({
                                                     <div className="flex justify-between text-xs mb-1.5">
                                                         <span className="text-gray-500">Progress</span>
                                                         <span
-                                                            className={achievement.isUnlocked ? rarityStyle.color : 'text-gray-400'}>
+                                                            className={achievement.isUnlocked ? rarityStyle.color : 'text-[#8888aa]'}>
                               {achievement.progress}/{achievement.requirement}
                             </span>
                                                     </div>
-                                                    <div className="h-2 rounded-full bg-gray-800 overflow-hidden">
+                                                    <div className="h-2 rounded-full bg-[#12123a] overflow-hidden">
                                                         <div
                                                             className={`h-full rounded-full transition-all duration-500 ${
                                                                 achievement.isUnlocked
@@ -1331,7 +1331,7 @@ export const DashboardClient = memo(function DashboardClient({
                                         <Trophy className="w-10 h-10 text-amber-400"/>
                                     </div>
                                     <h3 className="text-2xl font-bold text-white mb-3">No achievements found</h3>
-                                    <p className="text-gray-400 mb-6">
+                                    <p className="text-[#8888aa] mb-6">
                                         Try selecting a different category
                                     </p>
                                     <button
@@ -1347,7 +1347,7 @@ export const DashboardClient = memo(function DashboardClient({
                     ) : (
                         <div className="glass-strong rounded-2xl p-16 text-center">
                             <Trophy className="w-16 h-16 text-gray-600 mx-auto mb-4"/>
-                            <p className="text-gray-400">Unable to load achievements</p>
+                            <p className="text-[#8888aa]">Unable to load achievements</p>
                             <button
                                 onClick={fetchAchievements}
                                 className="mt-4 inline-flex items-center gap-2 px-6 py-3 bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 font-medium rounded-xl transition-all"
@@ -1390,7 +1390,7 @@ export const DashboardClient = memo(function DashboardClient({
                                             ? config
                                                 ? `${config.bg} ${config.color} border ${config.border}`
                                                 : 'bg-white/10 text-white border border-white/20'
-                                            : 'bg-white/[0.03] text-gray-400 border border-white/[0.05] hover:bg-white/[0.06] hover:text-white'
+                                            : 'bg-white/[0.03] text-[#8888aa] border border-white/[0.05] hover:bg-white/[0.06] hover:text-white'
                                     }`}
                                     style={{animationDelay: `${index * 50}ms`}}
                                 >
@@ -1409,7 +1409,7 @@ export const DashboardClient = memo(function DashboardClient({
                                 <div
                                     className="absolute inset-0 rounded-full border-4 border-purple-500 border-t-transparent animate-spin"/>
                             </div>
-                            <p className="text-gray-400">Loading your orders...</p>
+                            <p className="text-[#8888aa]">Loading your orders...</p>
                         </div>
                     ) : orders.length > 0 ? (
                         <div className="space-y-4">
@@ -1457,7 +1457,7 @@ export const DashboardClient = memo(function DashboardClient({
                                                 {order.items.map((item) => (
                                                     <div key={item.id} className="flex-shrink-0 w-24">
                                                         <div
-                                                            className="relative aspect-[63/88] rounded-xl overflow-hidden bg-gray-800 ring-1 ring-white/10">
+                                                            className="relative aspect-[63/88] rounded-xl overflow-hidden bg-[#0B0B2B] ring-1 ring-white/10">
                                                             {item.cardImage ? (
                                                                 <Image
                                                                     src={item.cardImage}
@@ -1473,7 +1473,7 @@ export const DashboardClient = memo(function DashboardClient({
                                                                 </div>
                                                             )}
                                                         </div>
-                                                        <p className="text-xs text-gray-400 mt-2 truncate text-center">{item.cardName}</p>
+                                                        <p className="text-xs text-[#8888aa] mt-2 truncate text-center">{item.cardName}</p>
                                                     </div>
                                                 ))}
                                             </div>
@@ -1484,7 +1484,7 @@ export const DashboardClient = memo(function DashboardClient({
                                                     <div className="p-2 rounded-lg bg-emerald-500/10">
                                                         <MapPin className="w-4 h-4 text-emerald-400"/>
                                                     </div>
-                                                    <div className="text-gray-400">
+                                                    <div className="text-[#8888aa]">
                                                         <p className="text-white font-medium">{order.shippingName}</p>
                                                         <p>{order.shippingAddress}</p>
                                                         <p>{order.shippingCity}, {order.shippingZip}</p>
@@ -1511,7 +1511,7 @@ export const DashboardClient = memo(function DashboardClient({
                                 <ShoppingBag className="w-10 h-10 text-emerald-400"/>
                             </div>
                             <h3 className="text-2xl font-bold text-white mb-3">No orders yet</h3>
-                            <p className="text-gray-400 mb-8 max-w-md mx-auto">
+                            <p className="text-[#8888aa] mb-8 max-w-md mx-auto">
                                 When you checkout cards from your collection, they'll appear here for tracking.
                             </p>
                             <button
@@ -1536,7 +1536,7 @@ export const DashboardClient = memo(function DashboardClient({
                                 <div
                                     className="absolute inset-0 rounded-full border-4 border-orange-500 border-t-transparent animate-spin"/>
                             </div>
-                            <p className="text-gray-400">Crunching your numbers...</p>
+                            <p className="text-[#8888aa]">Crunching your numbers...</p>
                         </div>
                     ) : stats ? (
                         <>
@@ -1590,8 +1590,8 @@ export const DashboardClient = memo(function DashboardClient({
                                                     className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br ${stat.gradient} mb-4 shadow-lg`}>
                                                     <Icon className="w-7 h-7 text-white"/>
                                                 </div>
-                                                <p className="text-3xl font-bold text-white mb-1">{stat.value}</p>
-                                                <p className="text-sm text-gray-400">{stat.label}</p>
+                                                <p className="text-3xl font-bold text-[#BFFF00] mb-1">{stat.value}</p>
+                                                <p className="text-sm text-[#7777a0]">{stat.label}</p>
                                             </div>
                                         </div>
                                     );
@@ -1633,7 +1633,7 @@ export const DashboardClient = memo(function DashboardClient({
                                             {
                                                 label: 'Collection Value',
                                                 value: stats.collectionValue.toLocaleString(),
-                                                color: 'text-purple-400',
+                                                color: 'text-[#BFFF00]',
                                                 icon: Gem
                                             },
                                             {
@@ -1647,7 +1647,7 @@ export const DashboardClient = memo(function DashboardClient({
                                             return (
                                                 <div key={item.label}
                                                      className="flex justify-between items-center p-4 bg-white/[0.02] rounded-xl border border-white/[0.05]">
-                          <span className="text-gray-400 flex items-center gap-2">
+                          <span className="text-[#7777a0] flex items-center gap-2">
                             <Icon className="w-4 h-4"/>
                               {item.label}
                           </span>
@@ -1678,12 +1678,12 @@ export const DashboardClient = memo(function DashboardClient({
                                     <div className="space-y-3">
                                         <div
                                             className="flex justify-between items-center p-4 bg-white/[0.02] rounded-xl border border-white/[0.05]">
-                                            <span className="text-gray-400">Total Orders</span>
+                                            <span className="text-[#7777a0]">Total Orders</span>
                                             <span className="font-bold text-2xl text-white">{stats.totalOrders}</span>
                                         </div>
                                         <div
                                             className="flex justify-between items-center p-4 bg-white/[0.02] rounded-xl border border-white/[0.05]">
-                      <span className="text-gray-400 flex items-center gap-2">
+                      <span className="text-[#7777a0] flex items-center gap-2">
                         <Clock className="w-4 h-4"/>
                         Pending/Processing
                       </span>
@@ -1692,7 +1692,7 @@ export const DashboardClient = memo(function DashboardClient({
                                         </div>
                                         <div
                                             className="flex justify-between items-center p-4 bg-white/[0.02] rounded-xl border border-white/[0.05]">
-                      <span className="text-gray-400 flex items-center gap-2">
+                      <span className="text-[#7777a0] flex items-center gap-2">
                         <CheckCircle2 className="w-4 h-4"/>
                         Completed
                       </span>
@@ -1769,14 +1769,14 @@ export const DashboardClient = memo(function DashboardClient({
                                                     </div>
                                                 )}
                                                 <div
-                                                    className={`inline-flex items-center justify-center w-12 h-12 rounded-xl ${isComplete ? `bg-gradient-to-br ${milestone.gradient}` : 'bg-gray-800'} mb-4`}>
+                                                    className={`inline-flex items-center justify-center w-12 h-12 rounded-xl ${isComplete ? `bg-gradient-to-br ${milestone.gradient}` : 'bg-[#12123a]'} mb-4`}>
                                                     <Icon
                                                         className={`w-6 h-6 ${isComplete ? 'text-white' : 'text-gray-500'}`}/>
                                                 </div>
-                                                <p className={`font-bold mb-1 ${isComplete ? 'text-white' : 'text-gray-400'}`}>{milestone.label}</p>
+                                                <p className={`font-bold mb-1 ${isComplete ? 'text-white' : 'text-[#8888aa]'}`}>{milestone.label}</p>
                                                 <p className="text-sm text-gray-500 mb-3">{milestone.current}/{milestone.target}</p>
                                                 {/* Progress bar */}
-                                                <div className="h-2 rounded-full bg-gray-800 overflow-hidden">
+                                                <div className="h-2 rounded-full bg-[#12123a] overflow-hidden">
                                                     <div
                                                         className={`h-full rounded-full bg-gradient-to-r ${milestone.gradient} transition-all duration-500`}
                                                         style={{width: `${progress}%`}}
@@ -1791,7 +1791,7 @@ export const DashboardClient = memo(function DashboardClient({
                     ) : (
                         <div className="glass-strong rounded-2xl p-16 text-center">
                             <BarChart3 className="w-16 h-16 text-gray-600 mx-auto mb-4"/>
-                            <p className="text-gray-400">Unable to load statistics</p>
+                            <p className="text-[#8888aa]">Unable to load statistics</p>
                         </div>
                     )}
                 </div>
@@ -1813,10 +1813,10 @@ export const DashboardClient = memo(function DashboardClient({
                         }}
                     >
                         <div
-                            className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-blue-500/10 to-transparent rounded-bl-full"/>
+                            className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-[rgba(191,255,0,0.05)] to-transparent rounded-bl-full"/>
                         <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-3">
-                            <div className="p-2 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500">
-                                <User className="w-5 h-5 text-white"/>
+                            <div className="p-2 rounded-lg bg-gradient-to-br from-[#BFFF00] to-[#7fff00]">
+                                <User className="w-5 h-5 text-black"/>
                             </div>
                             Profile Information
                         </h3>
@@ -1827,7 +1827,7 @@ export const DashboardClient = memo(function DashboardClient({
                                     type="text"
                                     value={profileForm.name}
                                     onChange={(e) => setProfileForm({...profileForm, name: e.target.value})}
-                                    className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all"
+                                    className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-[rgba(191,255,0,0.3)] focus:ring-2 focus:ring-[rgba(191,255,0,0.1)] transition-all"
                                     placeholder="Your name"
                                 />
                             </div>
@@ -1836,7 +1836,7 @@ export const DashboardClient = memo(function DashboardClient({
                                 <div
                                     className="flex items-center gap-3 px-4 py-3 bg-black/20 border border-white/[0.05] rounded-xl">
                                     <Mail className="w-5 h-5 text-gray-500"/>
-                                    <span className="text-gray-400 flex-1">{user.email}</span>
+                                    <span className="text-[#8888aa] flex-1">{user.email}</span>
                                     {user.emailVerified && (
                                         <div
                                             className="flex items-center gap-1 px-2 py-1 rounded-full bg-green-500/10 border border-green-500/30">
@@ -1852,7 +1852,7 @@ export const DashboardClient = memo(function DashboardClient({
                                     value={profileForm.bio}
                                     onChange={(e) => setProfileForm({...profileForm, bio: e.target.value})}
                                     rows={3}
-                                    className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all resize-none"
+                                    className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-[rgba(191,255,0,0.3)] focus:ring-2 focus:ring-[rgba(191,255,0,0.1)] transition-all resize-none"
                                     placeholder="Tell us about yourself..."
                                 />
                             </div>
@@ -1959,10 +1959,10 @@ export const DashboardClient = memo(function DashboardClient({
                         }}
                     >
                         <div
-                            className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-purple-500/10 to-transparent rounded-bl-full"/>
+                            className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-[rgba(191,255,0,0.05)] to-transparent rounded-bl-full"/>
                         <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-3">
-                            <div className="p-2 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500">
-                                <Calendar className="w-5 h-5 text-white"/>
+                            <div className="p-2 rounded-lg bg-gradient-to-br from-[#BFFF00] to-[#7fff00]">
+                                <Calendar className="w-5 h-5 text-black"/>
                             </div>
                             Account Information
                         </h3>
@@ -2002,14 +2002,14 @@ export const DashboardClient = memo(function DashboardClient({
                         <button
                             onClick={handleSaveProfile}
                             disabled={saving}
-                            className="group relative inline-flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold rounded-xl transition-all hover:scale-105 hover:shadow-xl hover:shadow-purple-500/25 disabled:opacity-50 disabled:hover:scale-100"
+                            className="group relative inline-flex items-center gap-3 px-10 py-4 bg-[#BFFF00] hover:bg-[#7fff00] text-black font-bold rounded-xl transition-all hover:scale-105 hover:shadow-xl hover:shadow-[rgba(191,255,0,0.25)] disabled:opacity-50 disabled:hover:scale-100"
                         >
                             <div
                                 className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"/>
                             {saving ? (
                                 <>
                                     <div
-                                        className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin relative z-10"/>
+                                        className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin relative z-10"/>
                                     <span className="relative z-10">Saving...</span>
                                 </>
                             ) : (

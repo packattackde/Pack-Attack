@@ -102,22 +102,22 @@ export default async function UserDashboard() {
   }));
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display">
+    <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display">
       {/* Background Effects */}
-      <div className="fixed inset-0 bg-grid opacity-30" />
+      <div className="fixed inset-0 bg-grid opacity-20" />
       <div className="fixed inset-0 radial-gradient" />
 
       <div className="relative container py-8 md:py-12">
         {/* Welcome Header */}
         <div className="mb-8">
           <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full glass text-sm">
-            <Sparkles className="w-4 h-4 text-blue-400" />
+            <Sparkles className="w-4 h-4 text-[#BFFF00]" />
             <span className="text-gray-300">Dashboard</span>
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
-            Welcome back, <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">{user.name || 'Player'}</span>!
+            Welcome back, <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#BFFF00] to-[#7fff00]">{user.name || 'Player'}</span>!
           </h1>
-          <p className="text-gray-400">Manage your collection, track orders, and view your stats</p>
+          <p className="text-[#8888aa]">Manage your collection, track orders, and view your stats</p>
         </div>
 
         <DashboardClient
