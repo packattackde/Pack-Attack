@@ -207,11 +207,11 @@ export function Navigation() {
   }, [session, feedbackCount]);
 
   return (
-    <nav ref={navRef} className="relative z-50 border-b border-[rgba(255,255,255,0.06)] bg-[#0B0B2B]" id="main-navigation">
-      <div className="container flex h-16 items-center gap-6">
+    <nav ref={navRef} className="relative z-50 h-[72px] border-b border-[rgba(191,255,0,0.08)] shadow-[0_1px_0_rgba(191,255,0,0.06)] bg-[#0B0B2B]" id="main-navigation">
+      <div className="container flex h-[72px] items-center gap-8">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 shrink-0 touch-target group">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[rgba(191,255,0,0.15)] border border-[rgba(191,255,0,0.25)] group-hover:bg-[rgba(191,255,0,0.25)] transition-colors">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[rgba(191,255,0,0.15)] border border-[rgba(191,255,0,0.25)] group-hover:bg-[rgba(191,255,0,0.25)] transition-colors">
             <Package className="h-4 w-4 text-[#BFFF00]" />
           </div>
           <span className="text-lg font-bold font-heading bg-gradient-to-r from-[#BFFF00] to-[#7fff00] bg-clip-text text-transparent">
@@ -220,7 +220,7 @@ export function Navigation() {
         </Link>
 
         {/* Desktop Navigation Links */}
-        <div className="hidden lg:flex items-center gap-1 flex-1">
+        <div className="hidden lg:flex items-center gap-1.5 flex-1">
           {filteredLinks.map((link) => {
             // Check if a more specific sibling link matches — avoid parent highlighting child routes
             const hasMoreSpecificMatch = filteredLinks.some(
@@ -233,7 +233,7 @@ export function Navigation() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`relative flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-150 touch-target ${
+                className={`relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 touch-target ${
                   isActive
                     ? 'bg-[rgba(191,255,0,0.08)] text-[#BFFF00] shadow-sm'
                     : 'text-[#8888aa] hover:text-[#f0f0f5] hover:bg-[rgba(255,255,255,0.04)]'
@@ -252,14 +252,14 @@ export function Navigation() {
         </div>
 
         {/* Desktop Right Side */}
-        <div className="hidden md:flex items-center gap-2 shrink-0">
+        <div className="hidden md:flex items-center gap-3 shrink-0">
           {status === 'loading' ? (
-            <div className="h-9 w-24 animate-pulse rounded-lg bg-gray-800" />
+            <div className="h-10 w-24 animate-pulse rounded-lg bg-[#1a1a4a]" />
           ) : session ? (
             <>
               {/* Coin Balance */}
               <Link href="/purchase-coins">
-                <div className="flex items-center gap-2 h-9 px-3 rounded-lg bg-yellow-500/10 border border-yellow-500/25 hover:bg-yellow-500/20 cursor-pointer transition-all duration-150">
+                <div className="flex items-center gap-2 h-10 px-3.5 rounded-xl bg-yellow-500/10 border border-yellow-500/25 hover:bg-yellow-500/20 cursor-pointer transition-all duration-150 shadow-sm">
                   <Coins className="h-4 w-4 text-yellow-400" />
                   <span className="text-sm font-semibold text-yellow-400 tabular-nums">
                     {userCoins !== null ? userCoins.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '...'}
@@ -270,11 +270,11 @@ export function Navigation() {
               {/* Level Badge */}
               {levelData && (
                 <Link href="/dashboard" title={`Level ${levelData.level} — ${levelData.title}`}>
-                  <div className="flex items-center gap-1.5 h-9 px-2.5 rounded-lg bg-[rgba(191,255,0,0.08)] border border-[rgba(191,255,0,0.2)] hover:bg-[rgba(191,255,0,0.15)] transition-all duration-150 relative overflow-hidden">
+                  <div className="flex items-center gap-1.5 h-10 px-3 rounded-xl bg-[rgba(191,255,0,0.08)] border border-[rgba(191,255,0,0.2)] hover:bg-[rgba(191,255,0,0.15)] transition-all duration-150 relative overflow-hidden">
                     {/* XP fill bar */}
                     <div
                       className="absolute inset-0 bg-[#BFFF00] origin-left transition-transform duration-500"
-                      style={{ transform: `scaleX(${levelData.percent / 100})`, opacity: 0.15 }}
+                      style={{ transform: `scaleX(${levelData.percent / 100})`, opacity: 0.2 }}
                     />
                     <Zap className="h-3.5 w-3.5 text-[#BFFF00] relative z-10 shrink-0" />
                     <span className="text-xs font-bold text-[#BFFF00] relative z-10 tabular-nums">
@@ -286,8 +286,8 @@ export function Navigation() {
 
               {/* Cart */}
               <Link href="/cart" className="relative">
-                <div className="flex items-center justify-center h-9 w-9 rounded-lg hover:bg-white/[0.06] transition-colors">
-                  <ShoppingCart className="h-4 w-4 text-gray-400" />
+                <div className="flex items-center justify-center h-10 w-10 rounded-xl hover:bg-white/[0.06] transition-colors">
+                  <ShoppingCart className="h-4 w-4 text-[#8888aa]" />
                   {cartCount > 0 && (
                     <span className="absolute -top-0.5 -right-0.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-[#BFFF00] text-[10px] font-bold text-black min-w-[18px] h-[18px] px-1">
                       {cartCount}
@@ -297,17 +297,17 @@ export function Navigation() {
               </Link>
 
               {/* User Profile */}
-              <Link href="/dashboard" className="hidden lg:flex items-center gap-2 h-9 px-3 rounded-lg hover:bg-white/[0.06] transition-colors">
+              <Link href="/dashboard" className="hidden lg:flex items-center gap-2 h-10 px-3.5 rounded-xl hover:bg-white/[0.06] transition-colors">
                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[rgba(191,255,0,0.15)]">
                   <User className="h-3.5 w-3.5 text-[#BFFF00]" />
                 </div>
-                <span className="text-sm text-gray-300 max-w-[100px] truncate">{session.user.name || session.user.email}</span>
+                <span className="text-sm text-[#f0f0f5] max-w-[100px] truncate">{session.user.name || session.user.email}</span>
               </Link>
 
               {/* Sign Out */}
               <button
                 onClick={() => signOut({ callbackUrl: '/' })}
-                className="flex items-center justify-center h-9 w-9 rounded-lg text-gray-500 hover:text-red-400 hover:bg-red-500/10 transition-all duration-150"
+                className="flex items-center justify-center h-10 w-10 rounded-xl text-[#7777a0] hover:text-red-400 hover:bg-red-500/10 transition-all duration-150"
                 title="Sign out"
               >
                 <LogOut className="h-4 w-4" />
@@ -315,13 +315,13 @@ export function Navigation() {
             </>
           ) : (
             <div className="flex items-center gap-2">
-              <Button asChild variant="ghost" size="sm" className="text-gray-300 hover:text-white">
+              <Button asChild variant="ghost" size="sm" className="text-[#f0f0f5] hover:text-white">
                 <Link href="/login">
                   <LogIn className="mr-2 h-4 w-4" />
                   Sign In
                 </Link>
               </Button>
-              <Button asChild size="sm" className="bg-[#BFFF00] hover:bg-[#a8e600] text-black shadow-lg shadow-[rgba(191,255,0,0.25)]">
+              <Button asChild size="sm" className="bg-[#BFFF00] hover:bg-[#a8e600] text-black font-bold rounded-xl shadow-lg shadow-[rgba(191,255,0,0.25)]">
                 <Link href="/register">Get Started</Link>
               </Button>
             </div>
@@ -341,7 +341,7 @@ export function Navigation() {
                 </div>
               </Link>
               <Link href="/cart" className="relative flex items-center justify-center h-9 w-9 touch-target">
-                <ShoppingCart className="h-5 w-5 text-gray-400" />
+                <ShoppingCart className="h-5 w-5 text-[#8888aa]" />
                 {cartCount > 0 && (
                   <span className="absolute top-0 right-0 flex items-center justify-center rounded-full bg-[#BFFF00] text-[10px] font-bold text-black min-w-[16px] h-[16px] px-1">
                     {cartCount}
@@ -354,7 +354,7 @@ export function Navigation() {
           {/* Hamburger Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="flex items-center justify-center h-9 w-9 rounded-lg text-gray-400 hover:text-white hover:bg-white/[0.06] active:bg-white/10 transition-all touch-target"
+            className="flex items-center justify-center h-9 w-9 rounded-lg text-[#8888aa] hover:text-white hover:bg-white/[0.06] active:bg-white/10 transition-all touch-target"
             aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={mobileMenuOpen}
             aria-controls="mobile-menu"
@@ -375,7 +375,7 @@ export function Navigation() {
           mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
         style={{
-          top: '64px'
+          top: '72px'
         }}
         role="dialog"
         aria-modal="true"
@@ -383,7 +383,7 @@ export function Navigation() {
       >
         <div className="flex flex-col h-full overflow-y-auto overscroll-contain">
           {/* Navigation Links */}
-          <div className="flex-1 px-3 py-4 space-y-0.5">
+          <div className="flex-1 px-3 py-4 space-y-1">
             {filteredLinks.map((link) => {
               const hasMoreSpecificMatch = filteredLinks.some(
                 (other) => other.href !== link.href && other.href.startsWith(link.href + '/') && pathname?.startsWith(other.href)
@@ -395,14 +395,14 @@ export function Navigation() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`flex items-center gap-3 px-4 py-3.5 rounded-xl text-[15px] font-medium transition-all touch-target min-h-[52px] ${
+                  className={`flex items-center gap-3 px-5 py-4 rounded-xl text-[15px] font-medium transition-all touch-target min-h-[52px] ${
                     isActive
                       ? 'bg-[rgba(191,255,0,0.1)] text-[#BFFF00]'
-                      : 'text-gray-300 active:bg-white/[0.06]'
+                      : 'text-[#f0f0f5] active:bg-white/[0.06]'
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  <link.icon className={`h-5 w-5 shrink-0 ${isActive ? 'text-[#BFFF00]' : 'text-gray-500'}`} />
+                  <link.icon className={`h-5 w-5 shrink-0 ${isActive ? 'text-[#BFFF00]' : 'text-[#7777a0]'}`} />
                   <span>{link.label}</span>
                   {link.badge && link.badge > 0 ? (
                     <span className="ml-auto flex items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white min-w-[18px] h-[18px] px-1">
@@ -417,7 +417,7 @@ export function Navigation() {
           {/* User Section */}
           <div className="border-t border-white/[0.06] px-3 py-4 space-y-3 safe-area-padding-bottom">
             {status === 'loading' ? (
-              <div className="h-14 animate-pulse rounded-xl bg-gray-800" />
+              <div className="h-14 animate-pulse rounded-xl bg-[#1a1a4a]" />
             ) : session ? (
               <>
                 <Link
@@ -440,7 +440,7 @@ export function Navigation() {
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-gray-500 truncate">
+                    <p className="text-xs text-[#7777a0] truncate">
                       {session.user.email}
                     </p>
                     {levelData && (
