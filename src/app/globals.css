@@ -87,17 +87,17 @@
    ============================================ */
 
 .glass {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--pa-bg-card);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--pa-border);
+  border: 1px solid var(--pa-border-hover);
 }
 
 .glass-strong {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--pa-bg-surface);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--pa-border-hover);
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 /* ============================================
@@ -143,8 +143,8 @@
 }
 
 .card-lift:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px -12px rgba(59, 130, 246, 0.25);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px -12px rgba(191, 255, 0, 0.15), 0 8px 16px -8px rgba(0, 0, 0, 0.4);
 }
 
 /* ============================================

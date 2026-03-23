@@ -136,16 +136,16 @@ export default async function BattlesPage() {
                   <h2 className="text-2xl font-bold text-white">Active Battles</h2>
                   <span className="text-sm text-[#8888aa]">({activeBattles.length})</span>
                 </div>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                   {activeBattles.map((battle) => {
                     const cost = totalCost(battle);
                     const modeLabel = getBattleModeLabel(battle.battleMode, battle.shareMode);
-                    
+
                     return (
-                      <Link 
-                        key={battle.id} 
+                      <Link
+                        key={battle.id}
                         href={`/battles/${battle.id}`}
-                        className="group glass rounded-2xl p-5 card-lift"
+                        className="group glass rounded-2xl p-6 card-lift hover:border-[rgba(191,255,0,0.2)] transition-all"
                       >
                         <div className="flex items-center justify-between mb-4">
                           <span className="text-sm font-medium text-[#f0f0f5]">
