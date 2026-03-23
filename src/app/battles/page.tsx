@@ -72,7 +72,7 @@ export default async function BattlesPage() {
         {/* Header */}
         <div className="mb-10 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full glass text-sm border border-[rgba(191,255,0,0.3)]">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 rounded-full text-sm bg-[#12123a] border border-[rgba(191,255,0,0.3)]">
               <Swords className="w-4 h-4 text-[#BFFF00]" />
               <span className="text-[#f0f0f5]">PvP Arena</span>
             </div>
@@ -103,7 +103,7 @@ export default async function BattlesPage() {
         </div>
 
         {battles.length === 0 ? (
-          <div className="glass-strong rounded-2xl p-12 text-center">
+          <div className="rounded-2xl p-12 text-center bg-[#10103a] border border-[rgba(255,255,255,0.1)]">
             <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-[rgba(191,255,0,0.08)]">
               <Swords className="w-10 h-10 text-[#BFFF00]" />
             </div>
@@ -145,7 +145,7 @@ export default async function BattlesPage() {
                       <Link
                         key={battle.id}
                         href={`/battles/${battle.id}`}
-                        className="group glass rounded-2xl p-6 card-lift hover:border-[rgba(191,255,0,0.2)] transition-all"
+                        className="group rounded-2xl p-6 card-lift transition-all bg-[#12123a] border border-[rgba(255,255,255,0.1)] hover:border-[rgba(191,255,0,0.3)] hover:shadow-[0_0_30px_rgba(191,255,0,0.08)]"
                       >
                         <div className="flex items-center justify-between mb-4">
                           <span className="text-sm font-medium text-[#f0f0f5]">
@@ -218,7 +218,7 @@ export default async function BattlesPage() {
                   <h2 className="text-2xl font-bold text-white">Completed</h2>
                   <span className="text-sm text-[#8888aa]">({completedBattles.length})</span>
                 </div>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                   {completedBattles.map((battle) => (
                     <CompletedBattleCard
                       key={battle.id}
