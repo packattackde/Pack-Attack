@@ -225,11 +225,12 @@ export function BoosterPackAnimation({ boxName, gameName, onTearComplete, rarity
               >
                 <defs>
                   <linearGradient id="boosterGrad" x1="0" y1="0" x2="1" y2="0.8">
-                    <stop offset="0%" stopColor="#1a0e50" />
-                    <stop offset="25%" stopColor="#2d1b6b" />
-                    <stop offset="50%" stopColor="#3a2282" />
-                    <stop offset="75%" stopColor="#2d1b6b" />
-                    <stop offset="100%" stopColor="#180c45" />
+                    <stop offset="0%" stopColor="#180c45" />
+                    <stop offset="20%" stopColor="#2d1b6b" />
+                    <stop offset="45%" stopColor="#3a2282" />
+                    <stop offset="55%" stopColor="#3d2590" />
+                    <stop offset="80%" stopColor="#2d1b6b" />
+                    <stop offset="100%" stopColor="#150a3d" />
                   </linearGradient>
                   <clipPath id="boosterClipFM">
                     <path d={BOOSTER_PATH} />
@@ -244,17 +245,72 @@ export function BoosterPackAnimation({ boxName, gameName, onTearComplete, rarity
                 style={{
                   clipPath: 'url(#boosterClipFM)',
                   background: useTransform(holoAngle, (a) =>
-                    `linear-gradient(${a}deg, rgba(255,0,128,0.08), rgba(0,255,200,0.1), rgba(255,200,0,0.08), rgba(0,128,255,0.1), rgba(255,0,200,0.06))`
+                    `linear-gradient(${a}deg, rgba(255,0,128,0.1), rgba(0,255,200,0.12), rgba(255,200,0,0.1), rgba(0,128,255,0.12), rgba(255,0,200,0.08))`
                   ),
                   mixBlendMode: 'color-dodge',
                 }}
               />
 
-              {/* 3D edge highlights */}
-              <div className="absolute top-[7%] bottom-[7%] left-0 w-[6px] pointer-events-none"
-                style={{ clipPath: 'url(#boosterClipFM)', background: 'linear-gradient(to right, rgba(255,255,255,0.12), transparent)' }} />
-              <div className="absolute top-[7%] bottom-[7%] right-0 w-[8px] pointer-events-none"
-                style={{ clipPath: 'url(#boosterClipFM)', background: 'linear-gradient(to left, rgba(0,0,0,0.4), transparent)' }} />
+              {/* Specular highlight — bright spot that follows tilt */}
+              <motion.div
+                className="absolute pointer-events-none"
+                style={{
+                  clipPath: 'url(#boosterClipFM)',
+                  width: 180,
+                  height: 180,
+                  borderRadius: '50%',
+                  background: 'radial-gradient(circle, rgba(255,255,255,0.14), transparent 65%)',
+                  left: useTransform(mouseX, [-0.5, 0.5], ['20%', '60%']),
+                  top: useTransform(mouseY, [-0.5, 0.5], ['15%', '50%']),
+                  mixBlendMode: 'overlay' as const,
+                }}
+              />
+
+              {/* 3D Left edge — light highlight */}
+              <div className="absolute top-[7%] bottom-[7%] left-0 w-[7px] pointer-events-none"
+                style={{ clipPath: 'url(#boosterClipFM)', background: 'linear-gradient(to right, rgba(255,255,255,0.15), transparent)' }} />
+
+              {/* 3D Right edge — dark shadow */}
+              <div className="absolute top-[7%] bottom-[7%] right-0 w-[10px] pointer-events-none"
+                style={{ clipPath: 'url(#boosterClipFM)', background: 'linear-gradient(to left, rgba(0,0,0,0.45), transparent)' }} />
+
+              {/* 3D Top edge — subtle highlight */}
+              <div className="absolute top-[6%] left-[5%] right-[5%] h-[10px] pointer-events-none"
+                style={{ clipPath: 'url(#boosterClipFM)', background: 'linear-gradient(to bottom, rgba(255,255,255,0.1), transparent)' }} />
+
+              {/* 3D Bottom edge — shadow */}
+              <div className="absolute bottom-[6%] left-[5%] right-[5%] h-[14px] pointer-events-none"
+                style={{ clipPath: 'url(#boosterClipFM)', background: 'linear-gradient(to top, rgba(0,0,0,0.35), transparent)' }} />
+
+              {/* Convex bulge — center brighter, edges darker (cards inside) */}
+              <div className="absolute inset-[7%] rounded-lg pointer-events-none"
+                style={{
+                  clipPath: 'url(#boosterClipFM)',
+                  background: 'radial-gradient(ellipse at 45% 45%, rgba(255,255,255,0.07) 0%, transparent 55%)',
+                }} />
+
+              {/* Foil crease lines — vertical wrinkles like real foil */}
+              <div className="absolute pointer-events-none"
+                style={{
+                  clipPath: 'url(#boosterClipFM)',
+                  top: '12%', left: '9%', width: 1, height: '72%',
+                  background: 'linear-gradient(to bottom, transparent, rgba(255,255,255,0.05) 30%, rgba(255,255,255,0.07) 50%, rgba(255,255,255,0.04) 70%, transparent)',
+                  transform: 'rotate(0.5deg)',
+                }} />
+              <div className="absolute pointer-events-none"
+                style={{
+                  clipPath: 'url(#boosterClipFM)',
+                  top: '8%', right: '13%', width: 1, height: '78%',
+                  background: 'linear-gradient(to bottom, transparent, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.06) 55%, rgba(255,255,255,0.03) 75%, transparent)',
+                  transform: 'rotate(-0.3deg)',
+                }} />
+              <div className="absolute pointer-events-none"
+                style={{
+                  clipPath: 'url(#boosterClipFM)',
+                  top: '15%', left: '35%', width: 1, height: '65%',
+                  background: 'linear-gradient(to bottom, transparent, rgba(255,255,255,0.03) 40%, rgba(255,255,255,0.05) 60%, transparent)',
+                  transform: 'rotate(0.2deg)',
+                }} />
 
               {/* Pack content */}
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
