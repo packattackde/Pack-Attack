@@ -308,6 +308,45 @@ export default function OpenBoxPage() {
     revealTimeoutsRef.current.push(timeoutId);
   };
 
+  // New card reveal sequence — called after booster tear completes
+  const startCardRevealSequence = useCallback(() => {
+    const pullsData = pendingPullsRef.current;
+    if (!pullsData || pullsData.length === 0) {
+      setDeckPhase('summary');
+      setOpening(false);
+      return;
+    }
+
+    const REVEAL_MS = 2800; // how long each card is shown
+
+    // Go directly to revealing cards one by one
+    let t = 0;
+    pullsData.forEach((pull: any, index: number) => {
+      const isLast = index === pullsData.length - 1;
+
+      scheduleTimeout(() => {
+        setCurrentReveal(pull);
+        setCurrentRevealIndex(index + 1);
+        setDeckPhase('revealed');
+        setOpenedCardIds(prev => {
+          const next = new Set(prev);
+          if (pull.card?.id) next.add(pull.card.id);
+          return next;
+        });
+        setPulls(prev => [...prev, pull]);
+      }, t);
+      t += REVEAL_MS;
+
+      if (isLast) {
+        scheduleTimeout(() => {
+          setCurrentReveal(null);
+          setDeckPhase('summary');
+          setOpening(false);
+        }, t);
+      }
+    });
+  }, []);
+
   const handleSkip = () => {
     const allPulls = pendingPullsRef.current;
     if (allPulls.length === 0) return;
@@ -418,52 +457,9 @@ export default function OpenBoxPage() {
         return;
       }
 
-      const numCards = pullsData.length;
-      const STACK_MS  = 700;  // stacking phase duration
-      const SHUFFLE_MS = 750; // shuffle phase duration
-      const DRAW_MS   = 550;  // top-card lift animation
-      const REVEAL_MS = 2800; // card shown duration
-
-      // Phase transitions: stacking → shuffling → draw/reveal sequence
-      scheduleTimeout(() => setDeckPhase('shuffling'), STACK_MS);
-
-      scheduleTimeout(() => {
-        let t = 0;
-        pullsData.forEach((pull: any, index: number) => {
-          const isLast = index === pullsData.length - 1;
-
-          scheduleTimeout(() => setDeckPhase('drawing'), t);
-          t += DRAW_MS;
-
-          scheduleTimeout(() => {
-            setCurrentReveal(pull);
-            setCurrentRevealIndex(index + 1);
-            setDeckPhase('revealed');
-            setOpenedCardIds(prev => {
-              const next = new Set(prev);
-              if (pull.card?.id) next.add(pull.card.id);
-              return next;
-            });
-            setPulls(prev => [...prev, pull]);
-          }, t);
-          t += REVEAL_MS;
-
-          if (!isLast) {
-            scheduleTimeout(() => {
-              setCurrentReveal(null);
-              setDeckKey(k => k + 1);
-              setDeckPhase('shuffling');
-            }, t);
-            t += SHUFFLE_MS;
-          } else {
-            scheduleTimeout(() => {
-              setCurrentReveal(null);
-              setDeckPhase('summary');
-              setOpening(false);
-            }, t);
-          }
-        });
-      }, STACK_MS + SHUFFLE_MS);
+      // Don't start card reveals yet — wait for booster tear to complete.
+      // The reveal sequence is triggered by onTearComplete → startCardRevealSequence()
+      // Pulls are stored in pendingPullsRef until then.
     } catch (error) {
       console.error('Error opening box:', error);
       clearRevealTimeouts();
@@ -986,7 +982,7 @@ export default function OpenBoxPage() {
         <BoosterPackAnimation
           boxName={box.name}
           gameName={box.name}
-          onTearComplete={() => setDeckPhase('stacking')}
+          onTearComplete={() => startCardRevealSequence()}
           rarityHint={(() => {
             // Determine best rarity from pending pulls for the glow hint
             const pulls = pendingPullsRef.current;
@@ -1005,20 +1001,18 @@ export default function OpenBoxPage() {
         />
       )}
 
-      {/* Deck Animation Overlay */}
-      {deckPhase !== 'idle' && deckPhase !== 'summary' && deckPhase !== 'booster' && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm">
+      {/* Card Reveal Overlay — shows cards one by one after booster tear */}
+      {deckPhase === 'revealed' && currentReveal?.card && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-[#06061a]/95 backdrop-blur-sm"
+          onClick={() => {
+            // Click to skip to next card / summary
+            handleSkip();
+          }}
+        >
           <div className="relative flex flex-col items-center">
-
-            {/* Status label */}
-            <p className="mb-6 text-xs font-semibold uppercase tracking-[0.2em] text-gray-500 text-center min-h-[16px]">
-              {deckPhase === 'stacking' && `Opening ${quantity} pack${quantity > 1 ? 's' : ''}…`}
-              {(deckPhase === 'shuffling' || deckPhase === 'drawing') && (
-                currentRevealIndex === 0
-                  ? 'Shuffling deck…'
-                  : `Pull ${currentRevealIndex + 1} of ${revealTotal}`
-              )}
-              {deckPhase === 'revealed' && `Pull ${currentRevealIndex} of ${revealTotal}`}
+            <p className="mb-6 text-xs font-semibold uppercase tracking-[0.2em] text-[#7777a0] text-center min-h-[16px]">
+              Pull {currentRevealIndex} of {revealTotal}
             </p>
 
             {/* Card container */}
