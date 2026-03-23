@@ -60,34 +60,34 @@ export default async function BattlesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display">
+    <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display">
       {/* Background Effects */}
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
-      
-      {/* Purple accent for battles */}
-      <div className="fixed top-20 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl hidden lg:block" />
+
+      {/* Accent glow for battles */}
+      <div className="fixed top-20 right-10 w-96 h-96 bg-[rgba(191,255,0,0.08)] rounded-full blur-3xl hidden lg:block" />
 
       <div className="relative container py-12">
         {/* Header */}
         <div className="mb-10 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full glass text-sm border border-purple-500/20">
-              <Swords className="w-4 h-4 text-purple-400" />
-              <span className="text-gray-300">PvP Arena</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full glass text-sm border border-[rgba(191,255,0,0.3)]">
+              <Swords className="w-4 h-4 text-[#BFFF00]" />
+              <span className="text-[#f0f0f5]">PvP Arena</span>
             </div>
             <h1 className="text-4xl md:text-5xl font-bold mb-3">
               <span className="text-white">Box </span>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">Battles</span>
+              <span className="text-[#BFFF00]">Battles</span>
             </h1>
-            <p className="text-gray-400 text-lg">
+            <p className="text-[#8888aa] text-lg">
               Compete against other players. Highest coin value wins!
             </p>
           </div>
           {session ? (
             <Link 
               href="/battles/create"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-semibold rounded-xl transition-all hover:scale-105 shimmer"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[#BFFF00] hover:bg-[#d4ff4d] text-black font-semibold rounded-xl transition-all hover:scale-105 shimmer"
             >
               <Plus className="w-5 h-5" />
               Create Battle
@@ -95,7 +95,7 @@ export default async function BattlesPage() {
           ) : (
             <Link 
               href="/login"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-white gradient-border bg-gray-900/50 hover:bg-gray-800/50 transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-white gradient-border bg-[#12123a] hover:bg-[#12123a]/80 transition-all"
             >
               Sign In to Create
             </Link>
@@ -104,15 +104,15 @@ export default async function BattlesPage() {
 
         {battles.length === 0 ? (
           <div className="glass-strong rounded-2xl p-12 text-center">
-            <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20">
-              <Swords className="w-10 h-10 text-purple-400" />
+            <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-[rgba(191,255,0,0.08)]">
+              <Swords className="w-10 h-10 text-[#BFFF00]" />
             </div>
             <h2 className="text-2xl font-bold text-white mb-3">No Battles Found</h2>
-            <p className="text-gray-400 mb-6">Be the first to create a battle!</p>
+            <p className="text-[#8888aa] mb-6">Be the first to create a battle!</p>
             {session ? (
               <Link 
                 href="/battles/create"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl transition-all hover:scale-105"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#BFFF00] text-black font-semibold rounded-xl transition-all hover:scale-105"
               >
                 <Plus className="w-5 h-5" />
                 Create Battle
@@ -120,7 +120,7 @@ export default async function BattlesPage() {
             ) : (
               <Link 
                 href="/login"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl transition-all hover:scale-105"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#BFFF00] text-black font-semibold rounded-xl transition-all hover:scale-105"
               >
                 Sign In to Create
               </Link>
@@ -148,7 +148,7 @@ export default async function BattlesPage() {
                         className="group glass rounded-2xl p-5 card-lift"
                       >
                         <div className="flex items-center justify-between mb-4">
-                          <span className="text-sm font-medium text-gray-300">
+                          <span className="text-sm font-medium text-[#f0f0f5]">
                             {battle.rounds} Round{battle.rounds !== 1 ? 's' : ''}
                           </span>
                           <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold ${
@@ -170,23 +170,23 @@ export default async function BattlesPage() {
                           </span>
                         </div>
                         
-                        <h3 className="text-lg font-semibold text-white mb-1 group-hover:text-purple-400 transition-colors line-clamp-1">
+                        <h3 className="text-lg font-semibold text-white mb-1 group-hover:text-[#BFFF00] transition-colors line-clamp-1">
                           {battle.box.name}
                         </h3>
-                        <p className="text-sm text-gray-400 mb-4">{modeLabel}</p>
+                        <p className="text-sm text-[#8888aa] mb-4">{modeLabel}</p>
 
                         {/* Participants */}
                         <div className="flex items-center gap-2 mb-4">
                           {getVisibleParticipants(battle).slice(0, 4).map((p: any, i: number) => (
                             <div 
                               key={p.id}
-                              className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-xs font-bold text-white"
+                              className="w-8 h-8 rounded-full bg-gradient-to-br from-[#BFFF00] to-[#a0d600] flex items-center justify-center text-xs font-bold text-white"
                               style={{ marginLeft: i > 0 ? '-8px' : '0' }}
                             >
                               {p.user.name?.[0] || '?'}
                             </div>
                           ))}
-                          <span className="text-sm text-gray-400 ml-2">
+                          <span className="text-sm text-[#8888aa] ml-2">
                             {battle.participants.length}/{battle.maxParticipants}
                             {battle.status === 'WAITING' && battle.participants.length < battle.maxParticipants && (
                               <span className="ml-1 text-green-400">• Open</span>
@@ -194,12 +194,12 @@ export default async function BattlesPage() {
                           </span>
                         </div>
 
-                        <div className="flex items-center justify-between pt-3 border-t border-gray-800">
+                        <div className="flex items-center justify-between pt-3 border-t border-[rgba(255,255,255,0.06)]">
                           <div className="flex items-center gap-1 text-amber-400">
                             <Coins className="w-4 h-4" />
                             <span className="font-semibold">{cost.toFixed(0)}</span>
                           </div>
-                          <span className="text-purple-400 text-sm font-medium group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+                          <span className="text-[#BFFF00] text-sm font-medium group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
                             View <ChevronRight className="w-4 h-4" />
                           </span>
                         </div>

@@ -44,7 +44,7 @@ type Payout = {
 
 const statusConfig: Record<string, { color: string; bgColor: string; icon: React.ElementType; label: string }> = {
   REQUESTED: { color: 'text-yellow-400', bgColor: 'bg-yellow-400/10', icon: Clock, label: 'Pending' },
-  PROCESSING: { color: 'text-blue-400', bgColor: 'bg-blue-400/10', icon: Loader2, label: 'Approved' },
+  PROCESSING: { color: 'text-[#BFFF00]', bgColor: 'bg-blue-400/10', icon: Loader2, label: 'Approved' },
   COMPLETED: { color: 'text-green-400', bgColor: 'bg-green-400/10', icon: CheckCircle, label: 'Paid' },
   REJECTED: { color: 'text-red-400', bgColor: 'bg-red-400/10', icon: XCircle, label: 'Rejected' },
 };
@@ -175,15 +175,15 @@ export function PayoutsAdminClient({ initialPayouts }: { initialPayouts: Payout[
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         <div className="glass rounded-xl p-4 text-center">
           <div className="text-2xl font-bold text-white">{stats.total}</div>
-          <div className="text-xs text-gray-400">Total Requests</div>
+          <div className="text-xs text-[#8888aa]">Total Requests</div>
         </div>
         <div className="glass rounded-xl p-4 text-center">
           <div className="text-2xl font-bold text-yellow-400">{stats.requested}</div>
           <div className="text-xs text-yellow-400">Pending</div>
         </div>
         <div className="glass rounded-xl p-4 text-center">
-          <div className="text-2xl font-bold text-blue-400">{stats.processing}</div>
-          <div className="text-xs text-blue-400">Approved</div>
+          <div className="text-2xl font-bold text-[#BFFF00]">{stats.processing}</div>
+          <div className="text-xs text-[#BFFF00]">Approved</div>
         </div>
         <div className="glass rounded-xl p-4 text-center">
           <div className="text-2xl font-bold text-green-400">{stats.completed}</div>
@@ -191,7 +191,7 @@ export function PayoutsAdminClient({ initialPayouts }: { initialPayouts: Payout[
         </div>
         <div className="glass rounded-xl p-4 text-center">
           <div className="text-2xl font-bold text-emerald-400">{stats.totalPaidEur.toFixed(2)}</div>
-          <div className="text-xs text-gray-400">Total Paid (EUR)</div>
+          <div className="text-xs text-[#8888aa]">Total Paid (EUR)</div>
         </div>
       </div>
 
@@ -204,7 +204,7 @@ export function PayoutsAdminClient({ initialPayouts }: { initialPayouts: Payout[
             className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
               filterStatus === s
                 ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg'
-                : 'glass text-gray-400 hover:text-white'
+                : 'glass text-[#8888aa] hover:text-white'
             }`}
           >
             {s === 'ALL' ? 'All' : statusConfig[s]?.label || s}
@@ -217,7 +217,7 @@ export function PayoutsAdminClient({ initialPayouts }: { initialPayouts: Payout[
       {filteredPayouts.length === 0 ? (
         <div className="glass-strong rounded-2xl p-12 text-center">
           <Wallet className="w-12 h-12 text-gray-600 mx-auto mb-3" />
-          <p className="text-gray-400">No payout requests found</p>
+          <p className="text-[#8888aa]">No payout requests found</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -259,16 +259,16 @@ export function PayoutsAdminClient({ initialPayouts }: { initialPayouts: Payout[
                       <div className={`px-3 py-1.5 rounded-xl text-xs font-medium ${config.color} ${config.bgColor}`}>
                         {config.label}
                       </div>
-                      {isExpanded ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
+                      {isExpanded ? <ChevronUp className="w-4 h-4 text-[#8888aa]" /> : <ChevronDown className="w-4 h-4 text-[#8888aa]" />}
                     </div>
                   </div>
                 </div>
 
                 {isExpanded && (
-                  <div className="border-t border-gray-800 p-5 space-y-4">
+                  <div className="border-t border-[rgba(255,255,255,0.06)] p-5 space-y-4">
                     <div className="grid md:grid-cols-2 gap-4">
                       <div className="glass rounded-xl p-4">
-                        <h4 className="text-sm font-medium text-gray-400 mb-3 flex items-center gap-2">
+                        <h4 className="text-sm font-medium text-[#8888aa] mb-3 flex items-center gap-2">
                           <Store className="w-4 h-4" /> Shop Details
                         </h4>
                         <div className="space-y-2 text-sm">
@@ -281,7 +281,7 @@ export function PayoutsAdminClient({ initialPayouts }: { initialPayouts: Payout[
                       </div>
 
                       <div className="glass rounded-xl p-4">
-                        <h4 className="text-sm font-medium text-gray-400 mb-3 flex items-center gap-2">
+                        <h4 className="text-sm font-medium text-[#8888aa] mb-3 flex items-center gap-2">
                           <Banknote className="w-4 h-4" /> Payout Summary
                         </h4>
                         <div className="space-y-2 text-sm">
@@ -297,12 +297,12 @@ export function PayoutsAdminClient({ initialPayouts }: { initialPayouts: Payout[
 
                     {/* Itemized Breakdown */}
                     <div className="glass rounded-xl p-4">
-                      <h4 className="text-sm font-medium text-gray-400 mb-3 flex items-center gap-2">
+                      <h4 className="text-sm font-medium text-[#8888aa] mb-3 flex items-center gap-2">
                         <Package className="w-4 h-4" /> Itemized Breakdown ({payout.items.length} items)
                       </h4>
                       <div className="space-y-2 max-h-64 overflow-y-auto">
                         {payout.items.map((item) => (
-                          <div key={item.id} className="flex items-center gap-3 bg-gray-800/50 rounded-lg p-3">
+                          <div key={item.id} className="flex items-center gap-3 bg-[#12123a] rounded-lg p-3">
                             {item.cardImage && (
                               <img
                                 src={item.cardImage}
@@ -342,7 +342,7 @@ export function PayoutsAdminClient({ initialPayouts }: { initialPayouts: Payout[
 
                     {/* Admin Notes */}
                     <div className="glass rounded-xl p-4">
-                      <h4 className="text-sm font-medium text-gray-400 mb-2 flex items-center gap-2">
+                      <h4 className="text-sm font-medium text-[#8888aa] mb-2 flex items-center gap-2">
                         <MessageSquare className="w-4 h-4" /> Admin Notes
                       </h4>
                       <textarea
@@ -350,19 +350,19 @@ export function PayoutsAdminClient({ initialPayouts }: { initialPayouts: Payout[
                         onChange={(e) => setNotesInput({ ...notesInput, [payout.id]: e.target.value })}
                         placeholder="Add notes about this payout..."
                         rows={2}
-                        className="w-full px-3 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white text-sm focus:border-orange-500 focus:outline-none resize-none"
+                        className="w-full px-3 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white text-sm focus:border-[rgba(191,255,0,0.3)] focus:outline-none resize-none"
                       />
                     </div>
 
                     {/* Actions */}
-                    <div className="flex items-center justify-between pt-4 border-t border-gray-800">
+                    <div className="flex items-center justify-between pt-4 border-t border-[rgba(255,255,255,0.06)]">
                       <div className="flex gap-2 flex-wrap">
                         {payout.status === 'REQUESTED' && (
                           <>
                             <button
                               onClick={() => handleStatusUpdate(payout.id, 'PROCESSING')}
                               disabled={updating === payout.id}
-                              className="px-4 py-2 rounded-xl text-sm font-medium bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 transition-all disabled:opacity-50"
+                              className="px-4 py-2 rounded-xl text-sm font-medium bg-blue-500/20 text-[#BFFF00] hover:bg-blue-500/30 transition-all disabled:opacity-50"
                             >
                               {updating === payout.id ? <Loader2 className="w-4 h-4 animate-spin inline mr-1" /> : null}
                               Approve
@@ -405,7 +405,7 @@ export function PayoutsAdminClient({ initialPayouts }: { initialPayouts: Payout[
                       </div>
                       <button
                         onClick={() => handlePrint(payout)}
-                        className="px-4 py-2 rounded-xl text-sm font-medium glass text-gray-400 hover:text-white transition-all flex items-center gap-2"
+                        className="px-4 py-2 rounded-xl text-sm font-medium glass text-[#8888aa] hover:text-white transition-all flex items-center gap-2"
                       >
                         <Printer className="w-4 h-4" />
                         Print Slip

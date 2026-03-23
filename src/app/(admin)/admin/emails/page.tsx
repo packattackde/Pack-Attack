@@ -62,14 +62,14 @@ export default async function AdminEmailsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display">
+    <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display">
       {/* Background Effects */}
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
 
       <div className="relative container py-12">
         {/* Back Link */}
-        <Link href="/admin" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-6">
+        <Link href="/admin" className="inline-flex items-center gap-2 text-[#8888aa] hover:text-white transition-colors mb-6">
           <ArrowLeft className="w-4 h-4" />
           Back to Admin
         </Link>
@@ -78,13 +78,13 @@ export default async function AdminEmailsPage() {
         <div className="mb-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full glass text-sm">
             <Mail className="w-4 h-4 text-pink-400" />
-            <span className="text-gray-300">Email Management</span>
+            <span className="text-[#f0f0f5]">Email Management</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-3">
             <span className="text-white">Email </span>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-rose-400">Management</span>
           </h1>
-          <p className="text-gray-400 text-lg">Send emails and view email history</p>
+          <p className="text-[#8888aa] text-lg">Send emails and view email history</p>
         </div>
 
         <EmailsClient 

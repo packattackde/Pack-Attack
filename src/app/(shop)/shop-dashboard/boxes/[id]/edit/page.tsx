@@ -143,10 +143,10 @@ export default function EditShopBoxPage({ params }: { params: Promise<{ id: stri
 
   if (status === 'loading' || loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin text-emerald-500 mx-auto mb-4" />
-          <p className="text-gray-400">Loading box...</p>
+          <p className="text-[#8888aa]">Loading box...</p>
         </div>
       </div>
     );
@@ -167,7 +167,7 @@ export default function EditShopBoxPage({ params }: { params: Promise<{ id: stri
         <div className="mb-8">
           <Link 
             href="/shop-dashboard/boxes" 
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-4"
+            className="inline-flex items-center gap-2 text-[#8888aa] hover:text-white transition-colors mb-4"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Boxes</span>
@@ -176,7 +176,7 @@ export default function EditShopBoxPage({ params }: { params: Promise<{ id: stri
           <div className="flex items-center gap-3 mb-4">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass text-sm">
               <Store className="w-4 h-4 text-cyan-400" />
-              <span className="text-gray-300">Shop Dashboard</span>
+              <span className="text-[#f0f0f5]">Shop Dashboard</span>
             </div>
           </div>
           
@@ -184,14 +184,14 @@ export default function EditShopBoxPage({ params }: { params: Promise<{ id: stri
             <span className="text-white">Edit </span>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">Box</span>
           </h1>
-          <p className="text-gray-400">Update your box details and settings.</p>
+          <p className="text-[#8888aa]">Update your box details and settings.</p>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Box Preview */}
           <div className="lg:col-span-1">
             <div className="glass-strong rounded-2xl overflow-hidden sticky top-24">
-              <div className="relative aspect-[4/3] bg-gray-800">
+              <div className="relative aspect-[4/3] bg-[#12123a]">
                 {box.imageUrl ? (
                   <Image
                     src={box.imageUrl}
@@ -207,7 +207,7 @@ export default function EditShopBoxPage({ params }: { params: Promise<{ id: stri
               </div>
               <div className="p-4">
                 <h3 className="font-bold text-white mb-2">{box.name}</h3>
-                <p className="text-sm text-gray-400 mb-4">{box.cards.length} cards in this box</p>
+                <p className="text-sm text-[#8888aa] mb-4">{box.cards.length} cards in this box</p>
                 
                 {/* Card Preview Grid */}
                 <div className="grid grid-cols-4 gap-1">
@@ -234,30 +234,30 @@ export default function EditShopBoxPage({ params }: { params: Promise<{ id: stri
             <div className="glass-strong rounded-2xl p-6">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-300">Box Name</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5]">Box Name</label>
                   <input
                     type="text"
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700 text-white focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition-colors"
+                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition-colors"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-300">Description</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5]">Description</label>
                   <textarea
                     required
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     rows={4}
-                    className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700 text-white focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition-colors resize-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition-colors resize-none"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-300">Price (coins)</label>
+                    <label className="block text-sm font-medium text-[#f0f0f5]">Price (coins)</label>
                     <input
                       type="number"
                       step="0.01"
@@ -265,37 +265,37 @@ export default function EditShopBoxPage({ params }: { params: Promise<{ id: stri
                       min="0.01"
                       value={formData.price}
                       onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700 text-white focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition-colors"
+                      className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition-colors"
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-300">Cards Per Pack</label>
+                    <label className="block text-sm font-medium text-[#f0f0f5]">Cards Per Pack</label>
                     <input
                       type="number"
                       required
                       min="1"
                       value={formData.cardsPerPack}
                       onChange={(e) => setFormData({ ...formData, cardsPerPack: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700 text-white focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition-colors"
+                      className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition-colors"
                     />
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 p-4 rounded-xl bg-gray-800/30">
+                <div className="flex items-center gap-3 p-4 rounded-xl bg-[#12123a]">
                   <input
                     type="checkbox"
                     id="isActive"
                     checked={formData.isActive}
                     onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                    className="w-5 h-5 rounded border-gray-600 bg-gray-800 text-cyan-500 focus:ring-cyan-500 focus:ring-offset-gray-900"
+                    className="w-5 h-5 rounded border-gray-600 bg-[#12123a] text-cyan-500 focus:ring-cyan-500 focus:ring-offset-gray-900"
                   />
-                  <label htmlFor="isActive" className="text-gray-300 cursor-pointer">
+                  <label htmlFor="isActive" className="text-[#f0f0f5] cursor-pointer">
                     <span className="font-medium">Active</span>
                     <p className="text-sm text-gray-500">When active, users can see and open this box</p>
                   </label>
                 </div>
 
-                <div className="flex gap-4 pt-4 border-t border-gray-800">
+                <div className="flex gap-4 pt-4 border-t border-[rgba(255,255,255,0.06)]">
                   <Button 
                     type="submit" 
                     disabled={saving}
@@ -317,7 +317,7 @@ export default function EditShopBoxPage({ params }: { params: Promise<{ id: stri
                     type="button" 
                     variant="outline" 
                     onClick={() => router.back()}
-                    className="border-gray-700 text-gray-400 hover:text-white hover:bg-gray-800"
+                    className="border-[rgba(255,255,255,0.06)] text-[#8888aa] hover:text-white hover:bg-[#12123a]"
                   >
                     Cancel
                   </Button>

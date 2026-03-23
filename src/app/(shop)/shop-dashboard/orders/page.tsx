@@ -101,7 +101,7 @@ export default async function ShopOrdersPage({
         <div className="mb-8">
           <Link 
             href={viewingSpecificShop ? `/shop-dashboard?shopId=${shop?.id}` : '/shop-dashboard'} 
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-4"
+            className="inline-flex items-center gap-2 text-[#8888aa] hover:text-white transition-colors mb-4"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Dashboard</span>
@@ -109,20 +109,20 @@ export default async function ShopOrdersPage({
           
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass text-sm mb-3">
             <Store className="w-4 h-4 text-emerald-400" />
-            <span className="text-gray-300">{viewingSpecificShop ? `Admin → ${shop?.name}` : isAdmin ? 'Admin View' : shop?.name || 'Shop Dashboard'}</span>
+            <span className="text-[#f0f0f5]">{viewingSpecificShop ? `Admin → ${shop?.name}` : isAdmin ? 'Admin View' : shop?.name || 'Shop Dashboard'}</span>
           </div>
           
           <h1 className="text-3xl md:text-4xl font-bold mb-2 font-heading">
             <span className="text-white">Order </span>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">Management</span>
           </h1>
-          <p className="text-gray-400">View and process orders from your card boxes.</p>
+          <p className="text-[#8888aa]">View and process orders from your card boxes.</p>
         </div>
 
         {/* Stats Overview */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
           <div className="glass rounded-xl p-4 text-center">
-            <ShoppingCart className="w-5 h-5 text-gray-400 mx-auto mb-2" />
+            <ShoppingCart className="w-5 h-5 text-[#8888aa] mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{stats.total}</div>
             <div className="text-xs text-gray-500">Total</div>
           </div>
@@ -132,9 +132,9 @@ export default async function ShopOrdersPage({
             <div className="text-xs text-yellow-400">Pending</div>
           </div>
           <div className="glass rounded-xl p-4 text-center">
-            <CheckCircle className="w-5 h-5 text-blue-400 mx-auto mb-2" />
+            <CheckCircle className="w-5 h-5 text-[#BFFF00] mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{stats.confirmed}</div>
-            <div className="text-xs text-blue-400">Confirmed</div>
+            <div className="text-xs text-[#BFFF00]">Confirmed</div>
           </div>
           <div className="glass rounded-xl p-4 text-center">
             <Package className="w-5 h-5 text-purple-400 mx-auto mb-2" />

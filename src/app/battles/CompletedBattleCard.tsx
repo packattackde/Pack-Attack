@@ -100,15 +100,15 @@ export function CompletedBattleCard({
 
         <Link href={`/battles/${battle.id}`} className="block">
           <div className="flex items-center justify-between mb-4">
-            <span className="text-sm font-medium text-gray-400">
+            <span className="text-sm font-medium text-[#8888aa]">
               {battle.rounds} Round{battle.rounds !== 1 ? 's' : ''}
             </span>
-            <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gray-700/50 text-gray-400">
+            <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#12123a]/50 text-[#8888aa]">
               Finished
             </span>
           </div>
           
-          <h3 className="text-lg font-semibold text-white mb-1 group-hover:text-purple-400 transition-colors line-clamp-1">
+          <h3 className="text-lg font-semibold text-white mb-1 group-hover:text-[#BFFF00] transition-colors line-clamp-1">
             {battle.box.name}
           </h3>
           <p className="text-sm text-gray-500 mb-4">{modeLabel}</p>
@@ -129,12 +129,12 @@ export function CompletedBattleCard({
             </div>
           ) : null}
 
-          <div className="flex items-center justify-between pt-3 border-t border-gray-800">
-            <div className="flex items-center gap-1 text-gray-400">
+          <div className="flex items-center justify-between pt-3 border-t border-[rgba(255,255,255,0.06)]">
+            <div className="flex items-center gap-1 text-[#8888aa]">
               <Users className="w-4 h-4" />
               <span>{visibleParticipants.length} players</span>
             </div>
-            <span className="text-gray-400 text-sm font-medium group-hover:text-purple-400 group-hover:translate-x-1 transition-all inline-flex items-center gap-1">
+            <span className="text-[#8888aa] text-sm font-medium group-hover:text-[#BFFF00] group-hover:translate-x-1 transition-all inline-flex items-center gap-1">
               Results <ChevronRight className="w-4 h-4" />
             </span>
           </div>
@@ -144,7 +144,7 @@ export function CompletedBattleCard({
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-[#0B0B2B]/80 backdrop-blur-sm p-4"
           onClick={(e) => {
             if (e.target === e.currentTarget && !deleting) {
               setShowDeleteModal(false);
@@ -158,7 +158,7 @@ export function CompletedBattleCard({
             
             <h2 className="text-2xl font-bold text-white mb-3">Delete Battle?</h2>
             
-            <p className="text-gray-400 mb-2">
+            <p className="text-[#8888aa] mb-2">
               You are about to delete this battle:
             </p>
             <p className="text-white font-semibold mb-6">
@@ -173,7 +173,7 @@ export function CompletedBattleCard({
               <button
                 onClick={() => setShowDeleteModal(false)}
                 disabled={deleting}
-                className="px-6 py-3 rounded-xl font-semibold text-white bg-gray-700 hover:bg-gray-600 transition-colors disabled:opacity-50"
+                className="px-6 py-3 rounded-xl font-semibold text-white bg-[#12123a] hover:bg-[#12123a] transition-colors disabled:opacity-50"
               >
                 Cancel
               </button>

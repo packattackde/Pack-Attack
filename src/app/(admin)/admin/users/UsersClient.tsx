@@ -234,25 +234,25 @@ export function UsersClient({ initialUsers, totalUsers }: Props) {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="text-center">
             <div className="text-2xl font-bold text-white">{total}</div>
-            <div className="text-sm text-gray-400">Total Users</div>
+            <div className="text-sm text-[#8888aa]">Total Users</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-green-400">
               {users.filter(u => u.emailVerified).length}
             </div>
-            <div className="text-sm text-gray-400">Verified</div>
+            <div className="text-sm text-[#8888aa]">Verified</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-purple-400">
               {users.filter(u => u.role === 'ADMIN').length}
             </div>
-            <div className="text-sm text-gray-400">Admins</div>
+            <div className="text-sm text-[#8888aa]">Admins</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-amber-400">
               {users.reduce((sum, u) => sum + u.coins, 0).toLocaleString()}
             </div>
-            <div className="text-sm text-gray-400">Total Coins</div>
+            <div className="text-sm text-[#8888aa]">Total Coins</div>
           </div>
         </div>
       </div>
@@ -268,14 +268,14 @@ export function UsersClient({ initialUsers, totalUsers }: Props) {
                 placeholder="Search by email or name..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-gray-900/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="w-full pl-10 pr-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white placeholder-gray-500 focus:border-[rgba(191,255,0,0.3)] focus:ring-1 focus:ring-[rgba(191,255,0,0.2)]"
               />
             </div>
           </div>
           <select
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value)}
-            className="px-4 py-2 bg-gray-900/50 border border-gray-700 rounded-lg text-white focus:border-blue-500"
+            className="px-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white focus:border-[rgba(191,255,0,0.3)]"
           >
             <option value="">All Roles</option>
             <option value="USER">Users</option>
@@ -285,7 +285,7 @@ export function UsersClient({ initialUsers, totalUsers }: Props) {
           <select
             value={verifiedFilter}
             onChange={(e) => setVerifiedFilter(e.target.value)}
-            className="px-4 py-2 bg-gray-900/50 border border-gray-700 rounded-lg text-white focus:border-blue-500"
+            className="px-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white focus:border-[rgba(191,255,0,0.3)]"
           >
             <option value="">All Status</option>
             <option value="true">Verified</option>
@@ -293,14 +293,14 @@ export function UsersClient({ initialUsers, totalUsers }: Props) {
           </select>
           <button
             type="submit"
-            className="px-6 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors"
+            className="px-6 py-2 bg-[#BFFF00] hover:bg-[#d4ff4d] text-black rounded-lg transition-colors"
           >
             Search
           </button>
           <button
             type="button"
             onClick={() => setCreateModalOpen(true)}
-            className="px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white rounded-lg transition-colors flex items-center gap-2"
+            className="px-6 py-2 bg-gradient-to-r bg-[#BFFF00] hover:bg-[#d4ff4d] text-black rounded-lg transition-colors flex items-center gap-2"
           >
             <UserPlus className="w-4 h-4" />
             Add User
@@ -313,18 +313,18 @@ export function UsersClient({ initialUsers, totalUsers }: Props) {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-gray-700">
-                <th className="text-left p-4 text-gray-400 font-medium">User</th>
-                <th className="text-left p-4 text-gray-400 font-medium">Role</th>
-                <th className="text-left p-4 text-gray-400 font-medium">Status</th>
-                <th className="text-right p-4 text-gray-400 font-medium">Coins</th>
-                <th className="text-right p-4 text-gray-400 font-medium">Activity</th>
-                <th className="text-right p-4 text-gray-400 font-medium">Actions</th>
+              <tr className="border-b border-[rgba(255,255,255,0.06)]">
+                <th className="text-left p-4 text-[#8888aa] font-medium">User</th>
+                <th className="text-left p-4 text-[#8888aa] font-medium">Role</th>
+                <th className="text-left p-4 text-[#8888aa] font-medium">Status</th>
+                <th className="text-right p-4 text-[#8888aa] font-medium">Coins</th>
+                <th className="text-right p-4 text-[#8888aa] font-medium">Activity</th>
+                <th className="text-right p-4 text-[#8888aa] font-medium">Actions</th>
               </tr>
             </thead>
             <tbody>
               {users.map((user) => (
-                <tr key={user.id} className="border-b border-gray-800 hover:bg-gray-800/30">
+                <tr key={user.id} className="border-b border-[rgba(255,255,255,0.06)] hover:bg-[#12123a]">
                   <td className="p-4">
                     <div>
                       <div className="text-white font-medium">{user.name || 'No name'}</div>
@@ -343,7 +343,7 @@ export function UsersClient({ initialUsers, totalUsers }: Props) {
                         Shop Owner
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-gray-500/20 text-gray-400 text-xs font-medium">
+                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-gray-500/20 text-[#8888aa] text-xs font-medium">
                         <Shield className="w-3 h-3" />
                         User
                       </span>
@@ -365,7 +365,7 @@ export function UsersClient({ initialUsers, totalUsers }: Props) {
                   <td className="p-4 text-right">
                     <span className="text-amber-400 font-medium">{user.coins.toLocaleString()}</span>
                   </td>
-                  <td className="p-4 text-right text-sm text-gray-400">
+                  <td className="p-4 text-right text-sm text-[#8888aa]">
                     {user._count.pulls} pulls • {user._count.battleParticipants} battles
                   </td>
                   <td className="p-4 text-right">
@@ -373,7 +373,7 @@ export function UsersClient({ initialUsers, totalUsers }: Props) {
                       {!user.emailVerified && (
                         <button
                           onClick={() => handleResendVerification(user.id)}
-                          className="p-2 text-gray-400 hover:text-blue-400 transition-colors"
+                          className="p-2 text-[#8888aa] hover:text-[#BFFF00] transition-colors"
                           title="Resend verification email"
                         >
                           <Mail className="w-4 h-4" />
@@ -381,14 +381,14 @@ export function UsersClient({ initialUsers, totalUsers }: Props) {
                       )}
                       <button
                         onClick={() => openEditModal(user)}
-                        className="p-2 text-gray-400 hover:text-white transition-colors"
+                        className="p-2 text-[#8888aa] hover:text-white transition-colors"
                         title="Edit user"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => setDeleteUser(user)}
-                        className="p-2 text-gray-400 hover:text-red-400 transition-colors"
+                        className="p-2 text-[#8888aa] hover:text-red-400 transition-colors"
                         title="Delete user"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -403,22 +403,22 @@ export function UsersClient({ initialUsers, totalUsers }: Props) {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between p-4 border-t border-gray-700">
-            <div className="text-sm text-gray-400">
+          <div className="flex items-center justify-between p-4 border-t border-[rgba(255,255,255,0.06)]">
+            <div className="text-sm text-[#8888aa]">
               Showing {(page - 1) * limit + 1} - {Math.min(page * limit, total)} of {total}
             </div>
             <div className="flex gap-2">
               <button
                 onClick={() => fetchUsers(page - 1)}
                 disabled={page === 1}
-                className="p-2 rounded-lg bg-gray-800 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-700"
+                className="p-2 rounded-lg bg-[#12123a] text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#12123a]"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
               <button
                 onClick={() => fetchUsers(page + 1)}
                 disabled={page === totalPages}
-                className="p-2 rounded-lg bg-gray-800 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-700"
+                className="p-2 rounded-lg bg-[#12123a] text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#12123a]"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
@@ -433,47 +433,47 @@ export function UsersClient({ initialUsers, totalUsers }: Props) {
           <div className="glass-strong rounded-2xl p-6 w-full max-w-md">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-white">Create User</h2>
-              <button onClick={() => setCreateModalOpen(false)} className="text-gray-400 hover:text-white">
+              <button onClick={() => setCreateModalOpen(false)} className="text-[#8888aa] hover:text-white">
                 <X className="w-5 h-5" />
               </button>
             </div>
             <form onSubmit={handleCreate} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">Name</label>
+                <label className="block text-sm font-medium text-[#f0f0f5] mb-1">Name</label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-4 py-2 bg-gray-900/50 border border-gray-700 rounded-lg text-white"
+                  className="w-full px-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">Email *</label>
+                <label className="block text-sm font-medium text-[#f0f0f5] mb-1">Email *</label>
                 <input
                   type="email"
                   required
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-4 py-2 bg-gray-900/50 border border-gray-700 rounded-lg text-white"
+                  className="w-full px-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">Password *</label>
+                <label className="block text-sm font-medium text-[#f0f0f5] mb-1">Password *</label>
                 <input
                   type="password"
                   required
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="w-full px-4 py-2 bg-gray-900/50 border border-gray-700 rounded-lg text-white"
+                  className="w-full px-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1">Role</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5] mb-1">Role</label>
                   <select
                     value={formData.role}
                     onChange={(e) => setFormData({ ...formData, role: e.target.value as 'USER' | 'ADMIN' | 'SHOP_OWNER' })}
-                    className="w-full px-4 py-2 bg-gray-900/50 border border-gray-700 rounded-lg text-white"
+                    className="w-full px-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white"
                   >
                     <option value="USER">User</option>
                     <option value="ADMIN">Admin</option>
@@ -481,12 +481,12 @@ export function UsersClient({ initialUsers, totalUsers }: Props) {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1">Coins</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5] mb-1">Coins</label>
                   <input
                     type="number"
                     value={formData.coins}
                     onChange={(e) => setFormData({ ...formData, coins: parseInt(e.target.value) || 0 })}
-                    className="w-full px-4 py-2 bg-gray-900/50 border border-gray-700 rounded-lg text-white"
+                    className="w-full px-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white"
                   />
                 </div>
               </div>
@@ -496,22 +496,22 @@ export function UsersClient({ initialUsers, totalUsers }: Props) {
                   id="emailVerified"
                   checked={formData.emailVerified}
                   onChange={(e) => setFormData({ ...formData, emailVerified: e.target.checked })}
-                  className="rounded border-gray-700"
+                  className="rounded border-[rgba(255,255,255,0.06)]"
                 />
-                <label htmlFor="emailVerified" className="text-sm text-gray-300">Email verified</label>
+                <label htmlFor="emailVerified" className="text-sm text-[#f0f0f5]">Email verified</label>
               </div>
               <div className="flex gap-3 pt-4">
                 <button
                   type="button"
                   onClick={() => setCreateModalOpen(false)}
-                  className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors"
+                  className="flex-1 py-3 bg-[#12123a] hover:bg-[#1a1a4a] text-white rounded-lg transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white rounded-lg transition-colors disabled:opacity-50"
+                  className="flex-1 py-3 bg-gradient-to-r bg-[#BFFF00] hover:bg-[#d4ff4d] text-black rounded-lg transition-colors disabled:opacity-50"
                 >
                   {loading ? 'Creating...' : 'Create User'}
                 </button>
@@ -527,46 +527,46 @@ export function UsersClient({ initialUsers, totalUsers }: Props) {
           <div className="glass-strong rounded-2xl p-6 w-full max-w-md">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-white">Edit User</h2>
-              <button onClick={() => setEditUser(null)} className="text-gray-400 hover:text-white">
+              <button onClick={() => setEditUser(null)} className="text-[#8888aa] hover:text-white">
                 <X className="w-5 h-5" />
               </button>
             </div>
             <form onSubmit={handleUpdate} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">Email</label>
+                <label className="block text-sm font-medium text-[#f0f0f5] mb-1">Email</label>
                 <input
                   type="email"
                   disabled
                   value={formData.email}
-                  className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-500 cursor-not-allowed"
+                  className="w-full px-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-gray-500 cursor-not-allowed"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">Name</label>
+                <label className="block text-sm font-medium text-[#f0f0f5] mb-1">Name</label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-4 py-2 bg-gray-900/50 border border-gray-700 rounded-lg text-white"
+                  className="w-full px-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">New Password (leave empty to keep current)</label>
+                <label className="block text-sm font-medium text-[#f0f0f5] mb-1">New Password (leave empty to keep current)</label>
                 <input
                   type="password"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="w-full px-4 py-2 bg-gray-900/50 border border-gray-700 rounded-lg text-white"
+                  className="w-full px-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white"
                   placeholder="••••••••"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1">Role</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5] mb-1">Role</label>
                   <select
                     value={formData.role}
                     onChange={(e) => setFormData({ ...formData, role: e.target.value as 'USER' | 'ADMIN' | 'SHOP_OWNER' })}
-                    className="w-full px-4 py-2 bg-gray-900/50 border border-gray-700 rounded-lg text-white"
+                    className="w-full px-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white"
                   >
                     <option value="USER">User</option>
                     <option value="ADMIN">Admin</option>
@@ -574,12 +574,12 @@ export function UsersClient({ initialUsers, totalUsers }: Props) {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1">Coins</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5] mb-1">Coins</label>
                   <input
                     type="number"
                     value={formData.coins}
                     onChange={(e) => setFormData({ ...formData, coins: parseInt(e.target.value) || 0 })}
-                    className="w-full px-4 py-2 bg-gray-900/50 border border-gray-700 rounded-lg text-white"
+                    className="w-full px-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white"
                   />
                 </div>
               </div>
@@ -589,22 +589,22 @@ export function UsersClient({ initialUsers, totalUsers }: Props) {
                   id="editEmailVerified"
                   checked={formData.emailVerified}
                   onChange={(e) => setFormData({ ...formData, emailVerified: e.target.checked })}
-                  className="rounded border-gray-700"
+                  className="rounded border-[rgba(255,255,255,0.06)]"
                 />
-                <label htmlFor="editEmailVerified" className="text-sm text-gray-300">Email verified</label>
+                <label htmlFor="editEmailVerified" className="text-sm text-[#f0f0f5]">Email verified</label>
               </div>
               <div className="flex gap-3 pt-4">
                 <button
                   type="button"
                   onClick={() => setEditUser(null)}
-                  className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors"
+                  className="flex-1 py-3 bg-[#12123a] hover:bg-[#1a1a4a] text-white rounded-lg transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white rounded-lg transition-colors disabled:opacity-50"
+                  className="flex-1 py-3 bg-gradient-to-r bg-[#BFFF00] hover:bg-[#d4ff4d] text-black rounded-lg transition-colors disabled:opacity-50"
                 >
                   {loading ? 'Saving...' : 'Save Changes'}
                 </button>
@@ -622,13 +622,13 @@ export function UsersClient({ initialUsers, totalUsers }: Props) {
               <Trash2 className="w-8 h-8 text-red-400" />
             </div>
             <h2 className="text-xl font-bold text-white mb-2">Delete User?</h2>
-            <p className="text-gray-400 mb-6">
+            <p className="text-[#8888aa] mb-6">
               Are you sure you want to delete <span className="text-white font-medium">{deleteUser.email}</span>? This action cannot be undone.
             </p>
             <div className="flex gap-3">
               <button
                 onClick={() => setDeleteUser(null)}
-                className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors"
+                className="flex-1 py-3 bg-[#12123a] hover:bg-[#1a1a4a] text-white rounded-lg transition-colors"
               >
                 Cancel
               </button>

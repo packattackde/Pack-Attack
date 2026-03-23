@@ -68,7 +68,7 @@ export default async function AdminPayoutsPage() {
         <div className="mb-8">
           <Link
             href="/admin"
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-4"
+            className="inline-flex items-center gap-2 text-[#8888aa] hover:text-white transition-colors mb-4"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Admin
@@ -76,14 +76,14 @@ export default async function AdminPayoutsPage() {
 
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass text-sm mb-3">
             <ShieldCheck className="w-4 h-4 text-orange-400" />
-            <span className="text-gray-300">Admin</span>
+            <span className="text-[#f0f0f5]">Admin</span>
           </div>
 
           <h1 className="text-3xl md:text-4xl font-bold mb-2 font-heading">
             <span className="text-white">Shop </span>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-400">Payouts</span>
           </h1>
-          <p className="text-gray-400">Manage payout requests from shop owners. Review items, approve, reject, or mark as paid.</p>
+          <p className="text-[#8888aa]">Manage payout requests from shop owners. Review items, approve, reject, or mark as paid.</p>
         </div>
 
         <PayoutsAdminClient initialPayouts={serialized} />

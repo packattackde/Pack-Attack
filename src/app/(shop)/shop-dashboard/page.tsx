@@ -202,13 +202,13 @@ export default async function ShopDashboard({
         <div className="mb-10">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 rounded-full glass text-sm">
             <Store className="w-4 h-4 text-emerald-400" />
-            <span className="text-gray-300">{viewingSpecificShop ? `Admin → ${shop?.name}` : isAdmin ? 'Admin View' : shop?.name || 'Shop Dashboard'}</span>
+            <span className="text-[#f0f0f5]">{viewingSpecificShop ? `Admin → ${shop?.name}` : isAdmin ? 'Admin View' : shop?.name || 'Shop Dashboard'}</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-3 font-heading">
             <span className="text-white">{viewingSpecificShop ? `${shop?.name} ` : 'Shop '}</span>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400">Dashboard</span>
           </h1>
-          <p className="text-gray-400 text-lg max-w-2xl">
+          <p className="text-[#8888aa] text-lg max-w-2xl">
             {viewingSpecificShop
               ? `Viewing ${shop?.name}'s dashboard as admin. You see exactly what the shop owner sees.`
               : isAdmin 
@@ -224,7 +224,7 @@ export default async function ShopDashboard({
             <div className="relative">
               <Package className="w-6 h-6 text-emerald-400 mb-3" />
               <div className="text-3xl font-bold text-white mb-1">{stats.totalBoxes}</div>
-              <div className="text-sm text-gray-400">Total Boxes</div>
+              <div className="text-sm text-[#8888aa]">Total Boxes</div>
             </div>
           </div>
           
@@ -233,7 +233,7 @@ export default async function ShopDashboard({
             <div className="relative">
               <Sparkles className="w-6 h-6 text-teal-400 mb-3" />
               <div className="text-3xl font-bold text-white mb-1">{stats.activeBoxes}</div>
-              <div className="text-sm text-gray-400">Active Boxes</div>
+              <div className="text-sm text-[#8888aa]">Active Boxes</div>
             </div>
           </div>
           
@@ -242,7 +242,7 @@ export default async function ShopDashboard({
             <div className="relative">
               <ShoppingCart className="w-6 h-6 text-cyan-400 mb-3" />
               <div className="text-3xl font-bold text-white mb-1">{stats.totalOrders}</div>
-              <div className="text-sm text-gray-400">Total Orders</div>
+              <div className="text-sm text-[#8888aa]">Total Orders</div>
             </div>
           </div>
           
@@ -251,7 +251,7 @@ export default async function ShopDashboard({
             <div className="relative">
               <DollarSign className="w-6 h-6 text-amber-400 mb-3" />
               <div className="text-3xl font-bold text-white mb-1">{stats.totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
-              <div className="text-sm text-gray-400">Total Value (Coins)</div>
+              <div className="text-sm text-[#8888aa]">Total Value (Coins)</div>
             </div>
           </div>
 
@@ -260,7 +260,7 @@ export default async function ShopDashboard({
             <div className="relative">
               <Wallet className="w-6 h-6 text-orange-400 mb-3" />
               <div className="text-3xl font-bold text-white mb-1">{stats.coinBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
-              <div className="text-sm text-gray-400">Wallet Balance</div>
+              <div className="text-sm text-[#8888aa]">Wallet Balance</div>
             </div>
           </div>
           
@@ -269,7 +269,7 @@ export default async function ShopDashboard({
             <div className="relative">
               <Users className="w-6 h-6 text-purple-400 mb-3" />
               <div className="text-3xl font-bold text-white mb-1">{stats.uniqueCustomers}</div>
-              <div className="text-sm text-gray-400">Unique Customers</div>
+              <div className="text-sm text-[#8888aa]">Unique Customers</div>
             </div>
           </div>
         </div>
@@ -288,11 +288,11 @@ export default async function ShopDashboard({
           
           <div className="glass rounded-xl p-4 flex items-center gap-4">
             <div className="p-3 rounded-xl bg-blue-500/10">
-              <Package className="w-5 h-5 text-blue-400" />
+              <Package className="w-5 h-5 text-[#BFFF00]" />
             </div>
             <div>
               <div className="text-2xl font-bold text-white">{stats.processingOrders}</div>
-              <div className="text-xs text-blue-400">Processing</div>
+              <div className="text-xs text-[#BFFF00]">Processing</div>
             </div>
           </div>
           
@@ -335,7 +335,7 @@ export default async function ShopDashboard({
                 <ShoppingCart className="w-7 h-7 text-emerald-400" />
               </div>
               <h3 className="text-xl font-bold text-white mb-2 group-hover:text-emerald-400 transition-colors">Box Orders</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">
+              <p className="text-[#8888aa] text-sm leading-relaxed">
                 Orders from your custom boxes. Process and ship cards.
               </p>
               <div className="mt-4 flex items-center text-emerald-400 text-sm font-medium">
@@ -363,7 +363,7 @@ export default async function ShopDashboard({
                 <ClipboardList className="w-7 h-7 text-purple-400" />
               </div>
               <h3 className="text-xl font-bold text-white mb-2 group-hover:text-purple-400 transition-colors">Assigned Orders</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">
+              <p className="text-[#8888aa] text-sm leading-relaxed">
                 Orders assigned by admin for fulfillment. {stats.assignedOrders} total.
               </p>
               <div className="mt-4 flex items-center text-purple-400 text-sm font-medium">
@@ -386,7 +386,7 @@ export default async function ShopDashboard({
                 <Database className="w-7 h-7 text-teal-400" />
               </div>
               <h3 className="text-xl font-bold text-white mb-2 group-hover:text-teal-400 transition-colors">My Stock</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">
+              <p className="text-[#8888aa] text-sm leading-relaxed">
                 View and manage your card inventory. Connect your stock via API integration.
               </p>
               <div className="mt-4 flex items-center text-teal-400 text-sm font-medium">
@@ -409,7 +409,7 @@ export default async function ShopDashboard({
                 <Wallet className="w-7 h-7 text-amber-400" />
               </div>
               <h3 className="text-xl font-bold text-white mb-2 group-hover:text-amber-400 transition-colors">Payouts</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">
+              <p className="text-[#8888aa] text-sm leading-relaxed">
                 Request payouts for your earned coins. 5 coins = 1 EUR.
               </p>
               <div className="mt-4 flex items-center text-amber-400 text-sm font-medium">
@@ -457,10 +457,10 @@ export default async function ShopDashboard({
               {stats.recentOrders.map((order: any) => (
                 <div 
                   key={order.id} 
-                  className="flex items-center justify-between p-4 rounded-xl bg-gray-800/50 hover:bg-gray-800/70 transition-colors"
+                  className="flex items-center justify-between p-4 rounded-xl bg-[#12123a] hover:bg-[#12123a] transition-colors"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-lg bg-gray-700 overflow-hidden flex-shrink-0">
+                    <div className="w-12 h-12 rounded-lg bg-[#12123a] overflow-hidden flex-shrink-0">
                       {order.cardImage ? (
                         <img 
                           src={order.cardImage} 
@@ -475,7 +475,7 @@ export default async function ShopDashboard({
                     </div>
                     <div>
                       <p className="font-medium text-white truncate max-w-[200px]">{order.cardName}</p>
-                      <p className="text-sm text-gray-400">
+                      <p className="text-sm text-[#8888aa]">
                         {order.user.name || order.user.email}{order.box ? ` • ${order.box.name}` : ' • Admin Assigned'}
                       </p>
                     </div>
@@ -483,7 +483,7 @@ export default async function ShopDashboard({
                   <div className="text-right">
                     <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${
                       order.status === 'PENDING' ? 'bg-yellow-500/10 text-yellow-400' :
-                      order.status === 'CONFIRMED' ? 'bg-blue-500/10 text-blue-400' :
+                      order.status === 'CONFIRMED' ? 'bg-blue-500/10 text-[#BFFF00]' :
                       order.status === 'PROCESSING' ? 'bg-purple-500/10 text-purple-400' :
                       order.status === 'SHIPPED' ? 'bg-indigo-500/10 text-indigo-400' :
                       order.status === 'DELIVERED' ? 'bg-green-500/10 text-green-400' :

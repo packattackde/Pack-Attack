@@ -32,7 +32,7 @@ export default async function AdminDashboard() {
   ]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display">
+    <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display">
       {/* Background Effects */}
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
@@ -42,13 +42,13 @@ export default async function AdminDashboard() {
         <div className="mb-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full glass text-sm">
             <ShieldCheck className="w-4 h-4 text-purple-400" />
-            <span className="text-gray-300">Admin Panel</span>
+            <span className="text-[#f0f0f5]">Admin Panel</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-3">
             <span className="text-white">Admin </span>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">Dashboard</span>
           </h1>
-          <p className="text-gray-400 text-lg">Manage your Pack Attack platform</p>
+          <p className="text-[#8888aa] text-lg">Manage your Pack Attack platform</p>
         </div>
 
         {/* Stats Grid */}
@@ -56,37 +56,37 @@ export default async function AdminDashboard() {
           <div className="glass rounded-xl p-4 text-center">
             <Package className="w-6 h-6 text-blue-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{boxCount}</div>
-            <div className="text-xs text-gray-400">Boxes</div>
+            <div className="text-xs text-[#8888aa]">Boxes</div>
           </div>
           <div className="glass rounded-xl p-4 text-center">
             <Swords className="w-6 h-6 text-purple-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{battleCount}</div>
-            <div className="text-xs text-gray-400">Battles</div>
+            <div className="text-xs text-[#8888aa]">Battles</div>
           </div>
           <div className="glass rounded-xl p-4 text-center">
             <Users className="w-6 h-6 text-cyan-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{userCount}</div>
-            <div className="text-xs text-gray-400">Users</div>
+            <div className="text-xs text-[#8888aa]">Users</div>
           </div>
           <div className="glass rounded-xl p-4 text-center">
             <Store className="w-6 h-6 text-orange-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{shopCount}</div>
-            <div className="text-xs text-gray-400">Shops</div>
+            <div className="text-xs text-[#8888aa]">Shops</div>
           </div>
           <div className="glass rounded-xl p-4 text-center">
             <TrendingUp className="w-6 h-6 text-green-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{verifiedCount}</div>
-            <div className="text-xs text-gray-400">Verified</div>
+            <div className="text-xs text-[#8888aa]">Verified</div>
           </div>
           <div className="glass rounded-xl p-4 text-center">
             <Mail className="w-6 h-6 text-pink-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{emailCount}</div>
-            <div className="text-xs text-gray-400">Emails Sent</div>
+            <div className="text-xs text-[#8888aa]">Emails Sent</div>
           </div>
           <div className="glass rounded-xl p-4 text-center">
             <Coins className="w-6 h-6 text-amber-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{Number(totalCoins._sum.coins || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-            <div className="text-xs text-gray-400">Total Coins</div>
+            <div className="text-xs text-[#8888aa]">Total Coins</div>
           </div>
         </div>
 
@@ -102,7 +102,7 @@ export default async function AdminDashboard() {
               <ShoppingCart className="w-6 h-6 text-green-400" />
             </div>
             <h3 className="text-xl font-bold text-white mb-2 group-hover:text-green-400 transition-colors">Order Management</h3>
-            <p className="text-gray-400 text-sm">View and process customer orders.</p>
+            <p className="text-[#8888aa] text-sm">View and process customer orders.</p>
           </Link>
 
           <Link href="/admin/shops" className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-orange-500/50 transition-all group">
@@ -110,7 +110,7 @@ export default async function AdminDashboard() {
               <Store className="w-6 h-6 text-orange-400" />
             </div>
             <h3 className="text-xl font-bold text-white mb-2 group-hover:text-orange-400 transition-colors">Shop Management</h3>
-            <p className="text-gray-400 text-sm">Oversee card supplier shops, stock, and orders.</p>
+            <p className="text-[#8888aa] text-sm">Oversee card supplier shops, stock, and orders.</p>
           </Link>
 
           <Link href="/admin/boxes" className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-blue-500/50 transition-all group">
@@ -118,7 +118,7 @@ export default async function AdminDashboard() {
               <Package className="w-6 h-6 text-blue-400" />
             </div>
             <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">Box Management</h3>
-            <p className="text-gray-400 text-sm">Create and manage boxes for users to open.</p>
+            <p className="text-[#8888aa] text-sm">Create and manage boxes for users to open.</p>
           </Link>
 
           <Link href="/admin/users" className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-cyan-500/50 transition-all group">
@@ -126,7 +126,7 @@ export default async function AdminDashboard() {
               <Users className="w-6 h-6 text-cyan-400" />
             </div>
             <h3 className="text-xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">User Management</h3>
-            <p className="text-gray-400 text-sm">View, edit, and manage user accounts.</p>
+            <p className="text-[#8888aa] text-sm">View, edit, and manage user accounts.</p>
           </Link>
 
           <Link href="/admin/emails" className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-pink-500/50 transition-all group">
@@ -134,7 +134,7 @@ export default async function AdminDashboard() {
               <Mail className="w-6 h-6 text-pink-400" />
             </div>
             <h3 className="text-xl font-bold text-white mb-2 group-hover:text-pink-400 transition-colors">Email Management</h3>
-            <p className="text-gray-400 text-sm">Send emails and view email history.</p>
+            <p className="text-[#8888aa] text-sm">Send emails and view email history.</p>
           </Link>
 
           <Link href="/battles" className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-purple-500/50 transition-all group">
@@ -142,7 +142,7 @@ export default async function AdminDashboard() {
               <Swords className="w-6 h-6 text-purple-400" />
             </div>
             <h3 className="text-xl font-bold text-white mb-2 group-hover:text-purple-400 transition-colors">Battle Management</h3>
-            <p className="text-gray-400 text-sm">View and manage ongoing battles.</p>
+            <p className="text-[#8888aa] text-sm">View and manage ongoing battles.</p>
           </Link>
 
           <Link href="/admin/upsale-items" className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-amber-500/50 transition-all group">
@@ -150,7 +150,7 @@ export default async function AdminDashboard() {
               <Tag className="w-6 h-6 text-amber-400" />
             </div>
             <h3 className="text-xl font-bold text-white mb-2 group-hover:text-amber-400 transition-colors">Upsale Items</h3>
-            <p className="text-gray-400 text-sm">Manage add-on products shown in cart.</p>
+            <p className="text-[#8888aa] text-sm">Manage add-on products shown in cart.</p>
           </Link>
 
           <Link href="/admin/payouts" className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-emerald-500/50 transition-all group">
@@ -158,7 +158,7 @@ export default async function AdminDashboard() {
               <Wallet className="w-6 h-6 text-emerald-400" />
             </div>
             <h3 className="text-xl font-bold text-white mb-2 group-hover:text-emerald-400 transition-colors">Shop Payouts</h3>
-            <p className="text-gray-400 text-sm">Process payout requests from shop owners. 5 coins = 1 EUR.</p>
+            <p className="text-[#8888aa] text-sm">Process payout requests from shop owners. 5 coins = 1 EUR.</p>
           </Link>
 
           <Link href="/admin/feedback" className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-teal-500/50 transition-all group relative">
@@ -171,7 +171,7 @@ export default async function AdminDashboard() {
               <MessageSquare className="w-6 h-6 text-teal-400" />
             </div>
             <h3 className="text-xl font-bold text-white mb-2 group-hover:text-teal-400 transition-colors">Feedback</h3>
-            <p className="text-gray-400 text-sm">View and manage user feedback and reports.</p>
+            <p className="text-[#8888aa] text-sm">View and manage user feedback and reports.</p>
           </Link>
 
           <Link href="/admin/chat" className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-indigo-500/50 transition-all group">
@@ -179,7 +179,7 @@ export default async function AdminDashboard() {
               <MessageCircle className="w-6 h-6 text-indigo-400" />
             </div>
             <h3 className="text-xl font-bold text-white mb-2 group-hover:text-indigo-400 transition-colors">Chat Moderation</h3>
-            <p className="text-gray-400 text-sm">View chat history, manage bans and timeouts.</p>
+            <p className="text-[#8888aa] text-sm">View chat history, manage bans and timeouts.</p>
           </Link>
         </div>
       </div>

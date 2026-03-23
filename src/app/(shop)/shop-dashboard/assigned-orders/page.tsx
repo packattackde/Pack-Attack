@@ -88,10 +88,10 @@ export default async function AssignedOrdersPage({
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold text-white">Assigned Orders</h1>
-          <p className="text-gray-400 mt-1">No shop associated with your account</p>
+          <p className="text-[#8888aa] mt-1">No shop associated with your account</p>
         </div>
         <div className="glass-strong rounded-2xl p-12 text-center">
-          <p className="text-gray-400">Please contact an administrator to set up your shop.</p>
+          <p className="text-[#8888aa]">Please contact an administrator to set up your shop.</p>
         </div>
       </div>
     );
@@ -111,7 +111,7 @@ export default async function AssignedOrdersPage({
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold text-white">Assigned Orders</h1>
-        <p className="text-gray-400 mt-1">
+        <p className="text-[#8888aa] mt-1">
           Orders assigned to <span className="text-purple-400 font-medium">{shopName}</span> for fulfillment
         </p>
       </div>

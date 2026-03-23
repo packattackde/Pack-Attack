@@ -113,7 +113,7 @@ export default function RegisterPage() {
           </p>
           <Link
               href="/login"
-              className="block w-full h-11 bg-linear-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white text-sm font-semibold rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/20 items-center justify-center"
+              className="block w-full h-11 bg-[#BFFF00] hover:bg-[#d4ff4d] text-black text-sm font-semibold rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-[0_0_24px_rgba(191,255,0,0.3)] items-center justify-center"
           >
             Go to Login
           </Link>
@@ -196,7 +196,7 @@ export default function RegisterPage() {
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-medium text-gray-400 mb-1.5 ml-1">Name</label>
+              <label className="block text-xs font-medium text-[#8888aa] mb-1.5 ml-1">Name</label>
               <div className="relative">
                 <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-600" />
                 <input
@@ -204,14 +204,14 @@ export default function RegisterPage() {
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full h-11 pl-10 pr-4 rounded-xl bg-white/4 border border-white/8 text-sm text-white placeholder-gray-600 focus:border-violet-500/40 focus:ring-1 focus:ring-violet-500/20 focus:bg-white/6 outline-none transition-all"
+                    className="w-full h-11 pl-10 pr-4 rounded-xl bg-white/4 border border-white/8 text-sm text-white placeholder-gray-600 focus:border-[rgba(191,255,0,0.3)] focus:ring-1 focus:ring-[rgba(191,255,0,0.2)] focus:bg-white/6 outline-none transition-all"
                     placeholder="Your name"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-gray-400 mb-1.5 ml-1">Email</label>
+              <label className="block text-xs font-medium text-[#8888aa] mb-1.5 ml-1">Email</label>
               <div className="relative">
                 <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-600" />
                 <input
@@ -219,14 +219,14 @@ export default function RegisterPage() {
                     required
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full h-11 pl-10 pr-4 rounded-xl bg-white/4 border border-white/8 text-sm text-white placeholder-gray-600 focus:border-violet-500/40 focus:ring-1 focus:ring-violet-500/20 focus:bg-white/6 outline-none transition-all"
+                    className="w-full h-11 pl-10 pr-4 rounded-xl bg-white/4 border border-white/8 text-sm text-white placeholder-gray-600 focus:border-[rgba(191,255,0,0.3)] focus:ring-1 focus:ring-[rgba(191,255,0,0.2)] focus:bg-white/6 outline-none transition-all"
                     placeholder="you@example.com"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-gray-400 mb-1.5 ml-1">Password</label>
+              <label className="block text-xs font-medium text-[#8888aa] mb-1.5 ml-1">Password</label>
               <div className="relative">
                 <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-600" />
                 <input
@@ -234,13 +234,13 @@ export default function RegisterPage() {
                     required
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    className="w-full h-11 pl-10 pr-11 rounded-xl bg-white/4 border border-white/8 text-sm text-white placeholder-gray-600 focus:border-violet-500/40 focus:ring-1 focus:ring-violet-500/20 focus:bg-white/6 outline-none transition-all"
+                    className="w-full h-11 pl-10 pr-11 rounded-xl bg-white/4 border border-white/8 text-sm text-white placeholder-gray-600 focus:border-[rgba(191,255,0,0.3)] focus:ring-1 focus:ring-[rgba(191,255,0,0.2)] focus:bg-white/6 outline-none transition-all"
                     placeholder="Create a password"
                 />
                 <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-400 transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-[#8888aa] transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -260,10 +260,10 @@ export default function RegisterPage() {
             <button
                 type="submit"
                 disabled={loading || !passwordStrong}
-                className="w-full h-11 mt-1 bg-linear-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white text-sm font-semibold rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-violet-500/20 disabled:opacity-40 disabled:hover:shadow-none flex items-center justify-center gap-2"
+                className="w-full h-11 mt-1 bg-[#BFFF00] hover:bg-[#d4ff4d] text-black text-sm font-semibold rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-[0_0_24px_rgba(191,255,0,0.3)] disabled:opacity-40 disabled:hover:shadow-none flex items-center justify-center gap-2"
             >
               {loading ? (
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
               ) : (
                   <>
                     Create Account
@@ -276,7 +276,7 @@ export default function RegisterPage() {
           {/* Login link */}
           <p className="mt-6 text-center text-sm text-gray-500">
             Already have an account?{' '}
-            <Link href="/login" className="text-violet-400 hover:text-violet-300 font-medium transition-colors">
+            <Link href="/login" className="text-[#BFFF00] hover:text-[#d4ff4d] font-medium transition-colors">
               Sign in
             </Link>
           </p>

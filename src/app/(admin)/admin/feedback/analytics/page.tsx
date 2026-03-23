@@ -139,7 +139,7 @@ export default function FeedbackAnalyticsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display flex items-center justify-center">
         <div className="w-6 h-6 border-2 border-white/20 border-t-teal-400 rounded-full animate-spin" />
       </div>
     );
@@ -147,7 +147,7 @@ export default function FeedbackAnalyticsPage() {
 
   if (!analytics) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display flex items-center justify-center">
         <p className="text-gray-500">Failed to load analytics.</p>
       </div>
     );
@@ -160,14 +160,14 @@ export default function FeedbackAnalyticsPage() {
   const problemCategories = categoryAnalytics.filter((c) => c.avgExperience !== null && c.avgExperience < 3);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display">
+    <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display">
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
 
       <div className="relative container py-8 sm:py-12">
         <Link
           href="/admin/feedback"
-          className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-300 transition-colors font-medium mb-6 touch-target"
+          className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-[#f0f0f5] transition-colors font-medium mb-6 touch-target"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Feedback
@@ -175,7 +175,7 @@ export default function FeedbackAnalyticsPage() {
 
         <div className="mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-400">Feedback</span> Analytics
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#BFFF00] to-[#d4ff4d]">Feedback</span> Analytics
           </h1>
           <p className="text-gray-500">Insights and trends across all feedback</p>
         </div>
@@ -184,7 +184,7 @@ export default function FeedbackAnalyticsPage() {
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
           <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
             <div className="flex items-center gap-2 mb-2">
-              <MessageSquare className="w-4 h-4 text-blue-400" />
+              <MessageSquare className="w-4 h-4 text-[#BFFF00]" />
               <span className="text-xs text-gray-500 font-medium">Total</span>
             </div>
             <p className="text-2xl font-bold text-white">{summary.totalCount}</p>
@@ -263,7 +263,7 @@ export default function FeedbackAnalyticsPage() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Icon className={`w-3.5 h-3.5 text-${conf?.color || 'gray'}-400`} />
-                        <span className="text-xs font-medium text-gray-300">{conf?.label || cat.category}</span>
+                        <span className="text-xs font-medium text-[#f0f0f5]">{conf?.label || cat.category}</span>
                       </div>
                       <div className="flex items-center gap-3 text-xs">
                         <span className="text-gray-500">{cat.totalCount} total</span>
@@ -313,19 +313,19 @@ export default function FeedbackAnalyticsPage() {
               {Object.entries(statusDistribution).map(([status, count]) => (
                 <div key={status} className="flex items-center gap-2">
                   <div className={`w-2.5 h-2.5 rounded-full ${statusColors[status] || 'bg-gray-500'}`} />
-                  <span className="text-xs text-gray-400">{statusLabels[status] || status}</span>
+                  <span className="text-xs text-[#8888aa]">{statusLabels[status] || status}</span>
                   <span className="text-xs font-semibold text-white ml-auto">{count}</span>
                 </div>
               ))}
             </div>
 
             {/* Priority distribution */}
-            <h4 className="text-xs font-semibold text-gray-400 mt-6 mb-3">Priority Breakdown</h4>
+            <h4 className="text-xs font-semibold text-[#8888aa] mt-6 mb-3">Priority Breakdown</h4>
             <div className="grid grid-cols-2 gap-3">
               {Object.entries(priorityDistribution).map(([priority, count]) => (
                 <div key={priority} className="flex items-center gap-2">
                   <div className={`w-2.5 h-2.5 rounded-full ${priorityColors[priority] || 'bg-gray-500'}`} />
-                  <span className="text-xs text-gray-400">{priority}</span>
+                  <span className="text-xs text-[#8888aa]">{priority}</span>
                   <span className="text-xs font-semibold text-white ml-auto">{count}</span>
                 </div>
               ))}
@@ -356,7 +356,7 @@ export default function FeedbackAnalyticsPage() {
                         className="w-full rounded-t bg-teal-500/60 hover:bg-teal-400/80 transition-colors cursor-default"
                         style={{ height: `${Math.max(height, 2)}%` }}
                       />
-                      <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 rounded bg-gray-800 text-[10px] text-white whitespace-nowrap z-10 border border-white/10">
+                      <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 rounded bg-[#12123a] text-[10px] text-white whitespace-nowrap z-10 border border-white/10">
                         {dateStr}: {entry.count}
                       </div>
                     </div>
@@ -389,9 +389,9 @@ export default function FeedbackAnalyticsPage() {
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <Icon className={`w-3.5 h-3.5 text-${conf?.color || 'gray'}-400`} />
-                            <span className="text-xs text-gray-300">{conf?.label || entry.category}</span>
+                            <span className="text-xs text-[#f0f0f5]">{conf?.label || entry.category}</span>
                           </div>
-                          <span className={`text-xs font-semibold ${isWarning ? 'text-red-400' : 'text-gray-300'}`}>
+                          <span className={`text-xs font-semibold ${isWarning ? 'text-red-400' : 'text-[#f0f0f5]'}`}>
                             {formatDuration(entry.avgResponseSeconds)}
                           </span>
                         </div>
@@ -425,7 +425,7 @@ export default function FeedbackAnalyticsPage() {
                   <div key={entry.user?.id || i} className="flex items-center justify-between px-3 py-2 rounded-lg bg-white/[0.02]">
                     <div className="flex items-center gap-3">
                       <span className="text-xs font-bold text-gray-500 w-5">{i + 1}.</span>
-                      <span className="text-sm text-gray-300">{entry.user?.name || entry.user?.email || 'Unknown'}</span>
+                      <span className="text-sm text-[#f0f0f5]">{entry.user?.name || entry.user?.email || 'Unknown'}</span>
                     </div>
                     <span className="text-sm font-semibold text-teal-400">{entry.count}</span>
                   </div>
@@ -448,7 +448,7 @@ export default function FeedbackAnalyticsPage() {
                   <div key={entry.user?.id || i} className="flex items-center justify-between px-3 py-2 rounded-lg bg-white/[0.02]">
                     <div className="flex items-center gap-3">
                       <span className="text-xs font-bold text-gray-500 w-5">{i + 1}.</span>
-                      <span className="text-sm text-gray-300">{entry.user?.name || entry.user?.email || 'Unknown'}</span>
+                      <span className="text-sm text-[#f0f0f5]">{entry.user?.name || entry.user?.email || 'Unknown'}</span>
                     </div>
                     <span className="text-sm font-semibold text-green-400">{entry.count}</span>
                   </div>

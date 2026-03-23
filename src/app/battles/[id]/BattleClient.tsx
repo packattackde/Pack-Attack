@@ -43,7 +43,7 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
       case 'CANCELLED':
         return <span className="px-3 py-1 rounded-full bg-red-500/20 text-red-400 text-sm font-semibold">Cancelled</span>;
       default:
-        return <span className="px-3 py-1 rounded-full bg-gray-500/20 text-gray-400 text-sm font-semibold">{battle.status}</span>;
+        return <span className="px-3 py-1 rounded-full bg-gray-500/20 text-[#8888aa] text-sm font-semibold">{battle.status}</span>;
     }
   };
 
@@ -95,7 +95,7 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display">
+    <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display">
       {/* Background Effects */}
       <div className="fixed inset-0 bg-grid opacity-20 pointer-events-none" />
       <div className="fixed inset-0 radial-gradient pointer-events-none" />
@@ -105,7 +105,7 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
         <div className="mb-8 flex items-center justify-between">
           <Link 
             href="/battles"
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+            className="inline-flex items-center gap-2 text-[#8888aa] hover:text-white transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Battles
@@ -113,7 +113,7 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
           <button
             onClick={handleRefresh}
             disabled={isRefreshing}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-gray-300 hover:text-white hover:bg-white/10 transition-all disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-[#f0f0f5] hover:text-white hover:bg-white/10 transition-all disabled:opacity-50"
           >
             <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
             Refresh
@@ -136,7 +136,7 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
                   </div>
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-1">It's a Draw!</h2>
-                    <p className="text-xl text-gray-300">
+                    <p className="text-xl text-[#f0f0f5]">
                       All players had the same total value — everyone keeps their own cards.
                     </p>
                   </div>
@@ -151,7 +151,7 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
                   </div>
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-1">Battle Complete!</h2>
-                    <p className="text-xl text-gray-300">
+                    <p className="text-xl text-[#f0f0f5]">
                       Winner: <span className="font-bold text-yellow-400">{getWinnerDisplay()}</span>
                     </p>
                   </div>
@@ -173,28 +173,28 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
               
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                  <div className="flex items-center gap-2 text-gray-400 mb-1">
+                  <div className="flex items-center gap-2 text-[#8888aa] mb-1">
                     <Swords className="w-4 h-4" />
                     <span className="text-sm">Mode</span>
                   </div>
                   <p className="text-white font-semibold">{getBattleModeLabel()}</p>
                 </div>
                 <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                  <div className="flex items-center gap-2 text-gray-400 mb-1">
+                  <div className="flex items-center gap-2 text-[#8888aa] mb-1">
                     <Users className="w-4 h-4" />
                     <span className="text-sm">Players</span>
                   </div>
                   <p className="text-white font-semibold">{battle.participants.length}/{battle.maxParticipants}</p>
                 </div>
                 <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                  <div className="flex items-center gap-2 text-gray-400 mb-1">
+                  <div className="flex items-center gap-2 text-[#8888aa] mb-1">
                     <Coins className="w-4 h-4" />
                     <span className="text-sm">Entry Fee</span>
                   </div>
                   <p className="text-white font-semibold">{battle.entryFee} coins</p>
                 </div>
                 <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                  <div className="flex items-center gap-2 text-gray-400 mb-1">
+                  <div className="flex items-center gap-2 text-[#8888aa] mb-1">
                     <Package className="w-4 h-4" />
                     <span className="text-sm">Rounds</span>
                   </div>
@@ -269,7 +269,7 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
                               transition={{ delay: index * 0.05 }}
                               className="group relative"
                             >
-                              <div className="relative aspect-[2/3] overflow-hidden rounded-xl border border-white/20 bg-gray-800 shadow-lg group-hover:shadow-xl transition-shadow">
+                              <div className="relative aspect-[2/3] overflow-hidden rounded-xl border border-white/20 bg-[#12123a] shadow-lg group-hover:shadow-xl transition-shadow">
                                 {pull.pull?.card ? (
                                   <>
                                     <Image
@@ -289,12 +289,12 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
                                         </span>
                                       </div>
                                     </div>
-                                    <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded bg-purple-500/80 text-white text-xs font-semibold">
+                                    <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded bg-[#BFFF00]/80 text-white text-xs font-semibold">
                                       R{pull.roundNumber}
                                     </div>
                                   </>
                                 ) : (
-                                  <div className="flex items-center justify-center h-full text-gray-500 text-xs">
+                                  <div className="flex items-center justify-center h-full text-[#8888aa] text-xs">
                                     No card
                                   </div>
                                 )}
@@ -320,12 +320,12 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
                       className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10"
                     >
                       <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#BFFF00] to-[#a0d600] flex items-center justify-center text-white font-bold">
                           {round.round}
                         </div>
                         <div>
                           <p className="text-white font-semibold">{round.winnerName}</p>
-                          <p className="text-gray-400 text-sm">{round.card?.name || 'Unknown Card'}</p>
+                          <p className="text-[#8888aa] text-sm">{round.card?.name || 'Unknown Card'}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-4">
@@ -355,12 +355,12 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
             <div className="glass-strong rounded-3xl p-6 border border-white/10">
               <h2 className="text-xl font-bold text-white mb-6">Battle Summary</h2>
               <div className="space-y-4">
-                <div className="flex items-center gap-3 text-gray-300">
-                  <Calendar className="w-5 h-5 text-gray-500" />
+                <div className="flex items-center gap-3 text-[#f0f0f5]">
+                  <Calendar className="w-5 h-5 text-[#8888aa]" />
                   <span>Created: {new Date(battle.createdAt).toLocaleString()}</span>
                 </div>
                 {battle.endedAt && (
-                  <div className="flex items-center gap-3 text-gray-300">
+                  <div className="flex items-center gap-3 text-[#f0f0f5]">
                     <Trophy className="w-5 h-5 text-yellow-500" />
                     <span>Ended: {new Date(battle.endedAt).toLocaleString()}</span>
                   </div>
@@ -374,7 +374,7 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
             {/* Box Details - Fanned Card Style */}
             <div className="glass rounded-xl overflow-hidden card-lift border border-white/10">
               {/* Card Preview Section - Fanned Cards */}
-              <div className="relative h-48 bg-gradient-to-b from-gray-800/50 to-gray-900/80 flex items-end justify-center pb-2 overflow-hidden">
+              <div className="relative h-48 bg-gradient-to-b from-[#12123a]/50 to-[#0B0B2B]/80 flex items-end justify-center pb-2 overflow-hidden">
                 {/* Background glow effect */}
                 <div className="absolute inset-0 bg-gradient-to-t from-amber-500/10 via-transparent to-transparent" />
                 
@@ -394,7 +394,7 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
                             zIndex: zIndexes[index],
                           }}
                         >
-                          <div className="relative w-20 h-[110px] rounded-md overflow-hidden border-2 border-gray-600 shadow-lg hover:border-amber-400/50 transition-colors bg-gray-800">
+                          <div className="relative w-20 h-[110px] rounded-md overflow-hidden border-2 border-[rgba(255,255,255,0.06)] shadow-lg hover:border-amber-400/50 transition-colors bg-[#12123a]">
                             {card.imageUrlGatherer || card.imageUrlScryfall ? (
                               <Image
                                 src={card.imageUrlGatherer || card.imageUrlScryfall}
@@ -404,8 +404,8 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
                                 unoptimized
                               />
                             ) : (
-                              <div className="w-full h-full flex items-center justify-center bg-gray-700">
-                                <span className="text-[8px] text-gray-500">?</span>
+                              <div className="w-full h-full flex items-center justify-center bg-[#12123a]">
+                                <span className="text-[8px] text-[#8888aa]">?</span>
                               </div>
                             )}
                             {/* Value badge on top card */}
@@ -428,7 +428,7 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
                       fill
                       className="object-cover opacity-80"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B2B] to-transparent" />
                   </div>
                 ) : (
                   <div className="flex items-center justify-center h-full">
@@ -445,7 +445,7 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
               </div>
 
               {/* Box Info */}
-              <div className="p-4 border-t border-gray-800">
+              <div className="p-4 border-t border-[rgba(255,255,255,0.06)]">
                 <h3 className="text-sm font-semibold text-white mb-2 line-clamp-1">
                   {battle.box?.name || 'Unknown Box'}
                 </h3>
@@ -453,10 +453,10 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
                   <div className="flex items-center gap-1">
                     <Coins className="w-4 h-4 text-amber-400" />
                     <span className="text-sm font-bold text-amber-400">{battle.box?.price?.toLocaleString() || 0}</span>
-                    <span className="text-xs text-gray-500">coins</span>
+                    <span className="text-xs text-[#8888aa]">coins</span>
                   </div>
                 </div>
-                <div className="mt-2 pt-2 border-t border-gray-800/50 flex items-center justify-between text-[11px] text-gray-500">
+                <div className="mt-2 pt-2 border-t border-[rgba(255,255,255,0.06)]/50 flex items-center justify-between text-[11px] text-[#8888aa]">
                   <span>{battle.box?.cardsPerPack || 1} cards/pack</span>
                   <span>{battle.rounds} rounds</span>
                 </div>
@@ -470,7 +470,7 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
                   <Link href="/battles">View All Battles</Link>
                 </Button>
                 {currentUserId && (
-                  <Button asChild className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
+                  <Button asChild className="w-full bg-[#BFFF00] hover:bg-[#d4ff4d] text-black">
                     <Link href="/battles/create">Create New Battle</Link>
                   </Button>
                 )}

@@ -56,7 +56,7 @@ export default async function ShopStockPage({
         <div className="mb-8">
           <Link 
             href={backHref}
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition-colors"
+            className="inline-flex items-center gap-2 text-[#8888aa] hover:text-white mb-6 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Dashboard</span>
@@ -64,13 +64,13 @@ export default async function ShopStockPage({
           
           <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 rounded-full glass text-sm">
             <Database className="w-4 h-4 text-teal-400" />
-            <span className="text-gray-300">{isAdmin && targetShop ? `Admin → ${shop.name}` : shop.name || 'My Stock'}</span>
+            <span className="text-[#f0f0f5]">{isAdmin && targetShop ? `Admin → ${shop.name}` : shop.name || 'My Stock'}</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-3 font-heading">
             <span className="text-white">My </span>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-cyan-400 to-blue-400">Stock</span>
           </h1>
-          <p className="text-gray-400 text-lg max-w-2xl">
+          <p className="text-[#8888aa] text-lg max-w-2xl">
             View, manage, and import your card inventory.
           </p>
         </div>
@@ -84,7 +84,7 @@ export default async function ShopStockPage({
               </div>
               <div>
                 <p className="text-2xl font-bold text-white">{productCount}</p>
-                <p className="text-xs text-gray-400">Total Products</p>
+                <p className="text-xs text-[#8888aa]">Total Products</p>
               </div>
             </div>
           </div>
@@ -95,7 +95,7 @@ export default async function ShopStockPage({
               </div>
               <div>
                 <p className="text-2xl font-bold text-green-400">{activeCount}</p>
-                <p className="text-xs text-gray-400">Active</p>
+                <p className="text-xs text-[#8888aa]">Active</p>
               </div>
             </div>
           </div>
@@ -105,8 +105,8 @@ export default async function ShopStockPage({
                 <Package className="w-5 h-5 text-gray-500" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-400">{inactiveCount}</p>
-                <p className="text-xs text-gray-400">Inactive</p>
+                <p className="text-2xl font-bold text-[#8888aa]">{inactiveCount}</p>
+                <p className="text-xs text-[#8888aa]">Inactive</p>
               </div>
             </div>
           </div>
@@ -117,7 +117,7 @@ export default async function ShopStockPage({
               </div>
               <div>
                 <p className="text-2xl font-bold text-red-400">{outOfStockCount}</p>
-                <p className="text-xs text-gray-400">Out of Stock</p>
+                <p className="text-xs text-[#8888aa]">Out of Stock</p>
               </div>
             </div>
           </div>
@@ -128,7 +128,7 @@ export default async function ShopStockPage({
               </div>
               <div>
                 <p className="text-2xl font-bold text-white">{totalStock?._sum?.stock || 0}</p>
-                <p className="text-xs text-gray-400">Total Units</p>
+                <p className="text-xs text-[#8888aa]">Total Units</p>
               </div>
             </div>
           </div>

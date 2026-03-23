@@ -120,11 +120,11 @@ export default function CreateBattlePage() {
     { value: 'NORMAL', label: 'Highest Wins', description: 'Highest total value wins all cards', icon: Crown, color: 'from-amber-500 to-yellow-500' },
     { value: 'UPSIDE_DOWN', label: 'Lowest Wins', description: 'Lowest total value wins all cards', icon: Trophy, color: 'from-blue-500 to-cyan-500' },
     { value: 'SHARE', label: 'Share Mode', description: 'Cards split evenly among players', icon: Share2, color: 'from-green-500 to-emerald-500' },
-    { value: 'JACKPOT', label: 'Jackpot', description: 'Random weighted winner takes all', icon: Sparkles, color: 'from-purple-500 to-pink-500' },
+    { value: 'JACKPOT', label: 'Jackpot', description: 'Random weighted winner takes all', icon: Sparkles, color: 'from-[#BFFF00] to-[#a0d600]' },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display">
+    <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display">
       {/* Background Effects */}
       <div className="fixed inset-0 bg-grid opacity-20 pointer-events-none" />
       <div className="fixed inset-0 radial-gradient pointer-events-none" />
@@ -133,7 +133,7 @@ export default function CreateBattlePage() {
         {/* Back Link */}
         <Link 
           href="/battles" 
-          className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-8"
+          className="inline-flex items-center gap-2 text-[#8888aa] hover:text-white transition-colors mb-8"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Battles
@@ -141,15 +141,15 @@ export default function CreateBattlePage() {
 
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-2 mb-6 rounded-full glass border border-purple-500/20">
-            <Swords className="w-5 h-5 text-purple-400" />
-            <span className="text-purple-400 font-semibold">New Battle</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 mb-6 rounded-full glass border border-[rgba(191,255,0,0.3)]">
+            <Swords className="w-5 h-5 text-[#BFFF00]" />
+            <span className="text-[#BFFF00] font-semibold">New Battle</span>
           </div>
           <h1 className="text-4xl md:text-6xl font-bold mb-4">
             <span className="text-white">Create </span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400">Battle</span>
+            <span className="text-[#BFFF00]">Battle</span>
           </h1>
-          <p className="text-gray-400 text-lg max-w-xl mx-auto">
+          <p className="text-[#8888aa] text-lg max-w-xl mx-auto">
             Set up your battle parameters and challenge other players
           </p>
         </div>
@@ -158,19 +158,19 @@ export default function CreateBattlePage() {
           {/* Step 1: Select Box */}
           <div className="mb-10">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#BFFF00] to-[#a0d600] flex items-center justify-center text-white font-bold">
                 1
               </div>
               <div>
                 <h2 className="text-xl font-bold text-white">Select Box</h2>
-                <p className="text-gray-400 text-sm">Choose which box to battle with</p>
+                <p className="text-[#8888aa] text-sm">Choose which box to battle with</p>
               </div>
             </div>
             
             {boxes.length === 0 ? (
               <div className="glass-strong rounded-2xl p-8 text-center border border-white/10">
                 <Package className="w-12 h-12 text-gray-500 mx-auto mb-3" />
-                <p className="text-gray-400">No boxes available</p>
+                <p className="text-[#8888aa]">No boxes available</p>
               </div>
             ) : (
               <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -183,12 +183,12 @@ export default function CreateBattlePage() {
                       onClick={() => setSelectedBox(box.id)}
                       className={`group glass rounded-xl overflow-hidden text-left transition-all card-lift ${
                         isSelected
-                          ? 'ring-2 ring-purple-500 shadow-lg shadow-purple-500/30'
-                          : 'hover:ring-1 hover:ring-purple-500/50'
+                          ? 'ring-2 ring-[#BFFF00] shadow-[0_0_24px_rgba(191,255,0,0.3)]'
+                          : 'hover:ring-1 hover:ring-[rgba(191,255,0,0.3)]'
                       }`}
                     >
                       {/* Card Preview Section - Fanned Cards */}
-                      <div className="relative h-48 bg-gradient-to-b from-gray-800/50 to-gray-900/80 flex items-end justify-center pb-2 overflow-hidden">
+                      <div className="relative h-48 bg-gradient-to-b from-[#12123a]/50 to-[#0B0B2B]/80 flex items-end justify-center pb-2 overflow-hidden">
                         {/* Background glow effect */}
                         <div className="absolute inset-0 bg-gradient-to-t from-amber-500/10 via-transparent to-transparent" />
                         
@@ -208,7 +208,7 @@ export default function CreateBattlePage() {
                                     zIndex: zIndexes[index],
                                   }}
                                 >
-                                  <div className="relative w-20 h-[110px] rounded-md overflow-hidden border-2 border-gray-600 shadow-lg group-hover:border-amber-400/50 transition-colors bg-gray-800">
+                                  <div className="relative w-20 h-[110px] rounded-md overflow-hidden border-2 border-[rgba(255,255,255,0.06)] shadow-lg group-hover:border-amber-400/50 transition-colors bg-[#12123a]">
                                     {card.imageUrlGatherer || card.imageUrlScryfall ? (
                                       <Image
                                         src={card.imageUrlGatherer || card.imageUrlScryfall || ''}
@@ -218,7 +218,7 @@ export default function CreateBattlePage() {
                                         unoptimized
                                       />
                                     ) : (
-                                      <div className="w-full h-full flex items-center justify-center bg-gray-700">
+                                      <div className="w-full h-full flex items-center justify-center bg-[#12123a]">
                                         <span className="text-[8px] text-gray-500">?</span>
                                       </div>
                                     )}
@@ -242,7 +242,7 @@ export default function CreateBattlePage() {
 
                         {/* Selected Badge */}
                         {isSelected && (
-                          <div className="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-[10px] font-bold text-white z-10">
+                          <div className="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-gradient-to-r from-[#BFFF00] to-[#a0d600] text-[10px] font-bold text-white z-10">
                             ✓ Selected
                           </div>
                         )}
@@ -263,8 +263,8 @@ export default function CreateBattlePage() {
                       </div>
 
                       {/* Box Info */}
-                      <div className="p-4 border-t border-gray-800">
-                        <h3 className="text-sm font-semibold text-white mb-2 group-hover:text-purple-400 transition-colors line-clamp-1">
+                      <div className="p-4 border-t border-[rgba(255,255,255,0.06)]">
+                        <h3 className="text-sm font-semibold text-white mb-2 group-hover:text-[#BFFF00] transition-colors line-clamp-1">
                           {box.name}
                         </h3>
                         <div className="flex items-center justify-between">
@@ -274,7 +274,7 @@ export default function CreateBattlePage() {
                             <span className="text-xs text-gray-500">coins</span>
                           </div>
                         </div>
-                        <div className="mt-2 pt-2 border-t border-gray-800/50 flex items-center justify-between text-[11px] text-gray-500">
+                        <div className="mt-2 pt-2 border-t border-[rgba(255,255,255,0.06)]/50 flex items-center justify-between text-[11px] text-gray-500">
                           <span>{box.cardsPerPack || 1} cards/pack</span>
                           <span>{box._count?.cards || 0} total</span>
                         </div>
@@ -289,12 +289,12 @@ export default function CreateBattlePage() {
           {/* Step 2: Battle Settings */}
           <div className="mb-10">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#BFFF00] to-[#a0d600] flex items-center justify-center text-white font-bold">
                 2
               </div>
               <div>
                 <h2 className="text-xl font-bold text-white">Battle Settings</h2>
-                <p className="text-gray-400 text-sm">Configure your battle</p>
+                <p className="text-[#8888aa] text-sm">Configure your battle</p>
               </div>
             </div>
 
@@ -302,7 +302,7 @@ export default function CreateBattlePage() {
               {/* Players */}
               <div className="glass-strong rounded-2xl p-6 border border-white/10">
                 <div className="flex items-center gap-2 mb-4">
-                  <Users className="w-5 h-5 text-purple-400" />
+                  <Users className="w-5 h-5 text-[#BFFF00]" />
                   <h3 className="text-lg font-bold text-white">Players</h3>
                 </div>
                 <div className="grid grid-cols-3 gap-3">
@@ -313,8 +313,8 @@ export default function CreateBattlePage() {
                       onClick={() => setFormData({ ...formData, players: count })}
                       className={`py-4 rounded-xl font-bold text-2xl transition-all ${
                         formData.players === count
-                          ? 'bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/30'
-                          : 'bg-white/5 text-gray-400 border border-white/10 hover:border-purple-500/50 hover:text-white'
+                          ? 'bg-gradient-to-br from-[#BFFF00] to-[#a0d600] text-white shadow-[0_0_24px_rgba(191,255,0,0.3)]'
+                          : 'bg-white/5 text-[#8888aa] border border-white/10 hover:border-[rgba(191,255,0,0.3)]/50 hover:text-white'
                       }`}
                     >
                       {count}
@@ -326,14 +326,14 @@ export default function CreateBattlePage() {
               {/* Rounds */}
               <div className="glass-strong rounded-2xl p-6 border border-white/10">
                 <div className="flex items-center gap-2 mb-4">
-                  <Package className="w-5 h-5 text-purple-400" />
+                  <Package className="w-5 h-5 text-[#BFFF00]" />
                   <h3 className="text-lg font-bold text-white">Rounds</h3>
                 </div>
                 <div className="flex items-center gap-4">
                   <button
                     type="button"
                     onClick={() => setFormData({ ...formData, rounds: Math.max(1, formData.rounds - 1) })}
-                    className="w-14 h-14 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-white/10 hover:border-purple-500/50 transition-all flex items-center justify-center"
+                    className="w-14 h-14 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-white/10 hover:border-[rgba(191,255,0,0.3)]/50 transition-all flex items-center justify-center"
                   >
                     <Minus className="w-6 h-6" />
                   </button>
@@ -344,7 +344,7 @@ export default function CreateBattlePage() {
                   <button
                     type="button"
                     onClick={() => setFormData({ ...formData, rounds: Math.min(10, formData.rounds + 1) })}
-                    className="w-14 h-14 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-white/10 hover:border-purple-500/50 transition-all flex items-center justify-center"
+                    className="w-14 h-14 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-white/10 hover:border-[rgba(191,255,0,0.3)]/50 transition-all flex items-center justify-center"
                   >
                     <Plus className="w-6 h-6" />
                   </button>
@@ -356,12 +356,12 @@ export default function CreateBattlePage() {
           {/* Step 3: Win Condition */}
           <div className="mb-10">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#BFFF00] to-[#a0d600] flex items-center justify-center text-white font-bold">
                 3
               </div>
               <div>
                 <h2 className="text-xl font-bold text-white">Win Condition</h2>
-                <p className="text-gray-400 text-sm">How the winner is determined</p>
+                <p className="text-[#8888aa] text-sm">How the winner is determined</p>
               </div>
             </div>
 
@@ -376,8 +376,8 @@ export default function CreateBattlePage() {
                     onClick={() => setFormData({ ...formData, winCondition: condition.value as any })}
                     className={`relative rounded-2xl p-5 text-left transition-all border-2 ${
                       isActive
-                        ? 'border-purple-500 bg-purple-500/10'
-                        : 'border-white/10 bg-white/5 hover:border-purple-500/50'
+                        ? 'border-[rgba(191,255,0,0.3)] bg-[rgba(191,255,0,0.08)]'
+                        : 'border-white/10 bg-white/5 hover:border-[rgba(191,255,0,0.3)]/50'
                     }`}
                   >
                     <div className="flex items-start gap-4">
@@ -385,13 +385,13 @@ export default function CreateBattlePage() {
                         <Icon className="w-6 h-6 text-white" />
                       </div>
                       <div className="flex-1">
-                        <h4 className={`font-bold mb-1 ${isActive ? 'text-purple-400' : 'text-white'}`}>
+                        <h4 className={`font-bold mb-1 ${isActive ? 'text-[#BFFF00]' : 'text-white'}`}>
                           {condition.label}
                         </h4>
-                        <p className="text-gray-400 text-sm">{condition.description}</p>
+                        <p className="text-[#8888aa] text-sm">{condition.description}</p>
                       </div>
                       {isActive && (
-                        <div className="w-6 h-6 rounded-full bg-purple-500 flex items-center justify-center">
+                        <div className="w-6 h-6 rounded-full bg-[#BFFF00] flex items-center justify-center">
                           <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                           </svg>
@@ -407,12 +407,12 @@ export default function CreateBattlePage() {
           {/* Step 4: Privacy */}
           <div className="mb-10">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#BFFF00] to-[#a0d600] flex items-center justify-center text-white font-bold">
                 4
               </div>
               <div>
                 <h2 className="text-xl font-bold text-white">Privacy</h2>
-                <p className="text-gray-400 text-sm">Battle visibility</p>
+                <p className="text-[#8888aa] text-sm">Battle visibility</p>
               </div>
             </div>
 
@@ -430,8 +430,8 @@ export default function CreateBattlePage() {
                     onClick={() => setFormData({ ...formData, privacy: option.value as any })}
                     className={`relative rounded-2xl p-5 text-left transition-all border-2 ${
                       isActive
-                        ? 'border-purple-500 bg-purple-500/10'
-                        : 'border-white/10 bg-white/5 hover:border-purple-500/50'
+                        ? 'border-[rgba(191,255,0,0.3)] bg-[rgba(191,255,0,0.08)]'
+                        : 'border-white/10 bg-white/5 hover:border-[rgba(191,255,0,0.3)]/50'
                     }`}
                   >
                     <div className="flex items-start gap-4">
@@ -439,13 +439,13 @@ export default function CreateBattlePage() {
                         <Icon className="w-6 h-6 text-white" />
                       </div>
                       <div className="flex-1">
-                        <h4 className={`font-bold mb-1 ${isActive ? 'text-purple-400' : 'text-white'}`}>
+                        <h4 className={`font-bold mb-1 ${isActive ? 'text-[#BFFF00]' : 'text-white'}`}>
                           {option.label}
                         </h4>
-                        <p className="text-gray-400 text-sm">{option.description}</p>
+                        <p className="text-[#8888aa] text-sm">{option.description}</p>
                       </div>
                       {isActive && (
-                        <div className="w-6 h-6 rounded-full bg-purple-500 flex items-center justify-center">
+                        <div className="w-6 h-6 rounded-full bg-[#BFFF00] flex items-center justify-center">
                           <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                           </svg>
@@ -464,7 +464,7 @@ export default function CreateBattlePage() {
               {/* Summary */}
               <div className="flex flex-wrap items-center gap-6">
                 <div>
-                  <p className="text-gray-400 text-sm mb-1">Entry Cost</p>
+                  <p className="text-[#8888aa] text-sm mb-1">Entry Cost</p>
                   <div className="flex items-center gap-2">
                     <Coins className="w-6 h-6 text-amber-400" />
                     <span className="text-3xl font-bold text-white">{calculateTotalCost().toLocaleString()}</span>
@@ -472,17 +472,17 @@ export default function CreateBattlePage() {
                 </div>
                 <div className="hidden sm:block w-px h-12 bg-white/10" />
                 <div>
-                  <p className="text-gray-400 text-sm mb-1">Players</p>
+                  <p className="text-[#8888aa] text-sm mb-1">Players</p>
                   <p className="text-xl font-bold text-white">{formData.players}</p>
                 </div>
                 <div className="hidden sm:block w-px h-12 bg-white/10" />
                 <div>
-                  <p className="text-gray-400 text-sm mb-1">Rounds</p>
+                  <p className="text-[#8888aa] text-sm mb-1">Rounds</p>
                   <p className="text-xl font-bold text-white">{formData.rounds}</p>
                 </div>
                 <div className="hidden sm:block w-px h-12 bg-white/10" />
                 <div>
-                  <p className="text-gray-400 text-sm mb-1">Mode</p>
+                  <p className="text-[#8888aa] text-sm mb-1">Mode</p>
                   <p className="text-xl font-bold text-white">
                     {winConditions.find(c => c.value === formData.winCondition)?.label}
                   </p>
@@ -494,7 +494,7 @@ export default function CreateBattlePage() {
                 type="button"
                 onClick={handleSubmit}
                 disabled={loading || !selectedBox}
-                className="flex items-center justify-center gap-3 px-10 py-5 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 hover:from-purple-600 hover:via-pink-600 hover:to-purple-600 text-white font-bold text-lg rounded-2xl transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 shadow-xl shadow-purple-500/30"
+                className="flex items-center justify-center gap-3 px-10 py-5 bg-[#BFFF00] hover:bg-[#d4ff4d] text-black font-bold text-lg rounded-2xl transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 shadow-[0_0_24px_rgba(191,255,0,0.3)]"
               >
                 {loading ? (
                   <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin" />

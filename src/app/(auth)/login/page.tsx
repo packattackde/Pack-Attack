@@ -72,8 +72,8 @@ export default function LoginPage() {
       <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-sm p-6 sm:p-8 shadow-2xl shadow-black/40">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500/20 to-violet-500/20 ring-1 ring-blue-500/20 mb-4">
-            <Gamepad2 className="w-6 h-6 text-blue-400" />
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-[rgba(191,255,0,0.1)] ring-1 ring-[rgba(191,255,0,0.2)] mb-4">
+            <Gamepad2 className="w-6 h-6 text-[#BFFF00]" />
           </div>
           <h2 className="text-2xl font-bold text-white mb-1">Welcome back</h2>
           <p className="text-sm text-gray-500">Sign in to continue your adventure</p>
@@ -129,7 +129,7 @@ export default function LoginPage() {
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-gray-400 mb-1.5 ml-1">Email</label>
+            <label className="block text-xs font-medium text-[#8888aa] mb-1.5 ml-1">Email</label>
             <div className="relative">
               <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-600" />
               <input
@@ -137,7 +137,7 @@ export default function LoginPage() {
                 required
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full h-11 pl-10 pr-4 rounded-xl bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder-gray-600 focus:border-blue-500/40 focus:ring-1 focus:ring-blue-500/20 focus:bg-white/[0.06] outline-none transition-all"
+                className="w-full h-11 pl-10 pr-4 rounded-xl bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder-gray-600 focus:border-[rgba(191,255,0,0.3)] focus:ring-1 focus:ring-[rgba(191,255,0,0.2)] focus:bg-white/[0.06] outline-none transition-all"
                 placeholder="you@example.com"
               />
             </div>
@@ -145,8 +145,8 @@ export default function LoginPage() {
 
           <div>
             <div className="flex items-center justify-between mb-1.5 ml-1">
-              <label className="text-xs font-medium text-gray-400">Password</label>
-              <button type="button" className="text-[11px] text-blue-400/70 hover:text-blue-400 transition-colors">
+              <label className="text-xs font-medium text-[#8888aa]">Password</label>
+              <button type="button" className="text-[11px] text-[#BFFF00]/70 hover:text-[#BFFF00] transition-colors">
                 Forgot password?
               </button>
             </div>
@@ -157,13 +157,13 @@ export default function LoginPage() {
                 required
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="w-full h-11 pl-10 pr-11 rounded-xl bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder-gray-600 focus:border-blue-500/40 focus:ring-1 focus:ring-blue-500/20 focus:bg-white/[0.06] outline-none transition-all"
+                className="w-full h-11 pl-10 pr-11 rounded-xl bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder-gray-600 focus:border-[rgba(191,255,0,0.3)] focus:ring-1 focus:ring-[rgba(191,255,0,0.2)] focus:bg-white/[0.06] outline-none transition-all"
                 placeholder="Enter your password"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-400 transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-[#8888aa] transition-colors"
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -173,10 +173,10 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full h-11 mt-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white text-sm font-semibold rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25 disabled:opacity-50 disabled:hover:shadow-none flex items-center justify-center gap-2"
+            className="w-full h-11 mt-2 bg-[#BFFF00] hover:bg-[#d4ff4d] text-black text-sm font-semibold rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-[0_0_24px_rgba(191,255,0,0.3)] disabled:opacity-50 disabled:hover:shadow-none flex items-center justify-center gap-2"
           >
             {loading ? (
-              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
             ) : (
               <>
                 Sign In
@@ -189,7 +189,7 @@ export default function LoginPage() {
         {/* Register link */}
         <p className="mt-6 text-center text-sm text-gray-500">
           Don&apos;t have an account?{' '}
-          <Link href="/register" className="text-blue-400 hover:text-blue-300 font-medium transition-colors">
+          <Link href="/register" className="text-[#BFFF00] hover:text-[#d4ff4d] font-medium transition-colors">
             Create one
           </Link>
         </p>
