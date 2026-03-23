@@ -282,48 +282,6 @@ export function BoosterPackAnimation({ boxName, gameName, onTearComplete, rarity
                   PA
                 </div>
 
-                {/* Tear Zone — INSIDE the front face */}
-                <div
-                  ref={tearZoneRef}
-                  className="absolute left-0 right-0 z-20"
-                  style={{ top: 'calc(22% - 35px)', height: 70, touchAction: 'none', cursor: 'none' }}
-                  onMouseDown={startTear}
-                  onMouseMove={moveTear}
-                  onMouseUp={endTear}
-                  onTouchStart={startTear}
-                  onTouchMove={moveTear}
-                  onTouchEnd={endTear}
-                  onTouchCancel={endTear}
-                >
-                  {phase === 'tilt' && (
-                    <div className="absolute top-1/2 left-2 right-2 h-[2px] -translate-y-1/2"
-                      style={{ background: 'repeating-linear-gradient(90deg, rgba(255,255,255,0.3) 0px, rgba(255,255,255,0.3) 4px, transparent 4px, transparent 8px)' }} />
-                  )}
-                  <svg viewBox="0 0 210 70" className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
-                    <defs>
-                      <filter id="tearGlow"><feGaussianBlur stdDeviation="1.5" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
-                    </defs>
-                    <path d={tearLinePath} fill="none" stroke={tearLineColor} strokeWidth={tearProgress > 60 ? 4 : 3} filter="url(#tearGlow)" />
-                  </svg>
-                </div>
-
-                {/* Particles — INSIDE the front face */}
-                <div className="absolute left-0 right-0 pointer-events-none z-30" style={{ top: '22%', height: 0, overflow: 'visible' }}>
-                  {particles.map(p => (
-                    <motion.div
-                      key={p.id}
-                      className="absolute rounded-full"
-                      style={{
-                        left: p.x, width: p.size, height: p.size,
-                        background: p.color,
-                        boxShadow: tearProgress > 60 ? `0 0 ${p.size}px ${p.color}` : 'none',
-                      }}
-                      initial={{ y: 0, opacity: 1, scale: 1 }}
-                      animate={{ y: p.dy, x: p.dx, opacity: 0, scale: 0 }}
-                      transition={{ duration: 0.7, ease: 'easeOut' }}
-                    />
-                  ))}
-                </div>
               </div>
 
               {/* === BACK FACE === */}
@@ -371,6 +329,49 @@ export function BoosterPackAnimation({ boxName, gameName, onTearComplete, rarity
                 }} />
 
             </motion.div>
+
+            {/* Tear Zone — OVERLAY on top of 3D pack, outside transform context */}
+            <div
+              ref={tearZoneRef}
+              className="absolute left-0 right-0"
+              style={{ top: 'calc(22% - 35px)', height: 70, touchAction: 'none', cursor: 'none', zIndex: 50 }}
+              onMouseDown={startTear}
+              onMouseMove={moveTear}
+              onMouseUp={endTear}
+              onTouchStart={startTear}
+              onTouchMove={moveTear}
+              onTouchEnd={endTear}
+              onTouchCancel={endTear}
+            >
+              {phase === 'tilt' && (
+                <div className="absolute top-1/2 left-2 right-2 h-[2px] -translate-y-1/2"
+                  style={{ background: 'repeating-linear-gradient(90deg, rgba(255,255,255,0.4) 0px, rgba(255,255,255,0.4) 4px, transparent 4px, transparent 8px)' }} />
+              )}
+              <svg viewBox="0 0 210 70" className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
+                <defs>
+                  <filter id="tearGlow"><feGaussianBlur stdDeviation="1.5" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+                </defs>
+                <path d={tearLinePath} fill="none" stroke={tearLineColor} strokeWidth={tearProgress > 60 ? 4 : 3} filter="url(#tearGlow)" />
+              </svg>
+            </div>
+
+            {/* Particles — OVERLAY */}
+            <div className="absolute left-0 right-0 pointer-events-none" style={{ top: '22%', height: 0, overflow: 'visible', zIndex: 60 }}>
+              {particles.map(p => (
+                <motion.div
+                  key={p.id}
+                  className="absolute rounded-full"
+                  style={{
+                    left: p.x, width: p.size, height: p.size,
+                    background: p.color,
+                    boxShadow: tearProgress > 60 ? `0 0 ${p.size}px ${p.color}` : 'none',
+                  }}
+                  initial={{ y: 0, opacity: 1, scale: 1 }}
+                  animate={{ y: p.dy, x: p.dx, opacity: 0, scale: 0 }}
+                  transition={{ duration: 0.7, ease: 'easeOut' }}
+                />
+              ))}
+            </div>
 
             {/* Torn top piece — flies away */}
             <AnimatePresence>
