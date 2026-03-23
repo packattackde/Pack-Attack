@@ -198,13 +198,14 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
           </button>
         </div>
       ) : (
-        {/* Section Label */}
-        <div className="flex items-center gap-3 mb-6">
-          <span className="text-[11px] font-semibold uppercase tracking-[1.5px] text-[#BFFF00] whitespace-nowrap">Available Packs</span>
-          <div className="flex-1 h-px bg-gradient-to-r from-[rgba(191,255,0,0.2)] to-transparent" />
-        </div>
+        <>
+          {/* Section Label */}
+          <div className="flex items-center gap-3 mb-6">
+            <span className="text-[11px] font-semibold uppercase tracking-[1.5px] text-[#BFFF00] whitespace-nowrap">Available Packs</span>
+            <div className="flex-1 h-px bg-gradient-to-r from-[rgba(191,255,0,0.2)] to-transparent" />
+          </div>
 
-        <div className="grid gap-6 sm:gap-7 lg:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 sm:gap-7 lg:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {filteredBoxes.map((box) => (
             <Link
               key={box.id}
@@ -319,6 +320,7 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
             </Link>
           ))}
         </div>
+        </>
       )}
     </>
   );
