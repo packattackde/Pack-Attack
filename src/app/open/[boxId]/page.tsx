@@ -7,7 +7,7 @@ import { Coins, Package, Sparkles, ArrowLeft, Layers, Zap, Square, BadgeDollarSi
 import Image from 'next/image';
 import Link from 'next/link';
 import { emitCoinBalanceUpdate } from '@/lib/coin-events';
-import { BoosterPackAnimation } from '@/components/BoosterPackAnimation';
+import { PackOpeningFlow } from '@/components/PackOpeningFlow';
 
 type BoxCard = {
   id: string;
@@ -273,9 +273,6 @@ export default function OpenBoxPage() {
   const [openedCardIds, setOpenedCardIds] = useState<Set<string>>(new Set());
   const [featuredPullId, setFeaturedPullId] = useState<string | null>(null);
   const [featuredCardId, setFeaturedCardId] = useState<string | null>(null);
-  const [currentReveal, setCurrentReveal] = useState<any | null>(null);
-  const [currentRevealIndex, setCurrentRevealIndex] = useState(0);
-  const [revealTotal, setRevealTotal] = useState(0);
   const [showConfirm, setShowConfirm] = useState(false);
   // Summary sell-by-rarity
   const [soldPullIds, setSoldPullIds] = useState<Set<string>>(new Set());
@@ -289,72 +286,21 @@ export default function OpenBoxPage() {
   const [showAutoConfirm, setShowAutoConfirm] = useState(false);
   const autoStopRef = useRef(false);
   // Deck animation
-  const [deckPhase, setDeckPhase] = useState<'idle'|'booster'|'stacking'|'shuffling'|'drawing'|'revealed'|'summary'>('idle');
-  const [deckKey, setDeckKey] = useState(0);
+  const [deckPhase, setDeckPhase] = useState<'idle'|'opening'|'summary'>('idle');
   const revealTimeoutsRef = useRef<Array<ReturnType<typeof setTimeout>>>([]);
   const pendingPullsRef = useRef<any[]>([]);
 
   const clearRevealTimeouts = () => {
     revealTimeoutsRef.current.forEach((timeoutId) => clearTimeout(timeoutId));
     revealTimeoutsRef.current = [];
-    setCurrentReveal(null);
-    setCurrentRevealIndex(0);
-    setRevealTotal(0);
     setDeckPhase('idle');
   };
-
-  const scheduleTimeout = (callback: () => void, delay: number) => {
-    const timeoutId = setTimeout(callback, delay);
-    revealTimeoutsRef.current.push(timeoutId);
-  };
-
-  // New card reveal sequence — called after booster tear completes
-  const startCardRevealSequence = useCallback(() => {
-    const pullsData = pendingPullsRef.current;
-    if (!pullsData || pullsData.length === 0) {
-      setDeckPhase('summary');
-      setOpening(false);
-      return;
-    }
-
-    const REVEAL_MS = 2800; // how long each card is shown
-
-    // Go directly to revealing cards one by one
-    let t = 0;
-    pullsData.forEach((pull: any, index: number) => {
-      const isLast = index === pullsData.length - 1;
-
-      scheduleTimeout(() => {
-        setCurrentReveal(pull);
-        setCurrentRevealIndex(index + 1);
-        setDeckPhase('revealed');
-        setOpenedCardIds(prev => {
-          const next = new Set(prev);
-          if (pull.card?.id) next.add(pull.card.id);
-          return next;
-        });
-        setPulls(prev => [...prev, pull]);
-      }, t);
-      t += REVEAL_MS;
-
-      if (isLast) {
-        scheduleTimeout(() => {
-          setCurrentReveal(null);
-          setDeckPhase('summary');
-          setOpening(false);
-        }, t);
-      }
-    });
-  }, []);
 
   const handleSkip = () => {
     const allPulls = pendingPullsRef.current;
     if (allPulls.length === 0) return;
     revealTimeoutsRef.current.forEach(clearTimeout);
     revealTimeoutsRef.current = [];
-    setCurrentReveal(null);
-    setCurrentRevealIndex(0);
-    setRevealTotal(0);
     setPulls(allPulls);
     setOpenedCardIds(new Set(allPulls.map((p: any) => p.card?.id).filter(Boolean)));
     setOpening(false);
@@ -410,11 +356,7 @@ export default function OpenBoxPage() {
     setPulls([]);
     setFeaturedPullId(null);
     setFeaturedCardId(null);
-    setCurrentReveal(null);
-    setCurrentRevealIndex(0);
-    setRevealTotal(0);
-    setDeckKey(k => k + 1);
-    setDeckPhase('booster');
+    setDeckPhase('opening');
 
     try {
       const res = await fetch('/api/packs/open', {
@@ -448,7 +390,6 @@ export default function OpenBoxPage() {
       setFeaturedCardId(featured?.card?.id ?? null);
       setUserCoins(data.remainingCoins);
       emitCoinBalanceUpdate({ balance: data.remainingCoins });
-      setRevealTotal(pullsData.length);
 
       if (pullsData.length === 0) {
         setDeckPhase('idle');
@@ -457,9 +398,8 @@ export default function OpenBoxPage() {
         return;
       }
 
-      // Don't start card reveals yet — wait for booster tear to complete.
-      // The reveal sequence is triggered by onTearComplete → startCardRevealSequence()
-      // Pulls are stored in pendingPullsRef until then.
+      // PackOpeningFlow handles the full animation sequence.
+      // Pulls are stored in pendingPullsRef and passed to the component.
     } catch (error) {
       console.error('Error opening box:', error);
       clearRevealTimeouts();
@@ -977,188 +917,27 @@ export default function OpenBoxPage() {
         </div>
       </div>
 
-      {/* Booster Pack Animation */}
-      {deckPhase === 'booster' && box && (
-        <BoosterPackAnimation
+      {/* Pack Opening Flow — handles booster, card reveal, best pull */}
+      {deckPhase === 'opening' && box && pendingPullsRef.current.length > 0 && (
+        <PackOpeningFlow
+          pulls={pendingPullsRef.current}
           boxName={box.name}
-          gameName={box.name}
-          onTearComplete={() => startCardRevealSequence()}
-          rarityHint={(() => {
-            // Determine best rarity from pending pulls for the glow hint
-            const pulls = pendingPullsRef.current;
-            if (!pulls || pulls.length === 0) return 'common' as const;
-            const bestPull = pulls.reduce((best: any, pull: any) => {
-              const bestValue = best?.card?.coinValue ?? 0;
-              return (pull.card?.coinValue ?? 0) > bestValue ? pull : best;
-            }, pulls[0]);
-            const rarity = bestPull?.card?.rarity?.toLowerCase() || 'common';
-            if (rarity.includes('secret') || rarity.includes('legendary') || rarity.includes('mythic') || rarity.includes('alt art') || rarity.includes('gold') || rarity.includes('hyper')) return 'legendary' as const;
-            if (rarity.includes('ultra') || rarity.includes('super') || rarity.includes('epic') || rarity.includes('illustration') || rarity.includes('full art')) return 'epic' as const;
-            if (rarity.includes('rare') || rarity.includes('holo') || rarity.includes('promo')) return 'rare' as const;
-            if (rarity.includes('uncommon')) return 'uncommon' as const;
-            return 'common' as const;
-          })()}
-        />
-      )}
-
-      {/* Card Reveal Overlay — shows cards one by one after booster tear */}
-      {deckPhase === 'revealed' && currentReveal?.card && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-[#06061a]/95 backdrop-blur-sm"
-          onClick={() => {
-            // Click to skip to next card / summary
-            handleSkip();
+          cardBackUrl={box.cardBackUrl}
+          bestPullId={featuredPullId}
+          onComplete={() => {
+            setPulls(pendingPullsRef.current);
+            setOpenedCardIds(new Set(pendingPullsRef.current.map((p: any) => p.card?.id).filter(Boolean)));
+            setOpening(false);
+            setDeckPhase('summary');
           }}
-        >
-          <div className="relative flex flex-col items-center">
-            <p className="mb-6 text-xs font-semibold uppercase tracking-[0.2em] text-[#7777a0] text-center min-h-[16px]">
-              Pull {currentRevealIndex} of {revealTotal}
-            </p>
-
-            {/* Card container */}
-            <div
-              className="relative"
-              style={{ width: 'min(260px, 65vw)', height: 'calc(min(260px, 65vw) * 88 / 63)' }}
-            >
-              {/* Face-down deck stack */}
-              {deckPhase !== 'revealed' && (
-                <div
-                  key={deckKey}
-                  className={`absolute inset-0 ${deckPhase === 'shuffling' ? 'deck-shuffle' : ''}`}
-                >
-                  {(() => {
-                    const deckCount = Math.max(1, revealTotal - currentRevealIndex);
-                    return Array.from({ length: deckCount }, (_, i) => deckCount - 1 - i).map((offset) => (
-                      <div
-                        key={offset}
-                        className="absolute inset-0"
-                        style={{
-                          transform: offset > 0 ? `translate(${offset * -3}px, ${offset * -4}px)` : undefined,
-                          zIndex: deckCount - offset,
-                        }}
-                      >
-                        <div
-                          className={`absolute inset-0 ${
-                            deckPhase === 'stacking' ? 'deck-card-in' : ''
-                          } ${offset === 0 && deckPhase === 'drawing' ? 'deck-draw-lift' : ''}`}
-                          style={{
-                            animationDelay: deckPhase === 'stacking' ? `${(deckCount - 1 - offset) * 80}ms` : '0ms',
-                          }}
-                        >
-                          <CardBack url={box.cardBackUrl} />
-                        </div>
-                      </div>
-                    ));
-                  })()}
-                </div>
-              )}
-
-              {/* Revealed card — full 3D flip: back → face */}
-              {deckPhase === 'revealed' && currentReveal?.card && (() => {
-                const rarityGlow = getRarityGlow(currentReveal.card.rarity);
-                const fx = getRarityEffects(rarityGlow.lindwurm);
-                const shimmerBg = `linear-gradient(105deg, transparent, ${rarityGlow.glowColor.replace('1)', '0.4)')}, transparent)`;
-                return (
-                  <>
-                    {/* Pulsing glow halo (behind card, first in DOM) */}
-                    {fx.glowClass && (
-                      <div className={`absolute inset-0 rounded-xl pointer-events-none ${fx.glowClass}`} />
-                    )}
-
-                    {/* 3D flip card */}
-                    <div className="absolute inset-0" style={{ perspective: '900px' }}>
-                      <div className="deck-flip-full absolute inset-0" style={{ transformStyle: 'preserve-3d' }}>
-                        {/* Front face: card back */}
-                        <div
-                          className="absolute inset-0"
-                          style={{ backfaceVisibility: 'hidden' }}
-                        >
-                          <CardBack url={box.cardBackUrl} />
-                        </div>
-
-                        {/* Back face: card image */}
-                        <div
-                          className="absolute inset-0 rounded-xl overflow-hidden border"
-                          style={{
-                            backfaceVisibility: 'hidden',
-                            transform: 'rotateY(180deg)',
-                            borderColor: rarityGlow.glowColor,
-                            boxShadow: `0 0 40px 10px ${rarityGlow.glowColor.replace('1)', '0.4)')}, 0 25px 60px rgba(0,0,0,0.7)`,
-                          }}
-                        >
-                          {currentReveal.card.imageUrlGatherer ? (
-                            <Image src={currentReveal.card.imageUrlGatherer} alt={currentReveal.card.name} fill className="object-contain" unoptimized />
-                          ) : (
-                            <div className="flex h-full w-full items-center justify-center bg-[#12123a] text-gray-500">No Image</div>
-                          )}
-                          {/* Shimmer sweep on card face (rare+) */}
-                          {fx.shimmerDur && (
-                            <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-xl" style={{ zIndex: 10 }}>
-                              <div className="rarity-shimmer-line" style={{ background: shimmerBg, animationDuration: fx.shimmerDur, animationDelay: '0.7s' }} />
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Spark particles floating up (epic / legendary) */}
-                    {fx.sparks?.map((s, i) => (
-                      <span
-                        key={i}
-                        className="spark-particle"
-                        style={{
-                          left: `${s.x}%`,
-                          top: `${s.y}%`,
-                          width: `${s.size}px`,
-                          height: `${s.size}px`,
-                          background: rarityGlow.particleColor,
-                          boxShadow: `0 0 ${s.size * 2}px ${s.size}px ${rarityGlow.glowColor.replace('1)', '0.7)')}`,
-                          animationDelay: `${0.7 + s.delay}s`,
-                          animationDuration: `${s.dur}s`,
-                          zIndex: 20,
-                        }}
-                      />
-                    ))}
-                  </>
-                );
-              })()}
-            </div>
-
-            {/* Card info shown on reveal */}
-            {deckPhase === 'revealed' && currentReveal?.card && (() => {
-              const rarityGlow = getRarityGlow(currentReveal.card.rarity);
-              return (
-                <div
-                  className="mt-5 flex flex-col items-center gap-1.5 deck-info-reveal"
-                  style={{ maxWidth: 'min(260px, 65vw)' }}
-                >
-                  <h3 className="text-xl font-bold text-[#f0f0f5] text-center leading-snug">
-                    {currentReveal.card.name}
-                  </h3>
-                  <div className="flex items-center gap-2 text-sm text-[#8888aa]">
-                    <span>{box.name}</span>
-                    <span className="text-gray-600">·</span>
-                    <span className={`font-semibold ${rarityGlow.text}`}>{currentReveal.card.rarity || 'Common'}</span>
-                  </div>
-                  <div className="mt-1.5 flex items-center gap-2 px-5 py-2 rounded-xl bg-white/[0.04] border border-white/[0.08]">
-                    <Coins className="h-5 w-5 text-amber-400" />
-                    <span className="text-lg font-bold text-[#f0f0f5]">
-                      {currentReveal.card.coinValue?.toFixed(2)} coins
-                    </span>
-                  </div>
-                </div>
-              );
-            })()}
-
-            {/* Skip button */}
-            <button
-              onClick={handleSkip}
-              className="mt-8 px-6 py-2 rounded-xl text-sm font-medium text-gray-500 hover:text-[#f0f0f5] border border-[rgba(255,255,255,0.06)] hover:border-[rgba(255,255,255,0.12)] transition-all"
-            >
-              Skip
-            </button>
-          </div>
-        </div>
+          onSkip={() => {
+            const allPulls = pendingPullsRef.current;
+            setPulls(allPulls);
+            setOpenedCardIds(new Set(allPulls.map((p: any) => p.card?.id).filter(Boolean)));
+            setOpening(false);
+            setDeckPhase('summary');
+          }}
+        />
       )}
 
       {/* Summary Overlay */}
