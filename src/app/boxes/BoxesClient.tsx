@@ -296,6 +296,7 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
                     Open <ChevronRight className="w-4 h-4" />
                   </span>
                 </div>
+              </div>
             </Link>
           ))}
         </div>
