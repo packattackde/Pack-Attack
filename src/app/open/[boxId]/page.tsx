@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/use-toast';
 import { Coins, Package, Sparkles, ArrowLeft, Layers, Zap, Square, BadgeDollarSign } from 'lucide-react';
