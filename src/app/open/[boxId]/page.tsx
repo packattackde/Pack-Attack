@@ -583,7 +583,7 @@ export default function OpenBoxPage() {
       <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display">
         <div className="fixed inset-0 bg-grid opacity-30" />
         <div className="relative container py-12">
-          <div className="glass-strong rounded-2xl p-12 text-center">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
             <Package className="w-16 h-16 text-gray-600 mx-auto mb-4" />
             <p className="text-[#8888aa]">This pack has no cards yet.</p>
           </div>
@@ -610,7 +610,7 @@ export default function OpenBoxPage() {
 
         <div className="max-w-6xl mx-auto">
           {/* Box Info Card */}
-          <div className="glass-strong rounded-2xl p-6 mb-6">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 mb-6">
             <div className="flex flex-col md:flex-row items-start gap-6">
               <div className="relative w-full md:w-48 aspect-[3/4] rounded-xl overflow-hidden flex-shrink-0">
                 {box.imageUrl ? (
@@ -622,7 +622,7 @@ export default function OpenBoxPage() {
                 )}
               </div>
               <div className="flex-1">
-                <div className="inline-flex items-center gap-2 px-3 py-1 mb-3 rounded-full glass text-sm">
+                <div className="inline-flex items-center gap-2 px-3 py-1 mb-3 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
                   <Package className="w-4 h-4 text-[#BFFF00]" />
                   <span className="text-[#8888aa]">Pack Opening</span>
                 </div>
@@ -643,7 +643,7 @@ export default function OpenBoxPage() {
           </div>
 
           {/* Open Box Card */}
-          <div className="glass-strong rounded-2xl p-6 mb-6">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 mb-6">
             <h2 className="text-xl font-bold text-[#f0f0f5] mb-4 flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-[#BFFF00]" />
               Open Pack
@@ -772,7 +772,7 @@ export default function OpenBoxPage() {
           </div>
 
           {/* What's in the box */}
-          <div className="glass-strong rounded-2xl p-6">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6">
             <h2 className="text-xl font-bold text-[#f0f0f5] mb-2">What's in the pack?</h2>
             {box.cards.length > 0 && (
               <p className="text-sm text-[#8888aa] mb-4">{box.cards.length} card{box.cards.length !== 1 ? 's' : ''} available</p>
@@ -883,7 +883,7 @@ export default function OpenBoxPage() {
 
           {/* Your Pulls */}
           {pulls.length > 0 && (
-            <div className="glass-strong rounded-2xl p-6 mt-6">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 mt-6">
               <h2 className="text-xl font-bold text-[#f0f0f5] mb-4">Your Pulls</h2>
               <div className={`grid gap-5 ${
                 pulls.length === 1 ? 'grid-cols-1 max-w-xs mx-auto' :

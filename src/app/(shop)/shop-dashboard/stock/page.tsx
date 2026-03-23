@@ -62,7 +62,7 @@ export default async function ShopStockPage({
             <span>Back to Dashboard</span>
           </Link>
           
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 rounded-full glass text-sm">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
             <Database className="w-4 h-4 text-teal-400" />
             <span className="text-[#f0f0f5]">{isAdmin && targetShop ? `Admin → ${shop.name}` : shop.name || 'My Stock'}</span>
           </div>
@@ -77,7 +77,7 @@ export default async function ShopStockPage({
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-8">
-          <div className="glass-strong rounded-xl p-4">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl p-4">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-lg bg-teal-500/10">
                 <Package className="w-5 h-5 text-teal-400" />
@@ -88,7 +88,7 @@ export default async function ShopStockPage({
               </div>
             </div>
           </div>
-          <div className="glass-strong rounded-xl p-4">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl p-4">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-lg bg-green-500/10">
                 <Package className="w-5 h-5 text-green-400" />
@@ -99,7 +99,7 @@ export default async function ShopStockPage({
               </div>
             </div>
           </div>
-          <div className="glass-strong rounded-xl p-4">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl p-4">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-lg bg-gray-500/10">
                 <Package className="w-5 h-5 text-gray-500" />
@@ -110,7 +110,7 @@ export default async function ShopStockPage({
               </div>
             </div>
           </div>
-          <div className="glass-strong rounded-xl p-4">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl p-4">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-lg bg-red-500/10">
                 <Package className="w-5 h-5 text-red-400" />
@@ -121,7 +121,7 @@ export default async function ShopStockPage({
               </div>
             </div>
           </div>
-          <div className="glass-strong rounded-xl p-4">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl p-4">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-lg bg-cyan-500/10">
                 <Database className="w-5 h-5 text-cyan-400" />

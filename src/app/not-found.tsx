@@ -7,7 +7,7 @@ export default function NotFound() {
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
       
-      <div className="relative glass-strong rounded-2xl p-8 max-w-md w-full text-center">
+      <div className="relative bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-8 max-w-md w-full text-center">
         <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-[rgba(191,255,0,0.1)]">
           <Search className="w-10 h-10 text-[#BFFF00]" />
         </div>

@@ -69,7 +69,7 @@ export default function LoginPage() {
 
   return (
     <>
-      <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-sm p-6 sm:p-8 shadow-2xl shadow-black/40">
+      <div className="rounded-2xl border border-white/[0.06] bg-[#1e1e55] backdrop-blur-sm p-6 sm:p-8 shadow-2xl shadow-black/40">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-[rgba(191,255,0,0.1)] ring-1 ring-[rgba(191,255,0,0.2)] mb-4">

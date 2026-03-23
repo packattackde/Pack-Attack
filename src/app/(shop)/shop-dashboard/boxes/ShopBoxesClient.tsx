@@ -95,7 +95,7 @@ export function ShopBoxesClient({ boxes: initialBoxes, isAdmin }: { boxes: Box[]
 
   if (boxes.length === 0) {
     return (
-      <div className="glass-strong rounded-2xl p-12 text-center">
+      <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
         <Package className="w-16 h-16 text-gray-700 mx-auto mb-4" />
         <h3 className="text-xl font-bold text-white mb-2">No Boxes Yet</h3>
         <p className="text-[#8888aa] mb-6 max-w-md mx-auto">
@@ -117,7 +117,7 @@ export function ShopBoxesClient({ boxes: initialBoxes, isAdmin }: { boxes: Box[]
       {boxes.map((box) => (
         <div 
           key={box.id} 
-          className={`glass-strong rounded-2xl overflow-hidden transition-all hover:ring-2 ${
+          className={`bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl overflow-hidden transition-all hover:ring-2 ${
             box.isActive ? 'hover:ring-cyan-500/50' : 'hover:ring-gray-500/50 opacity-75'
           }`}
         >

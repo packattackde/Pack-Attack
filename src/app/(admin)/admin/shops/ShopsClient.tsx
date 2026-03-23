@@ -108,22 +108,22 @@ export function ShopsClient() {
     <div className="space-y-6">
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="glass rounded-xl p-4 text-center">
+        <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
           <Store className="w-5 h-5 text-orange-400 mx-auto mb-2" />
           <div className="text-2xl font-bold text-white">{totals.shops}</div>
           <div className="text-xs text-[#8888aa]">Total Shops</div>
         </div>
-        <div className="glass rounded-xl p-4 text-center">
+        <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
           <ShoppingCart className="w-5 h-5 text-[#BFFF00] mx-auto mb-2" />
           <div className="text-2xl font-bold text-white">{totals.orders.toLocaleString()}</div>
           <div className="text-xs text-[#8888aa]">Total Orders</div>
         </div>
-        <div className="glass rounded-xl p-4 text-center">
+        <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
           <AlertCircle className="w-5 h-5 text-yellow-400 mx-auto mb-2" />
           <div className="text-2xl font-bold text-white">{totals.pendingOrders.toLocaleString()}</div>
           <div className="text-xs text-yellow-400">Pending Orders</div>
         </div>
-        <div className="glass rounded-xl p-4 text-center">
+        <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
           <Coins className="w-5 h-5 text-emerald-400 mx-auto mb-2" />
           <div className="text-2xl font-bold text-white">{totals.revenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
           <div className="text-xs text-[#8888aa]">Total Revenue</div>
@@ -138,13 +138,13 @@ export function ShopsClient() {
           placeholder="Search shops by name or owner..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-12 pr-4 py-3 rounded-xl glass-strong text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none transition-colors"
+          className="w-full pl-12 pr-4 py-3 rounded-xl bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none transition-colors"
         />
       </div>
 
       {/* Shops Table */}
       {filtered.length === 0 ? (
-        <div className="glass-strong rounded-2xl p-12 text-center">
+        <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
           <Store className="w-16 h-16 text-gray-600 mx-auto mb-4" />
           <h2 className="text-xl font-semibold text-white mb-2">
             {searchQuery ? 'No Shops Found' : 'No Shops Yet'}
@@ -154,7 +154,7 @@ export function ShopsClient() {
           </p>
         </div>
       ) : (
-        <div className="glass-strong rounded-2xl overflow-hidden">
+        <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>

@@ -150,7 +150,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
   if (orderComplete) {
     return (
       <div className="max-w-2xl mx-auto">
-        <div className="glass-strong rounded-2xl p-8 text-center">
+        <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-8 text-center">
           <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-full bg-green-500/20">
             <CheckCircle className="w-10 h-10 text-green-400" />
           </div>
@@ -158,7 +158,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
           <p className="text-[#8888aa] mb-2">Thank you for your order.</p>
           <p className="text-sm text-[#8888aa] mb-6">Order ID: {orderId}</p>
           
-          <div className="glass rounded-xl p-4 mb-6 text-left">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 mb-6 text-left">
             <div className="flex items-center gap-2 mb-3">
               <Truck className="w-5 h-5 text-[#BFFF00]" />
               <span className="font-semibold text-white">Shipping Information</span>
@@ -180,7 +180,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
             </Link>
             <Link
               href="/boxes"
-              className="px-6 py-3 glass text-white font-semibold rounded-xl transition-all hover:bg-white/10"
+              className="px-6 py-3 bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-white font-semibold rounded-xl transition-all hover:bg-white/10"
             >
               Open More Boxes
             </Link>
@@ -198,7 +198,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
           <ArrowLeft className="w-4 h-4" />
           Back to Cart
         </Link>
-        <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full glass text-sm ml-4">
+        <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm ml-4">
           <Package className="w-4 h-4 text-[#BFFF00]" />
           <span className="text-[#f0f0f5]">Checkout</span>
         </div>
@@ -213,7 +213,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
         <div className="grid gap-6 lg:grid-cols-3">
           {/* Shipping Form */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="glass-strong rounded-2xl p-6">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6">
               <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                 <MapPin className="w-5 h-5 text-[#BFFF00]" />
                 Shipping Address
@@ -325,7 +325,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
             </div>
 
             {/* Shipping Payment Method */}
-            <div className="glass-strong rounded-2xl p-6">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6">
               <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                 <Truck className="w-5 h-5 text-green-400" />
                 Shipping Payment
@@ -395,7 +395,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
             </div>
 
             {/* Items Preview */}
-            <div className="glass-strong rounded-2xl p-6">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6">
               <h2 className="text-xl font-bold text-white mb-4">Order Items ({items.length})</h2>
               <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
                 {items.map((item) => {
@@ -417,7 +417,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
 
           {/* Order Summary Sidebar */}
           <div className="lg:col-span-1">
-            <div className="glass-strong rounded-2xl p-6 sticky top-4">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 sticky top-4">
               <h3 className="text-lg font-bold text-white mb-4">Order Summary</h3>
               
               <div className="space-y-3 mb-6">

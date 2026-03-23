@@ -34,7 +34,7 @@ export default async function AdminShopsPage() {
             Back to Admin
           </Link>
 
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass text-sm mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm mb-3">
             <ShieldCheck className="w-4 h-4 text-orange-400" />
             <span className="text-[#f0f0f5]">Admin Panel</span>
           </div>

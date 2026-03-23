@@ -167,7 +167,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
 
   if (orders.length === 0) {
     return (
-      <div className="glass-strong rounded-2xl p-12 text-center">
+      <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
         <Package className="w-16 h-16 text-gray-700 mx-auto mb-4" />
         <h3 className="text-xl font-bold text-white mb-2">No Orders Yet</h3>
         <p className="text-[#8888aa] max-w-md mx-auto">
@@ -188,7 +188,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
             className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
               filterStatus === status
                 ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg'
-                : 'glass text-[#8888aa] hover:text-white hover:bg-[#12123a]'
+                : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white hover:bg-[#12123a]'
             }`}
           >
             {status === 'ALL' ? 'All Orders' : statusConfig[status]?.label || status}
@@ -203,7 +203,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
 
       {/* Orders List */}
       {filteredOrders.length === 0 ? (
-        <div className="glass-strong rounded-2xl p-8 text-center">
+        <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-8 text-center">
           <AlertCircle className="w-10 h-10 text-gray-600 mx-auto mb-3" />
           <p className="text-[#8888aa]">No orders with this status</p>
         </div>
@@ -215,7 +215,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
             const isExpanded = expandedOrder === order.id;
 
             return (
-              <div key={order.id} className="glass-strong rounded-2xl overflow-hidden">
+              <div key={order.id} className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl overflow-hidden">
                 {/* Order Header */}
                 <div
                   className="p-5 cursor-pointer hover:bg-white/5 transition-colors"
@@ -282,7 +282,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                   <div className="border-t border-[rgba(255,255,255,0.06)] p-5 space-y-5">
                     <div className="grid md:grid-cols-2 gap-4">
                       {/* Customer Info */}
-                      <div className="glass rounded-xl p-4">
+                      <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                         <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
                           <User className="w-4 h-4 text-emerald-400" />
                           Customer
@@ -297,7 +297,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                       </div>
 
                       {/* Shipping Info */}
-                      <div className="glass rounded-xl p-4">
+                      <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                         <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
                           <MapPin className="w-4 h-4 text-emerald-400" />
                           Shipping Address
@@ -330,7 +330,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                     </div>
 
                     {/* Card Details */}
-                    <div className="glass rounded-xl p-4">
+                    <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                       <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
                         <Package className="w-4 h-4 text-emerald-400" />
                         Order Item
@@ -363,14 +363,14 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
 
                     {/* Customer Notes */}
                     {order.notes && (
-                      <div className="glass rounded-xl p-4">
+                      <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                         <h4 className="font-semibold text-white mb-2">Customer Notes</h4>
                         <p className="text-sm text-[#8888aa]">{order.notes}</p>
                       </div>
                     )}
 
                     {/* Tracking Info */}
-                    <div className="glass rounded-xl p-4">
+                    <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                       <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
                         <Truck className="w-4 h-4 text-emerald-400" />
                         Tracking Information
@@ -459,7 +459,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                     </div>
 
                     {/* Shop Notes */}
-                    <div className="glass rounded-xl p-4">
+                    <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                       <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
                         <MessageSquare className="w-4 h-4 text-emerald-400" />
                         Internal Notes
@@ -540,7 +540,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                               className={`px-4 py-2 rounded-xl text-sm font-medium transition-all disabled:opacity-50 flex items-center gap-2 ${
                                 order.status === s
                                   ? `${cfg.bgColor} ${cfg.color} ring-2 ring-offset-2 ring-offset-gray-900 ring-current`
-                                  : 'glass hover:bg-white/10 text-[#8888aa]'
+                                  : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md hover:bg-white/10 text-[#8888aa]'
                               }`}
                             >
                               <StatusIcon className="w-4 h-4" />

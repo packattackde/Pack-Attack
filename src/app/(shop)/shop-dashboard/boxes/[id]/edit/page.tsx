@@ -174,7 +174,7 @@ export default function EditShopBoxPage({ params }: { params: Promise<{ id: stri
           </Link>
           
           <div className="flex items-center gap-3 mb-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass text-sm">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
               <Store className="w-4 h-4 text-cyan-400" />
               <span className="text-[#f0f0f5]">Shop Dashboard</span>
             </div>
@@ -190,7 +190,7 @@ export default function EditShopBoxPage({ params }: { params: Promise<{ id: stri
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Box Preview */}
           <div className="lg:col-span-1">
-            <div className="glass-strong rounded-2xl overflow-hidden sticky top-24">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl overflow-hidden sticky top-24">
               <div className="relative aspect-[4/3] bg-[#12123a]">
                 {box.imageUrl ? (
                   <Image
@@ -231,7 +231,7 @@ export default function EditShopBoxPage({ params }: { params: Promise<{ id: stri
 
           {/* Edit Form */}
           <div className="lg:col-span-2">
-            <div className="glass-strong rounded-2xl p-6">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-[#f0f0f5]">Box Name</label>

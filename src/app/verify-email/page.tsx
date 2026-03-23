@@ -53,7 +53,7 @@ function VerifyEmailContent() {
   }, [token]);
 
   return (
-    <div className="glass-strong rounded-2xl p-8 text-center">
+    <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-8 text-center">
       {status === 'loading' && (
         <>
           <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[rgba(191,255,0,0.1)] to-purple-500/20">
@@ -144,7 +144,7 @@ function VerifyEmailContent() {
 
 function LoadingState() {
   return (
-    <div className="glass-strong rounded-2xl p-8 text-center">
+    <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-8 text-center">
       <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[rgba(191,255,0,0.1)] to-purple-500/20">
         <Loader2 className="w-10 h-10 text-[#BFFF00] animate-spin" />
       </div>

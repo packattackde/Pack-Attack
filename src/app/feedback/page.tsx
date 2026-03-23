@@ -172,7 +172,7 @@ export default function FeedbackPage() {
           /* ============================================ */
           /* SUCCESS STATE */
           /* ============================================ */
-          <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8 sm:p-12 text-center" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '2rem 2rem 2rem 2rem' }}>
+          <div className="rounded-2xl border border-white/[0.06] bg-[#1e1e55] p-8 sm:p-12 text-center" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '2rem 2rem 2rem 2rem' }}>
             <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-green-500/15 border border-green-500/20" style={{ marginBottom: '1.5rem' }}>
               <CheckCircle2 className="w-10 h-10 text-green-400" />
             </div>
@@ -188,7 +188,7 @@ export default function FeedbackPage() {
             <div className="flex flex-col sm:flex-row justify-center gap-3" style={{ justifyContent: 'center', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
               <button
                 onClick={resetForm}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm text-white border border-white/[0.1] bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/[0.15] transition-all duration-200 active:scale-[0.98] touch-target"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm text-white border border-white/[0.1] bg-[#1a1a4a] hover:bg-white/[0.06] hover:border-white/[0.15] transition-all duration-200 active:scale-[0.98] touch-target"
               >
                 <MessageSquare className="w-4 h-4" />
                 Send More Feedback
@@ -368,7 +368,7 @@ export default function FeedbackPage() {
 
             {/* Logged-in user info */}
             {session && (
-              <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+              <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#1a1a4a] border border-white/[0.06]">
                 <div className="w-8 h-8 rounded-full bg-[rgba(191,255,0,0.1)] flex items-center justify-center shrink-0">
                   <span className="text-xs font-bold text-[#BFFF00]">
                     {session.user.name?.[0]?.toUpperCase() || session.user.email?.[0]?.toUpperCase() || '?'}

@@ -645,7 +645,7 @@ export const DashboardClient = memo(function DashboardClient({
             <div className="relative mb-10">
                 <div
                     className="absolute inset-0 bg-gradient-to-r from-[rgba(191,255,0,0.05)] via-[rgba(127,255,0,0.05)] to-[rgba(191,255,0,0.05)] rounded-3xl blur-xl"/>
-                <div className="relative glass-strong rounded-2xl p-2 overflow-x-auto">
+                <div className="relative bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-2 overflow-x-auto">
                     <div className="flex gap-2 min-w-max">
                         {tabs.map((tab, index) => {
                             const Icon = tab.icon;
@@ -699,7 +699,7 @@ export const DashboardClient = memo(function DashboardClient({
                         <div
                             className="absolute inset-0 bg-gradient-to-br from-amber-500/30 via-orange-500/20 to-red-500/30"/>
                         <div className="absolute inset-0 bg-grid opacity-30"/>
-                        <div className="relative glass-strong p-8 md:p-10">
+                        <div className="relative bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg p-8 md:p-10">
                             <div
                                 className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
                                 <div>
@@ -776,7 +776,7 @@ export const DashboardClient = memo(function DashboardClient({
                                 >
                                     <div
                                         className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-10 group-hover:opacity-20 transition-opacity`}/>
-                                    <div className="relative glass-strong p-6">
+                                    <div className="relative bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg p-6">
                                         <div
                                             className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br ${stat.gradient} mb-4 shadow-lg`}>
                                             <Icon className="w-6 h-6 text-white"/>
@@ -800,7 +800,7 @@ export const DashboardClient = memo(function DashboardClient({
                     >
                         <div className="absolute inset-0 bg-gradient-to-br from-[rgba(191,255,0,0.1)] via-[rgba(127,255,0,0.05)] to-[rgba(191,255,0,0.1)]"/>
                         <div className="absolute inset-0 bg-grid opacity-20"/>
-                        <div className="relative glass-strong p-6 md:p-8">
+                        <div className="relative bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg p-6 md:p-8">
                             <div className="flex flex-col md:flex-row gap-6 md:items-start">
                                 {/* Left — level & title */}
                                 <div className="flex items-center gap-4 md:w-48 shrink-0">
@@ -890,7 +890,7 @@ export const DashboardClient = memo(function DashboardClient({
                     <div className="grid gap-6 lg:grid-cols-2">
                         {/* Quick Actions */}
                         <div
-                            className="glass-strong rounded-2xl p-6 overflow-hidden relative"
+                            className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 overflow-hidden relative"
                             style={{
                                 opacity: mounted ? 1 : 0,
                                 transform: mounted ? 'translateY(0)' : 'translateY(20px)',
@@ -934,7 +934,7 @@ export const DashboardClient = memo(function DashboardClient({
                                         <Link
                                             key={action.href}
                                             href={action.href}
-                                            className="group flex items-center justify-between p-4 rounded-xl bg-white/[0.02] border border-white/[0.05] hover:bg-white/[0.05] hover:border-white/[0.1] transition-all"
+                                            className="group flex items-center justify-between p-4 rounded-xl bg-[#1e1e55] border border-white/[0.05] hover:bg-white/[0.05] hover:border-white/[0.1] transition-all"
                                         >
                                             <div className="flex items-center gap-4">
                                                 <div
@@ -957,7 +957,7 @@ export const DashboardClient = memo(function DashboardClient({
 
                         {/* Recent Pulls */}
                         <div
-                            className="glass-strong rounded-2xl p-6 overflow-hidden relative"
+                            className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 overflow-hidden relative"
                             style={{
                                 opacity: mounted ? 1 : 0,
                                 transform: mounted ? 'translateY(0)' : 'translateY(20px)',
@@ -1005,7 +1005,7 @@ export const DashboardClient = memo(function DashboardClient({
                                     {pulls.length > 4 && (
                                         <button
                                             onClick={() => setActiveTab('collection')}
-                                            className="w-full mt-4 py-3 text-sm text-[#BFFF00] hover:text-[#7fff00] bg-white/[0.02] hover:bg-white/[0.05] rounded-xl transition-all flex items-center justify-center gap-2"
+                                            className="w-full mt-4 py-3 text-sm text-[#BFFF00] hover:text-[#7fff00] bg-[#1e1e55] hover:bg-white/[0.05] rounded-xl transition-all flex items-center justify-center gap-2"
                                         >
                                             View all {pulls.length} cards
                                             <ArrowUpRight className="w-4 h-4"/>
@@ -1034,7 +1034,7 @@ export const DashboardClient = memo(function DashboardClient({
             {activeTab === 'achievements' && (
                 <div className="space-y-8">
                     {loading ? (
-                        <div className="glass-strong rounded-2xl p-16 text-center">
+                        <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-16 text-center">
                             <div className="relative w-16 h-16 mx-auto mb-6">
                                 <div className="absolute inset-0 rounded-full border-4 border-amber-500/20"/>
                                 <div
@@ -1056,7 +1056,7 @@ export const DashboardClient = memo(function DashboardClient({
                                 <div
                                     className="absolute inset-0 bg-gradient-to-br from-amber-500/20 via-yellow-500/10 to-orange-500/20"/>
                                 <div className="absolute inset-0 bg-grid opacity-30"/>
-                                <div className="relative glass-strong p-8 md:p-10">
+                                <div className="relative bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg p-8 md:p-10">
                                     <div
                                         className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
                                         <div>
@@ -1134,7 +1134,7 @@ export const DashboardClient = memo(function DashboardClient({
                                         >
                                             <div
                                                 className={`absolute inset-0 bg-gradient-to-br ${rarityStyle.gradient} opacity-10`}/>
-                                            <div className="relative glass-strong p-4 text-center">
+                                            <div className="relative bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg p-4 text-center">
                                                 <div
                                                     className={`inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br ${rarityStyle.gradient} mb-2`}>
                                                     <Star className="w-5 h-5 text-white"/>
@@ -1161,7 +1161,7 @@ export const DashboardClient = memo(function DashboardClient({
                                     className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
                                         achievementCategoryFilter === 'ALL'
                                             ? 'bg-white/10 text-white border border-white/20'
-                                            : 'bg-white/[0.03] text-[#8888aa] border border-white/[0.05] hover:bg-white/[0.06] hover:text-white'
+                                            : 'bg-[#1a1a4a] text-[#8888aa] border border-white/[0.05] hover:bg-white/[0.06] hover:text-white'
                                     }`}
                                 >
                                     <Star className="w-4 h-4"/>
@@ -1178,7 +1178,7 @@ export const DashboardClient = memo(function DashboardClient({
                                             className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
                                                 isActive
                                                     ? `${config.bg} ${config.color} border border-current/30`
-                                                    : 'bg-white/[0.03] text-[#8888aa] border border-white/[0.05] hover:bg-white/[0.06] hover:text-white'
+                                                    : 'bg-[#1a1a4a] text-[#8888aa] border border-white/[0.05] hover:bg-white/[0.06] hover:text-white'
                                             }`}
                                         >
                                             <Icon className="w-4 h-4"/>
@@ -1216,7 +1216,7 @@ export const DashboardClient = memo(function DashboardClient({
                                             )}
 
                                             <div
-                                                className={`relative glass-strong p-5 border ${achievement.isUnlocked ? rarityStyle.border : 'border-[rgba(255,255,255,0.06)]'}`}>
+                                                className={`relative bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg p-5 border ${achievement.isUnlocked ? rarityStyle.border : 'border-[rgba(255,255,255,0.06)]'}`}>
                                                 {/* Header with icon and rarity */}
                                                 <div className="flex items-start justify-between mb-4">
                                                     <div className={`relative p-3 rounded-xl ${
@@ -1325,7 +1325,7 @@ export const DashboardClient = memo(function DashboardClient({
 
                             {/* Empty state */}
                             {filteredAchievements.length === 0 && (
-                                <div className="glass-strong rounded-2xl p-16 text-center">
+                                <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-16 text-center">
                                     <div
                                         className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 mb-6">
                                         <Trophy className="w-10 h-10 text-amber-400"/>
@@ -1345,7 +1345,7 @@ export const DashboardClient = memo(function DashboardClient({
                             )}
                         </>
                     ) : (
-                        <div className="glass-strong rounded-2xl p-16 text-center">
+                        <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-16 text-center">
                             <Trophy className="w-16 h-16 text-gray-600 mx-auto mb-4"/>
                             <p className="text-[#8888aa]">Unable to load achievements</p>
                             <button
@@ -1390,7 +1390,7 @@ export const DashboardClient = memo(function DashboardClient({
                                             ? config
                                                 ? `${config.bg} ${config.color} border ${config.border}`
                                                 : 'bg-white/10 text-white border border-white/20'
-                                            : 'bg-white/[0.03] text-[#8888aa] border border-white/[0.05] hover:bg-white/[0.06] hover:text-white'
+                                            : 'bg-[#1a1a4a] text-[#8888aa] border border-white/[0.05] hover:bg-white/[0.06] hover:text-white'
                                     }`}
                                     style={{animationDelay: `${index * 50}ms`}}
                                 >
@@ -1403,7 +1403,7 @@ export const DashboardClient = memo(function DashboardClient({
 
                     {/* Orders List */}
                     {loading ? (
-                        <div className="glass-strong rounded-2xl p-16 text-center">
+                        <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-16 text-center">
                             <div className="relative w-16 h-16 mx-auto mb-6">
                                 <div className="absolute inset-0 rounded-full border-4 border-purple-500/20"/>
                                 <div
@@ -1419,7 +1419,7 @@ export const DashboardClient = memo(function DashboardClient({
                                 return (
                                     <div
                                         key={order.id}
-                                        className="glass-strong rounded-2xl overflow-hidden"
+                                        className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl overflow-hidden"
                                         style={{
                                             opacity: mounted ? 1 : 0,
                                             transform: mounted ? 'translateY(0)' : 'translateY(20px)',
@@ -1499,7 +1499,7 @@ export const DashboardClient = memo(function DashboardClient({
                         </div>
                     ) : (
                         <div
-                            className="glass-strong rounded-2xl p-16 text-center"
+                            className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-16 text-center"
                             style={{
                                 opacity: mounted ? 1 : 0,
                                 transform: mounted ? 'translateY(0)' : 'translateY(20px)',
@@ -1530,7 +1530,7 @@ export const DashboardClient = memo(function DashboardClient({
             {activeTab === 'statistics' && (
                 <div className="space-y-6">
                     {loading ? (
-                        <div className="glass-strong rounded-2xl p-16 text-center">
+                        <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-16 text-center">
                             <div className="relative w-16 h-16 mx-auto mb-6">
                                 <div className="absolute inset-0 rounded-full border-4 border-orange-500/20"/>
                                 <div
@@ -1585,7 +1585,7 @@ export const DashboardClient = memo(function DashboardClient({
                                         >
                                             <div
                                                 className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-10`}/>
-                                            <div className="relative glass-strong p-6 text-center">
+                                            <div className="relative bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg p-6 text-center">
                                                 <div
                                                     className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br ${stat.gradient} mb-4 shadow-lg`}>
                                                     <Icon className="w-7 h-7 text-white"/>
@@ -1601,7 +1601,7 @@ export const DashboardClient = memo(function DashboardClient({
                             {/* Economy & Orders */}
                             <div className="grid gap-6 lg:grid-cols-2">
                                 <div
-                                    className="glass-strong rounded-2xl p-6 relative overflow-hidden"
+                                    className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 relative overflow-hidden"
                                     style={{
                                         opacity: mounted ? 1 : 0,
                                         transform: mounted ? 'translateY(0)' : 'translateY(20px)',
@@ -1646,7 +1646,7 @@ export const DashboardClient = memo(function DashboardClient({
                                             const Icon = item.icon;
                                             return (
                                                 <div key={item.label}
-                                                     className="flex justify-between items-center p-4 bg-white/[0.02] rounded-xl border border-white/[0.05]">
+                                                     className="flex justify-between items-center p-4 bg-[#1e1e55] rounded-xl border border-white/[0.05]">
                           <span className="text-[#7777a0] flex items-center gap-2">
                             <Icon className="w-4 h-4"/>
                               {item.label}
@@ -1660,7 +1660,7 @@ export const DashboardClient = memo(function DashboardClient({
                                 </div>
 
                                 <div
-                                    className="glass-strong rounded-2xl p-6 relative overflow-hidden"
+                                    className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 relative overflow-hidden"
                                     style={{
                                         opacity: mounted ? 1 : 0,
                                         transform: mounted ? 'translateY(0)' : 'translateY(20px)',
@@ -1677,12 +1677,12 @@ export const DashboardClient = memo(function DashboardClient({
                                     </h3>
                                     <div className="space-y-3">
                                         <div
-                                            className="flex justify-between items-center p-4 bg-white/[0.02] rounded-xl border border-white/[0.05]">
+                                            className="flex justify-between items-center p-4 bg-[#1e1e55] rounded-xl border border-white/[0.05]">
                                             <span className="text-[#7777a0]">Total Orders</span>
                                             <span className="font-bold text-2xl text-white">{stats.totalOrders}</span>
                                         </div>
                                         <div
-                                            className="flex justify-between items-center p-4 bg-white/[0.02] rounded-xl border border-white/[0.05]">
+                                            className="flex justify-between items-center p-4 bg-[#1e1e55] rounded-xl border border-white/[0.05]">
                       <span className="text-[#7777a0] flex items-center gap-2">
                         <Clock className="w-4 h-4"/>
                         Pending/Processing
@@ -1691,7 +1691,7 @@ export const DashboardClient = memo(function DashboardClient({
                                                 className="font-bold text-lg text-amber-400">{stats.pendingOrders}</span>
                                         </div>
                                         <div
-                                            className="flex justify-between items-center p-4 bg-white/[0.02] rounded-xl border border-white/[0.05]">
+                                            className="flex justify-between items-center p-4 bg-[#1e1e55] rounded-xl border border-white/[0.05]">
                       <span className="text-[#7777a0] flex items-center gap-2">
                         <CheckCircle2 className="w-4 h-4"/>
                         Completed
@@ -1705,7 +1705,7 @@ export const DashboardClient = memo(function DashboardClient({
 
                             {/* Milestones */}
                             <div
-                                className="glass-strong rounded-2xl p-6 relative overflow-hidden"
+                                className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 relative overflow-hidden"
                                 style={{
                                     opacity: mounted ? 1 : 0,
                                     transform: mounted ? 'translateY(0)' : 'translateY(20px)',
@@ -1760,7 +1760,7 @@ export const DashboardClient = memo(function DashboardClient({
                                                 className={`relative p-5 rounded-2xl border transition-all ${
                                                     isComplete
                                                         ? 'bg-gradient-to-br from-amber-500/10 to-yellow-500/10 border-amber-500/30'
-                                                        : 'bg-white/[0.02] border-white/[0.05]'
+                                                        : 'bg-[#1e1e55] border-white/[0.05]'
                                                 }`}
                                             >
                                                 {isComplete && (
@@ -1789,7 +1789,7 @@ export const DashboardClient = memo(function DashboardClient({
                             </div>
                         </>
                     ) : (
-                        <div className="glass-strong rounded-2xl p-16 text-center">
+                        <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-16 text-center">
                             <BarChart3 className="w-16 h-16 text-gray-600 mx-auto mb-4"/>
                             <p className="text-[#8888aa]">Unable to load statistics</p>
                         </div>
@@ -1805,7 +1805,7 @@ export const DashboardClient = memo(function DashboardClient({
                 <div className="space-y-6">
                     {/* Profile Section */}
                     <div
-                        className="glass-strong rounded-2xl p-6 relative overflow-hidden"
+                        className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 relative overflow-hidden"
                         style={{
                             opacity: mounted ? 1 : 0,
                             transform: mounted ? 'translateY(0)' : 'translateY(20px)',
@@ -1861,7 +1861,7 @@ export const DashboardClient = memo(function DashboardClient({
 
                     {/* Shipping Address Section */}
                     <div
-                        className="glass-strong rounded-2xl p-6 relative overflow-hidden"
+                        className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 relative overflow-hidden"
                         style={{
                             opacity: mounted ? 1 : 0,
                             transform: mounted ? 'translateY(0)' : 'translateY(20px)',
@@ -1951,7 +1951,7 @@ export const DashboardClient = memo(function DashboardClient({
 
                     {/* Account Info */}
                     <div
-                        className="glass-strong rounded-2xl p-6 relative overflow-hidden"
+                        className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 relative overflow-hidden"
                         style={{
                             opacity: mounted ? 1 : 0,
                             transform: mounted ? 'translateY(0)' : 'translateY(20px)',
@@ -1967,11 +1967,11 @@ export const DashboardClient = memo(function DashboardClient({
                             Account Information
                         </h3>
                         <div className="grid gap-4 md:grid-cols-2">
-                            <div className="p-4 bg-white/[0.02] rounded-xl border border-white/[0.05]">
+                            <div className="p-4 bg-[#1e1e55] rounded-xl border border-white/[0.05]">
                                 <p className="text-sm text-gray-500 mb-1">Member Since</p>
                                 <p className="text-white font-semibold">{formatDate(user.createdAt)}</p>
                             </div>
-                            <div className="p-4 bg-white/[0.02] rounded-xl border border-white/[0.05]">
+                            <div className="p-4 bg-[#1e1e55] rounded-xl border border-white/[0.05]">
                                 <p className="text-sm text-gray-500 mb-1">Account Status</p>
                                 <div className="flex items-center gap-2">
                                     {user.emailVerified ? (

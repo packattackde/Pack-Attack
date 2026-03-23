@@ -200,7 +200,7 @@ export default async function ShopDashboard({
       <div className="relative container py-8 md:py-12">
         {/* Header */}
         <div className="mb-10">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 rounded-full glass text-sm">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
             <Store className="w-4 h-4 text-emerald-400" />
             <span className="text-[#f0f0f5]">{viewingSpecificShop ? `Admin → ${shop?.name}` : isAdmin ? 'Admin View' : shop?.name || 'Shop Dashboard'}</span>
           </div>
@@ -219,7 +219,7 @@ export default async function ShopDashboard({
 
         {/* Quick Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-          <div className="glass rounded-2xl p-5 relative overflow-hidden group hover:ring-2 hover:ring-emerald-500/30 transition-all">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-2xl p-5 relative overflow-hidden group hover:ring-2 hover:ring-emerald-500/30 transition-all">
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent" />
             <div className="relative">
               <Package className="w-6 h-6 text-emerald-400 mb-3" />
@@ -228,7 +228,7 @@ export default async function ShopDashboard({
             </div>
           </div>
           
-          <div className="glass rounded-2xl p-5 relative overflow-hidden group hover:ring-2 hover:ring-teal-500/30 transition-all">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-2xl p-5 relative overflow-hidden group hover:ring-2 hover:ring-teal-500/30 transition-all">
             <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 to-transparent" />
             <div className="relative">
               <Sparkles className="w-6 h-6 text-teal-400 mb-3" />
@@ -237,7 +237,7 @@ export default async function ShopDashboard({
             </div>
           </div>
           
-          <div className="glass rounded-2xl p-5 relative overflow-hidden group hover:ring-2 hover:ring-cyan-500/30 transition-all">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-2xl p-5 relative overflow-hidden group hover:ring-2 hover:ring-cyan-500/30 transition-all">
             <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent" />
             <div className="relative">
               <ShoppingCart className="w-6 h-6 text-cyan-400 mb-3" />
@@ -246,7 +246,7 @@ export default async function ShopDashboard({
             </div>
           </div>
           
-          <div className="glass rounded-2xl p-5 relative overflow-hidden group hover:ring-2 hover:ring-amber-500/30 transition-all">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-2xl p-5 relative overflow-hidden group hover:ring-2 hover:ring-amber-500/30 transition-all">
             <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent" />
             <div className="relative">
               <DollarSign className="w-6 h-6 text-amber-400 mb-3" />
@@ -255,7 +255,7 @@ export default async function ShopDashboard({
             </div>
           </div>
 
-          <div className="glass rounded-2xl p-5 relative overflow-hidden group hover:ring-2 hover:ring-orange-500/30 transition-all">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-2xl p-5 relative overflow-hidden group hover:ring-2 hover:ring-orange-500/30 transition-all">
             <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-transparent" />
             <div className="relative">
               <Wallet className="w-6 h-6 text-orange-400 mb-3" />
@@ -264,7 +264,7 @@ export default async function ShopDashboard({
             </div>
           </div>
           
-          <div className="glass rounded-2xl p-5 relative overflow-hidden group hover:ring-2 hover:ring-purple-500/30 transition-all">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-2xl p-5 relative overflow-hidden group hover:ring-2 hover:ring-purple-500/30 transition-all">
             <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent" />
             <div className="relative">
               <Users className="w-6 h-6 text-purple-400 mb-3" />
@@ -276,7 +276,7 @@ export default async function ShopDashboard({
 
         {/* Order Status Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-          <div className="glass rounded-xl p-4 flex items-center gap-4">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 flex items-center gap-4">
             <div className="p-3 rounded-xl bg-yellow-500/10">
               <Clock className="w-5 h-5 text-yellow-400" />
             </div>
@@ -286,7 +286,7 @@ export default async function ShopDashboard({
             </div>
           </div>
           
-          <div className="glass rounded-xl p-4 flex items-center gap-4">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 flex items-center gap-4">
             <div className="p-3 rounded-xl bg-[rgba(191,255,0,0.1)]">
               <Package className="w-5 h-5 text-[#BFFF00]" />
             </div>
@@ -296,7 +296,7 @@ export default async function ShopDashboard({
             </div>
           </div>
           
-          <div className="glass rounded-xl p-4 flex items-center gap-4">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 flex items-center gap-4">
             <div className="p-3 rounded-xl bg-purple-500/10">
               <Truck className="w-5 h-5 text-purple-400" />
             </div>
@@ -306,7 +306,7 @@ export default async function ShopDashboard({
             </div>
           </div>
           
-          <div className="glass rounded-xl p-4 flex items-center gap-4">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 flex items-center gap-4">
             <div className="p-3 rounded-xl bg-green-500/10">
               <CheckCircle className="w-5 h-5 text-green-400" />
             </div>
@@ -322,7 +322,7 @@ export default async function ShopDashboard({
           {/* Orders Management */}
           <Link 
             href={viewingSpecificShop ? `/shop-dashboard/orders?shopId=${shop?.id}` : '/shop-dashboard/orders'} 
-            className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-emerald-500/50 transition-all group relative overflow-hidden"
+            className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-emerald-500/50 transition-all group relative overflow-hidden"
           >
             {stats.pendingOrders > 0 && (
               <div className="absolute -top-1 -right-1 w-8 h-8 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg animate-pulse">
@@ -350,7 +350,7 @@ export default async function ShopDashboard({
           {/* Assigned Orders */}
           <Link 
             href={viewingSpecificShop ? `/shop-dashboard/assigned-orders?shopId=${shop?.id}` : '/shop-dashboard/assigned-orders'} 
-            className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-purple-500/50 transition-all group relative overflow-hidden"
+            className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-purple-500/50 transition-all group relative overflow-hidden"
           >
             {stats.assignedPending > 0 && (
               <div className="absolute -top-1 -right-1 w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg animate-pulse">
@@ -378,7 +378,7 @@ export default async function ShopDashboard({
           {/* My Stock */}
           <Link 
             href={viewingSpecificShop ? `/shop-dashboard/stock?shopId=${shop?.id}` : '/shop-dashboard/stock'} 
-            className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-teal-500/50 transition-all group relative overflow-hidden"
+            className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-teal-500/50 transition-all group relative overflow-hidden"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="relative">
@@ -401,7 +401,7 @@ export default async function ShopDashboard({
           {/* Payouts */}
           <Link 
             href={viewingSpecificShop ? `/shop-dashboard/payouts?shopId=${shop?.id}` : '/shop-dashboard/payouts'} 
-            className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-amber-500/50 transition-all group relative overflow-hidden"
+            className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-amber-500/50 transition-all group relative overflow-hidden"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="relative">
@@ -430,7 +430,7 @@ export default async function ShopDashboard({
         )}
 
         {/* Recent Orders Section */}
-        <div className="glass-strong rounded-2xl p-6">
+        <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-xl bg-emerald-500/10">

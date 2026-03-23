@@ -19,7 +19,7 @@ export function SalesHistoryClient({ sales }: { sales: Sale[] }) {
       {sales.map((sale) => (
         <div
           key={sale.id}
-          className="group glass rounded-xl overflow-hidden transition-all"
+          className="group bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl overflow-hidden transition-all"
         >
           <div className="relative aspect-[63/88] w-full">
             {sale.cardImage ? (

@@ -239,7 +239,7 @@ export default function EditProductPage() {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Basic Info */}
-            <div className="glass-strong rounded-2xl p-6 space-y-4">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 space-y-4">
               <h2 className="text-lg font-semibold text-white mb-4">Basic Information</h2>
 
               <div>
@@ -249,7 +249,7 @@ export default function EditProductPage() {
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl glass text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
+                  className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
                   placeholder="e.g., Charizard VMAX - Rainbow Rare"
                 />
               </div>
@@ -260,7 +260,7 @@ export default function EditProductPage() {
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={4}
-                  className="w-full px-4 py-3 rounded-xl glass text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none resize-none"
+                  className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none resize-none"
                   placeholder="Describe your product..."
                 />
               </div>
@@ -272,7 +272,7 @@ export default function EditProductPage() {
                     required
                     value={formData.category}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl glass text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
                   >
                     {categories.map((cat) => (
                       <option key={cat.value} value={cat.value} className="bg-[#0B0B2B]">
@@ -287,7 +287,7 @@ export default function EditProductPage() {
                   <select
                     value={formData.game}
                     onChange={(e) => setFormData({ ...formData, game: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl glass text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
                   >
                     {games.map((game) => (
                       <option key={game.value} value={game.value} className="bg-[#0B0B2B]">
@@ -303,7 +303,7 @@ export default function EditProductPage() {
                 <select
                   value={formData.condition}
                   onChange={(e) => setFormData({ ...formData, condition: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl glass text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
+                  className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
                 >
                   {conditions.map((cond) => (
                     <option key={cond.value} value={cond.value} className="bg-[#0B0B2B]">
@@ -315,7 +315,7 @@ export default function EditProductPage() {
             </div>
 
             {/* Pricing & Inventory */}
-            <div className="glass-strong rounded-2xl p-6 space-y-4">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 space-y-4">
               <h2 className="text-lg font-semibold text-white mb-4">Pricing & Inventory</h2>
 
               <div className="grid sm:grid-cols-2 gap-4">
@@ -328,7 +328,7 @@ export default function EditProductPage() {
                     step="0.01"
                     value={formData.price}
                     onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl glass text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
                     placeholder="0.00"
                   />
                 </div>
@@ -341,7 +341,7 @@ export default function EditProductPage() {
                     step="0.01"
                     value={formData.comparePrice}
                     onChange={(e) => setFormData({ ...formData, comparePrice: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl glass text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
                     placeholder="Original price for discount display"
                   />
                 </div>
@@ -356,7 +356,7 @@ export default function EditProductPage() {
                     min="0"
                     value={formData.stock}
                     onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl glass text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
                     placeholder="0"
                   />
                 </div>
@@ -367,7 +367,7 @@ export default function EditProductPage() {
                     type="text"
                     value={formData.sku}
                     onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl glass text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
                     placeholder="Product SKU"
                   />
                 </div>
@@ -399,7 +399,7 @@ export default function EditProductPage() {
             </div>
 
             {/* Images */}
-            <div className="glass-strong rounded-2xl p-6 space-y-4">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 space-y-4">
               <h2 className="text-lg font-semibold text-white mb-4">Images</h2>
 
               <div className="flex gap-2">
@@ -408,7 +408,7 @@ export default function EditProductPage() {
                   value={imageUrl}
                   onChange={(e) => setImageUrl(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addImage(); } }}
-                  className="flex-1 px-4 py-3 rounded-xl glass text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
+                  className="flex-1 px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
                   placeholder="Enter image URL"
                 />
                 <button
@@ -457,7 +457,7 @@ export default function EditProductPage() {
             <div className="flex gap-4">
               <Link
                 href="/shop/manage/products"
-                className="flex-1 py-4 glass text-[#f0f0f5] font-semibold rounded-xl hover:bg-white/10 transition-colors text-center"
+                className="flex-1 py-4 bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#f0f0f5] font-semibold rounded-xl hover:bg-white/10 transition-colors text-center"
               >
                 Cancel
               </Link>

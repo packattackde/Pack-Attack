@@ -199,7 +199,7 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
 
                 {/* ── Discord Card ── */}
                 <div className="group relative" style={animStyle('0.1s')}>
-                    <div className={`relative h-full glass-strong rounded-3xl p-8 border overflow-hidden transition-all duration-500 hover:shadow-2xl ${
+                    <div className={`relative h-full bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-3xl p-8 border overflow-hidden transition-all duration-500 hover:shadow-2xl ${
                         isDiscordConnected
                             ? 'border-green-500/20 hover:border-green-500/40 hover:shadow-green-500/10'
                             : 'border-white/[0.05] hover:border-indigo-500/30 hover:shadow-indigo-500/10'
@@ -322,7 +322,7 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
 
                 {/* ── Twitch Card ── */}
                 <div className="group relative" style={animStyle('0.2s')}>
-                    <div className={`relative h-full glass-strong rounded-3xl p-8 border overflow-hidden transition-all duration-500 hover:shadow-2xl ${
+                    <div className={`relative h-full bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-3xl p-8 border overflow-hidden transition-all duration-500 hover:shadow-2xl ${
                         isTwitchConnected
                             ? 'border-green-500/20 hover:border-green-500/40 hover:shadow-green-500/10'
                             : 'border-white/[0.05] hover:border-purple-500/30 hover:shadow-purple-500/10'

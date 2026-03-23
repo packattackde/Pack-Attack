@@ -107,7 +107,7 @@ export default async function ShopOrdersPage({
             <span>Back to Dashboard</span>
           </Link>
           
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass text-sm mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm mb-3">
             <Store className="w-4 h-4 text-emerald-400" />
             <span className="text-[#f0f0f5]">{viewingSpecificShop ? `Admin → ${shop?.name}` : isAdmin ? 'Admin View' : shop?.name || 'Shop Dashboard'}</span>
           </div>
@@ -121,32 +121,32 @@ export default async function ShopOrdersPage({
 
         {/* Stats Overview */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-          <div className="glass rounded-xl p-4 text-center">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
             <ShoppingCart className="w-5 h-5 text-[#8888aa] mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{stats.total}</div>
             <div className="text-xs text-gray-500">Total</div>
           </div>
-          <div className="glass rounded-xl p-4 text-center">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
             <Clock className="w-5 h-5 text-yellow-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{stats.pending}</div>
             <div className="text-xs text-yellow-400">Pending</div>
           </div>
-          <div className="glass rounded-xl p-4 text-center">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
             <CheckCircle className="w-5 h-5 text-[#BFFF00] mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{stats.confirmed}</div>
             <div className="text-xs text-[#BFFF00]">Confirmed</div>
           </div>
-          <div className="glass rounded-xl p-4 text-center">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
             <Package className="w-5 h-5 text-purple-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{stats.processing}</div>
             <div className="text-xs text-purple-400">Processing</div>
           </div>
-          <div className="glass rounded-xl p-4 text-center">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
             <Truck className="w-5 h-5 text-indigo-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{stats.shipped}</div>
             <div className="text-xs text-indigo-400">Shipped</div>
           </div>
-          <div className="glass rounded-xl p-4 text-center">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
             <CheckCircle className="w-5 h-5 text-green-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{stats.delivered}</div>
             <div className="text-xs text-green-400">Delivered</div>

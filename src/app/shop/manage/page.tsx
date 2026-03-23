@@ -146,7 +146,7 @@ export default function ShopManagePage() {
               <p className="text-[#8888aa]">Set up your shop to start selling TCG products</p>
             </div>
 
-            <form onSubmit={handleCreateShop} className="glass-strong rounded-2xl p-8 space-y-6">
+            <form onSubmit={handleCreateShop} className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-8 space-y-6">
               <div>
                 <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Shop Name *</label>
                 <input
@@ -154,7 +154,7 @@ export default function ShopManagePage() {
                   required
                   value={shopName}
                   onChange={(e) => setShopName(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl glass text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
+                  className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
                   placeholder="My Awesome Card Shop"
                 />
               </div>
@@ -165,7 +165,7 @@ export default function ShopManagePage() {
                   value={shopDescription}
                   onChange={(e) => setShopDescription(e.target.value)}
                   rows={4}
-                  className="w-full px-4 py-3 rounded-xl glass text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none resize-none"
+                  className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none resize-none"
                   placeholder="Tell customers about your shop..."
                 />
               </div>
@@ -226,7 +226,7 @@ export default function ShopManagePage() {
 
         {/* Stats */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <div className="glass-strong rounded-xl p-6">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl p-6">
             <div className="flex items-center gap-4">
               <div className="p-3 rounded-xl bg-[rgba(191,255,0,0.15)]">
                 <Package className="w-6 h-6 text-[#BFFF00]" />
@@ -238,7 +238,7 @@ export default function ShopManagePage() {
             </div>
           </div>
 
-          <div className="glass-strong rounded-xl p-6">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl p-6">
             <div className="flex items-center gap-4">
               <div className="p-3 rounded-xl bg-[rgba(191,255,0,0.1)]">
                 <ShoppingBag className="w-6 h-6 text-[#BFFF00]" />
@@ -250,7 +250,7 @@ export default function ShopManagePage() {
             </div>
           </div>
 
-          <div className="glass-strong rounded-xl p-6">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl p-6">
             <div className="flex items-center gap-4">
               <div className="p-3 rounded-xl bg-[rgba(191,255,0,0.1)]">
                 <BarChart3 className="w-6 h-6 text-[#BFFF00]" />
@@ -264,7 +264,7 @@ export default function ShopManagePage() {
             </div>
           </div>
 
-          <div className="glass-strong rounded-xl p-6">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl p-6">
             <div className="flex items-center gap-4">
               <div className="p-3 rounded-xl bg-amber-500/20">
                 <ImageIcon className="w-6 h-6 text-amber-400" />
@@ -281,7 +281,7 @@ export default function ShopManagePage() {
 
         {/* Quick Links */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Link href="/shop/manage/products" className="glass-strong rounded-2xl p-6 hover:bg-white/5 transition-colors group">
+          <Link href="/shop/manage/products" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:bg-white/5 transition-colors group">
             <div className="flex items-center gap-4 mb-4">
               <div className="p-3 rounded-xl bg-[rgba(191,255,0,0.15)] group-hover:bg-[rgba(191,255,0,0.2)] transition-colors">
                 <Package className="w-6 h-6 text-[#BFFF00]" />
@@ -291,7 +291,7 @@ export default function ShopManagePage() {
             <p className="text-[#8888aa]">Manage your product listings, prices, and inventory</p>
           </Link>
 
-          <Link href="/shop/manage/orders" className="glass-strong rounded-2xl p-6 hover:bg-white/5 transition-colors group">
+          <Link href="/shop/manage/orders" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:bg-white/5 transition-colors group">
             <div className="flex items-center gap-4 mb-4">
               <div className="p-3 rounded-xl bg-[rgba(191,255,0,0.1)] group-hover:bg-[rgba(191,255,0,0.15)] transition-colors">
                 <ShoppingBag className="w-6 h-6 text-[#BFFF00]" />
@@ -301,7 +301,7 @@ export default function ShopManagePage() {
             <p className="text-[#8888aa]">View and manage customer orders and shipping</p>
           </Link>
 
-          <Link href="/shop/manage/settings" className="glass-strong rounded-2xl p-6 hover:bg-white/5 transition-colors group">
+          <Link href="/shop/manage/settings" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:bg-white/5 transition-colors group">
             <div className="flex items-center gap-4 mb-4">
               <div className="p-3 rounded-xl bg-[rgba(191,255,0,0.1)] group-hover:bg-[rgba(191,255,0,0.2)] transition-colors">
                 <Settings className="w-6 h-6 text-[#BFFF00]" />

@@ -56,7 +56,7 @@ export default async function SalesHistoryPage() {
       <div className="relative container py-12">
         {/* Header */}
         <div className="mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full glass text-sm">
+          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
             <Receipt className="w-4 h-4 text-green-400" />
             <span className="text-[#f0f0f5]">Transaction History</span>
           </div>
@@ -69,7 +69,7 @@ export default async function SalesHistoryPage() {
 
         {/* Stats Bar */}
         {totalSales > 0 && (
-          <div className="glass-strong rounded-2xl p-6 mb-8">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 mb-8">
             <div className="grid grid-cols-2 gap-4">
               <div className="text-center">
                 <div className="inline-flex items-center justify-center w-12 h-12 mb-3 rounded-xl bg-green-500/20">
@@ -90,7 +90,7 @@ export default async function SalesHistoryPage() {
         )}
 
         {sales.length === 0 ? (
-          <div className="glass-strong rounded-2xl p-12 text-center">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
             <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-green-500/20 to-emerald-500/20">
               <Receipt className="w-10 h-10 text-green-400" />
             </div>

@@ -255,7 +255,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
         <>
             {/* Sell by Rarity */}
             {sellByRarity.length > 0 && (
-                <div className="glass-strong rounded-2xl p-5 mb-6">
+                <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-5 mb-6">
                     <p className="text-xs text-[#8888aa] uppercase tracking-wider mb-3 flex items-center gap-2">
                         <Coins className="w-3.5 h-3.5 text-amber-400" />
                         Sell all by rarity
@@ -292,7 +292,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
             )}
 
             {/* Search & Filters */}
-            <div className="glass-strong rounded-2xl p-5 mb-6">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-5 mb-6">
                 <div className="flex flex-wrap gap-4">
                     <div className="flex-1 min-w-[250px]">
                         <div className="relative group">
@@ -354,7 +354,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                 ].map((stat) => {
                     const Icon = stat.icon;
                     return (
-                        <div key={stat.label} className="glass rounded-xl p-4 text-center">
+                        <div key={stat.label} className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
                             <div className="flex items-center justify-center gap-2 mb-1">
                                 {Icon && <Icon className={`w-4 h-4 ${stat.color}`} />}
                                 <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
@@ -391,7 +391,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                                 }}
                             >
                                 <div className={`absolute inset-0 ${rarityConfig.bg} opacity-0 group-hover:opacity-100 transition-opacity`} />
-                                <div className={`relative glass border ${rarityConfig.border} rounded-2xl overflow-hidden`}>
+                                <div className={`relative bg-[#1a1a4a] shadow-md border ${rarityConfig.border} rounded-2xl overflow-hidden`}>
                                     <div className="relative aspect-[63/88] w-full">
                                         <Image
                                             src={group.card.imageUrlGatherer}
@@ -451,7 +451,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                     })}
                 </div>
             ) : (
-                <div className="glass-strong rounded-2xl p-16 text-center">
+                <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-16 text-center">
                     <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 mb-6">
                         <Package className="w-10 h-10 text-purple-400" />
                     </div>
@@ -503,7 +503,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                             )}
                         </div>
 
-                        <div className="glass-strong rounded-2xl p-6 w-full text-center border border-white/10">
+                        <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 w-full text-center border border-white/10">
                             {(() => {
                                 const config = getRarityConfig(zoomedCard.card.rarity);
                                 const Icon = config.icon;
@@ -613,7 +613,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                     onClick={(e) => { if (e.target === e.currentTarget) setConfirmSell(null); }}
                 >
                     <div className="absolute inset-0 bg-black/80 backdrop-blur-xl" />
-                    <div className="relative glass-strong rounded-2xl p-8 w-full max-w-sm border border-white/10 animate-in fade-in zoom-in-95 duration-200 text-center">
+                    <div className="relative bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-8 w-full max-w-sm border border-white/10 animate-in fade-in zoom-in-95 duration-200 text-center">
                         <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 mb-5">
                             <Coins className="w-7 h-7 text-amber-400" />
                         </div>

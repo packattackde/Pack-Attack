@@ -40,7 +40,7 @@ export default async function AdminDashboard() {
       <div className="relative container py-12">
         {/* Header */}
         <div className="mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full glass text-sm">
+          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
             <ShieldCheck className="w-4 h-4 text-purple-400" />
             <span className="text-[#f0f0f5]">Admin Panel</span>
           </div>
@@ -53,37 +53,37 @@ export default async function AdminDashboard() {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 mb-10">
-          <div className="glass rounded-xl p-4 text-center">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
             <Package className="w-6 h-6 text-[#BFFF00] mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{boxCount}</div>
             <div className="text-xs text-[#8888aa]">Boxes</div>
           </div>
-          <div className="glass rounded-xl p-4 text-center">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
             <Swords className="w-6 h-6 text-purple-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{battleCount}</div>
             <div className="text-xs text-[#8888aa]">Battles</div>
           </div>
-          <div className="glass rounded-xl p-4 text-center">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
             <Users className="w-6 h-6 text-cyan-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{userCount}</div>
             <div className="text-xs text-[#8888aa]">Users</div>
           </div>
-          <div className="glass rounded-xl p-4 text-center">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
             <Store className="w-6 h-6 text-orange-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{shopCount}</div>
             <div className="text-xs text-[#8888aa]">Shops</div>
           </div>
-          <div className="glass rounded-xl p-4 text-center">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
             <TrendingUp className="w-6 h-6 text-green-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{verifiedCount}</div>
             <div className="text-xs text-[#8888aa]">Verified</div>
           </div>
-          <div className="glass rounded-xl p-4 text-center">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
             <Mail className="w-6 h-6 text-pink-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{emailCount}</div>
             <div className="text-xs text-[#8888aa]">Emails Sent</div>
           </div>
-          <div className="glass rounded-xl p-4 text-center">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
             <Coins className="w-6 h-6 text-amber-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{Number(totalCoins._sum.coins || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
             <div className="text-xs text-[#8888aa]">Total Coins</div>
@@ -92,7 +92,7 @@ export default async function AdminDashboard() {
 
         {/* Management Cards */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <Link href="/admin/orders" className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-green-500/50 transition-all group relative">
+          <Link href="/admin/orders" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-green-500/50 transition-all group relative">
             {pendingOrders > 0 && (
               <div className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-xs font-bold text-white">
                 {pendingOrders}
@@ -105,7 +105,7 @@ export default async function AdminDashboard() {
             <p className="text-[#8888aa] text-sm">View and process customer orders.</p>
           </Link>
 
-          <Link href="/admin/shops" className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-orange-500/50 transition-all group">
+          <Link href="/admin/shops" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-orange-500/50 transition-all group">
             <div className="inline-flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-gradient-to-br from-orange-500/20 to-amber-500/20">
               <Store className="w-6 h-6 text-orange-400" />
             </div>
@@ -113,7 +113,7 @@ export default async function AdminDashboard() {
             <p className="text-[#8888aa] text-sm">Oversee card supplier shops, stock, and orders.</p>
           </Link>
 
-          <Link href="/admin/boxes" className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-[rgba(191,255,0,0.3)] transition-all group">
+          <Link href="/admin/boxes" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-[rgba(191,255,0,0.3)] transition-all group">
             <div className="inline-flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-gradient-to-br from-[rgba(191,255,0,0.1)] to-cyan-500/20">
               <Package className="w-6 h-6 text-[#BFFF00]" />
             </div>
@@ -121,7 +121,7 @@ export default async function AdminDashboard() {
             <p className="text-[#8888aa] text-sm">Create and manage boxes for users to open.</p>
           </Link>
 
-          <Link href="/admin/users" className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-cyan-500/50 transition-all group">
+          <Link href="/admin/users" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-cyan-500/50 transition-all group">
             <div className="inline-flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-gradient-to-br from-cyan-500/20 to-teal-500/20">
               <Users className="w-6 h-6 text-cyan-400" />
             </div>
@@ -129,7 +129,7 @@ export default async function AdminDashboard() {
             <p className="text-[#8888aa] text-sm">View, edit, and manage user accounts.</p>
           </Link>
 
-          <Link href="/admin/emails" className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-pink-500/50 transition-all group">
+          <Link href="/admin/emails" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-pink-500/50 transition-all group">
             <div className="inline-flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-gradient-to-br from-pink-500/20 to-rose-500/20">
               <Mail className="w-6 h-6 text-pink-400" />
             </div>
@@ -137,7 +137,7 @@ export default async function AdminDashboard() {
             <p className="text-[#8888aa] text-sm">Send emails and view email history.</p>
           </Link>
 
-          <Link href="/battles" className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-purple-500/50 transition-all group">
+          <Link href="/battles" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-purple-500/50 transition-all group">
             <div className="inline-flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-gradient-to-br from-purple-500/20 to-violet-500/20">
               <Swords className="w-6 h-6 text-purple-400" />
             </div>
@@ -145,7 +145,7 @@ export default async function AdminDashboard() {
             <p className="text-[#8888aa] text-sm">View and manage ongoing battles.</p>
           </Link>
 
-          <Link href="/admin/upsale-items" className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-amber-500/50 transition-all group">
+          <Link href="/admin/upsale-items" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-amber-500/50 transition-all group">
             <div className="inline-flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20">
               <Tag className="w-6 h-6 text-amber-400" />
             </div>
@@ -153,7 +153,7 @@ export default async function AdminDashboard() {
             <p className="text-[#8888aa] text-sm">Manage add-on products shown in cart.</p>
           </Link>
 
-          <Link href="/admin/payouts" className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-emerald-500/50 transition-all group">
+          <Link href="/admin/payouts" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-emerald-500/50 transition-all group">
             <div className="inline-flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20">
               <Wallet className="w-6 h-6 text-emerald-400" />
             </div>
@@ -161,7 +161,7 @@ export default async function AdminDashboard() {
             <p className="text-[#8888aa] text-sm">Process payout requests from shop owners. 5 coins = 1 EUR.</p>
           </Link>
 
-          <Link href="/admin/feedback" className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-teal-500/50 transition-all group relative">
+          <Link href="/admin/feedback" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-teal-500/50 transition-all group relative">
             {openFeedbackCount > 0 && (
               <div className="absolute -top-2 -right-2 w-6 h-6 bg-teal-500 rounded-full flex items-center justify-center text-xs font-bold text-white">
                 {openFeedbackCount}
@@ -174,7 +174,7 @@ export default async function AdminDashboard() {
             <p className="text-[#8888aa] text-sm">View and manage user feedback and reports.</p>
           </Link>
 
-          <Link href="/admin/chat" className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-indigo-500/50 transition-all group">
+          <Link href="/admin/chat" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-indigo-500/50 transition-all group">
             <div className="inline-flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20">
               <MessageCircle className="w-6 h-6 text-indigo-400" />
             </div>

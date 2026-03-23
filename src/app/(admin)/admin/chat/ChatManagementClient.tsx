@@ -407,7 +407,7 @@ export default function ChatManagementClient() {
           </div>
 
           {/* Log table */}
-          <div className="glass-strong rounded-xl overflow-hidden">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl overflow-hidden">
             {logLoading ? (
               <div className="flex items-center justify-center p-12 text-gray-500 text-sm">
                 Loading...
@@ -439,7 +439,7 @@ export default function ChatManagementClient() {
                     {logs.map((log) => (
                       <tr
                         key={log.id}
-                        className={`hover:bg-white/[0.02] ${log.isDeleted ? 'opacity-60' : ''}`}
+                        className={`hover:bg-[#1e1e55] ${log.isDeleted ? 'opacity-60' : ''}`}
                       >
                         <td className="px-4 py-2.5 text-xs text-gray-500 whitespace-nowrap">
                           {formatDate(log.createdAt)}
@@ -526,7 +526,7 @@ export default function ChatManagementClient() {
       {tab === 'bans' && (
         <div className="space-y-4">
           {/* Ban a user by search */}
-          <div className="glass-strong rounded-xl p-4 space-y-3">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl p-4 space-y-3">
             <div className="flex items-center gap-2 text-sm font-medium text-[#f0f0f5]">
               <UserPlus className="w-4 h-4 text-red-400" />
               Ban or timeout a user
@@ -554,7 +554,7 @@ export default function ChatManagementClient() {
 
             {/* User search results */}
             {userResults.length > 0 && (
-              <div className="divide-y divide-white/[0.04] rounded-lg bg-white/[0.02] overflow-hidden">
+              <div className="divide-y divide-white/[0.04] rounded-lg bg-[#1e1e55] overflow-hidden">
                 {userResults.map((user) => (
                   <div key={user.id} className="flex items-center justify-between px-4 py-2.5">
                     <div className="flex items-center gap-2.5">
@@ -618,7 +618,7 @@ export default function ChatManagementClient() {
             </label>
           </div>
 
-          <div className="glass-strong rounded-xl overflow-hidden">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl overflow-hidden">
             {bansLoading ? (
               <div className="flex items-center justify-center p-12 text-gray-500 text-sm">
                 Loading...

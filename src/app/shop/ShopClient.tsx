@@ -161,7 +161,7 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
       <div className="relative container py-12">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-2 mb-4 rounded-full glass text-sm">
+          <div className="inline-flex items-center gap-2 px-4 py-2 mb-4 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
             <Store className="w-4 h-4 text-[#BFFF00]" />
             <span className="text-[#f0f0f5]">TCG Marketplace</span>
           </div>
@@ -184,7 +184,7 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
                 placeholder="Search products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 rounded-xl glass-strong text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none transition-colors"
+                className="w-full pl-12 pr-4 py-3 rounded-xl bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none transition-colors"
               />
             </div>
 
@@ -193,7 +193,7 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="appearance-none pl-4 pr-10 py-3 rounded-xl glass-strong text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none transition-colors cursor-pointer min-w-[180px]"
+                className="appearance-none pl-4 pr-10 py-3 rounded-xl bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none transition-colors cursor-pointer min-w-[180px]"
               >
                 <option value="all" className="bg-[#0B0B2B]">All Categories</option>
                 {categories.map((cat) => (
@@ -210,7 +210,7 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
               <select
                 value={selectedGame}
                 onChange={(e) => setSelectedGame(e.target.value)}
-                className="appearance-none pl-4 pr-10 py-3 rounded-xl glass-strong text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none transition-colors cursor-pointer min-w-[180px]"
+                className="appearance-none pl-4 pr-10 py-3 rounded-xl bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none transition-colors cursor-pointer min-w-[180px]"
               >
                 <option value="all" className="bg-[#0B0B2B]">All Games</option>
                 {games.filter(g => g.game).map((g) => (
@@ -301,7 +301,7 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
           </div>
 
           {regularProducts.length === 0 && featuredProducts.length === 0 ? (
-            <div className="glass-strong rounded-2xl p-12 text-center">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
               <Package className="w-16 h-16 text-gray-600 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-white mb-2">No Products Found</h3>
               <p className="text-[#8888aa]">
@@ -345,7 +345,7 @@ const ProductCard = memo(function ProductCard({
     : null;
 
   return (
-    <div className={`group glass-strong rounded-2xl overflow-hidden transition-all hover:scale-[1.02] ${featured ? 'ring-2 ring-amber-500/50' : ''}`}>
+    <div className={`group bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl overflow-hidden transition-all hover:scale-[1.02] ${featured ? 'ring-2 ring-amber-500/50' : ''}`}>
       {/* Image */}
       <Link href={`/shop/product/${product.id}`}>
         <div className="relative aspect-square bg-[#12123a]">

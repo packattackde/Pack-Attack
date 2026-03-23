@@ -322,7 +322,7 @@ export default function FeedbackHistoryPage() {
                   className={`rounded-xl border transition-all duration-200 ${
                     isExpanded
                       ? 'border-white/[0.12] bg-white/[0.04]'
-                      : 'border-white/[0.06] bg-white/[0.02] hover:border-white/[0.1]'
+                      : 'border-white/[0.06] bg-[#1e1e55] hover:border-white/[0.1]'
                   }`}
                 >
                   {/* Header row */}
@@ -437,7 +437,7 @@ export default function FeedbackHistoryPage() {
                             </div>
                           </div>
                         ) : (
-                          <div className="text-sm text-[#f0f0f5] whitespace-pre-wrap leading-relaxed bg-white/[0.02] rounded-lg p-3 border border-white/[0.04]">
+                          <div className="text-sm text-[#f0f0f5] whitespace-pre-wrap leading-relaxed bg-[#1e1e55] rounded-lg p-3 border border-white/[0.04]">
                             {fb.message}
                             {fb.originalMessage && (
                               <p className="text-[10px] text-gray-600 mt-2 italic">Edited</p>
@@ -465,7 +465,7 @@ export default function FeedbackHistoryPage() {
                                 className={`rounded-lg p-3 text-sm ${
                                   msg.isAdmin
                                     ? 'bg-indigo-500/[0.07] border border-indigo-500/15 ml-4'
-                                    : 'bg-white/[0.03] border border-white/[0.06] mr-4'
+                                    : 'bg-[#1a1a4a] border border-white/[0.06] mr-4'
                                 }`}
                               >
                                 <div className="flex items-center gap-2 mb-1.5">

@@ -344,7 +344,7 @@ export default function CreateShopBoxPage() {
           </Link>
           
           <div className="flex items-center gap-3 mb-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass text-sm">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
               <Store className="w-4 h-4 text-teal-400" />
               <span className="text-[#f0f0f5]">Shop Dashboard</span>
             </div>
@@ -357,7 +357,7 @@ export default function CreateShopBoxPage() {
           <p className="text-[#8888aa]">Build a custom card box with your inventory for users to open.</p>
         </div>
 
-        <div className="glass-strong rounded-2xl overflow-hidden">
+        <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl overflow-hidden">
           <div className="border-b border-[rgba(255,255,255,0.06)] p-6">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-xl bg-teal-500/10">

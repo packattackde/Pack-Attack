@@ -141,7 +141,7 @@ export function CartClient({ items, total, upsellCartItems }: Props) {
   return (
     <div className="space-y-10">
       {isEmpty ? (
-        <div className="glass-strong rounded-2xl p-12 text-center">
+        <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
           <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[rgba(191,255,0,0.1)] to-[rgba(191,255,0,0.08)]">
             <ShoppingBag className="w-10 h-10 text-[#BFFF00]" />
           </div>
@@ -156,7 +156,7 @@ export function CartClient({ items, total, upsellCartItems }: Props) {
           {items.map((item) => {
             if (!item.pull.card) return null;
             return (
-              <div key={item.id} className="glass rounded-xl p-4">
+              <div key={item.id} className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                 <div className="flex items-center gap-4">
                   <div className="relative w-24 h-36 rounded-xl overflow-hidden flex-shrink-0">
                     <Image src={item.pull.card.imageUrlGatherer} alt={item.pull.card.name} fill className="object-cover" />
@@ -183,7 +183,7 @@ export function CartClient({ items, total, upsellCartItems }: Props) {
 
           {/* Upsell cart items */}
           {upsellCartItems.map((ui) => (
-            <div key={ui.id} className="glass rounded-xl p-4 border border-amber-500/20">
+            <div key={ui.id} className="bg-[#1a1a4a] shadow-md rounded-xl p-4 border border-amber-500/20">
               <div className="flex items-center gap-4">
                 <div className="relative w-24 h-24 rounded-xl overflow-hidden flex-shrink-0 bg-[#12123a]">
                   <Image src={ui.upsellItem.imageUrl} alt={ui.upsellItem.name} fill className="object-contain p-2" />
@@ -253,7 +253,7 @@ export function CartClient({ items, total, upsellCartItems }: Props) {
 
         {/* Checkout Sidebar */}
         <div className="lg:col-span-1">
-          <div className="glass-strong rounded-2xl p-6 sticky top-4">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 sticky top-4">
             <h3 className="text-lg font-bold text-white mb-4">Order Summary</h3>
             
             <div className="space-y-3 mb-6">
@@ -349,7 +349,7 @@ export function CartClient({ items, total, upsellCartItems }: Props) {
             {upsellItems.map(item => {
               const isInCart = inCartUpsellIds.has(item.id);
               return (
-                <div key={item.id} className={`glass-strong rounded-2xl overflow-hidden group transition-all ${isInCart ? 'ring-2 ring-green-500/40' : 'hover:ring-2 hover:ring-amber-500/30'}`}>
+                <div key={item.id} className={`bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl overflow-hidden group transition-all ${isInCart ? 'ring-2 ring-green-500/40' : 'hover:ring-2 hover:ring-amber-500/30'}`}>
                   <div className="relative h-52 bg-gradient-to-b from-[#12123a]/50 to-[#0B0B2B]/50">
                     <Image
                       src={item.imageUrl}

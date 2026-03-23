@@ -45,7 +45,7 @@ export function DealerDetailsClient({ shopId, initialTaxId }: Props) {
   const hasChanged = (taxId.trim() || '') !== (savedTaxId || '');
 
   return (
-    <div className="glass-strong rounded-2xl p-6">
+    <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6">
       <div className="flex items-center gap-3 mb-6">
         <div className="p-2 rounded-xl bg-indigo-500/10">
           <FileText className="w-5 h-5 text-indigo-400" />

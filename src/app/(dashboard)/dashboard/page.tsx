@@ -110,7 +110,7 @@ export default async function UserDashboard() {
       <div className="relative container py-8 md:py-12">
         {/* Welcome Header */}
         <div className="mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full glass text-sm">
+          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
             <Sparkles className="w-4 h-4 text-[#BFFF00]" />
             <span className="text-gray-300">Dashboard</span>
           </div>

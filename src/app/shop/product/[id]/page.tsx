@@ -191,7 +191,7 @@ export default function ProductPage() {
           {/* Images */}
           <div className="space-y-4">
             {/* Main Image */}
-            <div className="relative aspect-square rounded-2xl overflow-hidden glass-strong">
+            <div className="relative aspect-square rounded-2xl overflow-hidden bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg">
               {product.images[currentImageIndex] ? (
                 <Image
                   src={product.images[currentImageIndex]}
@@ -266,7 +266,7 @@ export default function ProductPage() {
             {/* Shop Info */}
             <Link 
               href={`/shop?shopId=${product.shop.id}`}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl glass hover:bg-white/5 transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md hover:bg-white/5 transition-colors"
             >
               <Store className="w-4 h-4 text-[#BFFF00]" />
               <span className="text-[#f0f0f5]">{product.shop.name}</span>
@@ -293,7 +293,7 @@ export default function ProductPage() {
             </div>
 
             {/* Price */}
-            <div className="glass-strong rounded-xl p-6">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl p-6">
               <div className="flex items-baseline gap-3 mb-2">
                 <span className="text-4xl font-bold text-[#BFFF00]">€{product.price.toFixed(2)}</span>
                 {product.comparePrice && (
@@ -332,14 +332,14 @@ export default function ProductPage() {
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                      className="p-2 rounded-lg glass hover:bg-white/10 transition-colors"
+                      className="p-2 rounded-lg bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md hover:bg-white/10 transition-colors"
                     >
                       <Minus className="w-4 h-4 text-white" />
                     </button>
                     <span className="w-12 text-center text-white font-semibold">{quantity}</span>
                     <button
                       onClick={() => setQuantity((q) => Math.min(product.stock, q + 1))}
-                      className="p-2 rounded-lg glass hover:bg-white/10 transition-colors"
+                      className="p-2 rounded-lg bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md hover:bg-white/10 transition-colors"
                     >
                       <Plus className="w-4 h-4 text-white" />
                     </button>
@@ -369,7 +369,7 @@ export default function ProductPage() {
 
             {/* Description */}
             {product.description && (
-              <div className="glass-strong rounded-xl p-6">
+              <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl p-6">
                 <h2 className="text-lg font-semibold text-white mb-3">Description</h2>
                 <p className="text-[#8888aa] whitespace-pre-wrap">{product.description}</p>
               </div>

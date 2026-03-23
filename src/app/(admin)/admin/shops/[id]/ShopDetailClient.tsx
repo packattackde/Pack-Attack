@@ -187,7 +187,7 @@ export function ShopDetailClient({
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all ${
                 activeTab === tab.id
                   ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/25'
-                  : 'glass text-[#8888aa] hover:text-white'
+                  : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white'
               }`}
             >
               <Icon className="w-4 h-4" />
@@ -215,7 +215,7 @@ export function ShopDetailClient({
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                   filterStatus === status
                     ? 'bg-orange-500/20 text-orange-400 ring-1 ring-orange-500/30'
-                    : 'glass text-[#8888aa] hover:text-white'
+                    : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white'
                 }`}
               >
                 {status === 'ALL' ? 'All' : statusConfig[status]?.label || status}
@@ -225,7 +225,7 @@ export function ShopDetailClient({
           </div>
 
           {filteredOrders.length === 0 ? (
-            <div className="glass-strong rounded-2xl p-12 text-center">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
               <ShoppingCart className="w-12 h-12 text-gray-600 mx-auto mb-3" />
               <p className="text-[#8888aa]">No orders found</p>
             </div>
@@ -239,7 +239,7 @@ export function ShopDetailClient({
                 const nextStatus = currentIdx >= 0 && currentIdx < STATUS_FLOW.length - 1 ? STATUS_FLOW[currentIdx + 1] : null;
 
                 return (
-                  <div key={order.id} className="glass-strong rounded-xl overflow-hidden">
+                  <div key={order.id} className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl overflow-hidden">
                     <div
                       className="flex items-center gap-4 px-5 py-4 cursor-pointer hover:bg-white/5 transition-colors"
                       onClick={() => setExpandedOrder(isExpanded ? null : order.id)}
@@ -270,7 +270,7 @@ export function ShopDetailClient({
                         <div className="grid md:grid-cols-2 gap-4">
                           <div className="space-y-2">
                             <h4 className="text-sm font-medium text-[#8888aa] flex items-center gap-2"><MapPin className="w-3.5 h-3.5" /> Shipping</h4>
-                            <div className="glass rounded-lg p-3 text-sm space-y-1">
+                            <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-lg p-3 text-sm space-y-1">
                               <p className="text-white font-medium">{order.shippingName}</p>
                               <p className="text-[#8888aa]">{order.shippingAddress}</p>
                               <p className="text-[#8888aa]">{order.shippingZip} {order.shippingCity}</p>
@@ -280,7 +280,7 @@ export function ShopDetailClient({
                           </div>
                           <div className="space-y-2">
                             <h4 className="text-sm font-medium text-[#8888aa] flex items-center gap-2"><Mail className="w-3.5 h-3.5" /> Customer</h4>
-                            <div className="glass rounded-lg p-3 text-sm space-y-1">
+                            <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-lg p-3 text-sm space-y-1">
                               <p className="text-white">{order.user.name || 'Unknown'}</p>
                               <p className="text-[#8888aa]">{order.user.email}</p>
                               <p className="text-[#8888aa]">{order.shippingEmail}</p>
@@ -296,7 +296,7 @@ export function ShopDetailClient({
                         <div className="space-y-2">
                           <h4 className="text-sm font-medium text-[#8888aa] flex items-center gap-2"><Truck className="w-3.5 h-3.5" /> Tracking</h4>
                           {editingTracking === order.id ? (
-                            <div className="glass rounded-lg p-3 space-y-2">
+                            <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-lg p-3 space-y-2">
                               <input
                                 value={trackingData.number}
                                 onChange={(e) => setTrackingData({ ...trackingData, number: e.target.value })}
@@ -311,11 +311,11 @@ export function ShopDetailClient({
                               />
                               <div className="flex gap-2">
                                 <button onClick={() => handleTrackingSave(order.id)} className="px-3 py-1.5 rounded-lg bg-orange-600 text-white text-xs font-medium hover:bg-orange-500">Save</button>
-                                <button onClick={() => setEditingTracking(null)} className="px-3 py-1.5 rounded-lg glass text-[#8888aa] text-xs hover:text-white">Cancel</button>
+                                <button onClick={() => setEditingTracking(null)} className="px-3 py-1.5 rounded-lg bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] text-xs hover:text-white">Cancel</button>
                               </div>
                             </div>
                           ) : (
-                            <div className="glass rounded-lg p-3 text-sm flex items-center justify-between">
+                            <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-lg p-3 text-sm flex items-center justify-between">
                               <div>
                                 {order.trackingNumber ? (
                                   <div className="flex items-center gap-2">
@@ -332,7 +332,7 @@ export function ShopDetailClient({
                               </div>
                               <button
                                 onClick={() => { setEditingTracking(order.id); setTrackingData({ number: order.trackingNumber || '', url: order.trackingUrl || '' }); }}
-                                className="px-3 py-1 rounded-lg glass text-xs text-orange-400 hover:text-white"
+                                className="px-3 py-1 rounded-lg bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-xs text-orange-400 hover:text-white"
                               >
                                 Edit
                               </button>
@@ -354,7 +354,7 @@ export function ShopDetailClient({
                               <button
                                 onClick={() => handleStatusUpdate(order.id, 'CANCELLED')}
                                 disabled={updatingOrder === order.id}
-                                className="px-4 py-2 rounded-lg glass text-red-400 text-sm font-medium hover:bg-red-500/20"
+                                className="px-4 py-2 rounded-lg bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-red-400 text-sm font-medium hover:bg-red-500/20"
                               >
                                 Cancel
                               </button>
@@ -375,12 +375,12 @@ export function ShopDetailClient({
       {activeTab === 'stock' && (
         <div>
           {initialProducts.length === 0 ? (
-            <div className="glass-strong rounded-2xl p-12 text-center">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
               <Database className="w-12 h-12 text-gray-600 mx-auto mb-3" />
               <p className="text-[#8888aa]">No products in stock</p>
             </div>
           ) : (
-            <div className="glass-strong rounded-2xl overflow-hidden">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
@@ -442,14 +442,14 @@ export function ShopDetailClient({
       {activeTab === 'boxes' && (
         <div>
           {boxes.length === 0 ? (
-            <div className="glass-strong rounded-2xl p-12 text-center">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
               <Package className="w-12 h-12 text-gray-600 mx-auto mb-3" />
               <p className="text-[#8888aa]">No boxes linked to this shop yet</p>
             </div>
           ) : (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {boxes.map((box) => (
-                <div key={box.id} className="glass-strong rounded-xl overflow-hidden">
+                <div key={box.id} className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl overflow-hidden">
                   <div className="relative h-36 bg-[#12123a]">
                     {box.imageUrl ? (
                       <Image src={box.imageUrl} alt={box.name} fill className="object-cover" />
@@ -484,7 +484,7 @@ export function ShopDetailClient({
       {/* Details Tab */}
       {activeTab === 'details' && (
         <div className="grid gap-6 md:grid-cols-2">
-          <div className="glass-strong rounded-2xl p-6 space-y-4">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 space-y-4">
             <h3 className="text-lg font-semibold text-white flex items-center gap-2">
               <Store className="w-5 h-5 text-orange-400" /> Shop Information
             </h3>
@@ -516,7 +516,7 @@ export function ShopDetailClient({
             </div>
           </div>
 
-          <div className="glass-strong rounded-2xl p-6 space-y-4">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 space-y-4">
             <h3 className="text-lg font-semibold text-white flex items-center gap-2">
               <User className="w-5 h-5 text-[#BFFF00]" /> Owner Information
             </h3>

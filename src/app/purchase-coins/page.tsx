@@ -216,7 +216,7 @@ function PurchaseCoinsContent() {
           transition: 'opacity 0.6s ease, transform 0.6s ease'
         }}
       >
-        <div className="inline-flex items-center gap-2 px-5 py-2.5 mb-8 rounded-full glass border border-amber-500/20">
+        <div className="inline-flex items-center gap-2 px-5 py-2.5 mb-8 rounded-full bg-[#1a1a4a] shadow-md border border-amber-500/20">
           <Sparkles className="w-5 h-5 text-amber-400" />
           <span className="text-amber-400 font-semibold">Power Up Your Collection</span>
         </div>
@@ -240,7 +240,7 @@ function PurchaseCoinsContent() {
             transition: 'opacity 0.6s ease 150ms, transform 0.6s ease 150ms'
           }}
         >
-          <div className="glass-strong rounded-3xl p-6 flex items-center justify-between border border-white/10">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-3xl p-6 flex items-center justify-between border border-white/10">
             <div className="flex items-center gap-4">
               <div className="p-4 rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-500/20">
                 <Coins className="w-7 h-7 text-amber-400" />
@@ -496,7 +496,7 @@ function PurchaseCoinsContent() {
             return (
               <div 
                 key={item.title}
-                className="glass rounded-2xl p-6 text-center hover:bg-white/[0.03] transition-colors"
+                className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-2xl p-6 text-center hover:bg-[#1a1a4a] transition-colors"
               >
                 <div className={`inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br ${item.gradient} mb-5 shadow-lg`}>
                   <Icon className="w-7 h-7 text-white" />

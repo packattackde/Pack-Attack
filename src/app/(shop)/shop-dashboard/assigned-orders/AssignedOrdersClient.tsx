@@ -159,30 +159,30 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
     <div className="space-y-6">
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <div className="glass rounded-xl p-4">
+        <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
           <p className="text-sm text-[#8888aa]">Total Assigned</p>
           <p className="text-2xl font-bold text-white">{stats.total}</p>
         </div>
-        <div className="glass rounded-xl p-4">
+        <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
           <p className="text-sm text-yellow-400">Pending</p>
           <p className="text-2xl font-bold text-white">{stats.pending}</p>
         </div>
-        <div className="glass rounded-xl p-4">
+        <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
           <p className="text-sm text-[#BFFF00]">Processing</p>
           <p className="text-2xl font-bold text-white">{stats.processing}</p>
         </div>
-        <div className="glass rounded-xl p-4">
+        <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
           <p className="text-sm text-purple-400">Shipped</p>
           <p className="text-2xl font-bold text-white">{stats.shipped}</p>
         </div>
-        <div className="glass rounded-xl p-4">
+        <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
           <p className="text-sm text-green-400">Delivered</p>
           <p className="text-2xl font-bold text-white">{stats.delivered}</p>
         </div>
       </div>
 
       {/* Info Banner */}
-      <div className="glass rounded-xl p-4 border border-purple-500/30 flex items-start gap-3">
+      <div className="bg-[#1a1a4a] shadow-md rounded-xl p-4 border border-purple-500/30 flex items-start gap-3">
         <AlertCircle className="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5" />
         <div>
           <p className="text-white font-medium">These orders have been assigned to you by an admin</p>
@@ -201,7 +201,7 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               filterStatus === status
                 ? 'bg-purple-500 text-white'
-                : 'glass text-[#8888aa] hover:text-white'
+                : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white'
             }`}
           >
             {status === 'ALL' ? 'All Orders' : statusConfig[status]?.label || status}
@@ -211,7 +211,7 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
 
       {/* Orders List */}
       {filteredOrders.length === 0 ? (
-        <div className="glass-strong rounded-2xl p-12 text-center">
+        <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
           <Package className="w-12 h-12 text-gray-600 mx-auto mb-4" />
           <p className="text-[#8888aa]">No assigned orders found</p>
           <p className="text-sm text-gray-500 mt-2">Orders assigned to you by admins will appear here</p>
@@ -224,7 +224,7 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
             const isExpanded = expandedOrder === order.id;
 
             return (
-              <div key={order.id} className="glass-strong rounded-xl overflow-hidden">
+              <div key={order.id} className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl overflow-hidden">
                 {/* Order Header */}
                 <div
                   className="p-4 cursor-pointer hover:bg-white/5 transition-colors"
@@ -276,7 +276,7 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
                   <div className="border-t border-[rgba(255,255,255,0.06)] p-4 space-y-4">
                     <div className="grid md:grid-cols-2 gap-4">
                       {/* Customer Info */}
-                      <div className="glass rounded-xl p-4">
+                      <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                         <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
                           <User className="w-4 h-4 text-[#BFFF00]" />
                           Customer
@@ -294,7 +294,7 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
                       </div>
 
                       {/* Shipping Info */}
-                      <div className="glass rounded-xl p-4">
+                      <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                         <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
                           <MapPin className="w-4 h-4 text-[#BFFF00]" />
                           Shipping Address
@@ -329,7 +329,7 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
                     </div>
 
                     {/* Tracking Information */}
-                    <div className="glass rounded-xl p-4">
+                    <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                       <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
                         <Link2 className="w-4 h-4 text-green-400" />
                         Tracking & Notes
@@ -399,14 +399,14 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
 
                     {/* Customer Notes */}
                     {order.notes && (
-                      <div className="glass rounded-xl p-4">
+                      <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                         <h4 className="font-semibold text-white mb-2">Customer Notes</h4>
                         <p className="text-sm text-[#8888aa]">{order.notes}</p>
                       </div>
                     )}
 
                     {/* Order Items */}
-                    <div className="glass rounded-xl p-4">
+                    <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                       <h4 className="font-semibold text-white mb-3">Order Items ({order.items.length})</h4>
                       <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2">
                         {order.items.map((item) => (
@@ -447,7 +447,7 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
                               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all disabled:opacity-50 ${
                                 order.status === s
                                   ? cfg.color + ' ring-2 ring-offset-2 ring-offset-gray-900'
-                                  : 'glass hover:bg-white/10 text-[#8888aa]'
+                                  : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md hover:bg-white/10 text-[#8888aa]'
                               }`}
                             >
                               {cfg.label}

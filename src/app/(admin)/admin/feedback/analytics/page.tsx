@@ -182,21 +182,21 @@ export default function FeedbackAnalyticsPage() {
 
         {/* Summary Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
+          <div className="rounded-xl border border-white/[0.06] bg-[#1e1e55] p-4">
             <div className="flex items-center gap-2 mb-2">
               <MessageSquare className="w-4 h-4 text-[#BFFF00]" />
               <span className="text-xs text-gray-500 font-medium">Total</span>
             </div>
             <p className="text-2xl font-bold text-white">{summary.totalCount}</p>
           </div>
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
+          <div className="rounded-xl border border-white/[0.06] bg-[#1e1e55] p-4">
             <div className="flex items-center gap-2 mb-2">
               <Loader2 className="w-4 h-4 text-amber-400" />
               <span className="text-xs text-gray-500 font-medium">Active</span>
             </div>
             <p className="text-2xl font-bold text-white">{summary.openCount}</p>
           </div>
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
+          <div className="rounded-xl border border-white/[0.06] bg-[#1e1e55] p-4">
             <div className="flex items-center gap-2 mb-2">
               <Star className="w-4 h-4 text-amber-400" />
               <span className="text-xs text-gray-500 font-medium">Avg Rating</span>
@@ -205,14 +205,14 @@ export default function FeedbackAnalyticsPage() {
               {summary.avgExperience ? summary.avgExperience.toFixed(1) : 'N/A'}
             </p>
           </div>
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
+          <div className="rounded-xl border border-white/[0.06] bg-[#1e1e55] p-4">
             <div className="flex items-center gap-2 mb-2">
               <Clock className="w-4 h-4 text-teal-400" />
               <span className="text-xs text-gray-500 font-medium">Avg Response</span>
             </div>
             <p className="text-2xl font-bold text-white">{formatDuration(summary.avgResponseSeconds)}</p>
           </div>
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
+          <div className="rounded-xl border border-white/[0.06] bg-[#1e1e55] p-4">
             <div className="flex items-center gap-2 mb-2">
               <CheckCircle2 className="w-4 h-4 text-green-400" />
               <span className="text-xs text-gray-500 font-medium">Avg Resolution</span>
@@ -246,7 +246,7 @@ export default function FeedbackAnalyticsPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Category Health Table */}
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
+          <div className="rounded-xl border border-white/[0.06] bg-[#1e1e55] p-5">
             <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
               <BarChart3 className="w-4 h-4 text-teal-400" />
               Category Health
@@ -289,7 +289,7 @@ export default function FeedbackAnalyticsPage() {
           </div>
 
           {/* Status Distribution */}
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
+          <div className="rounded-xl border border-white/[0.06] bg-[#1e1e55] p-5">
             <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
               <TrendingUp className="w-4 h-4 text-teal-400" />
               Status Distribution
@@ -336,7 +336,7 @@ export default function FeedbackAnalyticsPage() {
         {/* Volume Chart + Response Times */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Daily Volume */}
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
+          <div className="rounded-xl border border-white/[0.06] bg-[#1e1e55] p-5">
             <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
               <TrendingUp className="w-4 h-4 text-teal-400" />
               Daily Volume (30 days)
@@ -369,7 +369,7 @@ export default function FeedbackAnalyticsPage() {
           </div>
 
           {/* Response Time by Category */}
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
+          <div className="rounded-xl border border-white/[0.06] bg-[#1e1e55] p-5">
             <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
               <Clock className="w-4 h-4 text-teal-400" />
               Avg Response Time by Category
@@ -414,7 +414,7 @@ export default function FeedbackAnalyticsPage() {
         {/* Admin Leaderboard */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Top Claimers */}
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
+          <div className="rounded-xl border border-white/[0.06] bg-[#1e1e55] p-5">
             <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
               <Users className="w-4 h-4 text-teal-400" />
               Top Claimers
@@ -422,7 +422,7 @@ export default function FeedbackAnalyticsPage() {
             {topClaimers.length > 0 ? (
               <div className="space-y-2">
                 {topClaimers.map((entry, i) => (
-                  <div key={entry.user?.id || i} className="flex items-center justify-between px-3 py-2 rounded-lg bg-white/[0.02]">
+                  <div key={entry.user?.id || i} className="flex items-center justify-between px-3 py-2 rounded-lg bg-[#1e1e55]">
                     <div className="flex items-center gap-3">
                       <span className="text-xs font-bold text-gray-500 w-5">{i + 1}.</span>
                       <span className="text-sm text-[#f0f0f5]">{entry.user?.name || entry.user?.email || 'Unknown'}</span>
@@ -437,7 +437,7 @@ export default function FeedbackAnalyticsPage() {
           </div>
 
           {/* Top Resolvers */}
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
+          <div className="rounded-xl border border-white/[0.06] bg-[#1e1e55] p-5">
             <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-green-400" />
               Most Active (Status Changes)
@@ -445,7 +445,7 @@ export default function FeedbackAnalyticsPage() {
             {topResolvers.length > 0 ? (
               <div className="space-y-2">
                 {topResolvers.map((entry, i) => (
-                  <div key={entry.user?.id || i} className="flex items-center justify-between px-3 py-2 rounded-lg bg-white/[0.02]">
+                  <div key={entry.user?.id || i} className="flex items-center justify-between px-3 py-2 rounded-lg bg-[#1e1e55]">
                     <div className="flex items-center gap-3">
                       <span className="text-xs font-bold text-gray-500 w-5">{i + 1}.</span>
                       <span className="text-sm text-[#f0f0f5]">{entry.user?.name || entry.user?.email || 'Unknown'}</span>

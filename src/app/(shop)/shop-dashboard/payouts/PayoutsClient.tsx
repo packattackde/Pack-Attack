@@ -138,7 +138,7 @@ export function PayoutsClient({
     <div className="space-y-8">
       {/* Wallet Overview */}
       <div className="grid md:grid-cols-4 gap-4">
-        <div className="glass-strong rounded-2xl p-6 relative overflow-hidden">
+        <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent" />
           <div className="relative">
             <Coins className="w-8 h-8 text-amber-400 mb-3" />
@@ -147,7 +147,7 @@ export function PayoutsClient({
           </div>
         </div>
 
-        <div className="glass-strong rounded-2xl p-6 relative overflow-hidden">
+        <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent" />
           <div className="relative">
             <Package className="w-8 h-8 text-emerald-400 mb-3" />
@@ -158,7 +158,7 @@ export function PayoutsClient({
           </div>
         </div>
 
-        <div className="glass-strong rounded-2xl p-6 relative overflow-hidden">
+        <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent" />
           <div className="relative">
             <Banknote className="w-8 h-8 text-green-400 mb-3" />
@@ -167,7 +167,7 @@ export function PayoutsClient({
           </div>
         </div>
 
-        <div className="glass-strong rounded-2xl p-6 flex flex-col justify-center">
+        <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 flex flex-col justify-center">
           {hasPending ? (
             <div className="text-center">
               <AlertCircle className="w-8 h-8 text-yellow-400 mx-auto mb-2" />
@@ -207,7 +207,7 @@ export function PayoutsClient({
             className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
               filterStatus === s
                 ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg'
-                : 'glass text-[#8888aa] hover:text-white'
+                : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white'
             }`}
           >
             {s === 'ALL' ? 'All' : statusConfig[s]?.label || s}
@@ -220,7 +220,7 @@ export function PayoutsClient({
       <div>
         <h2 className="text-xl font-bold text-white mb-4">Payout History</h2>
         {filteredPayouts.length === 0 ? (
-          <div className="glass-strong rounded-2xl p-12 text-center">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
             <Wallet className="w-12 h-12 text-gray-700 mx-auto mb-3" />
             <p className="text-[#8888aa]">No payouts yet</p>
             <p className="text-gray-600 text-sm mt-1">Request a payout when you have delivered items</p>
@@ -233,7 +233,7 @@ export function PayoutsClient({
               const isExpanded = expandedPayout === payout.id;
 
               return (
-                <div key={payout.id} className="glass-strong rounded-xl overflow-hidden">
+                <div key={payout.id} className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl overflow-hidden">
                   <div
                     className="p-5 cursor-pointer hover:bg-white/5 transition-colors"
                     onClick={() => setExpandedPayout(isExpanded ? null : payout.id)}
@@ -306,7 +306,7 @@ export function PayoutsClient({
                                 </button>
                                 <button
                                   onClick={() => { setResubmitId(null); setResubmitMessage(''); }}
-                                  className="px-4 py-2 rounded-xl text-sm font-medium glass text-[#8888aa] hover:text-white transition-all"
+                                  className="px-4 py-2 rounded-xl text-sm font-medium bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white transition-all"
                                 >
                                   Cancel
                                 </button>
@@ -336,7 +336,7 @@ export function PayoutsClient({
                       <div className="text-sm font-medium text-[#8888aa] mb-2">Included Items</div>
                       <div className="space-y-2 max-h-80 overflow-y-auto">
                         {payout.items.map((item) => (
-                          <div key={item.id} className="flex items-center gap-3 glass rounded-lg p-3">
+                          <div key={item.id} className="flex items-center gap-3 bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-lg p-3">
                             {item.cardImage && (
                               <img
                                 src={item.cardImage}

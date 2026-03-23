@@ -66,7 +66,7 @@ export default async function AdminUsersPage() {
 
         {/* Header */}
         <div className="mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full glass text-sm">
+          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
             <Users className="w-4 h-4 text-[#BFFF00]" />
             <span className="text-[#f0f0f5]">User Management</span>
           </div>

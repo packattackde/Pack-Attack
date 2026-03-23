@@ -209,7 +209,7 @@ export default function ShopCartPage() {
         </div>
 
         {isEmpty ? (
-          <div className="glass-strong rounded-2xl p-12 text-center max-w-md mx-auto">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center max-w-md mx-auto">
             <ShoppingCart className="w-16 h-16 text-gray-600 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-white mb-2">Your Cart is Empty</h2>
             <p className="text-[#8888aa] mb-6">Browse our shop and add some products!</p>
@@ -231,7 +231,7 @@ export default function ShopCartPage() {
                 const shopName = shopItems[0]?.product.shop.name;
                 
                 return (
-                  <div key={shopId} className="glass-strong rounded-2xl overflow-hidden">
+                  <div key={shopId} className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl overflow-hidden">
                     {/* Shop Header */}
                     <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.06)]/50 flex items-center gap-2">
                       <Store className="w-4 h-4 text-[#BFFF00]" />
@@ -277,7 +277,7 @@ export default function ShopCartPage() {
                                 <button
                                   onClick={() => updateQuantity(item.id, item.quantity - 1)}
                                   disabled={updating === item.id || item.quantity <= 1}
-                                  className="p-1.5 rounded-lg glass hover:bg-white/10 transition-colors disabled:opacity-50"
+                                  className="p-1.5 rounded-lg bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md hover:bg-white/10 transition-colors disabled:opacity-50"
                                 >
                                   <Minus className="w-4 h-4 text-white" />
                                 </button>
@@ -287,7 +287,7 @@ export default function ShopCartPage() {
                                 <button
                                   onClick={() => updateQuantity(item.id, item.quantity + 1)}
                                   disabled={updating === item.id || item.quantity >= item.product.stock}
-                                  className="p-1.5 rounded-lg glass hover:bg-white/10 transition-colors disabled:opacity-50"
+                                  className="p-1.5 rounded-lg bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md hover:bg-white/10 transition-colors disabled:opacity-50"
                                 >
                                   <Plus className="w-4 h-4 text-white" />
                                 </button>
@@ -328,7 +328,7 @@ export default function ShopCartPage() {
 
             {/* Order Summary */}
             <div>
-              <div className="glass-strong rounded-2xl p-6 sticky top-24">
+              <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 sticky top-24">
                 <h2 className="text-xl font-bold text-white mb-6">Order Summary</h2>
 
                 <div className="space-y-3 mb-6">
@@ -359,7 +359,7 @@ export default function ShopCartPage() {
 
                 <Link
                   href="/shop"
-                  className="w-full mt-3 py-3 glass text-[#f0f0f5] font-medium rounded-xl hover:bg-white/10 transition-colors flex items-center justify-center gap-2"
+                  className="w-full mt-3 py-3 bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#f0f0f5] font-medium rounded-xl hover:bg-white/10 transition-colors flex items-center justify-center gap-2"
                 >
                   Continue Shopping
                 </Link>

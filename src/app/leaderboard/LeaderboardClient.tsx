@@ -105,7 +105,7 @@ export function LeaderboardClient() {
       <div className="relative container py-12">
         {/* Header */}
         <div className="mb-10 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full glass text-sm border border-amber-500/20">
+          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-[#1a1a4a] shadow-md text-sm border border-amber-500/20">
             <Trophy className="w-4 h-4 text-amber-400" />
             <span className="text-[#f0f0f5]">Battle Rankings</span>
           </div>
@@ -118,7 +118,7 @@ export function LeaderboardClient() {
           </p>
 
           {/* Period Toggle */}
-          <div className="inline-flex items-center gap-1 p-1 mb-6 rounded-xl glass border border-[rgba(255,255,255,0.06)]">
+          <div className="inline-flex items-center gap-1 p-1 mb-6 rounded-xl bg-[#1a1a4a] shadow-md border border-[rgba(255,255,255,0.06)]">
             <button
               onClick={() => setPeriod('current')}
               className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all ${
@@ -154,12 +154,12 @@ export function LeaderboardClient() {
         </div>
 
         {loading ? (
-          <div className="glass-strong rounded-2xl p-12 text-center">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
             <div className="w-12 h-12 border-4 border-amber-400/30 border-t-amber-400 rounded-full animate-spin mx-auto mb-4" />
             <span className="text-[#8888aa]">Loading rankings...</span>
           </div>
         ) : !data || data.leaderboard.length === 0 ? (
-          <div className="glass-strong rounded-2xl p-12 text-center">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
             <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-500/20">
               <Trophy className="w-10 h-10 text-amber-400" />
             </div>
@@ -180,7 +180,7 @@ export function LeaderboardClient() {
               {/* 2nd Place */}
               <div className="order-2 md:order-1 md:mt-8">
                 {top3[1] ? (
-                  <div className="glass-strong rounded-2xl p-6 text-center border border-slate-500/30">
+                  <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 text-center border border-slate-500/30">
                     <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-gradient-to-br from-slate-300 to-slate-500 flex items-center justify-center">
                       <span className="text-2xl font-black text-white">2</span>
                     </div>
@@ -202,7 +202,7 @@ export function LeaderboardClient() {
                     </div>
                   </div>
                 ) : (
-                  <div className="glass rounded-2xl p-6 text-center border border-[rgba(255,255,255,0.06)] min-h-[280px] flex items-center justify-center">
+                  <div className="bg-[#1a1a4a] shadow-md rounded-2xl p-6 text-center border border-[rgba(255,255,255,0.06)] min-h-[280px] flex items-center justify-center">
                     <span className="text-gray-600 text-2xl">—</span>
                   </div>
                 )}
@@ -211,7 +211,7 @@ export function LeaderboardClient() {
               {/* 1st Place */}
               <div className="order-1 md:order-2">
                 {top3[0] ? (
-                  <div className="glass-strong rounded-2xl p-6 text-center border-2 border-amber-500/50 relative overflow-hidden">
+                  <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 text-center border-2 border-amber-500/50 relative overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-b from-amber-500/10 to-transparent" />
                     <div className="relative">
                       <Crown className="w-12 h-12 mx-auto mb-2 text-amber-400" />
@@ -239,7 +239,7 @@ export function LeaderboardClient() {
                     </div>
                   </div>
                 ) : (
-                  <div className="glass rounded-2xl p-6 text-center border border-[rgba(255,255,255,0.06)] min-h-[320px] flex items-center justify-center">
+                  <div className="bg-[#1a1a4a] shadow-md rounded-2xl p-6 text-center border border-[rgba(255,255,255,0.06)] min-h-[320px] flex items-center justify-center">
                     <span className="text-gray-600 text-2xl">—</span>
                   </div>
                 )}
@@ -248,7 +248,7 @@ export function LeaderboardClient() {
               {/* 3rd Place */}
               <div className="order-3 md:mt-8">
                 {top3[2] ? (
-                  <div className="glass-strong rounded-2xl p-6 text-center border border-orange-600/30">
+                  <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 text-center border border-orange-600/30">
                     <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
                       <span className="text-2xl font-black text-white">3</span>
                     </div>
@@ -270,7 +270,7 @@ export function LeaderboardClient() {
                     </div>
                   </div>
                 ) : (
-                  <div className="glass rounded-2xl p-6 text-center border border-[rgba(255,255,255,0.06)] min-h-[280px] flex items-center justify-center">
+                  <div className="bg-[#1a1a4a] shadow-md rounded-2xl p-6 text-center border border-[rgba(255,255,255,0.06)] min-h-[280px] flex items-center justify-center">
                     <span className="text-gray-600 text-2xl">—</span>
                   </div>
                 )}
@@ -279,7 +279,7 @@ export function LeaderboardClient() {
 
             {/* Rest of Rankings */}
             {restOfLeaderboard.length > 0 && (
-              <div className="glass-strong rounded-2xl overflow-hidden mb-10">
+              <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl overflow-hidden mb-10">
                 <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.06)]">
                   <h2 className="font-semibold text-white text-center">Full Rankings</h2>
                 </div>
@@ -317,7 +317,7 @@ export function LeaderboardClient() {
             )}
 
             {/* CTA */}
-            <div className="glass-strong rounded-2xl p-8 text-center">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-8 text-center">
               <div className="inline-flex items-center justify-center w-16 h-16 mb-4 rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-500/20">
                 <Swords className="w-8 h-8 text-amber-400" />
               </div>

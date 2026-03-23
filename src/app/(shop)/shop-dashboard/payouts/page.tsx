@@ -102,7 +102,7 @@ export default async function ShopPayoutsPage({
             Back to Dashboard
           </Link>
 
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass text-sm mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm mb-3">
             <Store className="w-4 h-4 text-emerald-400" />
             <span className="text-[#f0f0f5]">{isAdmin && targetShop ? `Admin → ${shop.name}` : shop.name}</span>
           </div>

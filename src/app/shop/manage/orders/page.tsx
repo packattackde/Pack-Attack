@@ -178,7 +178,7 @@ export default function ManageOrdersPage() {
 
         {/* Orders */}
         {orders.length === 0 ? (
-          <div className="glass-strong rounded-2xl p-12 text-center">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
             <ShoppingBag className="w-16 h-16 text-gray-600 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-white mb-2">No Orders Yet</h2>
             <p className="text-[#8888aa]">Orders will appear here when customers purchase your products</p>
@@ -186,7 +186,7 @@ export default function ManageOrdersPage() {
         ) : (
           <div className="space-y-4">
             {orders.map((order) => (
-              <div key={order.id} className="glass-strong rounded-2xl overflow-hidden">
+              <div key={order.id} className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl overflow-hidden">
                 {/* Order Header */}
                 <button
                   onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
@@ -307,7 +307,7 @@ export default function ManageOrdersPage() {
                             value={order.status}
                             onChange={(e) => updateOrderStatus(order.id, e.target.value)}
                             disabled={updating === order.id}
-                            className="w-full px-4 py-3 rounded-xl glass text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none disabled:opacity-50"
+                            className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none disabled:opacity-50"
                           >
                             {statusOptions.map((status) => (
                               <option key={status.value} value={status.value} className="bg-[#0B0B2B]">

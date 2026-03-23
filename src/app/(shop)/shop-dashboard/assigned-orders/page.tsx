@@ -90,7 +90,7 @@ export default async function AssignedOrdersPage({
           <h1 className="text-3xl font-bold text-white">Assigned Orders</h1>
           <p className="text-[#8888aa] mt-1">No shop associated with your account</p>
         </div>
-        <div className="glass-strong rounded-2xl p-12 text-center">
+        <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
           <p className="text-[#8888aa]">Please contact an administrator to set up your shop.</p>
         </div>
       </div>

@@ -555,7 +555,7 @@ export default function AdminFeedbackPage() {
                   className={`rounded-xl border transition-all duration-200 ${
                     isExpanded ? 'border-white/[0.12] bg-white/[0.04]'
                     : isSelected ? 'border-teal-500/30 bg-teal-500/[0.03]'
-                    : 'border-white/[0.06] bg-white/[0.02] hover:border-white/[0.1]'
+                    : 'border-white/[0.06] bg-[#1e1e55] hover:border-white/[0.1]'
                   }`}
                 >
                   {/* ── Row header ── */}
@@ -633,7 +633,7 @@ export default function AdminFeedbackPage() {
                           </div>
                         )}
                         {fb.userAgent && (
-                          <div className="mt-3 text-xs text-gray-600 bg-white/[0.02] rounded-lg p-3 border border-white/[0.04]">
+                          <div className="mt-3 text-xs text-gray-600 bg-[#1e1e55] rounded-lg p-3 border border-white/[0.04]">
                             <span className="font-medium text-gray-500">User Agent:</span> {fb.userAgent}
                           </div>
                         )}
@@ -656,7 +656,7 @@ export default function AdminFeedbackPage() {
                                   return (
                                     <button key={key} onClick={() => updateStatus(fb.id, key)} disabled={isCurrent || updatingId === fb.id}
                                       className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                                        isCurrent ? `bg-${conf.color}-500/20 text-${conf.color}-400 border border-${conf.color}-500/30` : 'bg-white/[0.03] text-[#8888aa] border border-white/[0.06] hover:bg-white/[0.06] hover:text-white'
+                                        isCurrent ? `bg-${conf.color}-500/20 text-${conf.color}-400 border border-${conf.color}-500/30` : 'bg-[#1a1a4a] text-[#8888aa] border border-white/[0.06] hover:bg-white/[0.06] hover:text-white'
                                       } disabled:opacity-50`}>
                                       <Icon className="w-3 h-3" />{conf.label}
                                     </button>
@@ -767,7 +767,7 @@ export default function AdminFeedbackPage() {
                               <textarea
                                 value={editingNotes[fb.id] ?? fb.adminNotes ?? ''}
                                 onChange={(e) => handleNotesChange(fb.id, e.target.value)}
-                                className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-[#f0f0f5] placeholder-gray-600 focus:border-teal-500/30 focus:ring-1 focus:ring-teal-500/15 outline-none transition-all resize-y min-h-[60px]"
+                                className="w-full px-3 py-2 rounded-lg bg-[#1a1a4a] border border-white/[0.06] text-sm text-[#f0f0f5] placeholder-gray-600 focus:border-teal-500/30 focus:ring-1 focus:ring-teal-500/15 outline-none transition-all resize-y min-h-[60px]"
                                 placeholder="Internal notes (auto-saves)..."
                                 rows={2}
                               />
@@ -790,7 +790,7 @@ export default function AdminFeedbackPage() {
                         ) : fb.messages && fb.messages.length > 0 ? (
                           <div className="space-y-3 mb-4 max-h-80 overflow-y-auto pr-1">
                             {fb.messages.map((msg) => (
-                              <div key={msg.id} className={`rounded-lg p-3 text-sm ${msg.isAdmin ? 'bg-indigo-500/[0.07] border border-indigo-500/15 ml-4' : 'bg-white/[0.03] border border-white/[0.06] mr-4'}`}>
+                              <div key={msg.id} className={`rounded-lg p-3 text-sm ${msg.isAdmin ? 'bg-indigo-500/[0.07] border border-indigo-500/15 ml-4' : 'bg-[#1a1a4a] border border-white/[0.06] mr-4'}`}>
                                 <div className="flex items-center gap-2 mb-1.5">
                                   <span className={`text-xs font-semibold ${msg.isAdmin ? 'text-indigo-400' : 'text-[#f0f0f5]'}`}>
                                     {msg.isAdmin && <Shield className="w-3 h-3 inline mr-1" />}
@@ -920,12 +920,12 @@ export default function AdminFeedbackPage() {
         {totalPages > 1 && (
           <div className="flex items-center justify-center gap-2 mt-8">
             <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1}
-              className="flex items-center justify-center w-9 h-9 rounded-lg border border-white/[0.06] bg-white/[0.02] text-[#8888aa] hover:bg-white/[0.06] hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all touch-target">
+              className="flex items-center justify-center w-9 h-9 rounded-lg border border-white/[0.06] bg-[#1e1e55] text-[#8888aa] hover:bg-white/[0.06] hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all touch-target">
               <ChevronLeft className="w-4 h-4" />
             </button>
             <span className="text-sm text-[#8888aa] tabular-nums px-3">Page {page} of {totalPages}</span>
             <button onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages}
-              className="flex items-center justify-center w-9 h-9 rounded-lg border border-white/[0.06] bg-white/[0.02] text-[#8888aa] hover:bg-white/[0.06] hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all touch-target">
+              className="flex items-center justify-center w-9 h-9 rounded-lg border border-white/[0.06] bg-[#1e1e55] text-[#8888aa] hover:bg-white/[0.06] hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all touch-target">
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
