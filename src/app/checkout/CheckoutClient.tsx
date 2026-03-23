@@ -340,7 +340,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                   className={`relative p-4 rounded-xl border-2 transition-all text-left ${
                     shippingMethod === 'COINS'
                       ? 'border-amber-500 bg-amber-500/10'
-                      : 'border-[rgba(255,255,255,0.06)] bg-[#12123a]/60 hover:border-gray-600'
+                      : 'border-[rgba(255,255,255,0.06)] bg-[#12123a]/60 hover:border-[rgba(255,255,255,0.1)]'
                   }`}
                 >
                   {shippingMethod === 'COINS' && (
@@ -372,7 +372,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                   className={`relative p-4 rounded-xl border-2 transition-all text-left ${
                     shippingMethod === 'EUROS'
                       ? 'border-green-500 bg-green-500/10'
-                      : 'border-[rgba(255,255,255,0.06)] bg-[#12123a]/60 hover:border-gray-600'
+                      : 'border-[rgba(255,255,255,0.06)] bg-[#12123a]/60 hover:border-[rgba(255,255,255,0.1)]'
                   }`}
                 >
                   {shippingMethod === 'EUROS' && (

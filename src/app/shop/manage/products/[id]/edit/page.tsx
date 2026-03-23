@@ -380,7 +380,7 @@ export default function EditProductPage() {
                     id="featured"
                     checked={formData.featured}
                     onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                    className="w-5 h-5 rounded bg-[#12123a] border-gray-600 text-[#BFFF00] focus:ring-[rgba(191,255,0,0.3)]"
+                    className="w-5 h-5 rounded bg-[#12123a] border-[rgba(255,255,255,0.06)] text-[#BFFF00] focus:ring-[rgba(191,255,0,0.3)]"
                   />
                   <label htmlFor="featured" className="text-[#f0f0f5]">Featured</label>
                 </div>
@@ -391,7 +391,7 @@ export default function EditProductPage() {
                     id="isActive"
                     checked={formData.isActive}
                     onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                    className="w-5 h-5 rounded bg-[#12123a] border-gray-600 text-[#BFFF00] focus:ring-[rgba(191,255,0,0.3)]"
+                    className="w-5 h-5 rounded bg-[#12123a] border-[rgba(255,255,255,0.06)] text-[#BFFF00] focus:ring-[rgba(191,255,0,0.3)]"
                   />
                   <label htmlFor="isActive" className="text-[#f0f0f5]">Active (visible in shop)</label>
                 </div>

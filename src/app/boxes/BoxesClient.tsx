@@ -264,7 +264,7 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
                                 unoptimized
                               />
                             ) : (
-                              <div className="w-full h-full flex items-center justify-center bg-gray-700">
+                              <div className="w-full h-full flex items-center justify-center bg-[#12123a]">
                                 <span className="text-[8px] text-gray-500">?</span>
                               </div>
                             )}

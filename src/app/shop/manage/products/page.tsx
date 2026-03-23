@@ -258,7 +258,7 @@ export default function ManageProductsPage() {
                     <th className="px-6 py-4 text-right text-sm font-semibold text-[#8888aa]">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-700/50">
+                <tbody className="divide-y divide-[rgba(255,255,255,0.06)]">
                   {filteredProducts.map((product) => (
                     <tr key={product.id} className="hover:bg-white/5 transition-colors">
                       <td className="px-6 py-4">

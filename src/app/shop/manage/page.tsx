@@ -303,7 +303,7 @@ export default function ShopManagePage() {
 
           <Link href="/shop/manage/settings" className="glass-strong rounded-2xl p-6 hover:bg-white/5 transition-colors group">
             <div className="flex items-center gap-4 mb-4">
-              <div className="p-3 rounded-xl bg-[rgba(191,255,0,0.1)] group-hover:bg-purple-500/30 transition-colors">
+              <div className="p-3 rounded-xl bg-[rgba(191,255,0,0.1)] group-hover:bg-[rgba(191,255,0,0.2)] transition-colors">
                 <Settings className="w-6 h-6 text-[#BFFF00]" />
               </div>
               <h2 className="text-xl font-bold text-white">Settings</h2>
