@@ -134,7 +134,7 @@ export default async function BattlesPage() {
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-2 h-2 rounded-full bg-green-500 pulse-live" />
                   <h2 className="text-2xl font-bold text-white">Active Battles</h2>
-                  <span className="text-sm text-gray-500">({activeBattles.length})</span>
+                  <span className="text-sm text-[#8888aa]">({activeBattles.length})</span>
                 </div>
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                   {activeBattles.map((battle) => {
@@ -216,7 +216,7 @@ export default async function BattlesPage() {
                 <div className="flex items-center gap-3 mb-6">
                   <Trophy className="w-5 h-5 text-amber-400" />
                   <h2 className="text-2xl font-bold text-white">Completed</h2>
-                  <span className="text-sm text-gray-500">({completedBattles.length})</span>
+                  <span className="text-sm text-[#8888aa]">({completedBattles.length})</span>
                 </div>
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                   {completedBattles.map((battle) => (

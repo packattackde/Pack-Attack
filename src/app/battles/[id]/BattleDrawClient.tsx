@@ -594,7 +594,7 @@ export default function BattleDrawClient({ battle: initialBattle, currentUserId,
       case 'CANCELLED':
         return <span className="px-3 py-1 rounded-full bg-red-500/20 text-red-400 text-sm font-semibold">Cancelled</span>;
       default:
-        return <span className="px-3 py-1 rounded-full bg-gray-500/20 text-[#8888aa] text-sm font-semibold">{battle.status}</span>;
+        return <span className="px-3 py-1 rounded-full bg-[#12123a]/50 text-[#8888aa] text-sm font-semibold">{battle.status}</span>;
     }
   };
 
@@ -714,7 +714,7 @@ export default function BattleDrawClient({ battle: initialBattle, currentUserId,
                   disabled={readyLoading}
                   size="lg"
                   className={amIReady 
-                    ? 'bg-gray-600 hover:bg-[#12123a] text-white font-bold px-8' 
+                    ? 'bg-[#12123a] hover:bg-[#12123a]/80 text-white font-bold px-8' 
                     : 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold px-8'
                   }
                 >
@@ -845,7 +845,7 @@ export default function BattleDrawClient({ battle: initialBattle, currentUserId,
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md"
+              className="fixed inset-0 z-50 flex items-center justify-center bg-[#0B0B2B]/80 backdrop-blur-md"
             >
               <motion.div
                 initial={{ scale: 0.5, rotateY: 180 }}
@@ -907,7 +907,7 @@ export default function BattleDrawClient({ battle: initialBattle, currentUserId,
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+              className="fixed inset-0 z-50 flex items-center justify-center bg-[#0B0B2B]/80 backdrop-blur-sm"
             >
               <motion.div
                 initial={{ scale: 0.8, y: 20 }}
@@ -1033,7 +1033,7 @@ export default function BattleDrawClient({ battle: initialBattle, currentUserId,
                             <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold ${
                               participant.isReady 
                                 ? 'bg-green-500/20 text-green-400' 
-                                : 'bg-gray-500/20 text-[#8888aa]'
+                                : 'bg-[#12123a]/50 text-[#8888aa]'
                             }`}>
                               {participant.isReady ? (
                                 <>
@@ -1112,7 +1112,7 @@ export default function BattleDrawClient({ battle: initialBattle, currentUserId,
                       className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10"
                     >
                       <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#BFFF00] to-[#a0d600] flex items-center justify-center text-white font-bold">
                           {round.roundNumber}
                         </div>
                         <div>
@@ -1185,7 +1185,7 @@ export default function BattleDrawClient({ battle: initialBattle, currentUserId,
                             )}
                             {/* Value badge on top card */}
                             {index === 1 && card.coinValue && (
-                              <div className="absolute bottom-1 left-1/2 -translate-x-1/2 px-1.5 py-0.5 rounded bg-black/80 flex items-center gap-0.5">
+                              <div className="absolute bottom-1 left-1/2 -translate-x-1/2 px-1.5 py-0.5 rounded bg-[#0B0B2B]/80 flex items-center gap-0.5">
                                 <Coins className="w-2 h-2 text-amber-400" />
                                 <span className="text-[8px] font-bold text-amber-400">{card.coinValue}</span>
                               </div>
@@ -1203,11 +1203,11 @@ export default function BattleDrawClient({ battle: initialBattle, currentUserId,
                       fill
                       className="object-cover opacity-80"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B2B] to-transparent" />
                   </div>
                 ) : (
                   <div className="flex items-center justify-center h-full">
-                    <Package className="w-12 h-12 text-gray-600" />
+                    <Package className="w-12 h-12 text-[#8888aa]" />
                   </div>
                 )}
 
@@ -1245,7 +1245,7 @@ export default function BattleDrawClient({ battle: initialBattle, currentUserId,
                   <Link href="/battles">View All Battles</Link>
                 </Button>
                 {currentUserId && (
-                  <Button asChild className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
+                  <Button asChild className="w-full bg-[#BFFF00] hover:bg-[#d4ff4d] text-black">
                     <Link href="/battles/create">Create New Battle</Link>
                   </Button>
                 )}

@@ -43,7 +43,7 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
       case 'CANCELLED':
         return <span className="px-3 py-1 rounded-full bg-red-500/20 text-red-400 text-sm font-semibold">Cancelled</span>;
       default:
-        return <span className="px-3 py-1 rounded-full bg-gray-500/20 text-[#8888aa] text-sm font-semibold">{battle.status}</span>;
+        return <span className="px-3 py-1 rounded-full bg-[#12123a]/50 text-[#8888aa] text-sm font-semibold">{battle.status}</span>;
     }
   };
 
@@ -432,7 +432,7 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
                   </div>
                 ) : (
                   <div className="flex items-center justify-center h-full">
-                    <Package className="w-12 h-12 text-gray-600" />
+                    <Package className="w-12 h-12 text-[#8888aa]" />
                   </div>
                 )}
 

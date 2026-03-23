@@ -169,7 +169,7 @@ export default function CreateBattlePage() {
             
             {boxes.length === 0 ? (
               <div className="glass-strong rounded-2xl p-8 text-center border border-white/10">
-                <Package className="w-12 h-12 text-gray-500 mx-auto mb-3" />
+                <Package className="w-12 h-12 text-[#8888aa] mx-auto mb-3" />
                 <p className="text-[#8888aa]">No boxes available</p>
               </div>
             ) : (
@@ -219,7 +219,7 @@ export default function CreateBattlePage() {
                                       />
                                     ) : (
                                       <div className="w-full h-full flex items-center justify-center bg-[#12123a]">
-                                        <span className="text-[8px] text-gray-500">?</span>
+                                        <span className="text-[8px] text-[#8888aa]">?</span>
                                       </div>
                                     )}
                                     {/* Value badge on top card */}
@@ -236,7 +236,7 @@ export default function CreateBattlePage() {
                           </div>
                         ) : (
                           <div className="flex items-center justify-center h-full">
-                            <Package className="w-12 h-12 text-gray-600" />
+                            <Package className="w-12 h-12 text-[#8888aa]" />
                           </div>
                         )}
 
@@ -271,10 +271,10 @@ export default function CreateBattlePage() {
                           <div className="flex items-center gap-1">
                             <Coins className="w-4 h-4 text-amber-400" />
                             <span className="text-sm font-bold text-amber-400">{box.price.toLocaleString()}</span>
-                            <span className="text-xs text-gray-500">coins</span>
+                            <span className="text-xs text-[#8888aa]">coins</span>
                           </div>
                         </div>
-                        <div className="mt-2 pt-2 border-t border-[rgba(255,255,255,0.06)]/50 flex items-center justify-between text-[11px] text-gray-500">
+                        <div className="mt-2 pt-2 border-t border-[rgba(255,255,255,0.06)]/50 flex items-center justify-between text-[11px] text-[#8888aa]">
                           <span>{box.cardsPerPack || 1} cards/pack</span>
                           <span>{box._count?.cards || 0} total</span>
                         </div>
@@ -339,7 +339,7 @@ export default function CreateBattlePage() {
                   </button>
                   <div className="flex-1 text-center">
                     <span className="text-4xl font-bold text-white">{formData.rounds}</span>
-                    <p className="text-gray-500 text-sm">round{formData.rounds !== 1 ? 's' : ''}</p>
+                    <p className="text-[#8888aa] text-sm">round{formData.rounds !== 1 ? 's' : ''}</p>
                   </div>
                   <button
                     type="button"

@@ -111,7 +111,7 @@ export function CompletedBattleCard({
           <h3 className="text-lg font-semibold text-white mb-1 group-hover:text-[#BFFF00] transition-colors line-clamp-1">
             {battle.box.name}
           </h3>
-          <p className="text-sm text-gray-500 mb-4">{modeLabel}</p>
+          <p className="text-sm text-[#8888aa] mb-4">{modeLabel}</p>
 
           {battle.isDraw ? (
             <div className="flex items-center gap-2 mb-4 p-2 rounded-lg bg-blue-500/10 border border-blue-500/20">

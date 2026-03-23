@@ -62,11 +62,11 @@ export function AddBotsControl({ battleId, maxAddable }: AddBotsControlProps) {
         <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-xs uppercase tracking-wider">Admin Only</span>
         Testing Tool
       </div>
-      <p className="mb-4 text-sm text-gray-300">
+      <p className="mb-4 text-sm text-[#f0f0f5]">
         Instantly fill open slots with testing bots to simulate a full lobby.
       </p>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <label className="flex items-center gap-2 text-sm text-gray-300">
+        <label className="flex items-center gap-2 text-sm text-[#f0f0f5]">
           Bots to add:
           <input
             type="number"
@@ -74,7 +74,7 @@ export function AddBotsControl({ battleId, maxAddable }: AddBotsControlProps) {
             max={maxAddable}
             value={count}
             onChange={(event) => handleCountChange(parseInt(event.target.value, 10))}
-            className="w-20 rounded-lg border-2 border-gray-600 bg-gray-900 px-3 py-2 text-center text-white font-bold focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all"
+            className="w-20 rounded-lg border-2 border-[rgba(255,255,255,0.06)] bg-[#0B0B2B] px-3 py-2 text-center text-white font-bold focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all"
           />
         </label>
         <Button
@@ -87,7 +87,7 @@ export function AddBotsControl({ battleId, maxAddable }: AddBotsControlProps) {
         </Button>
       </div>
       <div className="mt-3 flex items-center justify-between text-xs">
-        <span className="text-gray-400">Open slots available: <span className="text-amber-400 font-bold">{maxAddable}</span></span>
+        <span className="text-[#8888aa]">Open slots available: <span className="text-amber-400 font-bold">{maxAddable}</span></span>
         <span className="text-green-400">✓ 8 bots ready</span>
       </div>
     </div>
