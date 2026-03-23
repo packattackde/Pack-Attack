@@ -103,7 +103,7 @@ export default async function CollectionPage() {
         {/* Stats Bar */}
         {totalCards > 0 && (
           <div className="glass-strong rounded-2xl p-6 mb-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className={`grid grid-cols-2 gap-4 ${(rarities['None'] || 0) > 0 ? 'md:grid-cols-5' : 'md:grid-cols-4'}`}>
               <div className="text-center">
                 <div className="text-2xl font-bold text-white">{totalCards}</div>
                 <div className="text-sm text-gray-400">Total Cards</div>
@@ -117,9 +117,15 @@ export default async function CollectionPage() {
                 <div className="text-sm text-gray-400">Rare Cards</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-amber-500">{rarities['Mythic'] || rarities['Legendary'] || 0}</div>
+                <div className="text-2xl font-bold text-amber-500">{(rarities['Mythic'] || 0) + (rarities['Legendary'] || 0)}</div>
                 <div className="text-sm text-gray-400">Mythic/Legendary</div>
               </div>
+              {(rarities['None'] || 0) > 0 && (
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-teal-400">{rarities['None']}</div>
+                  <div className="text-sm text-gray-400">Sealed Products</div>
+                </div>
+              )}
             </div>
           </div>
         )}

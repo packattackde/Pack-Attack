@@ -3,7 +3,7 @@
 import { useState, useCallback, useMemo, memo, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Coins, ShoppingCart, Package, Crown, Gem, Star, Sparkles, Search, X, ArrowUpDown } from 'lucide-react';
+import { Coins, ShoppingCart, Package, Crown, Gem, Star, Sparkles, Search, X, ArrowUpDown, BoxIcon } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { emitCoinBalanceUpdate } from '@/lib/coin-events';
 
@@ -33,8 +33,14 @@ interface CollectionClientProps {
     pulls: Pull[];
 }
 
+const isSealed = (rarity: string) => rarity?.toLowerCase() === 'none';
+
+const getRarityDisplay = (rarity: string) => isSealed(rarity) ? 'Sealed' : rarity;
+
 const getRarityConfig = (rarity: string) => {
     switch (rarity?.toLowerCase()) {
+        case 'none':
+            return { color: 'text-teal-300', bg: 'bg-gradient-to-r from-teal-500/20 to-emerald-500/20', border: 'border-teal-500/40', icon: BoxIcon };
         case 'mythic':
             return { color: 'text-orange-400', bg: 'bg-gradient-to-r from-orange-500/20 to-red-500/20', border: 'border-orange-500/40', icon: Crown };
         case 'legendary':
@@ -54,6 +60,7 @@ const RARITY_RANK: Record<string, number> = {
     rare: 4,
     uncommon: 3,
     common: 2,
+    none: 1,
 };
 
 const getGameConfig = (game: string) => {
@@ -257,12 +264,13 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                         {sellByRarity.map(([rarity, { pullIds, totalCoins }]) => {
                             const cfg = getRarityConfig(rarity);
                             const Icon = cfg.icon;
+                            const label = getRarityDisplay(rarity);
                             return (
                                 <button
                                     key={rarity}
                                     onClick={() => setConfirmSell({
                                         pullIds,
-                                        cardName: `all ${rarity} cards`,
+                                        cardName: `all ${label} cards`,
                                         quantity: pullIds.length,
                                         totalCoins,
                                     })}
@@ -270,7 +278,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                                     className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm border transition-all hover:scale-[1.03] disabled:opacity-50 ${cfg.bg} ${cfg.color} ${cfg.border}`}
                                 >
                                     <Icon className="w-4 h-4" />
-                                    <span>{rarity}</span>
+                                    <span>{label}</span>
                                     <span className="opacity-60">×{pullIds.length}</span>
                                     <span className="ml-1 flex items-center gap-1 text-amber-400 font-bold">
                                         <Coins className="w-3 h-3" />
@@ -305,7 +313,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                     >
                         <option value="">All Rarities</option>
                         {availableRarities.map(rarity => (
-                            <option key={rarity} value={rarity}>{rarity}</option>
+                            <option key={rarity} value={rarity}>{getRarityDisplay(rarity)}</option>
                         ))}
                     </select>
                     <select
@@ -410,11 +418,18 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                                             )}
                                         </div>
 
-                                        {/* Rarity badge */}
-                                        <div className={`absolute top-2 left-2 inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold ${rarityConfig.bg} ${rarityConfig.color} border ${rarityConfig.border}`}>
-                                            <RarityIcon className="w-3 h-3" />
-                                            {group.card.rarity}
-                                        </div>
+                                        {/* Rarity badge — sealed products show neutral "Sealed" label */}
+                                        {isSealed(group.card.rarity) ? (
+                                            <div className="absolute top-2 left-2 inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold bg-teal-500/20 text-teal-300 border border-teal-500/40">
+                                                <BoxIcon className="w-3 h-3" />
+                                                Sealed
+                                            </div>
+                                        ) : (
+                                            <div className={`absolute top-2 left-2 inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold ${rarityConfig.bg} ${rarityConfig.color} border ${rarityConfig.border}`}>
+                                                <RarityIcon className="w-3 h-3" />
+                                                {group.card.rarity}
+                                            </div>
+                                        )}
 
                                         {/* Game badge */}
                                         <div className={`absolute bottom-12 left-2 rounded-full px-2 py-0.5 text-xs font-bold ${gameConfig.bg} ${gameConfig.text}`}>
@@ -492,10 +507,11 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                             {(() => {
                                 const config = getRarityConfig(zoomedCard.card.rarity);
                                 const Icon = config.icon;
+                                const label = getRarityDisplay(zoomedCard.card.rarity);
                                 return (
                                     <div className={`inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold mb-4 ${config.bg} ${config.color} border ${config.border}`}>
                                         <Icon className="w-4 h-4" />
-                                        {zoomedCard.card.rarity}
+                                        {label}
                                     </div>
                                 );
                             })()}
