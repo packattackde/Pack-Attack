@@ -66,7 +66,7 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
   return (
     <>
       {/* Filter Bar */}
-      <div className="mb-10 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-4">
+      <div className="mb-12 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-4">
         <div className="relative w-full sm:w-auto">
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -198,7 +198,7 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
           </button>
         </div>
       ) : (
-        <div className="grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:gap-7 lg:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {filteredBoxes.map((box) => (
             <Link
               key={box.id}
@@ -208,7 +208,7 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
               {/* Card Preview Section */}
               <div className="relative h-[220px] bg-[#252560] flex items-end justify-center pb-4 overflow-hidden">
                 {/* Background glow effect */}
-                <div className="absolute inset-0 bg-gradient-to-t from-amber-500/10 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#1e1e55]/80 via-transparent to-transparent" />
                 
                 {/* Fanned Cards Display */}
                 {box.cards && box.cards.length > 0 ? (
@@ -246,7 +246,7 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
                                 alt={card.name}
                                 fill
                                 className="object-cover"
-                                sizes="80px"
+                                sizes="95px"
                                 unoptimized
                               />
                             ) : (
@@ -256,9 +256,9 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
                             )}
                             {/* Value badge on top card */}
                             {index === 1 && (
-                              <div className="absolute bottom-1 left-1/2 -translate-x-1/2 px-1.5 py-0.5 rounded bg-black/80 flex items-center gap-0.5">
-                                <Coins className="w-2 h-2 text-amber-400" />
-                                <span className="text-[8px] font-bold text-amber-400">{card.coinValue.toFixed(2)}</span>
+                              <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-md bg-black/85 border border-[rgba(191,255,0,0.3)] flex items-center gap-1">
+                                <Coins className="w-2.5 h-2.5 text-[#BFFF00]" />
+                                <span className="text-[9px] font-bold text-[#BFFF00]">{card.coinValue.toFixed(2)}</span>
                               </div>
                             )}
                           </div>
@@ -267,19 +267,20 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
                     })}
                   </div>
                 ) : (
-                  <div className="flex items-center justify-center h-full">
-                    <Package className="w-12 h-12 text-gray-600" />
+                  <div className="flex flex-col items-center justify-center h-full gap-2">
+                    <Package className="w-12 h-12 text-[#7777a0]/50" />
+                    <span className="text-xs text-[#7777a0]/50 font-medium">No preview</span>
                   </div>
                 )}
 
                 {/* Badges */}
                 {box.featured && (
-                  <div className="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-[10px] font-bold text-white z-10">
+                  <div className="absolute top-3 left-3 px-3 py-1 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-[11px] font-bold text-white z-10 shadow-md">
                     ⭐ Featured
                   </div>
                 )}
                 {box.createdByShop && (
-                  <div className="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-[10px] font-bold text-white z-10" title={`By ${box.createdByShop.name}`}>
+                  <div className="absolute top-3 left-3 px-3 py-1 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-[11px] font-bold text-white z-10 shadow-md" title={`By ${box.createdByShop.name}`}>
                     🏪 Partner Shop
                   </div>
                 )}
@@ -291,12 +292,11 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
               </div>
 
               {/* Box Info */}
-              <div className="p-6 bg-[#14143d]">
-                
-                <h3 className="text-lg font-bold text-white mb-1 group-hover:text-[#BFFF00] transition-colors line-clamp-1">
+              <div className="px-6 pt-5 pb-6 bg-[#151540]">
+                <h3 className="text-[17px] font-bold text-white mb-1.5 group-hover:text-[#BFFF00] transition-colors line-clamp-1">
                   {box.name}
                 </h3>
-                <p className="text-sm text-[#7777a0] mb-5">{box.cardsPerPack} cards/pack · {box._count.cards} total cards</p>
+                <p className="text-[13px] text-[#7777a0] mb-5">{box.cardsPerPack} cards/pack · {box._count.cards} total cards</p>
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
