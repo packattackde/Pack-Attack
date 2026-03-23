@@ -344,20 +344,9 @@
 
 /* ============================================
    CSS RESET & CROSS-BROWSER NORMALIZATION
+   Note: Tailwind v4 @import "tailwindcss" already includes Preflight reset.
+   Do NOT add * { margin: 0; padding: 0; } here — it overrides Tailwind utilities.
    ============================================ */
-
-/* Box sizing rules */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-/* Remove default margin and padding */
-* {
-  margin: 0;
-  padding: 0;
-}
 
 /* Prevent font size inflation on mobile */
 html {
