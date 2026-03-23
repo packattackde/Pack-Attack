@@ -78,16 +78,16 @@ export default async function BoxesPage() {
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
 
-      <div className="relative container py-12">
+      <div className="relative container py-14 sm:py-16">
         {/* Header */}
-        <div className="mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full glass text-sm">
+        <div className="mb-12">
+          <div className="inline-flex items-center gap-2 px-4 py-2 mb-4 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] text-sm shadow-md">
             <Package className="w-4 h-4 text-[#BFFF00]" />
-            <span className="text-[#f0f0f5]">Card Packs</span>
+            <span className="text-[#f0f0f5] font-medium">Card Packs</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-3">
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-3 tracking-tight">
             <span className="text-white">All </span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#BFFF00] to-[#d4ff4d]">Boxes</span>
+            <span className="text-[#BFFF00]">Boxes</span>
           </h1>
           <p className="text-[#8888aa] text-lg">Browse and open packs to build your collection</p>
         </div>

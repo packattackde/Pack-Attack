@@ -66,16 +66,11 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
   return (
     <>
       {/* Filter Bar */}
-      <div className="mb-6 md:mb-8 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3 sm:gap-4">
+      <div className="mb-10 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-4">
         <div className="relative w-full sm:w-auto">
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="flex items-center gap-3 px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl text-white font-semibold transition-all w-full sm:min-w-[240px] border border-[rgba(255,255,255,0.06)] active:border-[rgba(191,255,0,0.3)] touch-target min-h-[52px]"
-            style={{
-              background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%)',
-              backdropFilter: 'blur(12px)',
-              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-            }}
+            className="flex items-center gap-3 px-5 py-4 rounded-2xl text-white font-semibold transition-all w-full sm:min-w-[240px] bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] hover:border-[rgba(191,255,0,0.3)] shadow-lg touch-target min-h-[52px]"
             aria-label="Filter by game"
             aria-expanded={isDropdownOpen}
             aria-controls="game-filter-dropdown"
@@ -98,14 +93,9 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
               />
               
               {/* Dropdown with premium styling */}
-              <div 
+              <div
                 id="game-filter-dropdown"
-                className="absolute top-full left-0 mt-3 w-full min-w-[280px] rounded-2xl overflow-hidden z-50 border-2 border-[rgba(255,255,255,0.06)] shadow-2xl"
-                style={{
-                  background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.98) 100%)',
-                  backdropFilter: 'blur(16px)',
-                  boxShadow: '0 20px 60px rgba(0, 0, 0, 0.6), 0 0 1px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-                }}
+                className="absolute top-full left-0 mt-3 w-full min-w-[280px] rounded-2xl overflow-hidden z-50 border border-[rgba(255,255,255,0.15)] shadow-2xl bg-[#1e1e55]"
                 role="listbox"
                 aria-label="Game filter options"
               >
@@ -193,7 +183,7 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
 
       {/* Boxes Grid */}
       {filteredBoxes.length === 0 ? (
-        <div className="glass-strong rounded-2xl p-8 sm:p-12 text-center">
+        <div className="rounded-2xl p-8 sm:p-12 text-center bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg">
           <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 mb-4 sm:mb-6 rounded-2xl bg-gradient-to-br from-[rgba(191,255,0,0.15)] to-[rgba(191,255,0,0.1)]">
             <Package className="w-8 h-8 sm:w-10 sm:h-10 text-[#BFFF00]" />
           </div>
@@ -215,8 +205,8 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
               href={`/open/${box.id}`}
               className="group relative rounded-2xl overflow-hidden transition-all duration-300 active:scale-[0.97] sm:hover:scale-[1.02] sm:hover:shadow-[0_8px_40px_rgba(191,255,0,0.12)] bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] hover:border-[rgba(191,255,0,0.3)]"
             >
-              {/* Card Preview Section - Fanned Cards */}
-              <div className="relative h-56 bg-gradient-to-b from-[#252560] to-[#1a1a4a] flex items-end justify-center pb-4 overflow-hidden">
+              {/* Card Preview Section */}
+              <div className="relative h-[220px] bg-[#252560] flex items-end justify-center pb-4 overflow-hidden">
                 {/* Background glow effect */}
                 <div className="absolute inset-0 bg-gradient-to-t from-amber-500/10 via-transparent to-transparent" />
                 
@@ -237,10 +227,7 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
                           }}
                         >
                           <div 
-                            className="relative w-20 h-[110px] rounded-lg overflow-hidden border-2 border-[rgba(255,255,255,0.06)] shadow-2xl group-hover:border-[rgba(191,255,0,0.5)] transition-all duration-300 bg-[#12123a]"
-                            style={{
-                              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-                            }}
+                            className="relative w-[90px] h-[125px] rounded-lg overflow-hidden border-2 border-[rgba(255,255,255,0.15)] shadow-2xl group-hover:border-[rgba(191,255,0,0.4)] transition-all duration-300 bg-[#1e1e55]"
                           >
                             {card.imageUrlGatherer ? (
                               <Image
@@ -293,30 +280,22 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
               </div>
 
               {/* Box Info */}
-              <div className="relative p-6 border-t border-[rgba(255,255,255,0.08)]">
+              <div className="p-6 border-t border-[rgba(255,255,255,0.06)]">
                 
-                <h3 className="text-base font-bold text-white mb-3 group-hover:text-[#BFFF00] transition-colors line-clamp-1 tracking-wide">
+                <h3 className="text-lg font-bold text-white mb-1 group-hover:text-[#BFFF00] transition-colors line-clamp-1">
                   {box.name}
                 </h3>
-                
-                <div className="flex items-center justify-between mb-4">
+                <p className="text-sm text-[#7777a0] mb-5">{box.cardsPerPack} cards/pack · {box._count.cards} total cards</p>
+
+                <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Coins className="w-5 h-5 text-[#BFFF00]" />
-                    <span className="text-xl font-extrabold text-[#BFFF00]">{box.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                    <span className="text-2xl font-extrabold text-[#BFFF00]">{box.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                   </div>
-                  <span className="inline-flex items-center gap-1 px-4 py-2 bg-[#BFFF00] text-black text-sm font-bold rounded-xl group-hover:shadow-[0_0_20px_rgba(191,255,0,0.3)] transition-all">
+                  <span className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-[#BFFF00] text-black text-sm font-bold rounded-xl shadow-[0_2px_12px_rgba(191,255,0,0.2)] group-hover:shadow-[0_4px_24px_rgba(191,255,0,0.35)] group-hover:scale-105 transition-all">
                     Open <ChevronRight className="w-4 h-4" />
                   </span>
                 </div>
-
-                <div className="flex items-center justify-between text-xs text-[#8888aa] pt-3 border-t border-[rgba(255,255,255,0.08)]">
-                  <span className="flex items-center gap-1">
-                    <Layers className="w-3 h-3" />
-                    {box.cardsPerPack} cards/pack
-                  </span>
-                  <span className="font-medium">{box._count.cards} total</span>
-                </div>
-              </div>
             </Link>
           ))}
         </div>
