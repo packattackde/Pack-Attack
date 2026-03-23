@@ -203,7 +203,7 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
             <Link
               key={box.id}
               href={`/open/${box.id}`}
-              className="group relative rounded-2xl overflow-hidden transition-all duration-300 active:scale-[0.97] sm:hover:scale-[1.02] sm:hover:shadow-[0_8px_40px_rgba(191,255,0,0.12)] bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] hover:border-[rgba(191,255,0,0.3)]"
+              className="group relative rounded-2xl overflow-hidden transition-all duration-300 active:scale-[0.97] sm:hover:scale-[1.02] sm:hover:shadow-[0_8px_40px_rgba(191,255,0,0.12)] bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] hover:border-[rgba(191,255,0,0.3)] shadow-lg"
             >
               {/* Card Preview Section */}
               <div className="relative h-[220px] bg-[#252560] flex items-end justify-center pb-4 overflow-hidden">
@@ -280,7 +280,7 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
               </div>
 
               {/* Box Info */}
-              <div className="p-6 border-t border-[rgba(255,255,255,0.06)]">
+              <div className="p-6 bg-[#14143d]">
                 
                 <h3 className="text-lg font-bold text-white mb-1 group-hover:text-[#BFFF00] transition-colors line-clamp-1">
                   {box.name}
