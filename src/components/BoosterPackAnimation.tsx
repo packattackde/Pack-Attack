@@ -426,12 +426,13 @@ export function BoosterPackAnimation({ boxName, gameName, onTearComplete, rarity
 
       {/* Custom neon cursor */}
       <motion.div
-        className="fixed pointer-events-none z-[100]"
+        className="pointer-events-none"
         style={{
-          x: cursorX,
-          y: cursorY,
-          translateX: '-50%',
-          translateY: '-50%',
+          position: 'fixed',
+          left: cursorX,
+          top: cursorY,
+          zIndex: 10000,
+          transform: 'translate(-50%, -50%)',
         }}
       >
         <motion.div
