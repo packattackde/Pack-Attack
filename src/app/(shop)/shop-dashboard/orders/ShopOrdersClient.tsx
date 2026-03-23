@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { 
   Package, Truck, CheckCircle, Clock, XCircle, 
   ChevronDown, ChevronUp, MapPin, Mail, User, 
-  Coins, Euro, ExternalLink, MessageSquare, Send,
+  Euro, ExternalLink, MessageSquare, Send,
   AlertCircle, Check
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -257,7 +257,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                     
                     <div className="flex items-center gap-4 flex-shrink-0">
                       <div className="text-right hidden sm:block">
-                        <p className="text-sm font-medium text-amber-400">{order.cardValue.toFixed(2)} coins</p>
+                        <p className="text-sm font-medium text-amber-400">{(order.cardValue / 5).toFixed(2)} €</p>
                         <p className="text-xs text-gray-500">
                           {new Date(order.createdAt).toLocaleDateString('de-DE')}
                         </p>
@@ -310,20 +310,9 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                           {order.shippingPhone && (
                             <p className="mt-2">📞 {order.shippingPhone}</p>
                           )}
-                          <div className={`flex items-center gap-2 mt-3 pt-3 border-t border-gray-700 ${
-                            order.shippingMethod === 'COINS' ? 'text-amber-400' : 'text-green-400'
-                          }`}>
-                            {order.shippingMethod === 'COINS' ? (
-                              <>
-                                <Coins className="w-4 h-4" />
-                                <span className="font-medium">Shipping: {order.shippingCost.toFixed(2)} coins</span>
-                              </>
-                            ) : (
-                              <>
-                                <Euro className="w-4 h-4" />
-                                <span className="font-medium">Shipping: €{order.shippingCost.toFixed(2)}</span>
-                              </>
-                            )}
+                          <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-700 text-amber-400">
+                            <Euro className="w-4 h-4" />
+                            <span className="font-medium">Versand: {order.shippingMethod === 'COINS' ? `${(order.shippingCost / 5).toFixed(2)} €` : `${order.shippingCost.toFixed(2)} €`}</span>
                           </div>
                         </div>
                       </div>
@@ -355,7 +344,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                           {order.cardRarity && (
                             <p className="text-sm text-gray-400">Rarity: {order.cardRarity}</p>
                           )}
-                          <p className="text-sm text-amber-400 mt-1">{order.cardValue.toFixed(2)} coins</p>
+                          <p className="text-sm text-amber-400 mt-1">{(order.cardValue / 5).toFixed(2)} €</p>
                           <p className="text-xs text-gray-500 mt-1">From: {order.box?.name || 'Admin Assigned Order'}</p>
                         </div>
                       </div>

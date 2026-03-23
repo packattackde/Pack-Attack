@@ -5,8 +5,6 @@ import Link from 'next/link';
 import { 
   Package, 
   ShoppingCart, 
-  TrendingUp, 
-  DollarSign,
   Users,
   Clock,
   CheckCircle,
@@ -16,7 +14,8 @@ import {
   Sparkles,
   ClipboardList,
   Database,
-  Wallet
+  Wallet,
+  Euro
 } from 'lucide-react';
 import { DealerDetailsClient } from './DealerDetailsClient';
 
@@ -218,7 +217,7 @@ export default async function ShopDashboard({
         </div>
 
         {/* Quick Stats Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
           <div className="glass rounded-2xl p-5 relative overflow-hidden group hover:ring-2 hover:ring-emerald-500/30 transition-all">
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent" />
             <div className="relative">
@@ -249,18 +248,9 @@ export default async function ShopDashboard({
           <div className="glass rounded-2xl p-5 relative overflow-hidden group hover:ring-2 hover:ring-amber-500/30 transition-all">
             <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent" />
             <div className="relative">
-              <DollarSign className="w-6 h-6 text-amber-400 mb-3" />
-              <div className="text-3xl font-bold text-white mb-1">{stats.totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
-              <div className="text-sm text-gray-400">Total Value (Coins)</div>
-            </div>
-          </div>
-
-          <div className="glass rounded-2xl p-5 relative overflow-hidden group hover:ring-2 hover:ring-orange-500/30 transition-all">
-            <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-transparent" />
-            <div className="relative">
-              <Wallet className="w-6 h-6 text-orange-400 mb-3" />
-              <div className="text-3xl font-bold text-white mb-1">{stats.coinBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
-              <div className="text-sm text-gray-400">Wallet Balance</div>
+              <Euro className="w-6 h-6 text-amber-400 mb-3" />
+              <div className="text-3xl font-bold text-white mb-1">{(stats.totalRevenue / 5).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</div>
+              <div className="text-sm text-gray-400">Total Value</div>
             </div>
           </div>
           
@@ -318,7 +308,7 @@ export default async function ShopDashboard({
         </div>
 
         {/* Main Action Cards */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-10">
+        <div className={`grid gap-6 md:grid-cols-2 ${isAdmin ? 'lg:grid-cols-4' : 'lg:grid-cols-3'} mb-10`}>
           {/* Orders Management */}
           <Link 
             href={viewingSpecificShop ? `/shop-dashboard/orders?shopId=${shop?.id}` : '/shop-dashboard/orders'} 
@@ -347,33 +337,35 @@ export default async function ShopDashboard({
             </div>
           </Link>
 
-          {/* Assigned Orders */}
-          <Link 
-            href={viewingSpecificShop ? `/shop-dashboard/assigned-orders?shopId=${shop?.id}` : '/shop-dashboard/assigned-orders'} 
-            className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-purple-500/50 transition-all group relative overflow-hidden"
-          >
-            {stats.assignedPending > 0 && (
-              <div className="absolute -top-1 -right-1 w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg animate-pulse">
-                {stats.assignedPending}
+          {/* Assigned Orders — admin only */}
+          {isAdmin && (
+            <Link 
+              href={viewingSpecificShop ? `/shop-dashboard/assigned-orders?shopId=${shop?.id}` : '/shop-dashboard/assigned-orders'} 
+              className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-purple-500/50 transition-all group relative overflow-hidden"
+            >
+              {stats.assignedPending > 0 && (
+                <div className="absolute -top-1 -right-1 w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg animate-pulse">
+                  {stats.assignedPending}
+                </div>
+              )}
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="relative">
+                <div className="inline-flex items-center justify-center w-14 h-14 mb-5 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 ring-1 ring-purple-500/30">
+                  <ClipboardList className="w-7 h-7 text-purple-400" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-purple-400 transition-colors">Assigned Orders</h3>
+                <p className="text-gray-400 text-sm leading-relaxed">
+                  Orders assigned by admin for fulfillment. {stats.assignedOrders} total.
+                </p>
+                <div className="mt-4 flex items-center text-purple-400 text-sm font-medium">
+                  <span>View Assigned</span>
+                  <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
               </div>
-            )}
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="relative">
-              <div className="inline-flex items-center justify-center w-14 h-14 mb-5 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 ring-1 ring-purple-500/30">
-                <ClipboardList className="w-7 h-7 text-purple-400" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2 group-hover:text-purple-400 transition-colors">Assigned Orders</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">
-                Orders assigned by admin for fulfillment. {stats.assignedOrders} total.
-              </p>
-              <div className="mt-4 flex items-center text-purple-400 text-sm font-medium">
-                <span>View Assigned</span>
-                <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </div>
-            </div>
-          </Link>
+            </Link>
+          )}
 
           {/* My Stock */}
           <Link 

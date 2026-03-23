@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Wallet, ArrowRightLeft, Clock, CheckCircle, XCircle,
-  Loader2, Banknote, Coins, AlertCircle, ChevronDown, ChevronUp,
+  Loader2, Banknote, AlertCircle, ChevronDown, ChevronUp,
   Package, Filter, RotateCcw, Send, MessageSquare
 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
@@ -73,7 +73,6 @@ export function PayoutsClient({
   const [resubmitting, setResubmitting] = useState(false);
 
   const hasPending = payouts.some(p => p.status === 'REQUESTED' || p.status === 'PROCESSING');
-  const totalPaidCoins = payouts.filter(p => p.status === 'COMPLETED').reduce((sum, p) => sum + p.coinAmount, 0);
   const totalPaidEuro = payouts.filter(p => p.status === 'COMPLETED').reduce((sum, p) => sum + p.euroAmount, 0);
 
   const filteredPayouts = filterStatus === 'ALL' ? payouts : payouts.filter(p => p.status === filterStatus);
@@ -97,7 +96,7 @@ export function PayoutsClient({
       setEligibleEuro(0);
       addToast({
         title: 'Payout Requested',
-        description: `${data.payout.coinAmount.toFixed(2)} coins (${data.payout.euroAmount.toFixed(2)} EUR) — ${data.payout.items.length} items`,
+        description: `${data.payout.euroAmount.toFixed(2)} € — ${data.payout.items.length} items`,
       });
       router.refresh();
     } catch (err: any) {
@@ -136,24 +135,15 @@ export function PayoutsClient({
 
   return (
     <div className="space-y-8">
-      {/* Wallet Overview */}
-      <div className="grid md:grid-cols-4 gap-4">
-        <div className="glass-strong rounded-2xl p-6 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent" />
-          <div className="relative">
-            <Coins className="w-8 h-8 text-amber-400 mb-3" />
-            <div className="text-3xl font-bold text-white mb-1">{balance.toFixed(2)}</div>
-            <div className="text-sm text-gray-400">Coin Balance</div>
-          </div>
-        </div>
-
+      {/* Payout Overview */}
+      <div className="grid md:grid-cols-3 gap-4">
         <div className="glass-strong rounded-2xl p-6 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent" />
           <div className="relative">
             <Package className="w-8 h-8 text-emerald-400 mb-3" />
             <div className="text-3xl font-bold text-white mb-1">{eligibleCount}</div>
             <div className="text-sm text-gray-400">
-              Delivered Items ({eligibleTotal.toFixed(2)} coins / {eligibleEuro.toFixed(2)} EUR)
+              Delivered Items ({eligibleEuro.toFixed(2)} €)
             </div>
           </div>
         </div>
@@ -162,8 +152,8 @@ export function PayoutsClient({
           <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent" />
           <div className="relative">
             <Banknote className="w-8 h-8 text-green-400 mb-3" />
-            <div className="text-3xl font-bold text-white mb-1">{totalPaidEuro.toFixed(2)} EUR</div>
-            <div className="text-sm text-gray-400">Total Paid Out ({totalPaidCoins.toFixed(2)} coins)</div>
+            <div className="text-3xl font-bold text-white mb-1">{totalPaidEuro.toFixed(2)} €</div>
+            <div className="text-sm text-gray-400">Total Paid Out</div>
           </div>
         </div>
 
@@ -245,9 +235,7 @@ export function PayoutsClient({
                         </div>
                         <div>
                           <div className="flex items-center gap-3">
-                            <span className="font-semibold text-amber-400">{payout.coinAmount.toFixed(2)} coins</span>
-                            <span className="text-gray-600">→</span>
-                            <span className="font-semibold text-green-400">{payout.euroAmount.toFixed(2)} EUR</span>
+                            <span className="font-semibold text-green-400">{payout.euroAmount.toFixed(2)} €</span>
                             <span className="text-xs text-gray-500">({payout.items.length} items)</span>
                           </div>
                           <p className="text-xs text-gray-500 mt-1">
@@ -352,7 +340,7 @@ export function PayoutsClient({
                               </div>
                             </div>
                             <div className="text-sm font-semibold text-amber-400 whitespace-nowrap">
-                              {item.cardValue.toFixed(2)} coins
+                              {(item.cardValue / 5).toFixed(2)} €
                             </div>
                           </div>
                         ))}
@@ -360,7 +348,7 @@ export function PayoutsClient({
 
                       <div className="flex justify-between items-center pt-3 border-t border-gray-800">
                         <span className="text-sm text-gray-400">{payout.items.length} items total</span>
-                        <span className="text-sm font-bold text-amber-400">{payout.coinAmount.toFixed(2)} coins = {payout.euroAmount.toFixed(2)} EUR</span>
+                        <span className="text-sm font-bold text-green-400">{payout.euroAmount.toFixed(2)} €</span>
                       </div>
                     </div>
                   )}
