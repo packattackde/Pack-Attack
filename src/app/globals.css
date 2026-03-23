@@ -88,17 +88,19 @@
 
 @layer components {
   .glass {
-    background: var(--pa-bg-card) !important;
+    background: #1a1a4a !important;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--pa-border-hover) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
   }
 
   .glass-strong {
-    background: var(--pa-bg-surface) !important;
+    background: #1e1e55 !important;
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4) !important;
   }
 }
 
@@ -374,7 +376,7 @@ html {
   --pa-bg-base: #0B0B2B;
   --pa-bg-surface: #10103a;
   --pa-bg-elevated: #16164a;
-  --pa-bg-card: #12123a;
+  --pa-bg-card: #1a1a4a;
 
   /* Neon Green — Primary Brand */
   --pa-neon: #BFFF00;

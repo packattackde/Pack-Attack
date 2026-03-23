@@ -82,7 +82,7 @@ export function CompletedBattleCard({
 
   return (
     <>
-      <div className="group rounded-2xl p-6 transition-all relative bg-[#12123a] border border-[rgba(255,255,255,0.08)] hover:border-[rgba(255,255,255,0.15)]">
+      <div className="group rounded-2xl p-6 transition-all relative bg-[#1a1a4a] border border-[rgba(255,255,255,0.15)] hover:border-[rgba(255,255,255,0.25)] shadow-lg">
         {/* Admin Delete Button */}
         {isAdmin && (
           <button

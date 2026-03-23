@@ -145,7 +145,7 @@ export default async function BattlesPage() {
                       <Link
                         key={battle.id}
                         href={`/battles/${battle.id}`}
-                        className="group rounded-2xl p-6 card-lift transition-all bg-[#12123a] border border-[rgba(255,255,255,0.1)] hover:border-[rgba(191,255,0,0.3)] hover:shadow-[0_0_30px_rgba(191,255,0,0.08)]"
+                        className="group rounded-2xl p-6 card-lift transition-all bg-[#1a1a4a] border border-[rgba(255,255,255,0.15)] hover:border-[rgba(191,255,0,0.4)] shadow-lg hover:shadow-[0_8px_30px_rgba(191,255,0,0.12)]"
                       >
                         <div className="flex items-center justify-between mb-4">
                           <span className="text-sm font-medium text-[#f0f0f5]">
