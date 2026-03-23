@@ -37,8 +37,8 @@ export const viewport: Viewport = {
   userScalable: true,
   // Theme color for browser chrome - matches dark theme
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#030712" },
-    { media: "(prefers-color-scheme: dark)", color: "#030712" },
+    { media: "(prefers-color-scheme: light)", color: "#0B0B2B" },
+    { media: "(prefers-color-scheme: dark)", color: "#0B0B2B" },
   ],
   // Support notched devices (iPhone X+, Android with cutouts)
   viewportFit: "cover",
