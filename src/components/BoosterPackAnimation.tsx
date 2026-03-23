@@ -46,6 +46,13 @@ export function BoosterPackAnimation({ boxName, gameName, onTearComplete, rarity
 
   const colors = RARITY_COLORS[rarityHint];
 
+  // Custom cursor position
+  const cursorX = useMotionValue(-100);
+  const cursorY = useMotionValue(-100);
+  const cursorSpringX = useSpring(cursorX, { stiffness: 300, damping: 25 });
+  const cursorSpringY = useSpring(cursorY, { stiffness: 300, damping: 25 });
+  const [cursorPressed, setCursorPressed] = useState(false);
+
   // 3D Tilt motion values
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -55,15 +62,19 @@ export function BoosterPackAnimation({ boxName, gameName, onTearComplete, rarity
   // Holographic angle based on mouse position
   const holoAngle = useTransform(mouseX, [-0.5, 0.5], [100, 260]);
 
-  // Handle mouse/touch move for 3D tilt
+  // Handle mouse/touch move for 3D tilt + custom cursor
   const handlePointerMove = useCallback((e: React.PointerEvent | PointerEvent) => {
+    // Update custom cursor position
+    cursorX.set(e.clientX);
+    cursorY.set(e.clientY);
+
     if (phase !== 'tilt' || !containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
     mouseX.set(x);
     mouseY.set(y);
-  }, [phase, mouseX, mouseY]);
+  }, [phase, mouseX, mouseY, cursorX, cursorY]);
 
   // Reset tilt when pointer leaves
   const handlePointerLeave = useCallback(() => {
@@ -88,7 +99,7 @@ export function BoosterPackAnimation({ boxName, gameName, onTearComplete, rarity
     if (phase !== 'tilt') return;
     isTearing.current = true;
     setPhase('tearing');
-    // Reset tilt to neutral
+    setCursorPressed(true);
     mouseX.set(0);
     mouseY.set(0);
   }, [phase, mouseX, mouseY]);
@@ -163,6 +174,7 @@ export function BoosterPackAnimation({ boxName, gameName, onTearComplete, rarity
 
   const endTear = useCallback(() => {
     isTearing.current = false;
+    setCursorPressed(false);
   }, []);
 
   // Build SVG tear line path
@@ -413,6 +425,31 @@ export function BoosterPackAnimation({ boxName, gameName, onTearComplete, rarity
           Entlang der Risskante ziehen →
         </motion.p>
       )}
+
+      {/* Custom neon cursor */}
+      <motion.div
+        className="fixed pointer-events-none z-[100]"
+        style={{
+          x: cursorSpringX,
+          y: cursorSpringY,
+          translateX: '-50%',
+          translateY: '-50%',
+        }}
+      >
+        <motion.div
+          className="rounded-full border-2"
+          animate={{
+            width: cursorPressed ? 32 : 22,
+            height: cursorPressed ? 32 : 22,
+            borderColor: cursorPressed ? '#BFFF00' : 'rgba(191,255,0,0.5)',
+            backgroundColor: cursorPressed ? 'rgba(191,255,0,0.15)' : 'rgba(191,255,0,0)',
+            boxShadow: cursorPressed
+              ? '0 0 15px rgba(191,255,0,0.4), 0 0 30px rgba(191,255,0,0.2)'
+              : '0 0 8px rgba(191,255,0,0.2)',
+          }}
+          transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+        />
+      </motion.div>
     </div>
   );
 }
