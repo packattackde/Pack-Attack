@@ -1816,3 +1816,17 @@ body.modal-open {
     animation: none;
   }
 }
+
+@keyframes particle-burst {
+  0% { opacity: 1; transform: scale(0.5); }
+  100% { opacity: 0; transform: scale(2); }
+}
+
+.particle-burst::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle, rgba(255,107,107,0.2) 0%, transparent 70%);
+  animation: particle-burst 1s ease-out forwards;
+  pointer-events: none;
+}
