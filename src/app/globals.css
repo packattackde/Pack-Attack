@@ -86,65 +86,69 @@
    GLASS MORPHISM EFFECTS
    ============================================ */
 
-.glass {
-  background: var(--pa-bg-card);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--pa-border-hover);
-}
+@layer components {
+  .glass {
+    background: var(--pa-bg-card) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--pa-border-hover) !important;
+  }
 
-.glass-strong {
-  background: var(--pa-bg-surface);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  .glass-strong {
+    background: var(--pa-bg-surface) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  }
 }
 
 /* ============================================
    GRADIENT UTILITIES
    ============================================ */
 
-.gradient-border {
-  position: relative;
-  background: transparent;
-}
+@layer components {
+  .gradient-border {
+    position: relative;
+    background: transparent;
+  }
 
-.gradient-border::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  padding: 1px;
-  border-radius: inherit;
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-}
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, #BFFF00, #7fff00, #BFFF00);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
 
-/* Background grid pattern */
-.bg-grid {
-  background-image: 
-    linear-gradient(rgba(191, 255, 0, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(191, 255, 0, 0.02) 1px, transparent 1px);
-  background-size: 50px 50px;
-}
+  /* Background grid pattern */
+  .bg-grid {
+    background-image:
+      linear-gradient(rgba(191, 255, 0, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(191, 255, 0, 0.02) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
 
-/* Radial gradient overlay */
-.radial-gradient {
-  background: radial-gradient(ellipse at center, transparent 0%, var(--pa-bg-deep) 70%);
-}
+  /* Radial gradient overlay */
+  .radial-gradient {
+    background: radial-gradient(ellipse at center, transparent 0%, var(--pa-bg-deep) 70%);
+  }
 
-/* ============================================
-   CARD EFFECTS
-   ============================================ */
+  /* ============================================
+     CARD EFFECTS
+     ============================================ */
 
-.card-lift {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+  .card-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  }
 
-.card-lift:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 40px -12px rgba(191, 255, 0, 0.15), 0 8px 16px -8px rgba(0, 0, 0, 0.4);
+  .card-lift:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px -12px rgba(191, 255, 0, 0.15), 0 8px 16px -8px rgba(0, 0, 0, 0.4);
+  }
 }
 
 /* ============================================
