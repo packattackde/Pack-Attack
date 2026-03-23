@@ -68,11 +68,11 @@ export default async function BattlesPage() {
       {/* Accent glow for battles */}
       <div className="fixed top-20 right-10 w-96 h-96 bg-[rgba(191,255,0,0.08)] rounded-full blur-3xl hidden lg:block" />
 
-      <div className="relative container py-12">
+      <div className="relative container py-14 sm:py-16">
         {/* Header */}
-        <div className="mb-10 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+        <div className="mb-12 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <div>
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 rounded-full text-sm bg-[#12123a] border border-[rgba(191,255,0,0.3)]">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 rounded-full text-sm bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md">
               <Swords className="w-4 h-4 text-[#BFFF00]" />
               <span className="text-[#f0f0f5]">PvP Arena</span>
             </div>
@@ -103,7 +103,7 @@ export default async function BattlesPage() {
         </div>
 
         {battles.length === 0 ? (
-          <div className="rounded-2xl p-12 text-center bg-[#10103a] border border-[rgba(255,255,255,0.1)]">
+          <div className="rounded-2xl p-12 text-center bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg">
             <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-[rgba(191,255,0,0.08)]">
               <Swords className="w-10 h-10 text-[#BFFF00]" />
             </div>
@@ -131,12 +131,12 @@ export default async function BattlesPage() {
             {/* Active Battles */}
             {activeBattles.length > 0 && (
               <section>
-                <div className="flex items-center gap-3 mb-6">
+                <div className="flex items-center gap-3 mb-8">
                   <div className="w-2 h-2 rounded-full bg-green-500 pulse-live" />
                   <h2 className="text-2xl font-bold text-white">Active Battles</h2>
                   <span className="text-sm text-[#8888aa]">({activeBattles.length})</span>
                 </div>
-                <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                <div className="grid gap-6 sm:gap-7 md:grid-cols-2 lg:grid-cols-3">
                   {activeBattles.map((battle) => {
                     const cost = totalCost(battle);
                     const modeLabel = getBattleModeLabel(battle.battleMode, battle.shareMode);
@@ -145,9 +145,9 @@ export default async function BattlesPage() {
                       <Link
                         key={battle.id}
                         href={`/battles/${battle.id}`}
-                        className="group rounded-2xl p-6 card-lift transition-all bg-[#1a1a4a] border border-[rgba(255,255,255,0.15)] hover:border-[rgba(191,255,0,0.4)] shadow-lg hover:shadow-[0_8px_30px_rgba(191,255,0,0.12)]"
+                        className="group bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-lg rounded-2xl p-7 hover:-translate-y-1.5 hover:border-[rgba(191,255,0,0.3)] hover:shadow-[0_8px_30px_rgba(191,255,0,0.1)] transition-all duration-300"
                       >
-                        <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center justify-between mb-5">
                           <span className="text-sm font-medium text-[#f0f0f5]">
                             {battle.rounds} Round{battle.rounds !== 1 ? 's' : ''}
                           </span>
@@ -180,7 +180,7 @@ export default async function BattlesPage() {
                           {getVisibleParticipants(battle).slice(0, 4).map((p: any, i: number) => (
                             <div 
                               key={p.id}
-                              className="w-8 h-8 rounded-full bg-gradient-to-br from-[#BFFF00] to-[#a0d600] flex items-center justify-center text-xs font-bold text-white"
+                              className="w-9 h-9 rounded-full bg-gradient-to-br from-[#BFFF00] to-[#a0d600] flex items-center justify-center text-xs font-bold text-white"
                               style={{ marginLeft: i > 0 ? '-8px' : '0' }}
                             >
                               {p.user.name?.[0] || '?'}
@@ -194,7 +194,7 @@ export default async function BattlesPage() {
                           </span>
                         </div>
 
-                        <div className="flex items-center justify-between pt-3 border-t border-[rgba(255,255,255,0.06)]">
+                        <div className="flex items-center justify-between pt-4 mt-1 border-t border-[rgba(255,255,255,0.1)]">
                           <div className="flex items-center gap-1 text-amber-400">
                             <Coins className="w-4 h-4" />
                             <span className="font-semibold">{cost.toFixed(0)}</span>
@@ -213,12 +213,12 @@ export default async function BattlesPage() {
             {/* Completed Battles */}
             {completedBattles.length > 0 && (
               <section>
-                <div className="flex items-center gap-3 mb-6">
+                <div className="flex items-center gap-3 mb-8">
                   <Trophy className="w-5 h-5 text-amber-400" />
                   <h2 className="text-2xl font-bold text-white">Completed</h2>
                   <span className="text-sm text-[#8888aa]">({completedBattles.length})</span>
                 </div>
-                <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                <div className="grid gap-6 sm:gap-7 md:grid-cols-2 lg:grid-cols-3">
                   {completedBattles.map((battle) => (
                     <CompletedBattleCard
                       key={battle.id}

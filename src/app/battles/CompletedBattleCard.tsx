@@ -82,7 +82,7 @@ export function CompletedBattleCard({
 
   return (
     <>
-      <div className="group rounded-2xl p-6 transition-all relative bg-[#1a1a4a] border border-[rgba(255,255,255,0.15)] hover:border-[rgba(255,255,255,0.25)] shadow-lg">
+      <div className="group bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-lg rounded-2xl p-7 hover:border-[rgba(255,255,255,0.2)] transition-all duration-300 relative">
         {/* Admin Delete Button */}
         {isAdmin && (
           <button
@@ -129,7 +129,7 @@ export function CompletedBattleCard({
             </div>
           ) : null}
 
-          <div className="flex items-center justify-between pt-3 border-t border-[rgba(255,255,255,0.06)]">
+          <div className="flex items-center justify-between pt-3 border-t border-[rgba(255,255,255,0.1)]">
             <div className="flex items-center gap-1 text-[#8888aa]">
               <Users className="w-4 h-4" />
               <span>{visibleParticipants.length} players</span>
@@ -151,7 +151,7 @@ export function CompletedBattleCard({
             }
           }}
         >
-          <div className="glass-strong rounded-2xl p-8 max-w-md w-full text-center">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.2)] shadow-2xl rounded-2xl p-8 max-w-md w-full text-center">
             <div className="inline-flex items-center justify-center w-16 h-16 mb-6 rounded-2xl bg-red-500/20">
               <AlertTriangle className="w-8 h-8 text-red-400" />
             </div>

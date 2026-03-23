@@ -165,7 +165,7 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Battle Info Card */}
-            <div className="glass-strong rounded-3xl p-6 border border-white/10">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-3xl p-6">
               <div className="flex items-center justify-between mb-6">
                 <h1 className="text-2xl font-bold text-white">Battle #{battle.id.slice(-6)}</h1>
                 {getStatusBadge()}
@@ -204,7 +204,7 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
             </div>
 
             {/* Participants & Results */}
-            <div className="glass-strong rounded-3xl p-6 border border-white/10">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-3xl p-6">
               <h2 className="text-xl font-bold text-white mb-6">Battle Results</h2>
               
               <div className="space-y-4">
@@ -311,7 +311,7 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
 
             {/* Round Winners */}
             {roundWinners.length > 0 && (
-              <div className="glass-strong rounded-3xl p-6 border border-white/10">
+              <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-3xl p-6">
                 <h2 className="text-xl font-bold text-white mb-6">Round Winners</h2>
                 <div className="space-y-3">
                   {roundWinners.map((round) => (
@@ -352,7 +352,7 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
             )}
 
             {/* Battle Timeline */}
-            <div className="glass-strong rounded-3xl p-6 border border-white/10">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-3xl p-6">
               <h2 className="text-xl font-bold text-white mb-6">Battle Summary</h2>
               <div className="space-y-4">
                 <div className="flex items-center gap-3 text-[#f0f0f5]">
@@ -372,7 +372,7 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Box Details - Fanned Card Style */}
-            <div className="glass rounded-xl overflow-hidden card-lift border border-white/10">
+            <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl overflow-hidden hover:-translate-y-1.5 hover:shadow-[0_8px_30px_rgba(191,255,0,0.1)] transition-all duration-300">
               {/* Card Preview Section - Fanned Cards */}
               <div className="relative h-48 bg-gradient-to-b from-[#12123a]/50 to-[#0B0B2B]/80 flex items-end justify-center pb-2 overflow-hidden">
                 {/* Background glow effect */}
@@ -394,7 +394,7 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
                             zIndex: zIndexes[index],
                           }}
                         >
-                          <div className="relative w-20 h-[110px] rounded-md overflow-hidden border-2 border-[rgba(255,255,255,0.06)] shadow-lg hover:border-amber-400/50 transition-colors bg-[#12123a]">
+                          <div className="relative w-20 h-[110px] rounded-md overflow-hidden border-2 border-[rgba(255,255,255,0.1)] shadow-lg hover:border-amber-400/50 transition-colors bg-[#12123a]">
                             {card.imageUrlGatherer || card.imageUrlScryfall ? (
                               <Image
                                 src={card.imageUrlGatherer || card.imageUrlScryfall}
@@ -445,7 +445,7 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
               </div>
 
               {/* Box Info */}
-              <div className="p-4 border-t border-[rgba(255,255,255,0.06)]">
+              <div className="p-4 border-t border-[rgba(255,255,255,0.1)]">
                 <h3 className="text-sm font-semibold text-white mb-2 line-clamp-1">
                   {battle.box?.name || 'Unknown Box'}
                 </h3>
@@ -456,7 +456,7 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
                     <span className="text-xs text-[#8888aa]">coins</span>
                   </div>
                 </div>
-                <div className="mt-2 pt-2 border-t border-[rgba(255,255,255,0.06)]/50 flex items-center justify-between text-[11px] text-[#8888aa]">
+                <div className="mt-2 pt-2 border-t border-[rgba(255,255,255,0.1)]/50 flex items-center justify-between text-[11px] text-[#8888aa]">
                   <span>{battle.box?.cardsPerPack || 1} cards/pack</span>
                   <span>{battle.rounds} rounds</span>
                 </div>
@@ -464,7 +464,7 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
             </div>
 
             {/* Actions */}
-            <div className="glass-strong rounded-3xl p-6 border border-white/10">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-3xl p-6">
               <div className="space-y-3">
                 <Button asChild variant="outline" className="w-full">
                   <Link href="/battles">View All Battles</Link>

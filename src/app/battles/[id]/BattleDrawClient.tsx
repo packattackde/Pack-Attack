@@ -935,7 +935,7 @@ export default function BattleDrawClient({ battle: initialBattle, currentUserId,
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Battle Info Card */}
-            <div className="glass-strong rounded-3xl p-6 border border-white/10">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-3xl p-6">
               <div className="flex items-center justify-between mb-6">
                 <h1 className="text-2xl font-bold text-white">Battle #{battle.id.slice(-6)}</h1>
                 {getStatusBadge()}
@@ -976,7 +976,7 @@ export default function BattleDrawClient({ battle: initialBattle, currentUserId,
             </div>
 
             {/* Participants */}
-            <div className="glass-strong rounded-3xl p-6 border border-white/10">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-3xl p-6">
               <h2 className="text-xl font-bold text-white mb-6">
                 {allPulls.length > 0 ? 'Battle Progress' : 'Participants'}
               </h2>
@@ -1101,7 +1101,7 @@ export default function BattleDrawClient({ battle: initialBattle, currentUserId,
 
             {/* Round Results */}
             {roundResults.length > 0 && (
-              <div className="glass-strong rounded-3xl p-6 border border-white/10">
+              <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-3xl p-6">
                 <h2 className="text-xl font-bold text-white mb-6">Round Results</h2>
                 <div className="space-y-3">
                   {roundResults.map((round) => (
@@ -1147,7 +1147,7 @@ export default function BattleDrawClient({ battle: initialBattle, currentUserId,
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Box Details - Fanned Card Style */}
-            <div className="glass rounded-xl overflow-hidden card-lift border border-white/10">
+            <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl overflow-hidden hover:-translate-y-1.5 hover:shadow-[0_8px_30px_rgba(191,255,0,0.1)] transition-all duration-300">
               {/* Card Preview Section - Fanned Cards */}
               <div className="relative h-48 bg-gradient-to-b from-[#12123a]/50 to-[#0B0B2B]/80 flex items-end justify-center pb-2 overflow-hidden">
                 {/* Background glow effect */}
@@ -1220,7 +1220,7 @@ export default function BattleDrawClient({ battle: initialBattle, currentUserId,
               </div>
 
               {/* Box Info */}
-              <div className="p-4 border-t border-[rgba(255,255,255,0.06)]">
+              <div className="p-4 border-t border-[rgba(255,255,255,0.1)]">
                 <h3 className="text-sm font-semibold text-white mb-2 line-clamp-1">
                   {battle.box?.name || 'Unknown Box'}
                 </h3>
@@ -1231,7 +1231,7 @@ export default function BattleDrawClient({ battle: initialBattle, currentUserId,
                     <span className="text-xs text-[#8888aa]">coins</span>
                   </div>
                 </div>
-                <div className="mt-2 pt-2 border-t border-[rgba(255,255,255,0.06)]/50 flex items-center justify-between text-[11px] text-[#8888aa]">
+                <div className="mt-2 pt-2 border-t border-[rgba(255,255,255,0.1)]/50 flex items-center justify-between text-[11px] text-[#8888aa]">
                   <span>{battle.box?.cardsPerPack || 1} cards/pack</span>
                   <span>{battle.rounds} rounds</span>
                 </div>
@@ -1239,7 +1239,7 @@ export default function BattleDrawClient({ battle: initialBattle, currentUserId,
             </div>
 
             {/* Actions */}
-            <div className="glass-strong rounded-3xl p-6 border border-white/10">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-3xl p-6">
               <div className="space-y-3">
                 <Button asChild variant="outline" className="w-full">
                   <Link href="/battles">View All Battles</Link>

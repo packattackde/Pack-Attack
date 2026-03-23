@@ -141,7 +141,7 @@ export default function CreateBattlePage() {
 
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-2 mb-6 rounded-full glass border border-[rgba(191,255,0,0.3)]">
+          <div className="inline-flex items-center gap-2 px-4 py-2 mb-6 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md">
             <Swords className="w-5 h-5 text-[#BFFF00]" />
             <span className="text-[#BFFF00] font-semibold">New Battle</span>
           </div>
@@ -168,7 +168,7 @@ export default function CreateBattlePage() {
             </div>
             
             {boxes.length === 0 ? (
-              <div className="glass-strong rounded-2xl p-8 text-center border border-white/10">
+              <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-8 text-center">
                 <Package className="w-12 h-12 text-[#8888aa] mx-auto mb-3" />
                 <p className="text-[#8888aa]">No boxes available</p>
               </div>
@@ -181,7 +181,7 @@ export default function CreateBattlePage() {
                       key={box.id}
                       type="button"
                       onClick={() => setSelectedBox(box.id)}
-                      className={`group glass rounded-xl overflow-hidden text-left transition-all card-lift ${
+                      className={`group bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl overflow-hidden text-left hover:-translate-y-1.5 hover:shadow-[0_8px_30px_rgba(191,255,0,0.1)] transition-all duration-300 ${
                         isSelected
                           ? 'ring-2 ring-[#BFFF00] shadow-[0_0_24px_rgba(191,255,0,0.3)]'
                           : 'hover:ring-1 hover:ring-[rgba(191,255,0,0.3)]'
@@ -263,7 +263,7 @@ export default function CreateBattlePage() {
                       </div>
 
                       {/* Box Info */}
-                      <div className="p-4 border-t border-[rgba(255,255,255,0.06)]">
+                      <div className="p-4 border-t border-[rgba(255,255,255,0.1)]">
                         <h3 className="text-sm font-semibold text-white mb-2 group-hover:text-[#BFFF00] transition-colors line-clamp-1">
                           {box.name}
                         </h3>
@@ -274,7 +274,7 @@ export default function CreateBattlePage() {
                             <span className="text-xs text-[#8888aa]">coins</span>
                           </div>
                         </div>
-                        <div className="mt-2 pt-2 border-t border-[rgba(255,255,255,0.06)]/50 flex items-center justify-between text-[11px] text-[#8888aa]">
+                        <div className="mt-2 pt-2 border-t border-[rgba(255,255,255,0.1)]/50 flex items-center justify-between text-[11px] text-[#8888aa]">
                           <span>{box.cardsPerPack || 1} cards/pack</span>
                           <span>{box._count?.cards || 0} total</span>
                         </div>
@@ -300,7 +300,7 @@ export default function CreateBattlePage() {
 
             <div className="grid gap-6 md:grid-cols-2">
               {/* Players */}
-              <div className="glass-strong rounded-2xl p-6 border border-white/10">
+              <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6">
                 <div className="flex items-center gap-2 mb-4">
                   <Users className="w-5 h-5 text-[#BFFF00]" />
                   <h3 className="text-lg font-bold text-white">Players</h3>
@@ -324,7 +324,7 @@ export default function CreateBattlePage() {
               </div>
 
               {/* Rounds */}
-              <div className="glass-strong rounded-2xl p-6 border border-white/10">
+              <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6">
                 <div className="flex items-center gap-2 mb-4">
                   <Package className="w-5 h-5 text-[#BFFF00]" />
                   <h3 className="text-lg font-bold text-white">Rounds</h3>
@@ -459,7 +459,7 @@ export default function CreateBattlePage() {
           </div>
 
           {/* Summary & Create Button */}
-          <div className="glass-strong rounded-3xl p-8 border border-white/10">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-3xl p-8">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
               {/* Summary */}
               <div className="flex flex-wrap items-center gap-6">
