@@ -207,165 +207,139 @@ export function BoosterPackAnimation({ boxName, gameName, onTearComplete, rarity
             } : {}}
             transition={{ type: 'spring', stiffness: 100, damping: 20 }}
           >
-            {/* 3D Tilting Pack */}
+            {/* 3D Tilting Pack — real CSS 3D box with front + sides */}
             <motion.div
               className="w-full h-full relative"
               style={{
                 transformStyle: 'preserve-3d',
                 rotateX: phase === 'tilt' ? rotateX : 0,
                 rotateY: phase === 'tilt' ? rotateY : 0,
-                filter: 'drop-shadow(0 30px 50px rgba(0,0,0,0.6)) drop-shadow(0 0 40px rgba(80,56,181,0.25))',
               }}
             >
-              {/* SVG Booster Shape */}
-              <svg
-                viewBox="0 0 210 370"
-                className="absolute inset-0 w-full h-full"
-                style={{ overflow: 'visible' }}
-              >
-                <defs>
-                  <linearGradient id="boosterGrad" x1="0" y1="0" x2="0.8" y2="1">
-                    <stop offset="0%" stopColor="#2a1878" />
-                    <stop offset="20%" stopColor="#3d2590" />
-                    <stop offset="40%" stopColor="#4a30a8" />
-                    <stop offset="55%" stopColor="#5038b5" />
-                    <stop offset="75%" stopColor="#3d2590" />
-                    <stop offset="100%" stopColor="#221268" />
-                  </linearGradient>
-                  <clipPath id="boosterClipFM">
-                    <path d={BOOSTER_PATH} />
-                  </clipPath>
-                </defs>
-                <path d={BOOSTER_PATH} fill="url(#boosterGrad)" />
-              </svg>
+              {/* === FRONT FACE === */}
+              <div className="absolute inset-0" style={{ transformStyle: 'preserve-3d', transform: 'translateZ(6px)' }}>
+                {/* SVG Booster Shape */}
+                <svg viewBox="0 0 210 370" className="absolute inset-0 w-full h-full" style={{ overflow: 'visible' }}>
+                  <defs>
+                    <linearGradient id="boosterGrad" x1="0" y1="0" x2="0.8" y2="1">
+                      <stop offset="0%" stopColor="#2a1878" />
+                      <stop offset="25%" stopColor="#3d2590" />
+                      <stop offset="50%" stopColor="#4a30a8" />
+                      <stop offset="75%" stopColor="#3d2590" />
+                      <stop offset="100%" stopColor="#221268" />
+                    </linearGradient>
+                    <clipPath id="boosterClipFM">
+                      <path d={BOOSTER_PATH} />
+                    </clipPath>
+                  </defs>
+                  <path d={BOOSTER_PATH} fill="url(#boosterGrad)" />
+                </svg>
 
-              {/* Holographic foil overlay */}
-              <motion.div
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                  clipPath: 'url(#boosterClipFM)',
-                  background: useTransform(holoAngle, (a) =>
-                    `linear-gradient(${a}deg, rgba(255,0,128,0.15), rgba(0,255,200,0.18), rgba(255,200,0,0.15), rgba(0,128,255,0.18), rgba(255,0,200,0.12))`
-                  ),
-                  mixBlendMode: 'color-dodge',
-                }}
-              />
+                {/* Holographic foil */}
+                <motion.div className="absolute inset-0 pointer-events-none"
+                  style={{
+                    clipPath: 'url(#boosterClipFM)',
+                    background: useTransform(holoAngle, (a) =>
+                      `linear-gradient(${a}deg, rgba(255,0,128,0.15), rgba(0,255,200,0.18), rgba(255,200,0,0.15), rgba(0,128,255,0.18), rgba(255,0,200,0.12))`
+                    ),
+                    mixBlendMode: 'color-dodge',
+                  }} />
 
-              {/* Specular highlight — bright spot that follows tilt */}
-              <motion.div
-                className="absolute pointer-events-none"
-                style={{
-                  clipPath: 'url(#boosterClipFM)',
-                  width: 180,
-                  height: 180,
-                  borderRadius: '50%',
-                  background: 'radial-gradient(circle, rgba(255,255,255,0.22), transparent 60%)',
-                  left: useTransform(mouseX, [-0.5, 0.5], ['20%', '60%']),
-                  top: useTransform(mouseY, [-0.5, 0.5], ['15%', '50%']),
-                  mixBlendMode: 'overlay' as const,
-                }}
-              />
+                {/* Specular highlight */}
+                <motion.div className="absolute pointer-events-none"
+                  style={{
+                    clipPath: 'url(#boosterClipFM)',
+                    width: 180, height: 180, borderRadius: '50%',
+                    background: 'radial-gradient(circle, rgba(255,255,255,0.2), transparent 60%)',
+                    left: useTransform(mouseX, [-0.5, 0.5], ['20%', '60%']),
+                    top: useTransform(mouseY, [-0.5, 0.5], ['15%', '50%']),
+                    mixBlendMode: 'overlay' as const,
+                  }} />
 
-              {/* === CYLINDRICAL 3D LIGHTING — makes the pack look rounded like a real booster === */}
+                {/* Pack content */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
+                  style={{ clipPath: 'url(#boosterClipFM)' }}>
+                  <span className="text-5xl mb-2" style={{ filter: 'drop-shadow(0 0 15px rgba(191,255,0,0.3))' }}>🏴‍☠️</span>
+                  <span className="text-[15px] font-extrabold text-[#BFFF00] uppercase tracking-[3px]"
+                    style={{ textShadow: '0 0 10px rgba(191,255,0,0.4)' }}>
+                    Pack Attack
+                  </span>
+                  <span className="text-[9px] text-white/40 uppercase tracking-[2px] mt-1">
+                    {gameName || boxName}
+                  </span>
+                  <span className="absolute bottom-[18%] text-[9px] text-white/30 bg-black/30 px-3 py-0.5 rounded-full">
+                    5 Cards
+                  </span>
+                </div>
 
-              {/* Main cylindrical shading — dark edges, bright center strip */}
-              <div className="absolute inset-0 pointer-events-none"
-                style={{
-                  clipPath: 'url(#boosterClipFM)',
-                  background: 'linear-gradient(90deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.15) 8%, rgba(255,255,255,0.08) 25%, rgba(255,255,255,0.12) 40%, rgba(255,255,255,0.04) 55%, rgba(0,0,0,0.1) 75%, rgba(0,0,0,0.4) 92%, rgba(0,0,0,0.5) 100%)',
-                }} />
-
-              {/* Center highlight strip — vertical bright band (convex bulge) */}
-              <div className="absolute inset-0 pointer-events-none"
-                style={{
-                  clipPath: 'url(#boosterClipFM)',
-                  background: 'linear-gradient(90deg, transparent 20%, rgba(255,255,255,0.1) 35%, rgba(255,255,255,0.14) 45%, rgba(255,255,255,0.08) 55%, transparent 70%)',
-                }} />
-
-              {/* Left edge visible thickness — thin bright strip suggesting pack side */}
-              <div className="absolute top-[7%] bottom-[7%] left-0 w-[4px] pointer-events-none"
-                style={{
-                  clipPath: 'url(#boosterClipFM)',
-                  background: 'linear-gradient(to bottom, rgba(180,160,220,0.4), rgba(120,100,180,0.3) 50%, rgba(80,60,140,0.25))',
-                  borderRadius: '3px 0 0 3px',
-                }} />
-
-              {/* Right edge visible thickness — darker side */}
-              <div className="absolute top-[7%] bottom-[7%] right-0 w-[5px] pointer-events-none"
-                style={{
-                  clipPath: 'url(#boosterClipFM)',
-                  background: 'linear-gradient(to bottom, rgba(40,20,80,0.6), rgba(20,10,50,0.7) 50%, rgba(10,5,30,0.6))',
-                  borderRadius: '0 3px 3px 0',
-                }} />
-
-              {/* Top crimp shadow — where the seal meets the pack body */}
-              <div className="absolute top-[6%] left-[3%] right-[3%] h-[18px] pointer-events-none"
-                style={{
-                  clipPath: 'url(#boosterClipFM)',
-                  background: 'linear-gradient(to bottom, rgba(255,255,255,0.12), rgba(255,255,255,0.03) 40%, transparent)',
-                }} />
-
-              {/* Bottom crimp shadow */}
-              <div className="absolute bottom-[6%] left-[3%] right-[3%] h-[18px] pointer-events-none"
-                style={{
-                  clipPath: 'url(#boosterClipFM)',
-                  background: 'linear-gradient(to top, rgba(0,0,0,0.35), rgba(0,0,0,0.1) 40%, transparent)',
-                }} />
-
-              {/* Inner ambient glow */}
-              <div className="absolute inset-0 pointer-events-none"
-                style={{
-                  clipPath: 'url(#boosterClipFM)',
-                  background: 'radial-gradient(ellipse at 42% 45%, rgba(120,90,220,0.15), transparent 65%)',
-                }} />
-
-              {/* Foil crease lines — vertical wrinkles like real foil */}
-              <div className="absolute pointer-events-none"
-                style={{
-                  clipPath: 'url(#boosterClipFM)',
-                  top: '12%', left: '9%', width: 1, height: '72%',
-                  background: 'linear-gradient(to bottom, transparent, rgba(255,255,255,0.06) 30%, rgba(255,255,255,0.09) 50%, rgba(255,255,255,0.05) 70%, transparent)',
-                  transform: 'rotate(0.5deg)',
-                }} />
-              <div className="absolute pointer-events-none"
-                style={{
-                  clipPath: 'url(#boosterClipFM)',
-                  top: '8%', right: '13%', width: 1, height: '78%',
-                  background: 'linear-gradient(to bottom, transparent, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.08) 55%, rgba(255,255,255,0.04) 75%, transparent)',
-                  transform: 'rotate(-0.3deg)',
-                }} />
-              <div className="absolute pointer-events-none"
-                style={{
-                  clipPath: 'url(#boosterClipFM)',
-                  top: '15%', left: '35%', width: 1, height: '65%',
-                  background: 'linear-gradient(to bottom, transparent, rgba(255,255,255,0.04) 40%, rgba(255,255,255,0.06) 60%, transparent)',
-                  transform: 'rotate(0.2deg)',
-                }} />
-
-              {/* Pack content */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
-                style={{ clipPath: 'url(#boosterClipFM)' }}>
-                <span className="text-5xl mb-2" style={{ filter: 'drop-shadow(0 0 15px rgba(191,255,0,0.3))' }}>🏴‍☠️</span>
-                <span className="text-[15px] font-extrabold text-[#BFFF00] uppercase tracking-[3px]"
-                  style={{ textShadow: '0 0 10px rgba(191,255,0,0.4)' }}>
-                  Pack Attack
-                </span>
-                <span className="text-[9px] text-white/40 uppercase tracking-[2px] mt-1">
-                  {gameName || boxName}
-                </span>
-                <span className="absolute bottom-[18%] text-[9px] text-white/30 bg-black/30 px-3 py-0.5 rounded-full">
-                  5 Cards
-                </span>
+                {/* Seal */}
+                <div className="absolute top-[15%] right-[12%] w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-black text-black z-10"
+                  style={{
+                    background: 'radial-gradient(circle at 35% 35%, #e0ff60, #BFFF00, #80cc00)',
+                    boxShadow: '0 2px 8px rgba(191,255,0,0.4)',
+                    transform: 'translateZ(2px)',
+                  }}>
+                  PA
+                </div>
               </div>
 
-              {/* Seal */}
-              <div className="absolute top-[15%] right-[12%] w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-black text-black z-10"
+              {/* === BACK FACE === */}
+              <div className="absolute inset-0 pointer-events-none"
                 style={{
-                  background: 'radial-gradient(circle at 35% 35%, #e0ff60, #BFFF00, #80cc00)',
-                  boxShadow: '0 2px 8px rgba(191,255,0,0.4)',
-                }}>
-                PA
-              </div>
+                  transform: 'translateZ(-6px)',
+                  background: 'linear-gradient(155deg, #1a0e50, #150a3d)',
+                  clipPath: 'url(#boosterClipFM)',
+                }} />
+
+              {/* === LEFT SIDE (visible when tilted right) === */}
+              <div className="absolute pointer-events-none"
+                style={{
+                  width: 12,
+                  height: '76%',
+                  top: '7%',
+                  left: 0,
+                  transformOrigin: 'left center',
+                  transform: 'rotateY(90deg) translateX(-6px)',
+                  background: 'linear-gradient(to bottom, #3d2590, #2d1b6b 30%, #3a2282 50%, #2d1b6b 70%, #221268)',
+                  borderLeft: '1px solid rgba(255,255,255,0.08)',
+                }} />
+
+              {/* === RIGHT SIDE (visible when tilted left) === */}
+              <div className="absolute pointer-events-none"
+                style={{
+                  width: 12,
+                  height: '76%',
+                  top: '7%',
+                  right: 0,
+                  transformOrigin: 'right center',
+                  transform: 'rotateY(-90deg) translateX(6px)',
+                  background: 'linear-gradient(to bottom, #2a1878, #1a0e50 30%, #221268 50%, #1a0e50 70%, #150a3d)',
+                  borderRight: '1px solid rgba(255,255,255,0.05)',
+                }} />
+
+              {/* === TOP SIDE (visible when tilted down) === */}
+              <div className="absolute pointer-events-none"
+                style={{
+                  width: '86%',
+                  height: 12,
+                  top: '7%',
+                  left: '7%',
+                  transformOrigin: 'center top',
+                  transform: 'rotateX(-90deg) translateY(-6px)',
+                  background: 'linear-gradient(to right, #2d1b6b, #3d2590 50%, #2d1b6b)',
+                }} />
+
+              {/* === BOTTOM SIDE (visible when tilted up) === */}
+              <div className="absolute pointer-events-none"
+                style={{
+                  width: '86%',
+                  height: 12,
+                  bottom: '7%',
+                  left: '7%',
+                  transformOrigin: 'center bottom',
+                  transform: 'rotateX(90deg) translateY(6px)',
+                  background: 'linear-gradient(to right, #1a0e50, #221268 50%, #1a0e50)',
+                }} />
 
               {/* Tear Zone */}
               <div
