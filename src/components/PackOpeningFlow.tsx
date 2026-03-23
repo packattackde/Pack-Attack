@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import { motion, useMotionValue, useTransform, useSpring, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { Coins } from 'lucide-react';
@@ -103,6 +103,7 @@ export function PackOpeningFlow({
   const isTearing = useRef(false);
   const particleId = useRef(0);
   const lastParticleTime = useRef(0);
+  const tearTimeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   // ── Custom cursor ──
   const cursorX = useMotionValue(-100);
@@ -115,6 +116,9 @@ export function PackOpeningFlow({
   const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [12, -12]), { stiffness: 150, damping: 20 });
   const tiltRotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-12, 12]), { stiffness: 150, damping: 20 });
   const holoAngle = useTransform(mouseX, [-0.5, 0.5], [100, 260]);
+  const holoBackground = useTransform(holoAngle, (a: number) =>
+    `linear-gradient(${a}deg, rgba(255,0,128,0.15), rgba(0,255,200,0.18), rgba(255,200,0,0.15), rgba(0,128,255,0.18), rgba(255,0,200,0.12))`
+  );
 
   // ── Derived values ──
   const bestPullTier = bestPullId ? getRarityTier(pulls.find(p => p.id === bestPullId)?.card.rarity ?? '') : 'common';
@@ -220,10 +224,11 @@ export function PackOpeningFlow({
       isTearing.current = false;
       setBoosterPhase('torn');
       if ('vibrate' in navigator) navigator.vibrate([50, 30, 100]);
-      setTimeout(() => setBoosterPhase('glow'), 800);
-      setTimeout(() => {
+      const t1 = setTimeout(() => setBoosterPhase('glow'), 800);
+      const t2 = setTimeout(() => {
         setPhase('emerging');
       }, 1200);
+      tearTimeoutsRef.current.push(t1, t2);
     }
   }, [boosterPhase, tearProgress, bestPullTier]);
 
@@ -297,15 +302,36 @@ export function PackOpeningFlow({
     }
   }, [phase, infoVisible, currentCardIndex, pulls.length, showBestPull, onComplete]);
 
+  // ── Best pull ready guard (Bug #4) ──
+  const [bestPullReady, setBestPullReady] = useState(false);
+
+  // Reset bestPullReady when phase changes
+  useEffect(() => {
+    setBestPullReady(false);
+  }, [phase]);
+
   // ─── Best pull auto-advance ───────────────────────────────────────
 
   useEffect(() => {
     if (phase !== 'bestPull') return;
+    const readyTimer = setTimeout(() => setBestPullReady(true), 1500);
     const timer = setTimeout(() => {
       onComplete();
     }, 3000);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(readyTimer);
+      clearTimeout(timer);
+    };
   }, [phase, onComplete]);
+
+  // ─── Cleanup tear timeouts on unmount ──────────────────────────────
+
+  useEffect(() => {
+    return () => {
+      tearTimeoutsRef.current.forEach(t => clearTimeout(t));
+      tearTimeoutsRef.current = [];
+    };
+  }, []);
 
   // ─── Build SVG tear line ──────────────────────────────────────────
 
@@ -332,6 +358,27 @@ export function PackOpeningFlow({
   const bestPull = bestPullId ? pulls.find(p => p.id === bestPullId) : null;
   const bestColors = bestPull ? RARITY_COLORS[getRarityTier(bestPull.card.rarity)] : RARITY_COLORS.common;
 
+  // ── Pre-computed random particle data (Bug #2) ──
+  const buildupParticleData = useMemo(() =>
+    Array.from({ length: 12 }, () => ({
+      width: 4 + Math.random() * 4,
+      height: 4 + Math.random() * 4,
+      initialX: (Math.random() - 0.5) * 300,
+      initialY: (Math.random() - 0.5) * 400,
+      animateX: (Math.random() - 0.5) * 40,
+      animateY: (Math.random() - 0.5) * 40,
+    }))
+  , [currentCardIndex]);
+
+  const orbitParticleData = useMemo(() =>
+    Array.from({ length: 16 }, (_, i) => ({
+      width: 4 + Math.random() * 4,
+      height: 4 + Math.random() * 4,
+      radius: 180 + Math.random() * 40,
+      duration: 3 + Math.random() * 2,
+    }))
+  , [bestPullId]);
+
   // ─── Render ───────────────────────────────────────────────────────
 
   return (
@@ -340,7 +387,7 @@ export function PackOpeningFlow({
       className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#06061a] overflow-hidden select-none [&_*]:select-none"
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
-      onClick={phase === 'revealing' ? advanceCard : phase === 'bestPull' ? onComplete : undefined}
+      onClick={phase === 'revealing' ? advanceCard : phase === 'bestPull' ? (bestPullReady ? onComplete : undefined) : undefined}
       style={{ cursor: 'none' }}
     >
       {/* ═══ BOOSTER PACK ═══ */}
@@ -392,9 +439,7 @@ export function PackOpeningFlow({
                   className="absolute inset-0 pointer-events-none"
                   style={{
                     clipPath: 'url(#boosterClipPOF)',
-                    background: useTransform(holoAngle, (a: number) =>
-                      `linear-gradient(${a}deg, rgba(255,0,128,0.15), rgba(0,255,200,0.18), rgba(255,200,0,0.15), rgba(0,128,255,0.18), rgba(255,0,200,0.12))`
-                    ),
+                    background: holoBackground,
                     mixBlendMode: 'color-dodge',
                   }}
                 />
@@ -572,6 +617,7 @@ export function PackOpeningFlow({
                   }}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: [0, 0.8, 0.5, 1, 0.6] }}
+                  exit={{ opacity: 0 }}
                   transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
                 />
               )}
@@ -721,26 +767,26 @@ export function PackOpeningFlow({
             {/* Epic / Legendary buildup particles */}
             {buildupActive && !buildupDone && (currentTier === 'epic' || currentTier === 'legendary') && (
               <>
-                {Array.from({ length: 12 }).map((_, i) => (
+                {buildupParticleData.map((pd, i) => (
                   <motion.div
                     key={`bp-${i}`}
                     className="absolute rounded-full pointer-events-none"
                     style={{
-                      width: 4 + Math.random() * 4,
-                      height: 4 + Math.random() * 4,
+                      width: pd.width,
+                      height: pd.height,
                       background: currentColors.particle,
                       boxShadow: `0 0 6px ${currentColors.particle}`,
                       zIndex: -1,
                     }}
                     initial={{
-                      x: (Math.random() - 0.5) * 300,
-                      y: (Math.random() - 0.5) * 400,
+                      x: pd.initialX,
+                      y: pd.initialY,
                       opacity: 0,
                       scale: 0,
                     }}
                     animate={{
-                      x: (Math.random() - 0.5) * 40,
-                      y: (Math.random() - 0.5) * 40,
+                      x: pd.animateX,
+                      y: pd.animateY,
                       opacity: [0, 1, 1, 0.5],
                       scale: [0, 1.5, 1, 0.5],
                     }}
@@ -850,7 +896,7 @@ export function PackOpeningFlow({
                   </span>
                   <span className="flex items-center gap-1 text-amber-400 text-sm font-medium mt-1">
                     <Coins className="w-4 h-4" />
-                    {currentPull.card.coinValue}
+                    {currentPull.card.coinValue.toFixed(2)}
                   </span>
                 </motion.div>
               )}
@@ -901,35 +947,34 @@ export function PackOpeningFlow({
             />
 
             {/* Orbiting particles */}
-            {Array.from({ length: 16 }).map((_, i) => {
+            {orbitParticleData.map((pd, i) => {
               const angle = (i / 16) * Math.PI * 2;
-              const radius = 180 + Math.random() * 40;
               return (
                 <motion.div
                   key={`best-p-${i}`}
                   className="absolute rounded-full pointer-events-none"
                   style={{
-                    width: 4 + Math.random() * 4,
-                    height: 4 + Math.random() * 4,
+                    width: pd.width,
+                    height: pd.height,
                     background: bestColors.particle,
                     boxShadow: `0 0 8px ${bestColors.particle}`,
                     zIndex: -1,
                   }}
                   animate={{
                     x: [
-                      Math.cos(angle) * radius,
-                      Math.cos(angle + Math.PI) * radius,
-                      Math.cos(angle + Math.PI * 2) * radius,
+                      Math.cos(angle) * pd.radius,
+                      Math.cos(angle + Math.PI) * pd.radius,
+                      Math.cos(angle + Math.PI * 2) * pd.radius,
                     ],
                     y: [
-                      Math.sin(angle) * radius,
-                      Math.sin(angle + Math.PI) * radius,
-                      Math.sin(angle + Math.PI * 2) * radius,
+                      Math.sin(angle) * pd.radius,
+                      Math.sin(angle + Math.PI) * pd.radius,
+                      Math.sin(angle + Math.PI * 2) * pd.radius,
                     ],
                     opacity: [0.5, 1, 0.5],
                   }}
                   transition={{
-                    duration: 3 + Math.random() * 2,
+                    duration: pd.duration,
                     repeat: Infinity,
                     ease: 'linear',
                     delay: i * 0.1,
@@ -989,7 +1034,7 @@ export function PackOpeningFlow({
               </span>
               <span className="flex items-center gap-1 text-amber-400 text-base font-medium mt-1">
                 <Coins className="w-5 h-5" />
-                {bestPull.card.coinValue}
+                {bestPull.card.coinValue.toFixed(2)}
               </span>
             </motion.div>
           </motion.div>

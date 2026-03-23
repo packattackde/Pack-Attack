@@ -1160,46 +1160,6 @@ export default function OpenBoxPage() {
         </div>
       )}
 
-      {/* Sell-by-rarity confirmation dialog */}
-      {sellConfirm && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setSellConfirm(null)} />
-          <div className="relative z-10 w-full max-w-sm rounded-2xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] p-6 shadow-2xl">
-            <div className="flex items-center gap-2 mb-1">
-              <BadgeDollarSign className="w-5 h-5 text-amber-400" />
-              <h3 className="text-lg font-bold text-[#f0f0f5]">Sell {TIER_META[sellConfirm.tier]?.label}?</h3>
-            </div>
-            <p className="text-[#8888aa] text-sm mb-5">
-              Sell{' '}
-              <span className="text-[#f0f0f5] font-semibold">{sellConfirm.pullIds.length} {TIER_META[sellConfirm.tier]?.label}</span>
-              {' '}for{' '}
-              <span className="text-amber-400 font-semibold">{sellConfirm.coins.toFixed(2)} coins</span>?
-              {' '}This cannot be undone.
-            </p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setSellConfirm(null)}
-                disabled={sellingSummary}
-                className="flex-1 py-2.5 rounded-xl border border-[rgba(255,255,255,0.06)] text-[#8888aa] hover:text-[#f0f0f5] hover:border-[rgba(255,255,255,0.12)] font-medium transition-colors disabled:opacity-50"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSellByTier}
-                disabled={sellingSummary}
-                className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-semibold transition-all hover:scale-[1.02] flex items-center justify-center gap-2 disabled:opacity-50 disabled:hover:scale-100"
-              >
-                {sellingSummary ? (
-                  <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Selling...</>
-                ) : (
-                  <><BadgeDollarSign className="w-4 h-4" /> Sell</>
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Auto-open confirmation dialog */}
       {showAutoConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
