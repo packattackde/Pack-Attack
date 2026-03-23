@@ -7,6 +7,7 @@ import { Coins, Package, Sparkles, ArrowLeft, Layers, Zap, Square, BadgeDollarSi
 import Image from 'next/image';
 import Link from 'next/link';
 import { emitCoinBalanceUpdate } from '@/lib/coin-events';
+import { BoosterPackAnimation } from '@/components/BoosterPackAnimation';
 
 type BoxCard = {
   id: string;
@@ -288,7 +289,7 @@ export default function OpenBoxPage() {
   const [showAutoConfirm, setShowAutoConfirm] = useState(false);
   const autoStopRef = useRef(false);
   // Deck animation
-  const [deckPhase, setDeckPhase] = useState<'idle'|'stacking'|'shuffling'|'drawing'|'revealed'|'summary'>('idle');
+  const [deckPhase, setDeckPhase] = useState<'idle'|'booster'|'stacking'|'shuffling'|'drawing'|'revealed'|'summary'>('idle');
   const [deckKey, setDeckKey] = useState(0);
   const revealTimeoutsRef = useRef<Array<ReturnType<typeof setTimeout>>>([]);
   const pendingPullsRef = useRef<any[]>([]);
@@ -374,7 +375,7 @@ export default function OpenBoxPage() {
     setCurrentRevealIndex(0);
     setRevealTotal(0);
     setDeckKey(k => k + 1);
-    setDeckPhase('stacking');
+    setDeckPhase('booster');
 
     try {
       const res = await fetch('/api/packs/open', {
@@ -980,8 +981,32 @@ export default function OpenBoxPage() {
         </div>
       </div>
 
+      {/* Booster Pack Animation */}
+      {deckPhase === 'booster' && box && (
+        <BoosterPackAnimation
+          boxName={box.name}
+          gameName={box.name}
+          onTearComplete={() => setDeckPhase('stacking')}
+          rarityHint={(() => {
+            // Determine best rarity from pending pulls for the glow hint
+            const pulls = pendingPullsRef.current;
+            if (!pulls || pulls.length === 0) return 'common' as const;
+            const bestPull = pulls.reduce((best: any, pull: any) => {
+              const bestValue = best?.card?.coinValue ?? 0;
+              return (pull.card?.coinValue ?? 0) > bestValue ? pull : best;
+            }, pulls[0]);
+            const rarity = bestPull?.card?.rarity?.toLowerCase() || 'common';
+            if (rarity.includes('secret') || rarity.includes('legendary') || rarity.includes('mythic') || rarity.includes('alt art') || rarity.includes('gold') || rarity.includes('hyper')) return 'legendary' as const;
+            if (rarity.includes('ultra') || rarity.includes('super') || rarity.includes('epic') || rarity.includes('illustration') || rarity.includes('full art')) return 'epic' as const;
+            if (rarity.includes('rare') || rarity.includes('holo') || rarity.includes('promo')) return 'rare' as const;
+            if (rarity.includes('uncommon')) return 'uncommon' as const;
+            return 'common' as const;
+          })()}
+        />
+      )}
+
       {/* Deck Animation Overlay */}
-      {deckPhase !== 'idle' && deckPhase !== 'summary' && (
+      {deckPhase !== 'idle' && deckPhase !== 'summary' && deckPhase !== 'booster' && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm">
           <div className="relative flex flex-col items-center">
 
