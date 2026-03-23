@@ -208,27 +208,15 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
           </button>
         </div>
       ) : (
-        <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {filteredBoxes.map((box) => (
-            <Link 
-              key={box.id} 
+            <Link
+              key={box.id}
               href={`/open/${box.id}`}
-              className="group relative rounded-2xl overflow-hidden mobile-card-interaction transition-all duration-300 active:scale-[0.97] sm:hover:scale-[1.02]"
-              style={{
-                background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%)',
-                backdropFilter: 'blur(12px)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                boxShadow: '0 4px 24px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-              }}
+              className="group relative rounded-2xl overflow-hidden transition-all duration-300 active:scale-[0.97] sm:hover:scale-[1.02] sm:hover:shadow-[0_8px_40px_rgba(191,255,0,0.12)] bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] hover:border-[rgba(191,255,0,0.3)]"
             >
-              {/* Hover glow effect */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-2xl"
-                   style={{
-                     background: 'radial-gradient(circle at center, rgba(191, 255, 0, 0.1), transparent 70%)',
-                   }} />
-              
               {/* Card Preview Section - Fanned Cards */}
-              <div className="relative h-48 bg-gradient-to-b from-[#12123a]/40 to-[#0B0B2B]/60 flex items-end justify-center pb-2 overflow-hidden">
+              <div className="relative h-56 bg-gradient-to-b from-[#252560] to-[#1a1a4a] flex items-end justify-center pb-4 overflow-hidden">
                 {/* Background glow effect */}
                 <div className="absolute inset-0 bg-gradient-to-t from-amber-500/10 via-transparent to-transparent" />
                 
@@ -298,32 +286,30 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
                   </div>
                 )}
                 {box.games && box.games[0] && (
-                  <div className={`absolute top-2 right-2 px-2 py-0.5 rounded-full text-[10px] font-semibold badge-${box.games[0].toLowerCase()} z-10`}>
-                    {box.games[0]}
+                  <div className={`absolute top-3 right-3 px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider z-10 ${getGameBadgeStyle(box.games[0])}`}>
+                    {getGameDisplayName(box.games[0])}
                   </div>
                 )}
               </div>
 
-              {/* Box Info - Modern Premium Design */}
-              <div className="relative p-5 bg-gradient-to-b from-[#0B0B2B]/60 to-[#06061a]/80">
-                {/* Top accent line */}
-                <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-[rgba(191,255,0,0.3)] to-transparent" />
+              {/* Box Info */}
+              <div className="relative p-6 border-t border-[rgba(255,255,255,0.08)]">
                 
                 <h3 className="text-base font-bold text-white mb-3 group-hover:text-[#BFFF00] transition-colors line-clamp-1 tracking-wide">
                   {box.name}
                 </h3>
                 
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/20">
-                    <Coins className="w-4 h-4 text-amber-400" style={{ filter: 'drop-shadow(0 0 4px rgba(251, 191, 36, 0.5))' }} />
-                    <span className="text-sm font-bold text-amber-400">{box.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <Coins className="w-5 h-5 text-[#BFFF00]" />
+                    <span className="text-xl font-extrabold text-[#BFFF00]">{box.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                   </div>
-                  <div className="flex items-center gap-1 text-[#BFFF00] text-xs font-semibold group-hover:gap-2 transition-all duration-300">
+                  <span className="inline-flex items-center gap-1 px-4 py-2 bg-[#BFFF00] text-black text-sm font-bold rounded-xl group-hover:shadow-[0_0_20px_rgba(191,255,0,0.3)] transition-all">
                     Open <ChevronRight className="w-4 h-4" />
-                  </div>
+                  </span>
                 </div>
-                
-                <div className="flex items-center justify-between text-xs text-[#8888aa] pt-2 border-t border-[rgba(255,255,255,0.06)]">
+
+                <div className="flex items-center justify-between text-xs text-[#8888aa] pt-3 border-t border-[rgba(255,255,255,0.08)]">
                   <span className="flex items-center gap-1">
                     <Layers className="w-3 h-3" />
                     {box.cardsPerPack} cards/pack
@@ -337,6 +323,24 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
       )}
     </>
   );
+}
+
+function getGameBadgeStyle(game: string): string {
+  const normalized = game.toLowerCase().replace(/-/g, '_');
+  const styles: Record<string, string> = {
+    pokemon: 'bg-yellow-500 text-black',
+    magic: 'bg-purple-600 text-white',
+    magic_the_gathering: 'bg-purple-600 text-white',
+    yugioh: 'bg-orange-500 text-black',
+    onepiece: 'bg-red-600 text-white',
+    one_piece: 'bg-red-600 text-white',
+    lorcana: 'bg-indigo-500 text-white',
+    digimon: 'bg-cyan-500 text-black',
+    sports: 'bg-green-600 text-white',
+    flesh_and_blood: 'bg-rose-600 text-white',
+    fleshblood: 'bg-rose-600 text-white',
+  };
+  return styles[normalized] || 'bg-gray-600 text-white';
 }
 
 function getGameBadgeColor(game: string): string {
