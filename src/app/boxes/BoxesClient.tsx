@@ -198,6 +198,12 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
           </button>
         </div>
       ) : (
+        {/* Section Label */}
+        <div className="flex items-center gap-3 mb-6">
+          <span className="text-[11px] font-semibold uppercase tracking-[1.5px] text-[#BFFF00] whitespace-nowrap">Available Packs</span>
+          <div className="flex-1 h-px bg-gradient-to-r from-[rgba(191,255,0,0.2)] to-transparent" />
+        </div>
+
         <div className="grid gap-6 sm:gap-7 lg:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {filteredBoxes.map((box) => (
             <Link
@@ -299,8 +305,10 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
                 <p className="text-[13px] text-[#7777a0] mb-5">{box.cardsPerPack} cards/pack · {box._count.cards} total cards</p>
 
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Coins className="w-5 h-5 text-[#BFFF00]" />
+                  <div className="flex items-center gap-2.5">
+                    <div className="flex items-center justify-center w-7 h-7 rounded-full bg-[rgba(191,255,0,0.15)] border border-[rgba(191,255,0,0.3)]">
+                      <Coins className="w-4 h-4 text-[#BFFF00]" />
+                    </div>
                     <span className="text-2xl font-extrabold text-[#BFFF00]">{box.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                   </div>
                   <span className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-[#BFFF00] text-black text-sm font-bold rounded-xl shadow-[0_2px_12px_rgba(191,255,0,0.2)] group-hover:shadow-[0_4px_24px_rgba(191,255,0,0.35)] group-hover:scale-105 transition-all">

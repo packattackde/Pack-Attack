@@ -81,8 +81,10 @@ export default async function BoxesPage() {
       <div className="relative container py-14 sm:py-16">
         {/* Header */}
         <div className="mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-2 mb-4 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] text-sm shadow-md">
-            <Package className="w-4 h-4 text-[#BFFF00]" />
+          <div className="inline-flex items-center gap-2.5 px-4 py-2 mb-5 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] text-sm shadow-md">
+            <div className="flex items-center justify-center w-5 h-5 rounded-full bg-[rgba(191,255,0,0.15)]">
+              <Package className="w-3 h-3 text-[#BFFF00]" />
+            </div>
             <span className="text-[#f0f0f5] font-medium">Card Packs</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-extrabold mb-3 tracking-tight">
