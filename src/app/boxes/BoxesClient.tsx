@@ -227,10 +227,11 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
                         'rotate(0deg) translateX(0px) translateY(-6px)',
                         'rotate(12deg) translateX(18px)',
                       ];
+                      // Hover: cards fan out flat, side by side
                       const fanHover = [
-                        'rotate(-22deg) translateX(-50px) translateY(-4px) scale(1.08)',
-                        'rotate(0deg) translateX(0px) translateY(-16px) scale(1.08)',
-                        'rotate(22deg) translateX(50px) translateY(-4px) scale(1.08)',
+                        'rotate(0deg) translateX(-75px) translateY(-8px) scale(1.05)',
+                        'rotate(0deg) translateX(0px) translateY(-8px) scale(1.05)',
+                        'rotate(0deg) translateX(75px) translateY(-8px) scale(1.05)',
                       ];
                       const zIndexes = [1, 3, 2];
                       return (
