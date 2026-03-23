@@ -420,8 +420,8 @@ html {
   --pa-radius-xl: 20px;
   --pa-radius-full: 100px;
 
-  --primary: 59 130 246;
-  --secondary: 139 92 246;
+  --primary: 191 255 0;
+  --secondary: 154 204 0;
   
   /* Touch-friendly sizes - WCAG 2.1 recommends 44px minimum */
   --touch-target-min: 44px;
@@ -950,7 +950,7 @@ img {
 
 @media (prefers-contrast: high) {
   :root {
-    --primary: 96 165 250;
+    --primary: 191 255 0;
   }
   
   .border-\[rgba\(255\,255\,255\,0\.06\)\] {
