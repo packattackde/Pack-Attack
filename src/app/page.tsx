@@ -154,21 +154,19 @@ export default async function HomePage() {
       {/* Background Effects */}
       <div className="fixed inset-0 bg-grid opacity-20" />
       <div className="fixed inset-0 radial-gradient" />
-      <div className="fixed top-20 left-10 w-72 h-72 bg-[rgba(191,255,0,0.04)] rounded-full blur-3xl hidden lg:block" />
-      <div className="fixed bottom-20 right-10 w-96 h-96 bg-[rgba(191,255,0,0.03)] rounded-full blur-3xl hidden lg:block" />
 
       {/* ============================================ */}
       {/* HERO SECTION */}
       {/* ============================================ */}
-      <section className="relative container pt-16 sm:pt-24 pb-8 sm:pb-12 text-center px-4">
+      <section className="relative container pt-20 sm:pt-28 pb-12 sm:pb-16 text-center px-4">
         {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 mb-8 sm:mb-10 rounded-full border border-white/[0.08] bg-white/[0.03] backdrop-blur-sm">
+        <div className="inline-flex items-center gap-2 px-4 py-2 mb-8 sm:mb-10 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md">
           <Sparkles className="w-3.5 h-3.5 text-[#BFFF00]" />
           <span className="text-xs sm:text-sm text-[#8888aa] font-medium tracking-wide uppercase">The Ultimate TCG Experience</span>
         </div>
 
         {/* Main Headline */}
-        <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black mb-6 sm:mb-8 tracking-tighter leading-[0.9]">
+        <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-6 sm:mb-8 tracking-tighter leading-[0.9]">
           <span className="text-white">PACK</span>
           <br className="sm:hidden" />
           <span className="text-[#BFFF00]">
@@ -180,23 +178,23 @@ export default async function HomePage() {
         <p className="text-xl sm:text-2xl md:text-3xl text-[#f0f0f5] mb-3 font-semibold tracking-tight">
           Play. Rumble. Collect.
         </p>
-        <p className="mx-auto max-w-lg text-gray-500 mb-10 sm:mb-12 text-base sm:text-lg">
+        <p className="mx-auto max-w-lg text-[#8888aa] mb-10 sm:mb-12 text-base sm:text-lg">
           Open packs. Battle other players. Win real cards shipped to your door.
         </p>
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mb-6 px-4">
-          <Link 
-            href="/boxes" 
-            className="group inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-[#BFFF00] hover:bg-[#d4ff4d] text-black font-bold rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-[0_0_24px_rgba(191,255,0,0.3)] active:scale-95 touch-target min-h-[56px] text-base"
+          <Link
+            href="/boxes"
+            className="group inline-flex items-center justify-center gap-2.5 bg-[#BFFF00] text-black font-bold rounded-xl px-8 py-4 text-lg shadow-[0_2px_12px_rgba(191,255,0,0.2)] hover:shadow-[0_4px_24px_rgba(191,255,0,0.35)] hover:scale-105 transition-all active:scale-95 touch-target min-h-[56px]"
           >
             <Package className="w-5 h-5" />
             Get a Pack!
             <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
-          <Link 
-            href="/battles" 
-            className="group inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl font-bold text-white transition-all duration-300 hover:scale-105 active:scale-95 border border-white/[0.1] bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/[0.15] touch-target min-h-[56px] text-base"
+          <Link
+            href="/battles"
+            className="group inline-flex items-center justify-center gap-2.5 border border-[rgba(191,255,0,0.3)] text-[#BFFF00] rounded-xl px-8 py-4 text-lg hover:bg-[rgba(191,255,0,0.08)] transition-all active:scale-95 font-bold touch-target min-h-[56px]"
           >
             <Swords className="w-5 h-5" />
             View Battles
@@ -208,8 +206,8 @@ export default async function HomePage() {
       {/* STATS BAR */}
       {/* ============================================ */}
       <section className="relative container mb-16 sm:mb-20 px-4">
-        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-sm p-6 sm:p-8">
-          <div className="grid grid-cols-3 gap-4 md:gap-8">
+        <div className="rounded-2xl bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg p-8 sm:p-10">
+          <div className="grid grid-cols-3 gap-6 md:gap-10">
             {[
               { icon: Package, value: stats.boxesOpened, label: 'Packs Opened', color: 'blue' },
               { icon: Swords, value: stats.battlesRun, label: 'Battles Complete', color: 'purple' },
@@ -220,7 +218,7 @@ export default async function HomePage() {
                   <stat.icon className={`w-5 h-5 sm:w-5.5 sm:h-5.5 text-${stat.color}-400`} />
                 </div>
                 <div className="text-2xl sm:text-3xl md:text-4xl font-black text-white tabular-nums">{stat.value.toLocaleString()}</div>
-                <div className="text-xs sm:text-sm text-gray-500 mt-1 font-medium">{stat.label}</div>
+                <div className="text-xs sm:text-sm text-[#8888aa] mt-1 font-medium">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -240,11 +238,11 @@ export default async function HomePage() {
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">Today&apos;s Best Pull</h2>
           </div>
 
-          <div className="max-w-sm mx-auto">
+          <div className="max-w-lg mx-auto">
             {/* Card with glow */}
-            <div className={`relative rounded-2xl overflow-hidden border border-white/[0.08] bg-white/[0.02] p-4 shadow-2xl ${getRarityGlow(hitOfTheDay.card.rarity)}`}>
+            <div className={`relative rounded-2xl overflow-hidden bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-2xl p-6 ${getRarityGlow(hitOfTheDay.card.rarity)}`}>
               {/* Card image */}
-              <div className="relative aspect-[3/4] rounded-xl overflow-hidden mb-4 bg-[#0B0B2B]">
+              <div className="relative aspect-[3/4] rounded-xl overflow-hidden mb-4 bg-[#252560]">
                 {hitOfTheDay.card.imageUrlScryfall || hitOfTheDay.card.imageUrlGatherer ? (
                   <img
                     src={hitOfTheDay.card.imageUrlScryfall || hitOfTheDay.card.imageUrlGatherer}
@@ -253,7 +251,7 @@ export default async function HomePage() {
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <Package className="w-16 h-16 text-gray-700" />
+                    <Package className="w-16 h-16 text-[#7777a0]" />
                   </div>
                 )}
               </div>
@@ -261,10 +259,10 @@ export default async function HomePage() {
               {/* Card info */}
               <div className="text-center">
                 <h3 className="text-lg font-bold text-white mb-1">{hitOfTheDay.card.name}</h3>
-                <p className="text-sm text-gray-500 mb-3">{hitOfTheDay.card.setName}</p>
-                
+                <p className="text-sm text-[#8888aa] mb-3">{hitOfTheDay.card.setName}</p>
+
                 <div className="flex items-center justify-center gap-3 mb-4">
-                  <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold border border-white/[0.06] bg-white/[0.03] ${getRarityColor(hitOfTheDay.card.rarity)}`}>
+                  <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] ${getRarityColor(hitOfTheDay.card.rarity)}`}>
                     <Flame className="w-3 h-3" />
                     {hitOfTheDay.card.rarity}
                   </span>
@@ -277,7 +275,7 @@ export default async function HomePage() {
                 </div>
 
                 {/* Pulled by */}
-                <div className="flex items-center justify-center gap-2 pt-3 border-t border-white/[0.06]">
+                <div className="flex items-center justify-center gap-2 pt-3 border-t border-[rgba(255,255,255,0.15)]">
                   <div className="w-7 h-7 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-[11px] font-bold text-white">
                     {hitOfTheDay.user.name?.[0]?.toUpperCase() || '?'}
                   </div>
@@ -306,8 +304,8 @@ export default async function HomePage() {
                   </div>
                   <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">Hot Boxes</h2>
                 </div>
-                <Link 
-                  href="/boxes" 
+                <Link
+                  href="/boxes"
                   className="group inline-flex items-center gap-1.5 text-sm text-[#BFFF00] hover:text-[#d4ff4d] transition-colors font-medium touch-target"
                 >
                   View All
@@ -315,39 +313,39 @@ export default async function HomePage() {
                 </Link>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
                 {featuredBoxes.map((box) => (
-                  <Link 
-                    key={box.id} 
+                  <Link
+                    key={box.id}
                     href={`/open/${box.id}`}
-                    className="group rounded-2xl overflow-hidden border border-white/[0.06] bg-white/[0.02] hover:border-white/[0.12] hover:bg-white/[0.04] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                    className="group bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.3)] rounded-2xl overflow-hidden hover:-translate-y-2 hover:border-[rgba(191,255,0,0.35)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.4),0_0_30px_rgba(191,255,0,0.08)] transition-all duration-300 active:scale-[0.98]"
                   >
-                    <div className="aspect-[4/3] relative bg-gradient-to-br from-[#0B0B2B] to-[#06061a] flex items-center justify-center overflow-hidden">
+                    <div className="aspect-[4/3] relative bg-[#252560] flex items-center justify-center overflow-hidden">
                       {box.imageUrl ? (
-                        <img 
-                          src={box.imageUrl} 
+                        <img
+                          src={box.imageUrl}
                           alt={box.name}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                       ) : (
-                        <Package className="w-16 h-16 text-gray-700" />
+                        <Package className="w-16 h-16 text-[#7777a0]" />
                       )}
                       {box.games && box.games[0] && (
-                        <div className="absolute top-3 left-3 px-2.5 py-1 rounded-lg text-[11px] font-bold uppercase tracking-wide bg-black/60 backdrop-blur-sm text-white border border-white/[0.1]">
+                        <div className="absolute top-3 left-3 px-2.5 py-1 rounded-lg text-[11px] font-bold uppercase tracking-wide bg-[#0B0B2B]/80 border border-[rgba(255,255,255,0.1)] text-white">
                           {box.games[0].replace(/_/g, ' ')}
                         </div>
                       )}
                     </div>
-                    <div className="p-4 sm:p-5">
+                    <div className="p-6">
                       <h3 className="text-base font-semibold text-white mb-2 group-hover:text-[#BFFF00] transition-colors">
                         {box.name}
                       </h3>
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-1.5 text-amber-400">
+                        <div className="flex items-center gap-1.5 text-[#BFFF00]">
                           <Coins className="w-4 h-4" />
-                          <span className="font-bold">{box.price}</span>
+                          <span className="font-extrabold">{box.price}</span>
                         </div>
-                        <span className="text-xs text-gray-600 font-medium">{box._count.cards} cards</span>
+                        <span className="text-xs text-[#7777a0] font-medium">{box._count.cards} cards</span>
                       </div>
                     </div>
                   </Link>
@@ -369,8 +367,8 @@ export default async function HomePage() {
                   </div>
                   <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">Active Battles</h2>
                 </div>
-                <Link 
-                  href="/battles" 
+                <Link
+                  href="/battles"
                   className="group inline-flex items-center gap-1.5 text-sm text-[#BFFF00] hover:text-[#d4ff4d] transition-colors font-medium touch-target"
                 >
                   View All
@@ -378,17 +376,17 @@ export default async function HomePage() {
                 </Link>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
                 {activeBattles.map((battle) => (
-                  <Link 
-                    key={battle.id} 
+                  <Link
+                    key={battle.id}
                     href={`/battles/${battle.id}`}
-                    className="group rounded-2xl border border-white/[0.06] bg-white/[0.02] hover:border-white/[0.12] hover:bg-white/[0.04] p-5 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                    className="group bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:-translate-y-2 hover:border-[rgba(191,255,0,0.35)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.4),0_0_30px_rgba(191,255,0,0.08)] transition-all duration-300 active:scale-[0.98]"
                   >
                     <div className="flex items-center justify-between mb-4">
                       <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold uppercase tracking-wide ${
-                        battle.status === 'WAITING' 
-                          ? 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20' 
+                        battle.status === 'WAITING'
+                          ? 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20'
                           : 'bg-green-500/10 text-green-400 border border-green-500/20'
                       }`}>
                         {battle.status === 'WAITING' ? (
@@ -403,7 +401,7 @@ export default async function HomePage() {
                           </>
                         )}
                       </span>
-                      <span className="text-xs text-gray-600 font-medium">{battle.maxParticipants} players</span>
+                      <span className="text-xs text-[#7777a0] font-medium">{battle.maxParticipants} players</span>
                     </div>
 
                     <h3 className="text-base font-semibold text-white mb-3 group-hover:text-[#BFFF00] transition-colors">
@@ -413,7 +411,7 @@ export default async function HomePage() {
                     {/* Participants */}
                     <div className="flex items-center mb-4">
                       {battle.participants.slice(0, 4).map((p, i) => (
-                        <div 
+                        <div
                           key={p.id}
                           className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-[11px] font-bold text-white border-2 border-[#06061a]"
                           style={{ marginLeft: i > 0 ? '-6px' : '0', zIndex: 4 - i }}
@@ -422,11 +420,11 @@ export default async function HomePage() {
                         </div>
                       ))}
                       {battle.participants.length > 4 && (
-                        <span className="text-xs text-gray-500 ml-2">+{battle.participants.length - 4}</span>
+                        <span className="text-xs text-[#8888aa] ml-2">+{battle.participants.length - 4}</span>
                       )}
                     </div>
 
-                    <div className="flex items-center justify-between pt-3 border-t border-white/[0.06]">
+                    <div className="flex items-center justify-between pt-3 border-t border-[rgba(255,255,255,0.15)]">
                       <div className="flex items-center gap-1.5 text-amber-400">
                         <Coins className="w-3.5 h-3.5" />
                         <span className="text-sm font-bold">{battle.box.price} entry</span>
@@ -444,18 +442,18 @@ export default async function HomePage() {
       ) : (
         /* Coming Soon */
         <section className="relative container mb-16 sm:mb-20 px-4">
-          <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8 sm:p-12 text-center">
+          <div className="rounded-2xl bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg p-8 sm:p-12 text-center">
             <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 mb-6 rounded-2xl bg-gradient-to-br from-[rgba(191,255,0,0.08)] to-purple-500/15">
               <Package className="w-8 h-8 sm:w-10 sm:h-10 text-[#BFFF00]" />
             </div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4">Coming Soon</h2>
-            <p className="text-gray-500 mb-8 max-w-md mx-auto">
+            <p className="text-[#8888aa] mb-8 max-w-md mx-auto">
               We&apos;re preparing amazing boxes and battles for you.
               Create an account to be notified when we launch!
             </p>
-            <Link 
-              href="/register" 
-              className="inline-flex items-center gap-2 px-8 py-4 bg-[#BFFF00] hover:bg-[#d4ff4d] text-black font-bold rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 touch-target min-h-[56px]"
+            <Link
+              href="/register"
+              className="inline-flex items-center gap-2 bg-[#BFFF00] text-black font-bold rounded-xl px-8 py-4 text-lg shadow-[0_2px_12px_rgba(191,255,0,0.2)] hover:shadow-[0_4px_24px_rgba(191,255,0,0.35)] hover:scale-105 transition-all active:scale-95 touch-target min-h-[56px]"
             >
               <Sparkles className="w-5 h-5" />
               Get Notified
@@ -468,16 +466,13 @@ export default async function HomePage() {
       {/* BOTTOM CTA */}
       {/* ============================================ */}
       <section className="relative container pb-20 sm:pb-28 px-4">
-        <div className="text-center">
-          <p className="text-xl sm:text-2xl md:text-3xl text-[#f0f0f5] mb-2 font-semibold tracking-tight">
-            Play. Rumble. Collect.
-          </p>
-          <p className="text-lg sm:text-xl text-gray-500 mb-8">
+        <div className="border-t border-[rgba(255,255,255,0.06)] pt-16 text-center">
+          <p className="text-lg sm:text-xl text-[#8888aa] mb-8">
             Get the cards. With <span className="text-white font-bold">PACK</span><span className="text-[#BFFF00] font-bold">ATTACK</span>.
           </p>
-          <Link 
-            href="/boxes" 
-            className="inline-flex items-center gap-2.5 px-8 py-4 bg-[#BFFF00] hover:bg-[#d4ff4d] text-black font-bold rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-[0_0_24px_rgba(191,255,0,0.3)] active:scale-95 touch-target min-h-[56px] text-base"
+          <Link
+            href="/boxes"
+            className="inline-flex items-center gap-2.5 bg-[#BFFF00] text-black font-bold rounded-xl px-8 py-4 text-lg shadow-[0_2px_12px_rgba(191,255,0,0.2)] hover:shadow-[0_4px_24px_rgba(191,255,0,0.35)] hover:scale-105 transition-all active:scale-95 touch-target min-h-[56px]"
           >
             <Zap className="w-5 h-5" />
             Start Now
