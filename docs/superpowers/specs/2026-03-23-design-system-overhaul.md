@@ -4,6 +4,7 @@
 **Status:** Approved
 **Vibe:** Premium Collector — Elegant, deep shadows, holographic effects, luxury unboxing
 **Brand Identity:** Neon-Green (#BFFF00) on Deep Navy (#0B0B2B) — consistent across all touchpoints
+**Mode:** Dark-mode only. No light-mode variant planned.
 
 ---
 
@@ -22,6 +23,8 @@
 | `--pa-neon-dim` | `#9ACC00` | Secondary neon, hover states |
 | `--pa-neon-glow` | `rgba(191,255,0,0.3)` | Box-shadow glow effects |
 | `--pa-neon-subtle` | `rgba(191,255,0,0.08)` | Subtle backgrounds, hover fills |
+| `--pa-text-on-neon` | `#000000` | Text on neon-colored surfaces |
+| `--pa-bg-hover` | `rgba(255,255,255,0.06)` | Hover surface for interactive elements |
 
 ### Text Colors
 
@@ -29,7 +32,7 @@
 |---|---|---|
 | `--pa-text-primary` | `#F0F0F5` | Headings, primary content |
 | `--pa-text-secondary` | `#8888AA` | Descriptions, meta text |
-| `--pa-text-muted` | `#55557A` | Labels, disabled text |
+| `--pa-text-muted` | `#7777A0` | Labels, disabled text (WCAG AA compliant on navy) |
 
 ### Border System
 
@@ -77,7 +80,19 @@
 | Body Bold | Outfit | 600 | 16px | Emphasis, labels |
 | Body | Outfit | 400 | 14px | Default body text |
 | Label | Outfit | 500 | 12px, uppercase, 1px tracking | Meta labels, categories |
-| Small | Outfit | 400 | 11px | Fine print, timestamps |
+| Small | Outfit | 400 | 12px | Fine print, timestamps |
+
+### Responsive Scale (Mobile < 768px)
+
+| Level | Desktop | Mobile |
+|---|---|---|
+| XL Heading | 36px | 26px |
+| L Heading | 24px | 20px |
+| M Heading | 18px | 16px |
+| Body | 14px | 14px |
+| Label | 12px | 12px |
+
+Use `clamp()` for fluid transitions (already established pattern in project).
 
 ---
 
@@ -130,7 +145,7 @@
 **Interactions:**
 - Hover: `box-shadow: 0 0 24px var(--pa-neon-glow)` + `scale(1.02)` for Primary
 - Active: `scale(0.98)` press-down
-- Focus: 2px outline with neon color
+- Focus-visible: 2px outline with neon color, 2px offset (`:focus-visible` only — no outlines on mouse clicks)
 
 ### Cards
 
@@ -171,7 +186,7 @@
 - Each card: 3D flip reveal with rarity-colored glow building up
 - Common cards: Quick reveal, subtle effect
 - Rare+: Slower reveal, screen-edge glow in rarity color
-- Legendary/Mythic: Full-screen flash, particle burst, vibration feedback
+- Legendary/Mythic: Full-screen flash, CSS pseudo-element particle burst (no external library), optional `Navigator.vibrate()` on mobile (with feature detection fallback)
 - Post-reveal: Cards laid out in a fan pattern, best pull highlighted
 - Framer Motion `layoutId` for smooth transitions from reveal → collection
 
@@ -254,7 +269,41 @@ All animations respect `prefers-reduced-motion: reduce` — fall back to opacity
 
 ---
 
-## 8. Implementation Phases
+## 8. Mobile Optimization
+
+**The redesign is mobile-first.** All components must work flawlessly on mobile devices.
+
+### Layout Adaptations
+
+| Component | Desktop | Mobile |
+|---|---|---|
+| Navigation | Horizontal nav links + right-side badges | Hamburger menu + sticky bottom bar with key actions |
+| Card grid (Boxes) | 3 columns, 20px gap | 2 columns, 12px gap |
+| Collection grid | 5 columns, 14px gap | 3 columns, 10px gap |
+| Stats grid | 4 columns | 2 columns |
+| Dashboard XP section | Horizontal layout | Full-width stacked |
+| Pack opening | Centered overlay | Full-screen immersive |
+
+### Mobile-Specific Features
+
+- **Sticky bottom action bar:** Primary CTA (Open Pack / Buy) always accessible
+- **Touch targets:** Minimum 44x44px for all interactive elements (existing standard, maintain)
+- **Safe area padding:** Respect notched devices via `env(safe-area-inset-*)` (existing, maintain)
+- **Swipe gestures:** Horizontal swipe for collection cards, swipe-to-close for modals (existing pattern)
+- **Pull-to-refresh:** Disabled via `overscroll-behavior: none` (existing, maintain)
+- **Pack opening on mobile:** Full-screen takeover, swipe/tap to reveal cards, haptic feedback via `Navigator.vibrate()` (with feature detection)
+- **Card hover effects:** Convert to tap-and-hold or active states on touch devices (`@media (hover: none)`)
+
+### Performance on Mobile
+
+- Reduce glow/shadow intensity on mobile (lighter box-shadows, fewer blur layers)
+- Disable background animated blobs on screens < 768px (existing pattern)
+- Use `will-change` sparingly, only on actively animating elements
+- Skeleton loading states: Solid `--pa-bg-surface` base with gradient shimmer (neon-tinted at 3% opacity)
+
+---
+
+## 9. Implementation Phases
 
 ### Phase 1: Design Foundation
 
@@ -308,11 +357,11 @@ All animations respect `prefers-reduced-motion: reduce` — fall back to opacity
 3. Streak indicator — fire icon with count in navigation/dashboard
 4. Live feed component — real-time stream of other users' recent pulls
 5. Number counter animations — count-up effect for XP, coins, stats
-6. Sound design (optional) — click sounds, reveal sounds, level-up jingle
+6. Sound design — deferred to a separate future spec (requires autoplay policy handling, volume controls, mute toggles)
 
 ---
 
-## 9. Migration Strategy
+## 10. Migration Strategy
 
 ### Approach: Token-First Migration
 
