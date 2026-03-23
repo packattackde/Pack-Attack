@@ -46,11 +46,9 @@ export function BoosterPackAnimation({ boxName, gameName, onTearComplete, rarity
 
   const colors = RARITY_COLORS[rarityHint];
 
-  // Custom cursor position
+  // Custom cursor position — no spring, direct tracking
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
-  const cursorSpringX = useSpring(cursorX, { stiffness: 300, damping: 25 });
-  const cursorSpringY = useSpring(cursorY, { stiffness: 300, damping: 25 });
   const [cursorPressed, setCursorPressed] = useState(false);
 
   // 3D Tilt motion values
@@ -188,7 +186,7 @@ export function BoosterPackAnimation({ boxName, gameName, onTearComplete, rarity
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#06061a]"
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#06061a]"
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
       style={{ cursor: 'none' }}
@@ -430,8 +428,8 @@ export function BoosterPackAnimation({ boxName, gameName, onTearComplete, rarity
       <motion.div
         className="fixed pointer-events-none z-[100]"
         style={{
-          x: cursorSpringX,
-          y: cursorSpringY,
+          x: cursorX,
+          y: cursorY,
           translateX: '-50%',
           translateY: '-50%',
         }}
