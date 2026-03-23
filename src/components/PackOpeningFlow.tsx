@@ -337,7 +337,7 @@ export function PackOpeningFlow({
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#06061a] overflow-hidden"
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#06061a] overflow-hidden select-none [&_*]:select-none"
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
       onClick={phase === 'revealing' ? advanceCard : phase === 'bestPull' ? onComplete : undefined}
