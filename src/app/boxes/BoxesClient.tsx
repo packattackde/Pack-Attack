@@ -203,7 +203,7 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
             <Link
               key={box.id}
               href={`/open/${box.id}`}
-              className="group relative rounded-2xl overflow-hidden transition-all duration-300 active:scale-[0.97] sm:hover:scale-[1.02] sm:hover:shadow-[0_8px_40px_rgba(191,255,0,0.12)] bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] hover:border-[rgba(191,255,0,0.3)] shadow-lg"
+              className="group relative rounded-2xl overflow-hidden transition-all duration-300 active:scale-[0.97] sm:hover:-translate-y-2 sm:hover:shadow-[0_20px_50px_rgba(0,0,0,0.4),0_0_30px_rgba(191,255,0,0.08)] bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] hover:border-[rgba(191,255,0,0.35)] shadow-[0_4px_24px_rgba(0,0,0,0.3)]"
             >
               {/* Card Preview Section */}
               <div className="relative h-[220px] bg-[#252560] flex items-end justify-center pb-4 overflow-hidden">
@@ -212,22 +212,33 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
                 
                 {/* Fanned Cards Display */}
                 {box.cards && box.cards.length > 0 ? (
-                  <div className="relative h-40 w-full flex items-center justify-center">
+                  <div className="relative h-44 w-full flex items-center justify-center">
                     {box.cards.slice(0, 3).map((card, index) => {
-                      const rotations = [-15, 0, 15];
-                      const translations = [-20, 0, 20];
+                      // Fan-out positions: [left, center, right]
+                      const fanDefault = [
+                        'rotate(-12deg) translateX(-18px)',
+                        'rotate(0deg) translateX(0px) translateY(-6px)',
+                        'rotate(12deg) translateX(18px)',
+                      ];
+                      const fanHover = [
+                        'rotate(-22deg) translateX(-50px) translateY(-4px) scale(1.08)',
+                        'rotate(0deg) translateX(0px) translateY(-16px) scale(1.08)',
+                        'rotate(22deg) translateX(50px) translateY(-4px) scale(1.08)',
+                      ];
                       const zIndexes = [1, 3, 2];
                       return (
                         <div
                           key={card.id}
-                          className="absolute transition-all duration-500 group-hover:scale-110"
+                          className="absolute transition-all duration-[600ms] ease-[cubic-bezier(0.23,1,0.32,1)] fan-card"
                           style={{
-                            transform: `rotate(${rotations[index]}deg) translateX(${translations[index]}px)`,
+                            transform: fanDefault[index],
                             zIndex: zIndexes[index],
-                          }}
+                            // @ts-ignore - CSS custom property for hover state
+                            '--fan-hover': fanHover[index],
+                          } as React.CSSProperties}
                         >
                           <div 
-                            className="relative w-[90px] h-[125px] rounded-lg overflow-hidden border-2 border-[rgba(255,255,255,0.15)] shadow-2xl group-hover:border-[rgba(191,255,0,0.4)] transition-all duration-300 bg-[#1e1e55]"
+                            className="relative w-[95px] h-[132px] rounded-lg overflow-hidden border-2 border-[rgba(255,255,255,0.15)] shadow-2xl group-hover:border-[rgba(191,255,0,0.4)] transition-all duration-500 bg-[#1e1e55]"
                           >
                             {card.imageUrlGatherer ? (
                               <Image
