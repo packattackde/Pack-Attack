@@ -266,34 +266,57 @@ export function BoosterPackAnimation({ boxName, gameName, onTearComplete, rarity
                 }}
               />
 
-              {/* 3D Left edge — strong light highlight */}
-              <div className="absolute top-[7%] bottom-[7%] left-0 w-[10px] pointer-events-none"
-                style={{ clipPath: 'url(#boosterClipFM)', background: 'linear-gradient(to right, rgba(255,255,255,0.22), transparent)' }} />
+              {/* === CYLINDRICAL 3D LIGHTING — makes the pack look rounded like a real booster === */}
 
-              {/* 3D Right edge — dark shadow */}
-              <div className="absolute top-[7%] bottom-[7%] right-0 w-[14px] pointer-events-none"
-                style={{ clipPath: 'url(#boosterClipFM)', background: 'linear-gradient(to left, rgba(0,0,0,0.5), transparent)' }} />
-
-              {/* 3D Top edge — highlight */}
-              <div className="absolute top-[6%] left-[5%] right-[5%] h-[12px] pointer-events-none"
-                style={{ clipPath: 'url(#boosterClipFM)', background: 'linear-gradient(to bottom, rgba(255,255,255,0.15), transparent)' }} />
-
-              {/* 3D Bottom edge — shadow */}
-              <div className="absolute bottom-[6%] left-[5%] right-[5%] h-[16px] pointer-events-none"
-                style={{ clipPath: 'url(#boosterClipFM)', background: 'linear-gradient(to top, rgba(0,0,0,0.4), transparent)' }} />
-
-              {/* Convex bulge — bright center glow (cards inside make it pouchy) */}
-              <div className="absolute inset-[5%] pointer-events-none"
-                style={{
-                  clipPath: 'url(#boosterClipFM)',
-                  background: 'radial-gradient(ellipse at 48% 42%, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.04) 35%, transparent 60%)',
-                }} />
-
-              {/* Inner ambient glow — makes the pack feel lit from within */}
+              {/* Main cylindrical shading — dark edges, bright center strip */}
               <div className="absolute inset-0 pointer-events-none"
                 style={{
                   clipPath: 'url(#boosterClipFM)',
-                  background: 'radial-gradient(ellipse at 50% 50%, rgba(100,80,200,0.12), transparent 70%)',
+                  background: 'linear-gradient(90deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.15) 8%, rgba(255,255,255,0.08) 25%, rgba(255,255,255,0.12) 40%, rgba(255,255,255,0.04) 55%, rgba(0,0,0,0.1) 75%, rgba(0,0,0,0.4) 92%, rgba(0,0,0,0.5) 100%)',
+                }} />
+
+              {/* Center highlight strip — vertical bright band (convex bulge) */}
+              <div className="absolute inset-0 pointer-events-none"
+                style={{
+                  clipPath: 'url(#boosterClipFM)',
+                  background: 'linear-gradient(90deg, transparent 20%, rgba(255,255,255,0.1) 35%, rgba(255,255,255,0.14) 45%, rgba(255,255,255,0.08) 55%, transparent 70%)',
+                }} />
+
+              {/* Left edge visible thickness — thin bright strip suggesting pack side */}
+              <div className="absolute top-[7%] bottom-[7%] left-0 w-[4px] pointer-events-none"
+                style={{
+                  clipPath: 'url(#boosterClipFM)',
+                  background: 'linear-gradient(to bottom, rgba(180,160,220,0.4), rgba(120,100,180,0.3) 50%, rgba(80,60,140,0.25))',
+                  borderRadius: '3px 0 0 3px',
+                }} />
+
+              {/* Right edge visible thickness — darker side */}
+              <div className="absolute top-[7%] bottom-[7%] right-0 w-[5px] pointer-events-none"
+                style={{
+                  clipPath: 'url(#boosterClipFM)',
+                  background: 'linear-gradient(to bottom, rgba(40,20,80,0.6), rgba(20,10,50,0.7) 50%, rgba(10,5,30,0.6))',
+                  borderRadius: '0 3px 3px 0',
+                }} />
+
+              {/* Top crimp shadow — where the seal meets the pack body */}
+              <div className="absolute top-[6%] left-[3%] right-[3%] h-[18px] pointer-events-none"
+                style={{
+                  clipPath: 'url(#boosterClipFM)',
+                  background: 'linear-gradient(to bottom, rgba(255,255,255,0.12), rgba(255,255,255,0.03) 40%, transparent)',
+                }} />
+
+              {/* Bottom crimp shadow */}
+              <div className="absolute bottom-[6%] left-[3%] right-[3%] h-[18px] pointer-events-none"
+                style={{
+                  clipPath: 'url(#boosterClipFM)',
+                  background: 'linear-gradient(to top, rgba(0,0,0,0.35), rgba(0,0,0,0.1) 40%, transparent)',
+                }} />
+
+              {/* Inner ambient glow */}
+              <div className="absolute inset-0 pointer-events-none"
+                style={{
+                  clipPath: 'url(#boosterClipFM)',
+                  background: 'radial-gradient(ellipse at 42% 45%, rgba(120,90,220,0.15), transparent 65%)',
                 }} />
 
               {/* Foil crease lines — vertical wrinkles like real foil */}
