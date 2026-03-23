@@ -3,6 +3,7 @@ import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { Decimal } from '@prisma/client/runtime/library';
 import { rateLimit } from '@/lib/rate-limit';
+import { sendShopOrderNotificationEmail, ShopOrderItem, ShopOrderShipping } from '@/lib/email';
 
 const SHIPPING_COST_COINS = 5.00;
 
@@ -212,6 +213,60 @@ export async function POST(request: NextRequest) {
     });
 
     const order = result.order;
+
+    // Send notification emails to shop owners (fire-and-forget, don't block checkout)
+    if (result.shopOrders.length > 0) {
+      const shippingInfo: ShopOrderShipping = {
+        name: shippingName,
+        email: shippingEmail,
+        address: shippingAddress,
+        city: shippingCity,
+        zip: shippingZip,
+        country: shippingCountry,
+        method: shippingMethod,
+        cost: shippingCost,
+        notes: body.notes || null,
+      };
+
+      // Group shop orders by shopId
+      const ordersByShop = new Map<string, typeof result.shopOrders>();
+      for (const so of result.shopOrders) {
+        const list = ordersByShop.get(so.shopId) || [];
+        list.push(so);
+        ordersByShop.set(so.shopId, list);
+      }
+
+      // Send one email per shop (non-blocking)
+      Promise.allSettled(
+        Array.from(ordersByShop.entries()).map(async ([shopId, orders]) => {
+          try {
+            const shop = await prisma.shop.findUnique({
+              where: { id: shopId },
+              include: { owner: { select: { id: true, email: true } } },
+            });
+            if (!shop?.owner?.email) return;
+
+            const items: ShopOrderItem[] = orders.map(o => ({
+              orderNumber: o.orderNumber,
+              cardName: o.cardName,
+              cardImage: o.cardImage,
+              cardValue: Number(o.cardValue),
+              cardRarity: o.cardRarity,
+            }));
+
+            await sendShopOrderNotificationEmail(
+              shop.owner.email,
+              shop.name,
+              items,
+              shippingInfo,
+              shop.owner.id
+            );
+          } catch (err) {
+            console.error(`Failed to send order notification to shop ${shopId}:`, err);
+          }
+        })
+      ).catch(() => {});
+    }
 
     // Get updated user balance
     const updatedUser = await prisma.user.findUnique({

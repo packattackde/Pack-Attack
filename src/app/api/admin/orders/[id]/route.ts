@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { sendShopOrderNotificationEmail, ShopOrderItem, ShopOrderShipping } from '@/lib/email';
 
 // GET single order
 export async function GET(
@@ -165,15 +166,58 @@ export async function PATCH(
           sourceItemId: item.id,
         }));
 
-        await prisma.$transaction([
-          ...shopBoxOrders.map((data) =>
-            prisma.shopBoxOrder.create({ data })
-          ),
-          prisma.order.update({
+        const createdShopOrders = await prisma.$transaction(async (tx) => {
+          const created = [];
+          for (const data of shopBoxOrders) {
+            created.push(await tx.shopBoxOrder.create({ data }));
+          }
+          await tx.order.update({
             where: { id },
             data: { ...updateData, assignedShopId, assignedAt: new Date() },
-          }),
-        ]);
+          });
+          return created;
+        });
+
+        // Send notification email to shop owner (non-blocking)
+        Promise.resolve().then(async () => {
+          try {
+            const shopWithOwner = await prisma.shop.findUnique({
+              where: { id: assignedShopId },
+              include: { owner: { select: { id: true, email: true } } },
+            });
+            if (!shopWithOwner?.owner?.email) return;
+
+            const items: ShopOrderItem[] = createdShopOrders.map(o => ({
+              orderNumber: o.orderNumber,
+              cardName: o.cardName,
+              cardImage: o.cardImage,
+              cardValue: Number(o.cardValue),
+              cardRarity: o.cardRarity,
+            }));
+
+            const shippingInfo: ShopOrderShipping = {
+              name: existingOrder.shippingName,
+              email: existingOrder.shippingEmail,
+              address: existingOrder.shippingAddress,
+              city: existingOrder.shippingCity,
+              zip: existingOrder.shippingZip,
+              country: existingOrder.shippingCountry,
+              method: existingOrder.shippingMethod,
+              cost: Number(existingOrder.shippingCost),
+              notes: existingOrder.notes,
+            };
+
+            await sendShopOrderNotificationEmail(
+              shopWithOwner.owner.email,
+              shopWithOwner.name,
+              items,
+              shippingInfo,
+              shopWithOwner.owner.id
+            );
+          } catch (err) {
+            console.error('Failed to send order notification to shop:', err);
+          }
+        }).catch(() => {});
       }
     } else if (Object.keys(updateData).length > 0) {
       await prisma.order.update({ where: { id }, data: updateData });
