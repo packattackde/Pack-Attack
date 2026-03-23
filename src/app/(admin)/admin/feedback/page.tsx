@@ -110,7 +110,7 @@ const statusConfig: Record<string, { icon: typeof Clock; label: string; color: s
 
 const priorityConfig: Record<string, { label: string; color: string; dot: string }> = {
   LOW: { label: 'Low', color: 'gray', dot: 'bg-gray-400' },
-  MEDIUM: { label: 'Medium', color: 'blue', dot: 'bg-blue-400' },
+  MEDIUM: { label: 'Medium', color: 'blue', dot: 'bg-[#BFFF00]' },
   HIGH: { label: 'High', color: 'amber', dot: 'bg-amber-400' },
   URGENT: { label: 'Urgent', color: 'red', dot: 'bg-red-400 animate-pulse' },
 };
@@ -523,7 +523,7 @@ export default function AdminFeedbackPage() {
         {/* List */}
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <div className="w-6 h-6 border-2 border-white/20 border-t-blue-400 rounded-full animate-spin" />
+            <div className="w-6 h-6 border-2 border-white/20 border-t-[#BFFF00] rounded-full animate-spin" />
           </div>
         ) : feedbacks.length === 0 ? (
           <div className="text-center py-20">

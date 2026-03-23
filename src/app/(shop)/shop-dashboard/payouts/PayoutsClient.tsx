@@ -36,7 +36,7 @@ type Payout = {
 
 const statusConfig: Record<string, { color: string; bgColor: string; icon: React.ElementType; label: string }> = {
   REQUESTED: { color: 'text-yellow-400', bgColor: 'bg-yellow-400/10', icon: Clock, label: 'Pending' },
-  PROCESSING: { color: 'text-[#BFFF00]', bgColor: 'bg-blue-400/10', icon: Loader2, label: 'Approved' },
+  PROCESSING: { color: 'text-[#BFFF00]', bgColor: 'bg-[rgba(191,255,0,0.1)]', icon: Loader2, label: 'Approved' },
   COMPLETED: { color: 'text-green-400', bgColor: 'bg-green-400/10', icon: CheckCircle, label: 'Paid' },
   REJECTED: { color: 'text-red-400', bgColor: 'bg-red-400/10', icon: XCircle, label: 'Rejected' },
 };
@@ -274,7 +274,7 @@ export function PayoutsClient({
                       )}
 
                       {payout.shopMessage && (
-                        <div className="p-3 rounded-lg bg-blue-900/20 border border-blue-800/30 text-sm text-blue-300">
+                        <div className="p-3 rounded-lg bg-[rgba(191,255,0,0.05)] border border-[rgba(191,255,0,0.15)] text-sm text-[#BFFF00]/80">
                           <span className="text-[#BFFF00] font-medium flex items-center gap-1.5 mb-1">
                             <MessageSquare className="w-3.5 h-3.5" /> Your message:
                           </span>

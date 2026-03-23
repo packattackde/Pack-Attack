@@ -283,7 +283,7 @@ export default function ShopManagePage() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <Link href="/shop/manage/products" className="glass-strong rounded-2xl p-6 hover:bg-white/5 transition-colors group">
             <div className="flex items-center gap-4 mb-4">
-              <div className="p-3 rounded-xl bg-[rgba(191,255,0,0.15)] group-hover:bg-emerald-500/30 transition-colors">
+              <div className="p-3 rounded-xl bg-[rgba(191,255,0,0.15)] group-hover:bg-[rgba(191,255,0,0.2)] transition-colors">
                 <Package className="w-6 h-6 text-[#BFFF00]" />
               </div>
               <h2 className="text-xl font-bold text-white">Products</h2>
@@ -293,7 +293,7 @@ export default function ShopManagePage() {
 
           <Link href="/shop/manage/orders" className="glass-strong rounded-2xl p-6 hover:bg-white/5 transition-colors group">
             <div className="flex items-center gap-4 mb-4">
-              <div className="p-3 rounded-xl bg-[rgba(191,255,0,0.1)] group-hover:bg-blue-500/30 transition-colors">
+              <div className="p-3 rounded-xl bg-[rgba(191,255,0,0.1)] group-hover:bg-[rgba(191,255,0,0.15)] transition-colors">
                 <ShoppingBag className="w-6 h-6 text-[#BFFF00]" />
               </div>
               <h2 className="text-xl font-bold text-white">Orders</h2>

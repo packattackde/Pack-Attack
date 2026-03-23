@@ -152,7 +152,7 @@ export default function ShopCheckoutPage() {
           <div className="space-y-3">
             <Link
               href="/shop/orders"
-              className="block w-full py-3 bg-[#BFFF00] text-black font-semibold rounded-xl hover:from-emerald-500 hover:to-cyan-500 transition-all"
+              className="block w-full py-3 bg-[#BFFF00] text-black font-semibold rounded-xl hover:brightness-110 transition-all"
             >
               View My Orders
             </Link>
@@ -365,7 +365,7 @@ export default function ShopCheckoutPage() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full py-4 bg-[#BFFF00] text-black font-semibold rounded-xl hover:from-emerald-500 hover:to-cyan-500 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="w-full py-4 bg-[#BFFF00] text-black font-semibold rounded-xl hover:brightness-110 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   {submitting ? (
                     <>

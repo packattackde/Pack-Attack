@@ -70,7 +70,7 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
         <div className="relative w-full sm:w-auto">
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="flex items-center gap-3 px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl text-white font-semibold transition-all w-full sm:min-w-[240px] border border-gray-700/50 active:border-blue-500/50 touch-target min-h-[52px]"
+            className="flex items-center gap-3 px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl text-white font-semibold transition-all w-full sm:min-w-[240px] border border-[rgba(255,255,255,0.06)] active:border-[rgba(191,255,0,0.3)] touch-target min-h-[52px]"
             style={{
               background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%)',
               backdropFilter: 'blur(12px)',
@@ -80,11 +80,11 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
             aria-expanded={isDropdownOpen}
             aria-controls="game-filter-dropdown"
           >
-            <Filter className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400 shrink-0" />
+            <Filter className="w-4 h-4 sm:w-5 sm:h-5 text-[#BFFF00] shrink-0" />
             <span className="flex-1 text-left text-sm sm:text-base">
               {selectedGame === 'all' ? 'All Games' : getGameDisplayName(selectedGame)}
             </span>
-            <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform shrink-0 ${isDropdownOpen ? 'rotate-180' : ''}`} />
+            <ChevronDown className={`w-4 h-4 text-[#8888aa] transition-transform shrink-0 ${isDropdownOpen ? 'rotate-180' : ''}`} />
           </button>
 
           {/* Dropdown Menu */}
@@ -100,7 +100,7 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
               {/* Dropdown with premium styling */}
               <div 
                 id="game-filter-dropdown"
-                className="absolute top-full left-0 mt-3 w-full min-w-[280px] rounded-2xl overflow-hidden z-50 border-2 border-gray-700/80 shadow-2xl"
+                className="absolute top-full left-0 mt-3 w-full min-w-[280px] rounded-2xl overflow-hidden z-50 border-2 border-[rgba(255,255,255,0.06)] shadow-2xl"
                 style={{
                   background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.98) 100%)',
                   backdropFilter: 'blur(16px)',
@@ -112,7 +112,7 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
                 <div className="max-h-[420px] overflow-y-auto py-2 overscroll-contain"
                      style={{
                        scrollbarWidth: 'thin',
-                       scrollbarColor: 'rgba(59, 130, 246, 0.3) rgba(0, 0, 0, 0.2)',
+                       scrollbarColor: 'rgba(191, 255, 0, 0.3) rgba(0, 0, 0, 0.2)',
                        WebkitOverflowScrolling: 'touch',
                      }}
                 >
@@ -123,20 +123,20 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
                       setIsDropdownOpen(false);
                     }}
                     className={`w-full px-4 py-4 text-left flex items-center gap-3 transition-all duration-200 border-l-4 touch-target min-h-[56px] ${
-                      selectedGame === 'all' 
-                        ? 'bg-blue-600/20 text-blue-400 border-blue-500' 
-                        : 'text-gray-300 active:bg-gray-800/50 border-transparent active:border-blue-500/30'
+                      selectedGame === 'all'
+                        ? 'bg-[rgba(191,255,0,0.1)] text-[#BFFF00] border-[#BFFF00]'
+                        : 'text-[#f0f0f5] active:bg-[#12123a]/50 border-transparent active:border-[rgba(191,255,0,0.3)]'
                     }`}
                     role="option"
                     aria-selected={selectedGame === 'all'}
                   >
                     <Package className="w-4 h-4 shrink-0" />
                     <span className="font-semibold">All Games</span>
-                    <span className="ml-auto text-xs px-2 py-0.5 rounded-full bg-gray-800 text-gray-400 font-medium shrink-0">{boxes.length}</span>
+                    <span className="ml-auto text-xs px-2 py-0.5 rounded-full bg-[#12123a] text-[#8888aa] font-medium shrink-0">{boxes.length}</span>
                   </button>
 
                   {/* Divider */}
-                  <div className="my-2 mx-3 h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent" />
+                  <div className="my-2 mx-3 h-px bg-gradient-to-r from-transparent via-[rgba(255,255,255,0.06)] to-transparent" />
 
                   {/* Game options */}
                   {availableGames.map(game => {
@@ -149,9 +149,9 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
                           setIsDropdownOpen(false);
                         }}
                         className={`w-full px-4 py-4 text-left flex items-center gap-3 transition-all duration-200 border-l-4 touch-target min-h-[56px] ${
-                          selectedGame === game 
-                            ? 'bg-blue-600/20 text-blue-400 border-blue-500' 
-                            : 'text-gray-300 active:bg-gray-800/50 border-transparent active:border-blue-500/30'
+                          selectedGame === game
+                            ? 'bg-[rgba(191,255,0,0.1)] text-[#BFFF00] border-[#BFFF00]'
+                            : 'text-[#f0f0f5] active:bg-[#12123a]/50 border-transparent active:border-[rgba(191,255,0,0.3)]'
                         }`}
                         role="option"
                         aria-selected={selectedGame === game}
@@ -161,7 +161,7 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
                           style={{ boxShadow: `0 0 8px currentColor` }}
                         />
                         <span className="font-semibold">{getGameDisplayName(game)}</span>
-                        <span className="ml-auto text-xs px-2 py-0.5 rounded-full bg-gray-800 text-gray-400 font-medium shrink-0">{gameBoxCount}</span>
+                        <span className="ml-auto text-xs px-2 py-0.5 rounded-full bg-[#12123a] text-[#8888aa] font-medium shrink-0">{gameBoxCount}</span>
                       </button>
                     );
                   })}
@@ -173,7 +173,7 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
 
         {/* Active filter pill */}
         {selectedGame !== 'all' && (
-          <div className="flex items-center gap-2 px-3 py-2 rounded-full bg-blue-500/20 text-blue-400 text-sm min-h-[40px] w-full sm:w-auto">
+          <div className="flex items-center gap-2 px-3 py-2 rounded-full bg-[rgba(191,255,0,0.1)] text-[#BFFF00] text-sm min-h-[40px] w-full sm:w-auto">
             <span className="flex-1 sm:flex-initial">{getGameDisplayName(selectedGame)}</span>
             <button 
               onClick={() => setSelectedGame('all')}
@@ -186,7 +186,7 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
         )}
 
         {/* Results count */}
-        <span className="text-gray-400 text-sm sm:ml-auto order-first sm:order-none w-full sm:w-auto text-center sm:text-left py-2 sm:py-0">
+        <span className="text-[#8888aa] text-sm sm:ml-auto order-first sm:order-none w-full sm:w-auto text-center sm:text-left py-2 sm:py-0">
           Showing {filteredBoxes.length} of {boxes.length} boxes
         </span>
       </div>
@@ -194,14 +194,14 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
       {/* Boxes Grid */}
       {filteredBoxes.length === 0 ? (
         <div className="glass-strong rounded-2xl p-8 sm:p-12 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 mb-4 sm:mb-6 rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-500/20">
-            <Package className="w-8 h-8 sm:w-10 sm:h-10 text-blue-400" />
+          <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 mb-4 sm:mb-6 rounded-2xl bg-gradient-to-br from-[rgba(191,255,0,0.15)] to-[rgba(191,255,0,0.1)]">
+            <Package className="w-8 h-8 sm:w-10 sm:h-10 text-[#BFFF00]" />
           </div>
           <h2 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-3">No Boxes Found</h2>
-          <p className="text-gray-400 mb-6 text-sm sm:text-base">No boxes available for {getGameDisplayName(selectedGame)}</p>
+          <p className="text-[#8888aa] mb-6 text-sm sm:text-base">No boxes available for {getGameDisplayName(selectedGame)}</p>
           <button 
             onClick={() => setSelectedGame('all')}
-            className="inline-flex items-center gap-2 px-6 py-4 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-semibold rounded-xl transition-all active:scale-95 touch-target min-h-[52px]"
+            className="inline-flex items-center gap-2 px-6 py-4 bg-gradient-to-r from-[#BFFF00] to-[#d4ff4d] text-black font-semibold rounded-xl transition-all active:scale-95 touch-target min-h-[52px]"
           >
             <Sparkles className="w-5 h-5" />
             Show All Boxes
@@ -224,11 +224,11 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
               {/* Hover glow effect */}
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-2xl"
                    style={{
-                     background: 'radial-gradient(circle at center, rgba(59, 130, 246, 0.15), transparent 70%)',
+                     background: 'radial-gradient(circle at center, rgba(191, 255, 0, 0.1), transparent 70%)',
                    }} />
               
               {/* Card Preview Section - Fanned Cards */}
-              <div className="relative h-48 bg-gradient-to-b from-gray-800/40 to-gray-900/60 flex items-end justify-center pb-2 overflow-hidden">
+              <div className="relative h-48 bg-gradient-to-b from-[#12123a]/40 to-[#0B0B2B]/60 flex items-end justify-center pb-2 overflow-hidden">
                 {/* Background glow effect */}
                 <div className="absolute inset-0 bg-gradient-to-t from-amber-500/10 via-transparent to-transparent" />
                 
@@ -249,7 +249,7 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
                           }}
                         >
                           <div 
-                            className="relative w-20 h-[110px] rounded-lg overflow-hidden border-2 border-gray-700/80 shadow-2xl group-hover:border-blue-400/80 transition-all duration-300 bg-gray-800"
+                            className="relative w-20 h-[110px] rounded-lg overflow-hidden border-2 border-[rgba(255,255,255,0.06)] shadow-2xl group-hover:border-[rgba(191,255,0,0.5)] transition-all duration-300 bg-[#12123a]"
                             style={{
                               boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
                             }}
@@ -305,11 +305,11 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
               </div>
 
               {/* Box Info - Modern Premium Design */}
-              <div className="relative p-5 bg-gradient-to-b from-gray-900/60 to-gray-950/80">
+              <div className="relative p-5 bg-gradient-to-b from-[#0B0B2B]/60 to-[#06061a]/80">
                 {/* Top accent line */}
-                <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-blue-500/30 to-transparent" />
+                <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-[rgba(191,255,0,0.3)] to-transparent" />
                 
-                <h3 className="text-base font-bold text-white mb-3 group-hover:text-blue-400 transition-colors line-clamp-1 tracking-wide">
+                <h3 className="text-base font-bold text-white mb-3 group-hover:text-[#BFFF00] transition-colors line-clamp-1 tracking-wide">
                   {box.name}
                 </h3>
                 
@@ -318,12 +318,12 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
                     <Coins className="w-4 h-4 text-amber-400" style={{ filter: 'drop-shadow(0 0 4px rgba(251, 191, 36, 0.5))' }} />
                     <span className="text-sm font-bold text-amber-400">{box.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                   </div>
-                  <div className="flex items-center gap-1 text-blue-400 text-xs font-semibold group-hover:gap-2 transition-all duration-300">
+                  <div className="flex items-center gap-1 text-[#BFFF00] text-xs font-semibold group-hover:gap-2 transition-all duration-300">
                     Open <ChevronRight className="w-4 h-4" />
                   </div>
                 </div>
                 
-                <div className="flex items-center justify-between text-xs text-gray-400 pt-2 border-t border-gray-800/50">
+                <div className="flex items-center justify-between text-xs text-[#8888aa] pt-2 border-t border-[rgba(255,255,255,0.06)]">
                   <span className="flex items-center gap-1">
                     <Layers className="w-3 h-3" />
                     {box.cardsPerPack} cards/pack

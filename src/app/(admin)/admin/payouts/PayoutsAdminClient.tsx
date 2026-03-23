@@ -44,7 +44,7 @@ type Payout = {
 
 const statusConfig: Record<string, { color: string; bgColor: string; icon: React.ElementType; label: string }> = {
   REQUESTED: { color: 'text-yellow-400', bgColor: 'bg-yellow-400/10', icon: Clock, label: 'Pending' },
-  PROCESSING: { color: 'text-[#BFFF00]', bgColor: 'bg-blue-400/10', icon: Loader2, label: 'Approved' },
+  PROCESSING: { color: 'text-[#BFFF00]', bgColor: 'bg-[rgba(191,255,0,0.1)]', icon: Loader2, label: 'Approved' },
   COMPLETED: { color: 'text-green-400', bgColor: 'bg-green-400/10', icon: CheckCircle, label: 'Paid' },
   REJECTED: { color: 'text-red-400', bgColor: 'bg-red-400/10', icon: XCircle, label: 'Rejected' },
 };
@@ -362,7 +362,7 @@ export function PayoutsAdminClient({ initialPayouts }: { initialPayouts: Payout[
                             <button
                               onClick={() => handleStatusUpdate(payout.id, 'PROCESSING')}
                               disabled={updating === payout.id}
-                              className="px-4 py-2 rounded-xl text-sm font-medium bg-blue-500/20 text-[#BFFF00] hover:bg-blue-500/30 transition-all disabled:opacity-50"
+                              className="px-4 py-2 rounded-xl text-sm font-medium bg-[rgba(191,255,0,0.1)] text-[#BFFF00] hover:bg-[rgba(191,255,0,0.15)] transition-all disabled:opacity-50"
                             >
                               {updating === payout.id ? <Loader2 className="w-4 h-4 animate-spin inline mr-1" /> : null}
                               Approve

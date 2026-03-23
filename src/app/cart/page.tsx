@@ -84,7 +84,7 @@ export default async function CartPage() {
   const { items, total, upsellCartItems } = await getCart();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display">
+    <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display">
       {/* Background Effects */}
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
@@ -93,14 +93,14 @@ export default async function CartPage() {
         {/* Header */}
         <div className="mb-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full glass text-sm">
-            <ShoppingCart className="w-4 h-4 text-blue-400" />
-            <span className="text-gray-300">Checkout</span>
+            <ShoppingCart className="w-4 h-4 text-[#BFFF00]" />
+            <span className="text-[#f0f0f5]">Checkout</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-3">
             <span className="text-white">Shopping </span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Cart</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#BFFF00] to-[#d4ff4d]">Cart</span>
           </h1>
-          <p className="text-gray-400 text-lg">Review your items before checkout</p>
+          <p className="text-[#8888aa] text-lg">Review your items before checkout</p>
         </div>
 
         <CartClient items={items} total={total} upsellCartItems={upsellCartItems} />

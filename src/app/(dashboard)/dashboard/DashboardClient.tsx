@@ -487,9 +487,9 @@ export const DashboardClient = memo(function DashboardClient({
             case 'PROCESSING':
                 return {
                     icon: Activity,
-                    color: 'text-blue-400',
-                    bg: 'bg-blue-500/10',
-                    border: 'border-blue-500/30',
+                    color: 'text-[#BFFF00]',
+                    bg: 'bg-[rgba(191,255,0,0.1)]',
+                    border: 'border-[rgba(191,255,0,0.3)]',
                     label: 'Processing'
                 };
             case 'SHIPPED':
@@ -598,7 +598,7 @@ export const DashboardClient = memo(function DashboardClient({
     const getCategoryConfig = (category: string) => {
         switch (category) {
             case 'PULLS':
-                return {label: 'Pack Opening', icon: Package, color: 'text-blue-400', bg: 'bg-blue-500/10'};
+                return {label: 'Pack Opening', icon: Package, color: 'text-[#BFFF00]', bg: 'bg-[rgba(191,255,0,0.1)]'};
             case 'BATTLES':
                 return {label: 'Battles', icon: Swords, color: 'text-purple-400', bg: 'bg-purple-500/10'};
             case 'COLLECTION':

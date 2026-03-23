@@ -445,8 +445,8 @@ export const CATEGORY_CONFIG = {
   PULLS: {
     label: 'Pack Opening',
     icon: 'Package',
-    color: 'text-blue-400',
-    bg: 'bg-blue-500/10',
+    color: 'text-[#BFFF00]',
+    bg: 'bg-[rgba(191,255,0,0.1)]',
   },
   BATTLES: {
     label: 'Battles',

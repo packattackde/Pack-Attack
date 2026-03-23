@@ -54,7 +54,7 @@ export default async function AdminDashboard() {
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 mb-10">
           <div className="glass rounded-xl p-4 text-center">
-            <Package className="w-6 h-6 text-blue-400 mx-auto mb-2" />
+            <Package className="w-6 h-6 text-[#BFFF00] mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{boxCount}</div>
             <div className="text-xs text-[#8888aa]">Boxes</div>
           </div>
@@ -113,11 +113,11 @@ export default async function AdminDashboard() {
             <p className="text-[#8888aa] text-sm">Oversee card supplier shops, stock, and orders.</p>
           </Link>
 
-          <Link href="/admin/boxes" className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-blue-500/50 transition-all group">
-            <div className="inline-flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20">
-              <Package className="w-6 h-6 text-blue-400" />
+          <Link href="/admin/boxes" className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-[rgba(191,255,0,0.3)] transition-all group">
+            <div className="inline-flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-gradient-to-br from-[rgba(191,255,0,0.1)] to-cyan-500/20">
+              <Package className="w-6 h-6 text-[#BFFF00]" />
             </div>
-            <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">Box Management</h3>
+            <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#BFFF00] transition-colors">Box Management</h3>
             <p className="text-[#8888aa] text-sm">Create and manage boxes for users to open.</p>
           </Link>
 

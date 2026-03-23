@@ -199,13 +199,13 @@ export default function ManageProductsPage() {
           <div className="flex items-center gap-3">
             <Package className="w-8 h-8 text-[#BFFF00]" />
             <h1 className="text-3xl font-bold text-white">Products</h1>
-            <span className="px-3 py-1 rounded-full bg-gray-700/50 text-[#f0f0f5] text-sm">
+            <span className="px-3 py-1 rounded-full bg-[#12123a] text-[#f0f0f5] text-sm">
               {products.length} total
             </span>
           </div>
           <Link
             href="/shop/manage/products/new"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-[#BFFF00] text-black font-semibold rounded-xl hover:from-emerald-500 hover:to-cyan-500 transition-all"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-[#BFFF00] text-black font-semibold rounded-xl hover:brightness-110 transition-all"
           >
             <Plus className="w-5 h-5" />
             Add Product
@@ -263,7 +263,7 @@ export default function ManageProductsPage() {
                     <tr key={product.id} className="hover:bg-white/5 transition-colors">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-4">
-                          <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gray-800 flex-shrink-0">
+                          <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-[#12123a] flex-shrink-0">
                             {product.images[0] ? (
                               <Image
                                 src={product.images[0]}
@@ -318,7 +318,7 @@ export default function ManageProductsPage() {
                             className={`p-2 rounded-lg transition-colors ${
                               product.featured 
                                 ? 'text-amber-400 hover:bg-amber-500/20' 
-                                : 'text-[#8888aa] hover:bg-gray-700/50'
+                                : 'text-[#8888aa] hover:bg-[#12123a]'
                             }`}
                             title={product.featured ? 'Remove from featured' : 'Add to featured'}
                           >
@@ -329,7 +329,7 @@ export default function ManageProductsPage() {
                             className={`p-2 rounded-lg transition-colors ${
                               product.isActive 
                                 ? 'text-green-400 hover:bg-green-500/20' 
-                                : 'text-[#8888aa] hover:bg-gray-700/50'
+                                : 'text-[#8888aa] hover:bg-[#12123a]'
                             }`}
                             title={product.isActive ? 'Hide product' : 'Show product'}
                           >
@@ -337,7 +337,7 @@ export default function ManageProductsPage() {
                           </button>
                           <Link
                             href={`/shop/manage/products/${product.id}/edit`}
-                            className="p-2 rounded-lg text-blue-400 hover:bg-blue-500/20 transition-colors"
+                            className="p-2 rounded-lg text-[#BFFF00] hover:bg-[rgba(191,255,0,0.15)] transition-colors"
                             title="Edit product"
                           >
                             <Edit className="w-4 h-4" />

@@ -71,7 +71,7 @@ const categoryConfig: Record<string, { icon: typeof Bug; label: string; color: s
 };
 
 const statusColors: Record<string, string> = {
-  OPEN: 'bg-blue-500',
+  OPEN: 'bg-[#BFFF00]',
   CLAIMED: 'bg-indigo-500',
   IN_PROGRESS: 'bg-amber-500',
   RESOLVED: 'bg-green-500',
@@ -88,7 +88,7 @@ const statusLabels: Record<string, string> = {
 
 const priorityColors: Record<string, string> = {
   LOW: 'bg-gray-500',
-  MEDIUM: 'bg-blue-500',
+  MEDIUM: 'bg-[#BFFF00]',
   HIGH: 'bg-amber-500',
   URGENT: 'bg-red-500',
 };

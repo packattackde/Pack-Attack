@@ -73,7 +73,7 @@ export default async function BoxesPage() {
   )].sort();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display">
+    <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display">
       {/* Background Effects */}
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
@@ -82,14 +82,14 @@ export default async function BoxesPage() {
         {/* Header */}
         <div className="mb-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full glass text-sm">
-            <Package className="w-4 h-4 text-blue-400" />
-            <span className="text-gray-300">Card Packs</span>
+            <Package className="w-4 h-4 text-[#BFFF00]" />
+            <span className="text-[#f0f0f5]">Card Packs</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-3">
             <span className="text-white">All </span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Boxes</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#BFFF00] to-[#d4ff4d]">Boxes</span>
           </h1>
-          <p className="text-gray-400 text-lg">Browse and open packs to build your collection</p>
+          <p className="text-[#8888aa] text-lg">Browse and open packs to build your collection</p>
         </div>
 
         {/* Client-side filterable boxes */}

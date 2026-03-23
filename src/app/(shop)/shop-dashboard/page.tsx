@@ -287,7 +287,7 @@ export default async function ShopDashboard({
           </div>
           
           <div className="glass rounded-xl p-4 flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-blue-500/10">
+            <div className="p-3 rounded-xl bg-[rgba(191,255,0,0.1)]">
               <Package className="w-5 h-5 text-[#BFFF00]" />
             </div>
             <div>
@@ -483,7 +483,7 @@ export default async function ShopDashboard({
                   <div className="text-right">
                     <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${
                       order.status === 'PENDING' ? 'bg-yellow-500/10 text-yellow-400' :
-                      order.status === 'CONFIRMED' ? 'bg-blue-500/10 text-[#BFFF00]' :
+                      order.status === 'CONFIRMED' ? 'bg-[rgba(191,255,0,0.1)] text-[#BFFF00]' :
                       order.status === 'PROCESSING' ? 'bg-purple-500/10 text-purple-400' :
                       order.status === 'SHIPPED' ? 'bg-indigo-500/10 text-indigo-400' :
                       order.status === 'DELIVERED' ? 'bg-green-500/10 text-green-400' :

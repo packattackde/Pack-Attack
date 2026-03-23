@@ -766,7 +766,7 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
             
             {/* Show JustTCG badge for JustTCG-only games */}
             {justTCGOnlyGames.includes(selectedGame) && (
-              <span className="px-3 py-2 rounded-lg bg-blue-900/50 border border-blue-700 text-blue-300 text-sm">
+              <span className="px-3 py-2 rounded-lg bg-[rgba(191,255,0,0.1)] border border-[rgba(191,255,0,0.3)] text-[#BFFF00] text-sm">
                 📊 JustTCG
               </span>
             )}
@@ -1018,7 +1018,7 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
                     <Button 
                       size="sm" 
                       onClick={enterBulkEditMode}
-                      className="bg-blue-600 hover:bg-blue-700"
+                      className="bg-[#BFFF00] text-black hover:bg-[#d4ff4d]"
                     >
                       <Edit2 className="h-4 w-4 mr-2" />
                       Edit Rates
@@ -1209,7 +1209,7 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
                             variant="secondary"
                             size="sm"
                             onClick={() => handleEditCard(card)}
-                            className="flex-1 h-8 bg-blue-600 hover:bg-blue-700 text-white"
+                            className="flex-1 h-8 bg-[#BFFF00] text-black hover:bg-[#d4ff4d]"
                           >
                             <Edit2 className="h-3 w-3 mr-1" />
                             Edit

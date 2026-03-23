@@ -32,7 +32,7 @@ const categories = [
 const colorMap: Record<string, { bg: string; border: string; text: string; activeBg: string; activeBorder: string; glow: string; activeInline: { backgroundColor: string; borderColor: string } }> = {
   red: { bg: 'bg-white/5', border: 'border-white/10', text: 'text-red-400', activeBg: 'bg-red-500/15', activeBorder: 'border-red-500/40', glow: 'shadow-red-500/20', activeInline: { backgroundColor: 'rgba(239,68,68,0.15)', borderColor: 'rgba(239,68,68,0.4)' } },
   amber: { bg: 'bg-white/5', border: 'border-white/10', text: 'text-amber-400', activeBg: 'bg-amber-500/15', activeBorder: 'border-amber-500/40', glow: 'shadow-amber-500/20', activeInline: { backgroundColor: 'rgba(245,158,11,0.15)', borderColor: 'rgba(245,158,11,0.4)' } },
-  blue: { bg: 'bg-white/5', border: 'border-white/10', text: 'text-[#BFFF00]', activeBg: 'bg-blue-500/15', activeBorder: 'border-[rgba(191,255,0,0.3)]/40', glow: 'shadow-[0_0_24px_rgba(191,255,0,0.3)]', activeInline: { backgroundColor: 'rgba(59,130,246,0.15)', borderColor: 'rgba(59,130,246,0.4)' } },
+  blue: { bg: 'bg-white/5', border: 'border-white/10', text: 'text-[#BFFF00]', activeBg: 'bg-[rgba(191,255,0,0.1)]', activeBorder: 'border-[rgba(191,255,0,0.3)]/40', glow: 'shadow-[0_0_24px_rgba(191,255,0,0.3)]', activeInline: { backgroundColor: 'rgba(191,255,0,0.1)', borderColor: 'rgba(191,255,0,0.4)' } },
   purple: { bg: 'bg-white/5', border: 'border-white/10', text: 'text-purple-400', activeBg: 'bg-purple-500/15', activeBorder: 'border-purple-500/40', glow: 'shadow-purple-500/20', activeInline: { backgroundColor: 'rgba(168,85,247,0.15)', borderColor: 'rgba(168,85,247,0.4)' } },
   green: { bg: 'bg-white/5', border: 'border-white/10', text: 'text-green-400', activeBg: 'bg-green-500/15', activeBorder: 'border-green-500/40', glow: 'shadow-green-500/20', activeInline: { backgroundColor: 'rgba(34,197,94,0.15)', borderColor: 'rgba(34,197,94,0.4)' } },
   orange: { bg: 'bg-white/5', border: 'border-white/10', text: 'text-orange-400', activeBg: 'bg-orange-500/15', activeBorder: 'border-orange-500/40', glow: 'shadow-orange-500/20', activeInline: { backgroundColor: 'rgba(249,115,22,0.15)', borderColor: 'rgba(249,115,22,0.4)' } },
@@ -156,7 +156,7 @@ export default function FeedbackPage() {
 
         {/* Header */}
         <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 rounded-full border border-[rgba(191,255,0,0.3)]/20 bg-blue-500/5">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 rounded-full border border-[rgba(191,255,0,0.3)]/20 bg-[rgba(191,255,0,0.03)]">
             <Sparkles className="w-3.5 h-3.5 text-[#BFFF00]" />
             <span className="text-xs text-[#BFFF00] font-semibold uppercase tracking-wide">We Value Your Input</span>
           </div>
@@ -369,7 +369,7 @@ export default function FeedbackPage() {
             {/* Logged-in user info */}
             {session && (
               <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06]">
-                <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-full bg-[rgba(191,255,0,0.1)] flex items-center justify-center shrink-0">
                   <span className="text-xs font-bold text-[#BFFF00]">
                     {session.user.name?.[0]?.toUpperCase() || session.user.email?.[0]?.toUpperCase() || '?'}
                   </span>

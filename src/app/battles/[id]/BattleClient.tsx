@@ -128,10 +128,10 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
             className="mb-8"
           >
             {battle.isDraw ? (
-              <div className="relative overflow-hidden rounded-3xl border border-blue-500/30 bg-gradient-to-br from-blue-900/30 via-slate-900/20 to-blue-900/30 p-8">
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent" />
+              <div className="relative overflow-hidden rounded-3xl border border-[rgba(191,255,0,0.3)] bg-gradient-to-br from-[rgba(191,255,0,0.05)] via-slate-900/20 to-[rgba(191,255,0,0.05)] p-8">
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[rgba(191,255,0,0.1)] via-transparent to-transparent" />
                 <div className="relative flex items-center gap-4">
-                  <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-600 shadow-lg shadow-blue-500/30">
+                  <div className="p-4 rounded-2xl bg-gradient-to-br from-[#BFFF00] to-[#8fbf00] shadow-lg shadow-[rgba(191,255,0,0.3)]">
                     <Equal className="w-10 h-10 text-white" />
                   </div>
                   <div>
@@ -221,7 +221,7 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
                       animate={{ opacity: 1, y: 0 }}
                       className={`rounded-2xl border p-5 transition-all ${
                         battle.isDraw
-                          ? 'border-blue-500/50 bg-gradient-to-br from-blue-900/20 to-slate-900/20'
+                          ? 'border-[rgba(191,255,0,0.3)] bg-gradient-to-br from-[rgba(191,255,0,0.05)] to-slate-900/20'
                           : isWinner 
                             ? 'border-yellow-500/50 bg-gradient-to-br from-yellow-900/30 to-amber-900/20' 
                             : 'border-white/10 bg-white/5'
@@ -238,7 +238,7 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
                             </span>
                           )}
                           {battle.isDraw && (
-                            <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 text-xs font-semibold">
+                            <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-[rgba(191,255,0,0.1)] text-[#BFFF00] text-xs font-semibold">
                               <Equal className="w-3 h-3" />
                               Draw
                             </div>

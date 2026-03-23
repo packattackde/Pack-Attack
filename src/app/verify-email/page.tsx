@@ -56,7 +56,7 @@ function VerifyEmailContent() {
     <div className="glass-strong rounded-2xl p-8 text-center">
       {status === 'loading' && (
         <>
-          <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-500/20">
+          <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[rgba(191,255,0,0.1)] to-purple-500/20">
             <Loader2 className="w-10 h-10 text-[#BFFF00] animate-spin" />
           </div>
           <h2 className="text-2xl font-bold text-white mb-2">Verifying Email</h2>
@@ -90,7 +90,7 @@ function VerifyEmailContent() {
 
       {status === 'already-verified' && (
         <>
-          <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-500/20">
+          <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[rgba(191,255,0,0.1)] to-purple-500/20">
             <CheckCircle2 className="w-10 h-10 text-[#BFFF00]" />
           </div>
           <h2 className="text-2xl font-bold text-white mb-2">Already Verified</h2>
@@ -145,7 +145,7 @@ function VerifyEmailContent() {
 function LoadingState() {
   return (
     <div className="glass-strong rounded-2xl p-8 text-center">
-      <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-500/20">
+      <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[rgba(191,255,0,0.1)] to-purple-500/20">
         <Loader2 className="w-10 h-10 text-[#BFFF00] animate-spin" />
       </div>
       <h2 className="text-2xl font-bold text-white mb-2">Loading</h2>

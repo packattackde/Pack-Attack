@@ -161,7 +161,7 @@ export function EmailsClient({ initialEmails, totalEmails, initialStats, users }
   const getTypeColor = (type: string) => {
     switch (type) {
       case 'VERIFICATION':
-        return 'bg-blue-500/20 text-[#BFFF00]';
+        return 'bg-[rgba(191,255,0,0.1)] text-[#BFFF00]';
       case 'WELCOME':
         return 'bg-green-500/20 text-green-400';
       case 'PASSWORD_RESET':

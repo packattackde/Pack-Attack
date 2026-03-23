@@ -471,7 +471,7 @@ export default function CreateShopBoxPage() {
                   )}
                   
                   {justTCGOnlyGames.includes(selectedGame) && (
-                    <span className="px-3 py-2.5 rounded-xl bg-blue-900/50 border border-blue-700 text-blue-300 text-sm flex items-center gap-2">
+                    <span className="px-3 py-2.5 rounded-xl bg-[rgba(191,255,0,0.1)] border border-[rgba(191,255,0,0.3)] text-[#BFFF00] text-sm flex items-center gap-2">
                       <span>📊</span> JustTCG
                     </span>
                   )}

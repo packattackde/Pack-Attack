@@ -446,13 +446,13 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
 
             {/* Privacy Notice */}
             <div
-                className="relative overflow-hidden rounded-2xl border border-blue-500/20 bg-gradient-to-r from-blue-500/5 to-indigo-500/5 p-6"
+                className="relative overflow-hidden rounded-2xl border border-[rgba(191,255,0,0.15)] bg-gradient-to-r from-[rgba(191,255,0,0.03)] to-[rgba(191,255,0,0.02)] p-6"
                 style={animStyle('0.3s')}
             >
-                <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-blue-400/10 to-transparent rounded-bl-full" />
+                <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-[rgba(191,255,0,0.08)] to-transparent rounded-bl-full" />
                 <div className="relative flex items-start gap-4">
-                    <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center">
-                        <Shield className="w-6 h-6 text-blue-400" />
+                    <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-[rgba(191,255,0,0.1)] flex items-center justify-center">
+                        <Shield className="w-6 h-6 text-[#BFFF00]" />
                     </div>
                     <div>
                         <h4 className="text-lg font-bold text-white mb-2">Your Privacy is Protected</h4>

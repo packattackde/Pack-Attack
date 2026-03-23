@@ -239,7 +239,7 @@ export default function ShopCartPage() {
                     </div>
 
                     {/* Items */}
-                    <div className="divide-y divide-gray-700/50">
+                    <div className="divide-y divide-[rgba(255,255,255,0.06)]">
                       {shopItems.map((item) => (
                         <div key={item.id} className="p-6 flex gap-4">
                           {/* Image */}

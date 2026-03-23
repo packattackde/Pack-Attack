@@ -352,7 +352,7 @@ export function UpsaleItemsClient({ initialItems }: { initialItems: UpsellItem[]
                   <h3 className="font-bold text-white mb-1 truncate">{item.name}</h3>
                   {item.description && <p className="text-[#8888aa] text-sm mb-3 line-clamp-2">{item.description}</p>}
                   {item.externalUrl && (
-                    <a href={item.externalUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-[#BFFF00] hover:text-blue-300 mb-3">
+                    <a href={item.externalUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-[#BFFF00] hover:text-[#BFFF00] mb-3">
                       <ExternalLink className="w-3 h-3" />
                       External Link
                     </a>

@@ -405,7 +405,7 @@ export function StockImportClient() {
                     </p>
                     <Link
                       href={`/shop/manage/products/${item.id}/edit`}
-                      className="flex-shrink-0 inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium text-[#BFFF00] hover:bg-blue-500/20 transition-colors"
+                      className="flex-shrink-0 inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium text-[#BFFF00] hover:bg-[rgba(191,255,0,0.08)] transition-colors"
                     >
                       <Pencil className="w-3 h-3" />
                       Edit
@@ -428,7 +428,7 @@ export function StockImportClient() {
                     </p>
                     <Link
                       href={`/shop/manage/products/${item.id}/edit`}
-                      className="flex-shrink-0 inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium text-[#BFFF00] hover:bg-blue-500/20 transition-colors"
+                      className="flex-shrink-0 inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium text-[#BFFF00] hover:bg-[rgba(191,255,0,0.08)] transition-colors"
                     >
                       <Pencil className="w-3 h-3" />
                       Edit

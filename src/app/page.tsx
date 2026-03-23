@@ -445,7 +445,7 @@ export default async function HomePage() {
         /* Coming Soon */
         <section className="relative container mb-16 sm:mb-20 px-4">
           <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8 sm:p-12 text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 mb-6 rounded-2xl bg-gradient-to-br from-blue-500/15 to-purple-500/15">
+            <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 mb-6 rounded-2xl bg-gradient-to-br from-[rgba(191,255,0,0.08)] to-purple-500/15">
               <Package className="w-8 h-8 sm:w-10 sm:h-10 text-[#BFFF00]" />
             </div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4">Coming Soon</h2>

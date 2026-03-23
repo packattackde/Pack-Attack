@@ -588,7 +588,7 @@ export default function BattleDrawClient({ battle: initialBattle, currentUserId,
       case 'WAITING':
         return <span className="px-3 py-1 rounded-full bg-yellow-500/20 text-yellow-400 text-sm font-semibold">Waiting</span>;
       case 'IN_PROGRESS':
-        return <span className="px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 text-sm font-semibold">In Progress</span>;
+        return <span className="px-3 py-1 rounded-full bg-[rgba(191,255,0,0.1)] text-[#BFFF00] text-sm font-semibold">In Progress</span>;
       case 'FINISHED':
         return <span className="px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-sm font-semibold">Finished</span>;
       case 'CANCELLED':
@@ -639,10 +639,10 @@ export default function BattleDrawClient({ battle: initialBattle, currentUserId,
               className="mb-8"
             >
               {battle?.isDraw ? (
-                <div className="relative overflow-hidden rounded-3xl border border-blue-500/30 bg-gradient-to-br from-blue-900/30 via-slate-900/20 to-blue-900/30 p-8">
-                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent" />
+                <div className="relative overflow-hidden rounded-3xl border border-[rgba(191,255,0,0.3)] bg-gradient-to-br from-[rgba(191,255,0,0.05)] via-slate-900/20 to-[rgba(191,255,0,0.05)] p-8">
+                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[rgba(191,255,0,0.1)] via-transparent to-transparent" />
                   <div className="relative flex items-center gap-4">
-                    <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-600 shadow-lg shadow-blue-500/30">
+                    <div className="p-4 rounded-2xl bg-gradient-to-br from-[#BFFF00] to-[#8fbf00] shadow-lg shadow-[rgba(191,255,0,0.3)]">
                       <svg className="w-10 h-10 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/></svg>
                     </div>
                     <div>
@@ -741,19 +741,19 @@ export default function BattleDrawClient({ battle: initialBattle, currentUserId,
             <div className={`rounded-3xl border p-6 ${
               timeUntilAutoStart <= 300 
                 ? 'border-orange-500/30 bg-gradient-to-br from-orange-900/30 to-red-900/20' 
-                : 'border-blue-500/30 bg-gradient-to-br from-blue-900/30 to-indigo-900/20'
+                : 'border-[rgba(191,255,0,0.3)] bg-gradient-to-br from-[rgba(191,255,0,0.05)] to-[rgba(191,255,0,0.03)]'
             }`}>
               <div className="flex items-center gap-4">
                 <div className={`p-3 rounded-xl ${
                   timeUntilAutoStart <= 300 
                     ? 'bg-gradient-to-br from-orange-500 to-red-600' 
-                    : 'bg-gradient-to-br from-blue-500 to-indigo-600'
+                    : 'bg-gradient-to-br from-[#BFFF00] to-[#8fbf00]'
                 }`}>
                   <Clock className="w-6 h-6 text-white" />
                 </div>
                 <div className="flex-1">
                   <h3 className={`text-xl font-bold ${
-                    timeUntilAutoStart <= 300 ? 'text-orange-400' : 'text-blue-400'
+                    timeUntilAutoStart <= 300 ? 'text-orange-400' : 'text-[#BFFF00]'
                   }`}>
                     Auto-Start Timer
                   </h3>
@@ -764,7 +764,7 @@ export default function BattleDrawClient({ battle: initialBattle, currentUserId,
                   </p>
                 </div>
                 <div className={`text-3xl font-bold ${
-                  timeUntilAutoStart <= 300 ? 'text-orange-400' : 'text-blue-400'
+                  timeUntilAutoStart <= 300 ? 'text-orange-400' : 'text-[#BFFF00]'
                 }`}>
                   {formatTimeRemaining(timeUntilAutoStart)}
                 </div>
@@ -1000,7 +1000,7 @@ export default function BattleDrawClient({ battle: initialBattle, currentUserId,
                       layout
                       className={`rounded-2xl border p-5 transition-all ${
                         isDrawResult
-                          ? 'border-blue-500/50 bg-gradient-to-br from-blue-900/20 to-slate-900/20'
+                          ? 'border-[rgba(191,255,0,0.3)] bg-gradient-to-br from-[rgba(191,255,0,0.05)] to-slate-900/20'
                           : isWinner 
                             ? 'border-yellow-500/50 bg-gradient-to-br from-yellow-900/30 to-amber-900/20' 
                             : 'border-white/10 bg-white/5'
@@ -1017,7 +1017,7 @@ export default function BattleDrawClient({ battle: initialBattle, currentUserId,
                             </span>
                           )}
                           {isDrawResult && (
-                            <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 text-xs font-semibold">
+                            <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-[rgba(191,255,0,0.1)] text-[#BFFF00] text-xs font-semibold">
                               <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/></svg>
                               Draw
                             </div>

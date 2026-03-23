@@ -214,7 +214,7 @@ export default function FeedbackHistoryPage() {
   if (sessionStatus === 'loading') {
     return (
       <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display flex items-center justify-center">
-        <div className="w-6 h-6 border-2 border-white/20 border-t-blue-400 rounded-full animate-spin" />
+        <div className="w-6 h-6 border-2 border-white/20 border-t-[#BFFF00] rounded-full animate-spin" />
       </div>
     );
   }
@@ -281,7 +281,7 @@ export default function FeedbackHistoryPage() {
             {/* New Feedback */}
             <Link
               href="/feedback"
-              className="inline-flex items-center gap-1.5 h-9 px-3 rounded-lg bg-blue-500/15 text-[#BFFF00] border border-[rgba(191,255,0,0.3)]/20 hover:bg-blue-500/25 text-sm font-medium transition-all"
+              className="inline-flex items-center gap-1.5 h-9 px-3 rounded-lg bg-[rgba(191,255,0,0.1)] text-[#BFFF00] border border-[rgba(191,255,0,0.3)]/20 hover:bg-[rgba(191,255,0,0.15)] text-sm font-medium transition-all"
             >
               <Plus className="w-3.5 h-3.5" />
               New
@@ -292,7 +292,7 @@ export default function FeedbackHistoryPage() {
         {/* Feedback List */}
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <div className="w-6 h-6 border-2 border-white/20 border-t-blue-400 rounded-full animate-spin" />
+            <div className="w-6 h-6 border-2 border-white/20 border-t-[#BFFF00] rounded-full animate-spin" />
           </div>
         ) : feedbacks.length === 0 ? (
           <div className="text-center py-20">
@@ -425,10 +425,10 @@ export default function FeedbackHistoryPage() {
                                 type="button"
                                 onClick={() => saveEdit(fb.id)}
                                 disabled={!editMessage.trim() || savingEdit || editMessage.trim() === fb.message}
-                                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium text-[#BFFF00] bg-blue-500/10 border border-[rgba(191,255,0,0.3)]/20 hover:bg-blue-500/20 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium text-[#BFFF00] bg-[rgba(191,255,0,0.1)] border border-[rgba(191,255,0,0.3)]/20 hover:bg-[rgba(191,255,0,0.15)] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                               >
                                 {savingEdit ? (
-                                  <div className="w-3 h-3 border-2 border-blue-400/30 border-t-blue-400 rounded-full animate-spin" />
+                                  <div className="w-3 h-3 border-2 border-[#BFFF00]/30 border-t-[#BFFF00] rounded-full animate-spin" />
                                 ) : (
                                   <Save className="w-3 h-3" />
                                 )}

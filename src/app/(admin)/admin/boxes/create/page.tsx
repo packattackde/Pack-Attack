@@ -424,7 +424,7 @@ export default function CreateBoxPage() {
                   type="button"
                   variant="outline"
                   onClick={() => setShowPresetGallery(true)}
-                  className="border-[rgba(191,255,0,0.3)]/50 text-[#BFFF00] hover:bg-blue-500/10 hover:text-blue-300"
+                  className="border-[rgba(191,255,0,0.3)]/50 text-[#BFFF00] hover:bg-[rgba(191,255,0,0.08)] hover:text-[#BFFF00]"
                 >
                   <FolderOpen className="h-4 w-4 mr-2" />
                   Load Preset
@@ -534,7 +534,7 @@ export default function CreateBoxPage() {
                   
                   {/* Show JustTCG badge for JustTCG-only games */}
                   {justTCGOnlyGames.includes(selectedGame) && (
-                    <span className="px-3 py-2 rounded-lg bg-blue-900/50 border border-blue-700 text-blue-300 text-sm">
+                    <span className="px-3 py-2 rounded-lg bg-[rgba(191,255,0,0.1)] border border-[rgba(191,255,0,0.3)] text-[#BFFF00] text-sm">
                       📊 JustTCG
                     </span>
                   )}

@@ -53,7 +53,7 @@ type Order = {
 
 const statusConfig: Record<string, { color: string; icon: React.ElementType; label: string }> = {
   PENDING: { color: 'text-yellow-400 bg-yellow-400/10', icon: Clock, label: 'Pending' },
-  PROCESSING: { color: 'text-[#BFFF00] bg-blue-400/10', icon: Package, label: 'Processing' },
+  PROCESSING: { color: 'text-[#BFFF00] bg-[rgba(191,255,0,0.1)]', icon: Package, label: 'Processing' },
   SHIPPED: { color: 'text-purple-400 bg-purple-400/10', icon: Truck, label: 'Shipped' },
   DELIVERED: { color: 'text-green-400 bg-green-400/10', icon: CheckCircle, label: 'Delivered' },
   CANCELLED: { color: 'text-red-400 bg-red-400/10', icon: XCircle, label: 'Cancelled' },

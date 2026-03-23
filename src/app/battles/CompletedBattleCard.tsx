@@ -114,9 +114,9 @@ export function CompletedBattleCard({
           <p className="text-sm text-[#8888aa] mb-4">{modeLabel}</p>
 
           {battle.isDraw ? (
-            <div className="flex items-center gap-2 mb-4 p-2 rounded-lg bg-blue-500/10 border border-blue-500/20">
-              <Equal className="w-4 h-4 text-blue-400" />
-              <span className="text-sm text-blue-400 font-medium">
+            <div className="flex items-center gap-2 mb-4 p-2 rounded-lg bg-[rgba(191,255,0,0.1)] border border-[rgba(191,255,0,0.15)]">
+              <Equal className="w-4 h-4 text-[#BFFF00]" />
+              <span className="text-sm text-[#BFFF00] font-medium">
                 Draw — Everyone keeps their cards
               </span>
             </div>
