@@ -281,6 +281,49 @@ export function BoosterPackAnimation({ boxName, gameName, onTearComplete, rarity
                   }}>
                   PA
                 </div>
+
+                {/* Tear Zone — INSIDE the front face */}
+                <div
+                  ref={tearZoneRef}
+                  className="absolute left-0 right-0 z-20"
+                  style={{ top: 'calc(22% - 35px)', height: 70, touchAction: 'none', cursor: 'none' }}
+                  onMouseDown={startTear}
+                  onMouseMove={moveTear}
+                  onMouseUp={endTear}
+                  onTouchStart={startTear}
+                  onTouchMove={moveTear}
+                  onTouchEnd={endTear}
+                  onTouchCancel={endTear}
+                >
+                  {phase === 'tilt' && (
+                    <div className="absolute top-1/2 left-2 right-2 h-[2px] -translate-y-1/2"
+                      style={{ background: 'repeating-linear-gradient(90deg, rgba(255,255,255,0.3) 0px, rgba(255,255,255,0.3) 4px, transparent 4px, transparent 8px)' }} />
+                  )}
+                  <svg viewBox="0 0 210 70" className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
+                    <defs>
+                      <filter id="tearGlow"><feGaussianBlur stdDeviation="1.5" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+                    </defs>
+                    <path d={tearLinePath} fill="none" stroke={tearLineColor} strokeWidth={tearProgress > 60 ? 4 : 3} filter="url(#tearGlow)" />
+                  </svg>
+                </div>
+
+                {/* Particles — INSIDE the front face */}
+                <div className="absolute left-0 right-0 pointer-events-none z-30" style={{ top: '22%', height: 0, overflow: 'visible' }}>
+                  {particles.map(p => (
+                    <motion.div
+                      key={p.id}
+                      className="absolute rounded-full"
+                      style={{
+                        left: p.x, width: p.size, height: p.size,
+                        background: p.color,
+                        boxShadow: tearProgress > 60 ? `0 0 ${p.size}px ${p.color}` : 'none',
+                      }}
+                      initial={{ y: 0, opacity: 1, scale: 1 }}
+                      animate={{ y: p.dy, x: p.dx, opacity: 0, scale: 0 }}
+                      transition={{ duration: 0.7, ease: 'easeOut' }}
+                    />
+                  ))}
+                </div>
               </div>
 
               {/* === BACK FACE === */}
@@ -291,119 +334,42 @@ export function BoosterPackAnimation({ boxName, gameName, onTearComplete, rarity
                   clipPath: 'url(#boosterClipFM)',
                 }} />
 
-              {/* === LEFT SIDE (visible when tilted right) === */}
+              {/* === LEFT SIDE — thin, dark === */}
               <div className="absolute pointer-events-none"
                 style={{
-                  width: 12,
-                  height: '76%',
-                  top: '7%',
-                  left: 0,
+                  width: 7, height: '76%', top: '7%', left: 0,
                   transformOrigin: 'left center',
-                  transform: 'rotateY(90deg) translateX(-6px)',
-                  background: 'linear-gradient(to bottom, #3d2590, #2d1b6b 30%, #3a2282 50%, #2d1b6b 70%, #221268)',
-                  borderLeft: '1px solid rgba(255,255,255,0.08)',
+                  transform: 'rotateY(90deg) translateX(-3.5px)',
+                  background: 'linear-gradient(to bottom, #2d1b6b, #1a0e50 50%, #150a3d)',
                 }} />
 
-              {/* === RIGHT SIDE (visible when tilted left) === */}
+              {/* === RIGHT SIDE — thin, darker === */}
               <div className="absolute pointer-events-none"
                 style={{
-                  width: 12,
-                  height: '76%',
-                  top: '7%',
-                  right: 0,
+                  width: 7, height: '76%', top: '7%', right: 0,
                   transformOrigin: 'right center',
-                  transform: 'rotateY(-90deg) translateX(6px)',
-                  background: 'linear-gradient(to bottom, #2a1878, #1a0e50 30%, #221268 50%, #1a0e50 70%, #150a3d)',
-                  borderRight: '1px solid rgba(255,255,255,0.05)',
+                  transform: 'rotateY(-90deg) translateX(3.5px)',
+                  background: 'linear-gradient(to bottom, #1a0e50, #120840 50%, #0e0630)',
                 }} />
 
-              {/* === TOP SIDE (visible when tilted down) === */}
+              {/* === TOP SIDE === */}
               <div className="absolute pointer-events-none"
                 style={{
-                  width: '86%',
-                  height: 12,
-                  top: '7%',
-                  left: '7%',
+                  width: '86%', height: 7, top: '7%', left: '7%',
                   transformOrigin: 'center top',
-                  transform: 'rotateX(-90deg) translateY(-6px)',
-                  background: 'linear-gradient(to right, #2d1b6b, #3d2590 50%, #2d1b6b)',
+                  transform: 'rotateX(-90deg) translateY(-3.5px)',
+                  background: '#2d1b6b',
                 }} />
 
-              {/* === BOTTOM SIDE (visible when tilted up) === */}
+              {/* === BOTTOM SIDE === */}
               <div className="absolute pointer-events-none"
                 style={{
-                  width: '86%',
-                  height: 12,
-                  bottom: '7%',
-                  left: '7%',
+                  width: '86%', height: 7, bottom: '7%', left: '7%',
                   transformOrigin: 'center bottom',
-                  transform: 'rotateX(90deg) translateY(6px)',
-                  background: 'linear-gradient(to right, #1a0e50, #221268 50%, #1a0e50)',
+                  transform: 'rotateX(90deg) translateY(3.5px)',
+                  background: '#150a3d',
                 }} />
 
-              {/* Tear Zone */}
-              <div
-                ref={tearZoneRef}
-                className="absolute left-0 right-0 z-20"
-                style={{
-                  top: 'calc(22% - 35px)',
-                  height: 70,
-                  touchAction: 'none',
-                  cursor: 'none',
-                }}
-                onMouseDown={startTear}
-                onMouseMove={moveTear}
-                onMouseUp={endTear}
-                onTouchStart={startTear}
-                onTouchMove={moveTear}
-                onTouchEnd={endTear}
-                onTouchCancel={endTear}
-              >
-                {/* Perforation line */}
-                {phase === 'tilt' && (
-                  <div className="absolute top-1/2 left-2 right-2 h-[2px] -translate-y-1/2"
-                    style={{
-                      background: 'repeating-linear-gradient(90deg, rgba(255,255,255,0.3) 0px, rgba(255,255,255,0.3) 4px, transparent 4px, transparent 8px)',
-                    }} />
-                )}
-
-                {/* SVG tear line */}
-                <svg viewBox="0 0 210 70" className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
-                  <defs>
-                    <filter id="tearGlow">
-                      <feGaussianBlur stdDeviation="1.5" result="b" />
-                      <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
-                    </filter>
-                  </defs>
-                  <path
-                    d={tearLinePath}
-                    fill="none"
-                    stroke={tearLineColor}
-                    strokeWidth={tearProgress > 60 ? 4 : 3}
-                    filter="url(#tearGlow)"
-                  />
-                </svg>
-              </div>
-
-              {/* Particles from tear */}
-              <div className="absolute left-0 right-0 pointer-events-none z-30" style={{ top: '22%', height: 0, overflow: 'visible' }}>
-                {particles.map(p => (
-                  <motion.div
-                    key={p.id}
-                    className="absolute rounded-full"
-                    style={{
-                      left: p.x,
-                      width: p.size,
-                      height: p.size,
-                      background: p.color,
-                      boxShadow: tearProgress > 60 ? `0 0 ${p.size}px ${p.color}` : 'none',
-                    }}
-                    initial={{ y: 0, opacity: 1, scale: 1 }}
-                    animate={{ y: p.dy, x: p.dx, opacity: 0, scale: 0 }}
-                    transition={{ duration: 0.7, ease: 'easeOut' }}
-                  />
-                ))}
-              </div>
             </motion.div>
 
             {/* Torn top piece — flies away */}
