@@ -51,15 +51,15 @@ export default function RecentPullsWidget({ pulls, className = '' }: RecentPulls
       </div>
 
       <ScrollableRow>
-        <div className="flex gap-2.5">
+        <div className="flex gap-3">
           {pulls.map((pull, idx) => {
             const fresh = isFreshPull(pull.timestamp);
             const borderClass = getRarityBorderClass(pull.rarity);
 
             return (
-              <div key={idx} className="flex-shrink-0 w-[80px]">
+              <div key={idx} className="flex-shrink-0 w-[100px]">
                 <div
-                  className={`w-[80px] h-[112px] rounded-lg overflow-hidden ${borderClass} ${
+                  className={`w-[100px] h-[140px] rounded-lg overflow-hidden ${borderClass} ${
                     fresh ? 'pull-shimmer' : ''
                   } transition-transform hover:scale-105 cursor-pointer`}
                 >
@@ -67,8 +67,8 @@ export default function RecentPullsWidget({ pulls, className = '' }: RecentPulls
                     <Image
                       src={pull.cardImage}
                       alt={pull.cardName}
-                      width={80}
-                      height={112}
+                      width={100}
+                      height={140}
                       className="w-full h-full object-cover"
                       unoptimized
                     />
@@ -78,7 +78,7 @@ export default function RecentPullsWidget({ pulls, className = '' }: RecentPulls
                     </div>
                   )}
                 </div>
-                <p className="text-[9px] text-[#8888aa] truncate mt-1.5 text-center w-[80px]">
+                <p className="text-[9px] text-[#8888aa] truncate mt-1.5 text-center w-[100px]">
                   {pull.cardName}
                 </p>
               </div>

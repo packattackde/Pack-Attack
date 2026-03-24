@@ -52,9 +52,12 @@ export default async function DashboardPage() {
         levelCoinsEarnedThisMonth: true,
       },
     }),
-    // Recent pulls (last 12)
+    // Recent pulls (last 12, only ones with cards)
     prisma.pull.findMany({
-      where: { user: { email: userEmail } },
+      where: {
+        user: { email: userEmail },
+        cardId: { not: null },
+      },
       orderBy: { timestamp: 'desc' },
       take: 12,
       include: {
