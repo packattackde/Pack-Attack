@@ -38,6 +38,7 @@ export default async function DashboardPage() {
     activeBattles,
     leaderboardData,
     cheapestBox,
+    collectionValueAgg,
   ] = await Promise.all([
     // User profile
     prisma.user.findUnique({
@@ -124,6 +125,11 @@ export default async function DashboardPage() {
       orderBy: { price: 'asc' },
       select: { price: true },
     }),
+    // Collection value — aggregate all pull cardValues
+    prisma.pull.aggregate({
+      where: { user: { email: userEmail }, cardId: { not: null } },
+      _sum: { cardValue: true },
+    }),
   ]);
 
   if (!user) redirect('/login');
@@ -133,10 +139,7 @@ export default async function DashboardPage() {
   const title = titleForLevel(user.level);
   const winRate =
     totalBattles > 0 ? Math.round((battlesWon / totalBattles) * 100) : 0;
-  const collectionValue = recentPulls.reduce(
-    (sum, p) => sum + (p.card?.coinValue ? Number(p.card.coinValue) : 0),
-    0
-  );
+  const collectionValue = Number(collectionValueAgg._sum.cardValue || 0);
 
   // Luck streak
   const hitRarities = new Set([
@@ -288,8 +291,8 @@ export default async function DashboardPage() {
           <LeaderboardWidget
             className="sm:col-span-3 lg:col-span-3"
             entries={serializedLeaderboard}
-            userRank={userLbEntry?.rank ?? 0}
-            userPoints={userLbEntry?.points ?? 0}
+            userRank={userLbEntry?.rank ?? -1}
+            userPoints={userLbEntry?.points ?? -1}
             month={currentMonth}
           />
         </div>

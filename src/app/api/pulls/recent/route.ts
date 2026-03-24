@@ -1,10 +1,16 @@
 import { prisma } from '@/lib/prisma';
+import { rateLimit } from '@/lib/rate-limit';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
   try {
+    const rateLimitResult = await rateLimit(request as never, 'general');
+    if (!rateLimitResult.success && rateLimitResult.response) {
+      return rateLimitResult.response;
+    }
+
     const { searchParams } = new URL(request.url);
     const minValue = Number(searchParams.get('minValue') || '100');
     const limit = Math.min(Number(searchParams.get('limit') || '15'), 30);
@@ -27,7 +33,7 @@ export async function GET(request: NextRequest) {
     });
 
     const items = pulls
-      .filter(p => p.card)
+      .filter(p => p.card && p.box)
       .map(pull => ({
         pullId: pull.id,
         userId: pull.user.id,

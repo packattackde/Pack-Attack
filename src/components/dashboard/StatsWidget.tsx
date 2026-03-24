@@ -13,8 +13,6 @@ interface StatsWidgetProps {
 
 import { formatCoins } from '@/lib/format'
 
-const formatLargeNumber = formatCoins;
-
 function StatCard({
   value,
   label,
@@ -71,7 +69,7 @@ export default function StatsWidget({
           colorClass="text-[#60a5fa]"
         />
         <StatCard
-          value={formatLargeNumber(animatedValue)}
+          value={formatCoins(animatedValue)}
           label="Collection Value"
           colorClass="text-[#a78bfa]"
         />

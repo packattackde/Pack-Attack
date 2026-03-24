@@ -1,4 +1,6 @@
 import { prisma } from '@/lib/prisma';
+import { getCurrentSession } from '@/lib/auth';
+import { rateLimit } from '@/lib/rate-limit';
 import { NextRequest } from 'next/server';
 
 export const dynamic = 'force-dynamic';
@@ -10,6 +12,16 @@ const POLL_INTERVAL_MS = 3000;
 const KEEPALIVE_INTERVAL_MS = 30000;
 
 export async function GET(_request: NextRequest) {
+  const session = await getCurrentSession();
+  if (!session?.user?.email) {
+    return new Response('Unauthorized', { status: 401 });
+  }
+
+  const rateLimitResult = await rateLimit(_request as never, 'general');
+  if (!rateLimitResult.success && rateLimitResult.response) {
+    return rateLimitResult.response;
+  }
+
   const encoder = new TextEncoder();
   let lastTimestamp = new Date();
   let closed = false;
@@ -56,11 +68,12 @@ export async function GET(_request: NextRequest) {
           }
 
           const hitPulls = newPulls
-            .filter(p => p.card && Number(p.card.coinValue || 0) >= MIN_COIN_VALUE)
+            .filter(p => p.card && p.box && Number(p.cardValue || 0) >= MIN_COIN_VALUE)
             .slice(0, 5);
 
           if (hitPulls.length > 0) {
             for (const pull of hitPulls) {
+              if (!pull.box) continue;
               const data = JSON.stringify({
                 pullId: pull.id,
                 userId: pull.user.id,

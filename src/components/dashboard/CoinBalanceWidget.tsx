@@ -44,7 +44,7 @@ export default function CoinBalanceWidget({
         }`}
       >
         <GiTwoCoins className="w-4 h-4 text-black" />
-        Coins aufladen
+        Top Up Coins
       </Link>
 
       {isLow && (

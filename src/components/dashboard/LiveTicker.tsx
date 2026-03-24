@@ -75,6 +75,7 @@ export default function LiveTicker({ className }: LiveTickerProps) {
   const retryTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const retryDelayRef = useRef(3000)
   const pauseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const newItemTimersRef = useRef<ReturnType<typeof setTimeout>[]>([])
 
   const connect = useCallback(() => {
     if (eventSourceRef.current) {
@@ -123,17 +124,19 @@ export default function LiveTicker({ className }: LiveTickerProps) {
                 gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5)
                 osc.start(ctx.currentTime)
                 osc.stop(ctx.currentTime + 0.5)
+                osc.addEventListener('ended', () => ctx.close())
               } catch {}
             })
           } catch {}
         }
 
         // Remove isNew/isMegaHit flags after animation completes
-        setTimeout(() => {
+        const timerId = setTimeout(() => {
           setItems((prev) => prev.map(item =>
             item.pullId === data.pullId ? { ...item, isNew: false, isMegaHit: false } : item
           ))
         }, isMegaHit ? 5000 : 3000)
+        newItemTimersRef.current.push(timerId)
 
         // Pause ticker for legendary pulls or mega hits
         if (tier === 'legendary' || isMegaHit) {
@@ -203,6 +206,7 @@ export default function LiveTicker({ className }: LiveTickerProps) {
       if (pauseTimeoutRef.current) {
         clearTimeout(pauseTimeoutRef.current)
       }
+      newItemTimersRef.current.forEach(clearTimeout)
     }
   }, [connect])
 
@@ -282,7 +286,7 @@ export default function LiveTicker({ className }: LiveTickerProps) {
           <button
             onClick={(e) => { e.stopPropagation(); setSoundEnabled(!soundEnabled); }}
             className="ml-1 text-[12px] opacity-50 hover:opacity-100 transition-opacity"
-            title={soundEnabled ? 'Sound aus' : 'Sound an'}
+            title={soundEnabled ? 'Mute' : 'Unmute'}
           >
             {soundEnabled ? <GiSpeaker className="w-3.5 h-3.5" /> : <GiSpeakerOff className="w-3.5 h-3.5" />}
           </button>

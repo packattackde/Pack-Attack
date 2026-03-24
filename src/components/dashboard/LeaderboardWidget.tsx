@@ -39,7 +39,7 @@ export default function LeaderboardWidget({
   className = '',
 }: LeaderboardWidgetProps) {
   const topEntries = entries.slice(0, 10);
-  const userInTop10 = topEntries.some((_, i) => i + 1 === userRank);
+  const userInTop10 = userRank > 0 && userRank <= 10 && topEntries.some(e => e.rank === userRank);
 
   return (
     <div className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl h-full p-4 sm:p-6 ${className}`}>
@@ -78,7 +78,7 @@ export default function LeaderboardWidget({
       )}
 
       {/* User's own rank — only show separately if not in top 10 */}
-      {!userInTop10 && (
+      {!userInTop10 && userRank > 0 && (
         <>
           <div className="my-2 border-t border-dashed border-[rgba(255,255,255,0.08)]" />
           <div className="flex items-center gap-2 py-1.5 px-2 rounded-lg border border-[rgba(191,255,0,0.15)] bg-[rgba(191,255,0,0.03)]">
