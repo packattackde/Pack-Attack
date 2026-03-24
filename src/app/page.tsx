@@ -8,7 +8,7 @@ import CoinBalanceWidget from '@/components/dashboard/CoinBalanceWidget';
 import BestPullWidget from '@/components/dashboard/BestPullWidget';
 import StatsWidget from '@/components/dashboard/StatsWidget';
 import BattlesWidget from '@/components/dashboard/BattlesWidget';
-import FeaturedBoxesWidget from '@/components/dashboard/FeaturedBoxesWidget';
+// FeaturedBoxesWidget removed — replaced by expanded AchievementsWidget
 import RecentPullsWidget from '@/components/dashboard/RecentPullsWidget';
 import LeaderboardWidget from '@/components/dashboard/LeaderboardWidget';
 import AchievementsWidget from '@/components/dashboard/AchievementsWidget';
@@ -35,7 +35,6 @@ export default async function DashboardPage() {
     battlesWon,
     bestPullToday,
     activeBattles,
-    featuredBoxes,
     leaderboardEntries,
     userLeaderboard,
     cheapestBox,
@@ -116,13 +115,6 @@ export default async function DashboardPage() {
         box: { select: { name: true } },
         _count: { select: { participants: true } },
       },
-    }),
-    // Featured boxes (up to 6)
-    prisma.box.findMany({
-      where: { isActive: true, featured: true },
-      orderBy: { popularity: 'desc' },
-      take: 6,
-      select: { id: true, name: true, imageUrl: true, price: true },
     }),
     // Leaderboard top 3
     prisma.battleLeaderboard.findMany({
@@ -234,12 +226,6 @@ export default async function DashboardPage() {
     maxParticipants: b.maxParticipants,
   }));
 
-  const serializedBoxes = featuredBoxes.map((b) => ({
-    id: b.id,
-    name: b.name,
-    imageUrl: b.imageUrl,
-    price: Number(b.price),
-  }));
 
   const serializedLeaderboard = leaderboardEntries.map((e, i) => ({
     rank: i + 1,
@@ -309,11 +295,6 @@ export default async function DashboardPage() {
           <BattlesWidget
             className="sm:col-span-3 lg:col-span-4"
             battles={serializedBattles}
-          />
-
-          <FeaturedBoxesWidget
-            className="sm:col-span-3 lg:col-span-4"
-            boxes={serializedBoxes}
           />
 
           <RecentPullsWidget
