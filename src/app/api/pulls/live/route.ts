@@ -3,13 +3,8 @@ import { NextRequest } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
-const HIT_RARITIES = new Set([
-  'rare', 'r', 'holo rare', 'holo', 'promo',
-  'super rare', 'sr', 'epic', 'ultra rare', 'ultra', 'double rare', 'rr',
-  'leader', 'special', 'illustration rare', 'full art', 'v', 'vstar', 'vmax', 'ex', 'gx',
-  'legendary', 'mythic', 'mythic rare', 'secret', 'secret rare', 'ssr', 'ur',
-  'alt art', 'alternate art', 'art rare', 'gold', 'hyper rare', 'chase', 'manga',
-]);
+// Minimum coin value for a pull to appear in the live ticker
+const MIN_COIN_VALUE = 100;
 
 const POLL_INTERVAL_MS = 3000;
 const KEEPALIVE_INTERVAL_MS = 30000;
@@ -61,7 +56,7 @@ export async function GET(_request: NextRequest) {
           }
 
           const hitPulls = newPulls
-            .filter(p => p.card && HIT_RARITIES.has(p.card.rarity?.toLowerCase().trim() || ''))
+            .filter(p => p.card && Number(p.card.coinValue || 0) >= MIN_COIN_VALUE)
             .slice(0, 5);
 
           if (hitPulls.length > 0) {
@@ -79,7 +74,7 @@ export async function GET(_request: NextRequest) {
                 boxName: pull.box.name,
                 timestamp: pull.timestamp.toISOString(),
               });
-              controller.enqueue(encoder.encode(`event: pull\ndata: ${data}\n\n`));
+              controller.enqueue(encoder.encode(`data: ${data}\n\n`));
             }
           }
         } catch (error) {
