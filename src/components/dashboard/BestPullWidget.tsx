@@ -117,7 +117,12 @@ export default function BestPullWidget({
             <p className="text-[#BFFF00] font-extrabold mt-2 text-xl sm:text-2xl">
             <span className="inline-flex items-center gap-1.5"><GiTwoCoins className="w-5 h-5 text-[#BFFF00]" /> {(coinValue ?? 0).toFixed(2)}</span>
             </p>
-            <p className="text-xs text-[#7777a0] mt-0.5">by {pullerName}</p>
+            <div className="flex items-center gap-2 mt-2 px-2.5 py-1.5 rounded-lg bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.08)] w-fit">
+              <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#BFFF00] to-[#7fff00] flex items-center justify-center text-[9px] font-bold text-black">
+                {(pullerName ?? '?')[0]?.toUpperCase()}
+              </div>
+              <span className="text-xs font-semibold text-[#f0f0f5]">{pullerName}</span>
+            </div>
           </div>
         </div>
 
