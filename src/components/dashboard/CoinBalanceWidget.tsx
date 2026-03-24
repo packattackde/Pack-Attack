@@ -29,7 +29,7 @@ export default function CoinBalanceWidget({
       </p>
 
       <p className="text-2xl sm:text-3xl font-extrabold text-[#fbbf24]">
-<GiTwoCoins className="w-7 h-7 text-[#fbbf24] inline" /> {coins.toFixed(2)}
+<span className="flex items-center gap-2"><GiTwoCoins className="w-7 h-7 text-[#fbbf24]" /> {coins.toFixed(2)}</span>
       </p>
 
       <p className="text-xs text-[#8888aa] mt-1">
@@ -38,11 +38,12 @@ export default function CoinBalanceWidget({
 
       <Link
         href="/purchase-coins"
-        className={`mt-4 block w-full text-center px-4 py-2.5 min-h-[44px] font-semibold rounded-xl text-sm text-black bg-gradient-to-r from-[#fbbf24] to-[#f59e0b] hover:brightness-110 transition ${
+        className={`mt-4 flex items-center justify-center gap-2 w-full px-4 py-2.5 min-h-[44px] font-semibold rounded-xl text-sm text-black bg-gradient-to-r from-[#fbbf24] to-[#f59e0b] hover:brightness-110 transition ${
           isLow ? 'animate-pulse' : ''
         }`}
       >
-<GiTwoCoins className="w-4 h-4 text-[#BFFF00] inline" /> Coins aufladen
+        <GiTwoCoins className="w-4 h-4 text-black" />
+        Coins aufladen
       </Link>
 
       {isLow && (

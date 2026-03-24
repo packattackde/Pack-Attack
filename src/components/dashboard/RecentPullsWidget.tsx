@@ -83,8 +83,8 @@ export default function RecentPullsWidget({ hits, pulls, className = '' }: Recen
                 <p className="text-[9px] text-[#f0f0f5] font-semibold truncate mt-1.5 text-center w-full max-w-[100px] sm:max-w-[120px]">
                   {hit.cardName}
                 </p>
-                <p className="text-[8px] text-[#BFFF00] font-bold">
-<GiTwoCoins className="w-3 h-3 text-[#BFFF00] inline" /> {hit.coinValue.toFixed(2)}
+                <p className="text-[8px] text-[#BFFF00] font-bold flex items-center justify-center gap-1">
+                  <GiTwoCoins className="w-3 h-3" /> {hit.coinValue.toFixed(2)}
                 </p>
               </div>
             ))}

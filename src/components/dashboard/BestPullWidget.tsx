@@ -57,7 +57,7 @@ export default function BestPullWidget({
             href="/boxes"
             className="min-h-[44px] inline-flex items-center gap-2 px-6 py-3 bg-[#BFFF00] text-black text-sm font-bold rounded-xl shadow-[0_0_15px_rgba(191,255,0,0.2)] hover:shadow-[0_0_25px_rgba(191,255,0,0.35)] hover:scale-105 transition-all"
           >
-<GiCardboardBox className="w-4 h-4" /> Open a Box →
+            <GiCardboardBox className="w-4 h-4" /> Open a Box →
           </Link>
         </div>
       </div>
@@ -115,7 +115,7 @@ export default function BestPullWidget({
               {rarity}
             </span>
             <p className="text-[#BFFF00] font-extrabold mt-2 text-xl sm:text-2xl">
-<GiTwoCoins className="w-5 h-5 text-[#fbbf24] inline" /> {(coinValue ?? 0).toFixed(2)}
+            <span className="inline-flex items-center gap-1.5"><GiTwoCoins className="w-5 h-5 text-[#BFFF00]" /> {(coinValue ?? 0).toFixed(2)}</span>
             </p>
             <p className="text-xs text-[#7777a0] mt-0.5">by {pullerName}</p>
           </div>
@@ -123,9 +123,9 @@ export default function BestPullWidget({
 
         <Link
           href={`/open/${boxId}`}
-          className="min-h-[44px] mt-4 block w-full text-center px-4 py-3 font-bold rounded-xl text-sm text-black bg-[#BFFF00] hover:brightness-110 transition shadow-[0_0_12px_rgba(191,255,0,0.3)]"
+          className="min-h-[44px] mt-4 flex items-center justify-center gap-2 w-full px-4 py-3 font-bold rounded-xl text-sm text-black bg-[#BFFF00] hover:brightness-110 transition shadow-[0_0_12px_rgba(191,255,0,0.3)]"
         >
-<GiCardboardBox className="w-4 h-4 inline" /> Open this Box →
+          <GiCardboardBox className="w-4 h-4" /> Open this Box →
         </Link>
       </div>
 

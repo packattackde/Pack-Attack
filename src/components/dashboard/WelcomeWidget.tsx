@@ -40,13 +40,13 @@ export default function WelcomeWidget({
         <div className="flex flex-col sm:flex-row flex-wrap gap-2 w-full sm:w-auto">
           <Link
             href="/boxes"
-            className="min-h-[44px] flex items-center justify-center px-4 py-2 bg-[#BFFF00] text-black font-semibold rounded-xl text-sm whitespace-nowrap hover:brightness-110 transition"
+            className="min-h-[44px] flex items-center justify-center gap-2 px-4 py-2 bg-[#BFFF00] text-black font-semibold rounded-xl text-sm whitespace-nowrap hover:brightness-110 transition"
           >
             <GiCardboardBox className="w-4 h-4" /> Open Box
           </Link>
           <Link
             href="/battles"
-            className="min-h-[44px] flex items-center justify-center px-4 py-2 border border-[rgba(191,255,0,0.3)] text-[#BFFF00] font-semibold rounded-xl text-sm whitespace-nowrap hover:bg-[rgba(191,255,0,0.05)] transition"
+            className="min-h-[44px] flex items-center justify-center gap-2 px-4 py-2 border border-[rgba(191,255,0,0.3)] text-[#BFFF00] font-semibold rounded-xl text-sm whitespace-nowrap hover:bg-[rgba(191,255,0,0.05)] transition"
           >
             <GiCrossedSwords className="w-4 h-4" /> Join Battle
           </Link>
