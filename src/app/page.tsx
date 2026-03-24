@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { titleForLevel, xpProgressInCurrentLevel } from '@/lib/level';
+import { getLeaderboard } from '@/lib/leaderboard';
 import LiveTicker from '@/components/dashboard/LiveTicker';
 import WelcomeWidget from '@/components/dashboard/WelcomeWidget';
 import CoinBalanceWidget from '@/components/dashboard/CoinBalanceWidget';
@@ -35,8 +36,7 @@ export default async function DashboardPage() {
     battlesWon,
     bestPullToday,
     activeBattles,
-    leaderboardEntries,
-    userLeaderboard,
+    leaderboardData,
     cheapestBox,
   ] = await Promise.all([
     // User profile
@@ -116,24 +116,8 @@ export default async function DashboardPage() {
         _count: { select: { participants: true } },
       },
     }),
-    // Leaderboard top 3
-    prisma.battleLeaderboard.findMany({
-      where: {
-        month: new Date().getMonth() + 1,
-        year: new Date().getFullYear(),
-      },
-      orderBy: { points: 'desc' },
-      take: 3,
-      include: { user: { select: { name: true } } },
-    }),
-    // User's leaderboard entry
-    prisma.battleLeaderboard.findFirst({
-      where: {
-        user: { email: userEmail },
-        month: new Date().getMonth() + 1,
-        year: new Date().getFullYear(),
-      },
-    }),
+    // Leaderboard — shared utility
+    getLeaderboard(new Date().getMonth() + 1, new Date().getFullYear(), 10),
     // Cheapest active box
     prisma.box.findFirst({
       where: { isActive: true },
@@ -227,11 +211,13 @@ export default async function DashboardPage() {
   }));
 
 
-  const serializedLeaderboard = leaderboardEntries.map((e, i) => ({
-    rank: i + 1,
-    name: e.user.name || 'Anonymous',
+  // Leaderboard — top 3 for widget, find user's entry
+  const serializedLeaderboard = leaderboardData.slice(0, 3).map(e => ({
+    rank: e.rank,
+    name: e.userName,
     points: e.points,
   }));
+  const userLbEntry = leaderboardData.find(e => e.userId === user.id);
 
   return (
     <div className="min-h-screen bg-[#06061a] font-display flex flex-col">
@@ -302,8 +288,8 @@ export default async function DashboardPage() {
           <LeaderboardWidget
             className="sm:col-span-3 lg:col-span-3"
             entries={serializedLeaderboard}
-            userRank={userLeaderboard?.rank ?? 0}
-            userPoints={userLeaderboard?.points ?? 0}
+            userRank={userLbEntry?.rank ?? 0}
+            userPoints={userLbEntry?.points ?? 0}
             month={currentMonth}
           />
         </div>
