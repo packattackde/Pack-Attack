@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { GiLaurelCrown } from 'react-icons/gi';
+import { formatCoins } from '@/lib/format';
 
 interface LeaderboardEntry {
   rank: number;
@@ -20,11 +21,11 @@ interface LeaderboardWidgetProps {
 function getRankStyle(rank: number): string {
   switch (rank) {
     case 1:
-      return 'bg-[rgba(251,191,36,0.12)] text-[#fbbf24]';
+      return 'bg-[rgba(251,191,36,0.15)] text-[#fbbf24] border border-[rgba(251,191,36,0.3)]';
     case 2:
-      return 'bg-[rgba(192,192,192,0.12)] text-[#c0c0c0]';
+      return 'bg-[rgba(192,192,192,0.12)] text-[#c0c0c0] border border-[rgba(192,192,192,0.2)]';
     case 3:
-      return 'bg-[rgba(205,127,50,0.12)] text-[#cd7f32]';
+      return 'bg-[rgba(205,127,50,0.12)] text-[#cd7f32] border border-[rgba(205,127,50,0.2)]';
     default:
       return 'bg-[rgba(255,255,255,0.06)] text-[#8888aa]';
   }
@@ -37,12 +38,13 @@ export default function LeaderboardWidget({
   month,
   className = '',
 }: LeaderboardWidgetProps) {
-  const topEntries = entries.slice(0, 3);
+  const topEntries = entries.slice(0, 10);
+  const userInTop10 = topEntries.some((_, i) => i + 1 === userRank);
 
   return (
     <div className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl p-4 sm:p-6 ${className}`}>
-      <div className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-3 flex items-center gap-1.5">
-<GiLaurelCrown className="w-3.5 h-3.5 text-[#BFFF00]" /> Leaderboard
+      <div className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-2 flex items-center gap-1.5">
+        <GiLaurelCrown className="w-3.5 h-3.5 text-[#BFFF00]" /> Leaderboard
       </div>
 
       <p className="text-[10px] text-[#7777a0] mb-3">{month}</p>
@@ -53,46 +55,49 @@ export default function LeaderboardWidget({
           <p className="text-[11px] text-[#7777a0] mt-1">Start opening packs to climb the leaderboard!</p>
         </div>
       ) : (
-        <div className="space-y-1.5">
+        <div className="space-y-1">
           {topEntries.map((entry) => (
             <div
               key={entry.rank}
-              className="flex items-center gap-2.5 py-1.5"
+              className="flex items-center gap-2 py-1.5"
             >
               <span
-                className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 ${getRankStyle(
-                  entry.rank
-                )}`}
+                className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold flex-shrink-0 ${getRankStyle(entry.rank)}`}
               >
                 {entry.rank}
               </span>
-              <span className="text-sm text-[#f0f0f5] font-medium flex-1 truncate">
+              <span className="text-[12px] text-[#f0f0f5] font-medium flex-1 truncate">
                 {entry.name}
               </span>
-              <span className="text-[11px] text-[#8888aa] font-semibold flex-shrink-0">
-                {entry.points.toLocaleString()} pts
+              <span className="text-[10px] text-[#8888aa] font-semibold flex-shrink-0">
+                {formatCoins(entry.points)} pts
               </span>
             </div>
           ))}
         </div>
       )}
 
-      {/* User's own rank */}
-      <div className="mt-3 flex items-center gap-2.5 py-2 px-2.5 rounded-lg border border-[rgba(191,255,0,0.12)] bg-[rgba(191,255,0,0.03)]">
-        <span className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 bg-[rgba(191,255,0,0.12)] text-[#BFFF00]">
-          {userRank}
-        </span>
-        <span className="text-sm text-[#BFFF00] font-semibold flex-1">
-          You
-        </span>
-        <span className="text-[11px] text-[#BFFF00] font-semibold flex-shrink-0">
-          {userPoints.toLocaleString()} pts
-        </span>
-      </div>
+      {/* User's own rank — only show separately if not in top 10 */}
+      {!userInTop10 && (
+        <>
+          <div className="my-2 border-t border-dashed border-[rgba(255,255,255,0.08)]" />
+          <div className="flex items-center gap-2 py-1.5 px-2 rounded-lg border border-[rgba(191,255,0,0.15)] bg-[rgba(191,255,0,0.03)]">
+            <span className="w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold flex-shrink-0 bg-[rgba(191,255,0,0.12)] text-[#BFFF00]">
+              {userRank || '—'}
+            </span>
+            <span className="text-[12px] text-[#BFFF00] font-semibold flex-1">
+              You
+            </span>
+            <span className="text-[10px] text-[#BFFF00] font-semibold flex-shrink-0">
+              {formatCoins(userPoints)} pts
+            </span>
+          </div>
+        </>
+      )}
 
       <Link
         href="/leaderboard"
-        className="text-[#BFFF00] text-[11px] font-semibold mt-4 inline-block hover:underline"
+        className="text-[#BFFF00] text-[11px] font-semibold mt-3 inline-block hover:underline"
       >
         Full leaderboard →
       </Link>

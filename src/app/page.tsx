@@ -212,7 +212,7 @@ export default async function DashboardPage() {
 
 
   // Leaderboard — top 3 for widget, find user's entry
-  const serializedLeaderboard = leaderboardData.slice(0, 3).map(e => ({
+  const serializedLeaderboard = leaderboardData.slice(0, 10).map(e => ({
     rank: e.rank,
     name: e.userName,
     points: e.points,
