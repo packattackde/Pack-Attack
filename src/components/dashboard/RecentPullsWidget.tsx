@@ -17,16 +17,16 @@ interface RecentPullsWidgetProps {
 }
 
 function getRarityBorderClass(rarity: string): string {
-  switch (rarity.toLowerCase()) {
-    case 'legendary':
-      return 'border-2 border-[#fbbf24]';
-    case 'epic':
-      return 'border-2 border-[#a78bfa]';
-    case 'rare':
-      return 'border-2 border-[#60a5fa]';
-    default:
-      return 'border border-[rgba(255,255,255,0.1)]';
-  }
+  const r = rarity.toLowerCase().trim();
+  if (r.includes('secret') || r.includes('legendary') || r.includes('mythic') || r.includes('alt art') || r.includes('gold') || r.includes('hyper') || r.includes('chase') || r.includes('manga'))
+    return 'border-2 border-[#fbbf24] shadow-[0_0_12px_rgba(251,191,36,0.25)]';
+  if (r.includes('ultra') || r.includes('super') || r.includes('epic') || r.includes('illustration') || r.includes('full art') || r.includes('vmax') || r.includes('vstar'))
+    return 'border-2 border-[#a78bfa] shadow-[0_0_10px_rgba(167,139,250,0.2)]';
+  if (r.includes('rare') || r.includes('holo') || r.includes('promo'))
+    return 'border-2 border-[#60a5fa] shadow-[0_0_8px_rgba(96,165,250,0.15)]';
+  if (r.includes('uncommon'))
+    return 'border border-[#4ade80]';
+  return 'border border-[rgba(255,255,255,0.1)]';
 }
 
 function isFreshPull(timestamp: string): boolean {
@@ -57,19 +57,20 @@ export default function RecentPullsWidget({ pulls, className = '' }: RecentPulls
             const borderClass = getRarityBorderClass(pull.rarity);
 
             return (
-              <div key={idx} className="flex-shrink-0 w-[60px]">
+              <div key={idx} className="flex-shrink-0 w-[80px]">
                 <div
-                  className={`w-[60px] h-[84px] rounded-lg overflow-hidden ${borderClass} ${
+                  className={`w-[80px] h-[112px] rounded-lg overflow-hidden ${borderClass} ${
                     fresh ? 'pull-shimmer' : ''
-                  }`}
+                  } transition-transform hover:scale-105 cursor-pointer`}
                 >
                   {pull.cardImage ? (
                     <Image
                       src={pull.cardImage}
                       alt={pull.cardName}
-                      width={60}
-                      height={84}
+                      width={80}
+                      height={112}
                       className="w-full h-full object-cover"
+                      unoptimized
                     />
                   ) : (
                     <div className="w-full h-full bg-[#252560] flex items-center justify-center">
@@ -77,7 +78,7 @@ export default function RecentPullsWidget({ pulls, className = '' }: RecentPulls
                     </div>
                   )}
                 </div>
-                <p className="text-[8px] text-[#8888aa] truncate mt-1 text-center">
+                <p className="text-[9px] text-[#8888aa] truncate mt-1.5 text-center w-[80px]">
                   {pull.cardName}
                 </p>
               </div>

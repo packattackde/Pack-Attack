@@ -52,11 +52,11 @@ export default async function DashboardPage() {
         levelCoinsEarnedThisMonth: true,
       },
     }),
-    // Recent pulls (last 8)
+    // Recent pulls (last 12)
     prisma.pull.findMany({
       where: { user: { email: userEmail } },
       orderBy: { timestamp: 'desc' },
-      take: 8,
+      take: 12,
       include: {
         card: {
           select: {
