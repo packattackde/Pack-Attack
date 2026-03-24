@@ -293,6 +293,7 @@ model Battle {
   maxParticipants Int                 @default(2)
   rounds          Int                 @default(3)
   battleMode      BattleMode          @default(LOWEST_CARD)
+  winCondition    WinCondition        @default(HIGHEST)
   status          BattleStatus        @default(OPEN)
   winnerId        String?
   winner          User?               @relation("BattleWinner", fields: [winnerId], references: [id])
@@ -370,6 +371,11 @@ enum BattleMode {
   LOWEST_CARD
   HIGHEST_CARD
   ALL_CARDS
+}
+
+enum WinCondition {
+  HIGHEST
+  LOWEST
 }
 
 model SaleHistory {

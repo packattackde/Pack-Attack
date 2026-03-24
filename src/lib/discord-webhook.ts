@@ -5,21 +5,27 @@ type BattleNotification = {
     players: number;
     rounds: number;
     winCondition: string;
+    rewardMode: string;
     privacy: 'PUBLIC' | 'PRIVATE';
     entryCost: number;
     creatorUsername: string;
 };
 
-const winConditionEmoji: Record<string, string> = {
+const rewardModeEmoji: Record<string, string> = {
     LOWEST_CARD: '⬇️',
     HIGHEST_CARD: '⬆️',
     ALL_CARDS: '🃏',
 };
 
-const winConditionNames: Record<string, string> = {
+const rewardModeNames: Record<string, string> = {
     LOWEST_CARD: 'Niedrigste Karte',
     HIGHEST_CARD: 'Höchste Karte',
     ALL_CARDS: 'Alle Karten',
+};
+
+const winConditionNames: Record<string, string> = {
+    HIGHEST: 'Höchster Gesamtwert gewinnt',
+    LOWEST: 'Niedrigster Gesamtwert gewinnt',
 };
 
 export async function sendBattleNotificationWebhook(battle: BattleNotification) {
@@ -43,8 +49,13 @@ export async function sendBattleNotificationWebhook(battle: BattleNotification) 
             { name: 'Spieler', value: `${battle.players} Spieler`, inline: true },
             { name: 'Runden', value: `${battle.rounds}`, inline: true },
             {
-                name: `${winConditionEmoji[battle.winCondition] ?? ''} Spielmodus`,
+                name: 'Gewinnlogik',
                 value: winConditionNames[battle.winCondition] ?? battle.winCondition,
+                inline: true,
+            },
+            {
+                name: `${rewardModeEmoji[battle.rewardMode] ?? ''} Belohnungsmodus`,
+                value: rewardModeNames[battle.rewardMode] ?? battle.rewardMode,
                 inline: true,
             },
             { name: 'Einsatz', value: `${battle.entryCost.toLocaleString()} Coins`, inline: true },

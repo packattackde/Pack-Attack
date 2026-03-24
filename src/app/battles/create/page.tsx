@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Swords, Coins, Users, RotateCcw, Zap, Check, Star, ChevronDown, ChevronUp, ArrowRight } from 'lucide-react';
+import { ArrowLeft, Swords, Coins, Users, RotateCcw, Zap, Check, Star, ChevronDown, ChevronUp, ArrowRight, Trophy } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
 type Box = {
@@ -42,6 +42,23 @@ const MODE_OPTIONS = [
 
 const PLAYER_OPTIONS = [2, 3, 4] as const;
 
+const WIN_CONDITION_OPTIONS = [
+  {
+    value: 'HIGHEST' as const,
+    label: 'Höchster Gesamtwert gewinnt',
+    description: 'Der Spieler mit dem höheren Gesamtkartenwert nach allen Runden gewinnt. Wer die stärkeren Karten zieht, hat die besten Chancen.',
+    icon: '📈',
+  },
+  {
+    value: 'LOWEST' as const,
+    label: 'Niedrigster Gesamtwert gewinnt',
+    description: 'Der Spieler mit dem niedrigeren Gesamtkartenwert nach allen Runden gewinnt. Hier ist Glück mit niedrigen Karten der Schlüssel.',
+    icon: '📉',
+  },
+];
+
+const TOTAL_STEPS = 6;
+
 export default function CreateBattlePage() {
   const router = useRouter();
   const { addToast } = useToast();
@@ -51,6 +68,7 @@ export default function CreateBattlePage() {
   const [selectedBox, setSelectedBox] = useState<Box | null>(null);
   const [rounds, setRounds] = useState<3 | 5 | 7>(3);
   const [battleMode, setBattleMode] = useState<'LOWEST_CARD' | 'HIGHEST_CARD' | 'ALL_CARDS'>('LOWEST_CARD');
+  const [winCondition, setWinCondition] = useState<'HIGHEST' | 'LOWEST'>('HIGHEST');
   const [maxParticipants, setMaxParticipants] = useState<2 | 3 | 4>(2);
   const [confirmed, setConfirmed] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -81,6 +99,7 @@ export default function CreateBattlePage() {
           boxId: selectedBox.id,
           rounds,
           battleMode,
+          winCondition,
           maxParticipants,
         }),
       });
@@ -146,12 +165,12 @@ export default function CreateBattlePage() {
             <span className="text-white">Neues </span>
             <span className="text-[#BFFF00]">Battle</span>
           </h1>
-          <p className="text-[#8888aa] mt-2">Wähle Box, Spieleranzahl, Runden und Spielmodus</p>
+          <p className="text-[#8888aa] mt-2">Wähle Box, Spieleranzahl, Runden, Belohnungsmodus und Gewinnlogik</p>
         </div>
 
         {/* Step indicator */}
         <div className="flex items-center gap-2 mb-10">
-          {[1, 2, 3, 4, 5].map((s) => (
+          {Array.from({ length: TOTAL_STEPS }, (_, i) => i + 1).map((s) => (
             <div key={s} className="flex items-center gap-2">
               <button
                 onClick={() => { if (s < step) setStep(s); }}
@@ -163,7 +182,7 @@ export default function CreateBattlePage() {
               >
                 {s < step ? <Check className="w-4 h-4" /> : s}
               </button>
-              {s < 5 && <div className={`w-8 h-0.5 ${s < step ? 'bg-[#BFFF00]/30' : 'bg-[#1a1a4a]'}`} />}
+              {s < TOTAL_STEPS && <div className={`w-8 h-0.5 ${s < step ? 'bg-[#BFFF00]/30' : 'bg-[#1a1a4a]'}`} />}
             </div>
           ))}
         </div>
@@ -276,10 +295,10 @@ export default function CreateBattlePage() {
           </div>
         )}
 
-        {/* Step 4: Game Mode */}
+        {/* Step 4: Reward Mode (Belohnungsmodus) */}
         {step === 4 && (
           <div>
-            <h2 className="text-xl font-bold text-white mb-6">Schritt 4: Spielmodus</h2>
+            <h2 className="text-xl font-bold text-white mb-6">Schritt 4: Belohnungsmodus</h2>
             <p className="text-[#8888aa] mb-6 text-sm">
               Der Modus bestimmt, welche Karten der Gewinner vom Verlierer erhält.
             </p>
@@ -320,8 +339,52 @@ export default function CreateBattlePage() {
           </div>
         )}
 
-        {/* Step 5: Summary */}
-        {step === 5 && selectedBox && (
+        {/* Step 5: Win Condition (Gewinnlogik) */}
+        {step === 5 && (
+          <div>
+            <h2 className="text-xl font-bold text-white mb-6">Schritt 5: Gewinnlogik</h2>
+            <p className="text-[#8888aa] mb-6 text-sm">
+              Lege fest, wie der Gewinner des Battles bestimmt wird. Der Gewinner wird anhand des Gesamtwerts aller Karten nach allen Runden ermittelt.
+            </p>
+            <div className="space-y-4 max-w-lg">
+              {WIN_CONDITION_OPTIONS.map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => setWinCondition(option.value)}
+                  className={`w-full text-left p-5 rounded-2xl border transition-all ${
+                    winCondition === option.value
+                      ? 'border-[#BFFF00] bg-[#BFFF00]/10 shadow-[0_0_20px_rgba(191,255,0,0.15)]'
+                      : 'border-[rgba(255,255,255,0.12)] bg-[#1a1a4a] hover:border-[rgba(255,255,255,0.25)]'
+                  }`}
+                >
+                  <div className="flex items-center gap-4">
+                    <span className="text-2xl">{option.icon}</span>
+                    <div>
+                      <div className="font-semibold text-white">{option.label}</div>
+                      <div className="text-sm text-[#8888aa]">{option.description}</div>
+                    </div>
+                    {winCondition === option.value && (
+                      <div className="ml-auto shrink-0 w-6 h-6 bg-[#BFFF00] rounded-full flex items-center justify-center">
+                        <Check className="w-4 h-4 text-black" />
+                      </div>
+                    )}
+                  </div>
+                </button>
+              ))}
+            </div>
+            <div className="flex gap-3 mt-8">
+              <button onClick={() => setStep(4)} className="px-5 py-2.5 text-[#8888aa] hover:text-white transition-colors">
+                <ArrowLeft className="w-4 h-4 inline mr-1" /> Zurück
+              </button>
+              <button onClick={() => setStep(6)} className="px-6 py-2.5 bg-[#BFFF00] text-black font-semibold rounded-xl hover:bg-[#d4ff4d] transition-all">
+                Weiter <ArrowRight className="w-4 h-4 inline ml-1" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Step 6: Summary */}
+        {step === 6 && selectedBox && (
           <div>
             <h2 className="text-xl font-bold text-white mb-6">Zusammenfassung</h2>
             <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] rounded-2xl p-6 space-y-4 max-w-lg">
@@ -338,8 +401,12 @@ export default function CreateBattlePage() {
                 <span className="text-white font-medium">{rounds}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-[#8888aa]">Spielmodus</span>
+                <span className="text-[#8888aa]">Belohnungsmodus</span>
                 <span className="text-white font-medium">{MODE_OPTIONS.find(m => m.value === battleMode)?.label}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[#8888aa]">Gewinnlogik</span>
+                <span className="text-white font-medium">{WIN_CONDITION_OPTIONS.find(w => w.value === winCondition)?.label}</span>
               </div>
               <div className="border-t border-[rgba(255,255,255,0.1)] pt-4">
                 <div className="flex justify-between items-center">
@@ -354,6 +421,9 @@ export default function CreateBattlePage() {
                 </p>
               </div>
               <div className="border-t border-[rgba(255,255,255,0.1)] pt-4">
+                <p className="text-xs text-amber-400/80 mb-2 font-medium">
+                  Gewinner wird anhand des Gesamtwerts aller Karten nach allen Runden bestimmt.
+                </p>
                 <p className="text-xs text-[#8888aa] mb-3">
                   Die Lobby ist 15 Minuten offen. Tritt kein Mitspieler bei, wird das Battle storniert und die Gebühr erstattet. Nach Beitritt aller Spieler startet das Battle automatisch nach 3 Minuten.
                 </p>
@@ -371,7 +441,7 @@ export default function CreateBattlePage() {
               </div>
             </div>
             <div className="flex gap-3 mt-8">
-              <button onClick={() => setStep(4)} className="px-5 py-2.5 text-[#8888aa] hover:text-white transition-colors">
+              <button onClick={() => setStep(5)} className="px-5 py-2.5 text-[#8888aa] hover:text-white transition-colors">
                 <ArrowLeft className="w-4 h-4 inline mr-1" /> Zurück
               </button>
               <button

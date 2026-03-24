@@ -109,12 +109,13 @@ async function startBattleLogic(battleId: string) {
     return results;
   });
 
+  const useLowest = battle.winCondition === 'LOWEST';
   const sorted = battle.participants
     .map(p => ({ ...p, total: participantTotals[p.id] }))
-    .sort((a, b) => b.total - a.total);
+    .sort((a, b) => useLowest ? a.total - b.total : b.total - a.total);
 
-  const highestTotal = sorted[0].total;
-  const winners = sorted.filter(p => p.total === highestTotal);
+  const bestTotal = sorted[0].total;
+  const winners = sorted.filter(p => p.total === bestTotal);
   const isDraw = winners.length > 1;
 
   let winnerId: string | null = null;

@@ -11,6 +11,11 @@ const MODE_LABELS: Record<string, string> = {
   ALL_CARDS: 'Alle Karten',
 };
 
+const WIN_CONDITION_LABELS: Record<string, string> = {
+  HIGHEST: 'Höchster Gesamtwert gewinnt',
+  LOWEST: 'Niedrigster Gesamtwert gewinnt',
+};
+
 const STATUS_LABELS: Record<string, { label: string; color: string }> = {
   FINISHED_WIN: { label: 'Abgeschlossen', color: 'bg-green-500/20 text-green-400' },
   FINISHED_DRAW: { label: 'Unentschieden', color: 'bg-blue-500/20 text-blue-400' },
@@ -23,6 +28,7 @@ type Battle = {
   status: string;
   rounds: number;
   battleMode: string;
+  winCondition: string;
   maxParticipants: number;
   entryFee: number;
   winnerId: string | null;
@@ -133,10 +139,14 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
               </span>
             </div>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
             <div className="bg-[#12123a] rounded-lg p-3">
-              <div className="text-[#8888aa] text-xs">Modus</div>
+              <div className="text-[#8888aa] text-xs">Belohnung</div>
               <div className="text-white font-medium">{MODE_LABELS[battle.battleMode] || battle.battleMode}</div>
+            </div>
+            <div className="bg-[#12123a] rounded-lg p-3">
+              <div className="text-[#8888aa] text-xs">Gewinnlogik</div>
+              <div className="text-white font-medium">{WIN_CONDITION_LABELS[battle.winCondition] || battle.winCondition}</div>
             </div>
             <div className="bg-[#12123a] rounded-lg p-3">
               <div className="text-[#8888aa] text-xs">Spieler</div>

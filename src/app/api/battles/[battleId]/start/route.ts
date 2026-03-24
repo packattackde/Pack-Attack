@@ -198,13 +198,14 @@ export async function POST(
       return results;
     });
 
-    // Determine winner: highest total value
+    // Determine winner based on winCondition
+    const useLowest = battle.winCondition === 'LOWEST';
     const sortedParticipants = battle.participants
       .map(p => ({ ...p, total: participantTotals[p.id] }))
-      .sort((a, b) => b.total - a.total);
+      .sort((a, b) => useLowest ? a.total - b.total : b.total - a.total);
 
-    const highestTotal = sortedParticipants[0].total;
-    const winners = sortedParticipants.filter(p => p.total === highestTotal);
+    const bestTotal = sortedParticipants[0].total;
+    const winners = sortedParticipants.filter(p => p.total === bestTotal);
     const isDraw = winners.length > 1;
 
     let winnerId: string | null = null;

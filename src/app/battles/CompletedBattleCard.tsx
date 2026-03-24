@@ -12,11 +12,17 @@ const MODE_LABELS: Record<string, string> = {
   ALL_CARDS: 'Alle Karten',
 };
 
+const WIN_CONDITION_LABELS: Record<string, string> = {
+  HIGHEST: 'Höchster Wert',
+  LOWEST: 'Niedrigster Wert',
+};
+
 type Battle = {
   id: string;
   status: string;
   rounds: number;
   battleMode: string;
+  winCondition: string;
   maxParticipants: number;
   entryFee: number;
   winnerId: string | null;
@@ -78,7 +84,11 @@ export function CompletedBattleCard({ battle, isAdmin, visibleParticipants }: {
         )}
 
         <div className="flex items-center justify-between mb-4">
-          <span className="text-sm font-medium text-[#f0f0f5]">{modeLabel}</span>
+          <div className="flex items-center gap-2 text-sm font-medium text-[#f0f0f5]">
+            <span>{modeLabel}</span>
+            <span className="text-[#8888aa]">·</span>
+            <span className="text-[#8888aa]">{WIN_CONDITION_LABELS[battle.winCondition] || ''}</span>
+          </div>
           <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
             isDraw ? 'bg-blue-500/20 text-blue-400' : 'bg-green-500/20 text-green-400'
           }`}>

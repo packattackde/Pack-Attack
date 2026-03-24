@@ -37,7 +37,14 @@ Der Gewinner erhält die Karte mit dem **höchsten Wert** aus dem Inventar jedes
 ### Modus 3: Alle Karten (`ALL_CARDS`)
 Der Gewinner erhält **alle** im Battle gezogenen Karten jedes Verlierers.
 
-## Gewinnerermittlung
+## Gewinnlogik (`winCondition`)
+
+Der Ersteller legt bei der Battle-Erstellung fest, wie der Gewinner bestimmt wird:
+
+| Wert | Beschreibung |
+|------|-------------|
+| `HIGHEST` | Der Spieler mit dem **höchsten** Gesamtkartenwert gewinnt |
+| `LOWEST` | Der Spieler mit dem **niedrigsten** Gesamtkartenwert gewinnt |
 
 - **Immer** basierend auf dem **Gesamtwert aller Karten** nach allen Runden
 - **Niemals** basierend auf einzelnen Rundensiegen
@@ -86,10 +93,16 @@ enum BattleMode {
   HIGHEST_CARD
   ALL_CARDS
 }
+
+enum WinCondition {
+  HIGHEST
+  LOWEST
+}
 ```
 
 ### Neue Felder
 
+- `Battle.winCondition` — `HIGHEST` oder `LOWEST` (Gewinnlogik)
 - `Battle.lobbyExpiresAt` — 15 Min nach Erstellung
 - `Battle.autoStartAt` — 3 Min nach Voll
 - `BattlePull.transferredToUserId` — Empfänger bei Kartentransfer
@@ -104,7 +117,7 @@ enum BattleMode {
 ## Frontend (Deutsch)
 
 Alle UI-Texte sind auf Deutsch:
-- Battle-Erstellung: 5-Schritt-Wizard (Box → Spieler → Runden → Modus → Zusammenfassung)
+- Battle-Erstellung: 6-Schritt-Wizard (Box → Spieler → Runden → Belohnungsmodus → Gewinnlogik → Zusammenfassung)
 - Lobby: Countdown-Timer, Bereit-Markierung, Auto-Start-Anzeige
 - Spiel: Runde-für-Runde Kartenaufdeckung mit Animation
 - Ergebnis: Gewinner/Unentschieden-Banner, übertragene Karten hervorgehoben

@@ -14,6 +14,11 @@ const MODE_LABELS: Record<string, string> = {
   ALL_CARDS: 'Alle Karten',
 };
 
+const WIN_CONDITION_LABELS: Record<string, string> = {
+  HIGHEST: 'Höchster Gesamtwert gewinnt',
+  LOWEST: 'Niedrigster Gesamtwert gewinnt',
+};
+
 type Participant = {
   id: string;
   userId: string;
@@ -40,6 +45,7 @@ type Battle = {
   status: string;
   rounds: number;
   battleMode: string;
+  winCondition: string;
   maxParticipants: number;
   entryFee: number;
   lobbyExpiresAt: string | null;
@@ -275,7 +281,10 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
             </div>
             <div className="flex flex-wrap gap-3 text-sm">
               <div className="px-3 py-1.5 bg-[#12123a] rounded-lg text-[#f0f0f5]">
-                <span className="text-[#8888aa]">Modus:</span> {MODE_LABELS[battle.battleMode] || battle.battleMode}
+                <span className="text-[#8888aa]">Belohnung:</span> {MODE_LABELS[battle.battleMode] || battle.battleMode}
+              </div>
+              <div className="px-3 py-1.5 bg-[#12123a] rounded-lg text-[#f0f0f5]">
+                <span className="text-[#8888aa]">Gewinnlogik:</span> {WIN_CONDITION_LABELS[battle.winCondition] || battle.winCondition}
               </div>
               <div className="px-3 py-1.5 bg-[#12123a] rounded-lg text-[#f0f0f5]">
                 <span className="text-[#8888aa]">Spieler:</span> {battle.participants.length}/{battle.maxParticipants}

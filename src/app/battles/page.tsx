@@ -10,6 +10,11 @@ const MODE_LABELS: Record<string, string> = {
   ALL_CARDS: 'Alle Karten',
 };
 
+const WIN_CONDITION_SHORT: Record<string, string> = {
+  HIGHEST: '📈 Höchster',
+  LOWEST: '📉 Niedrigster',
+};
+
 async function getBattles() {
   try {
     const battles = await prisma.battle.findMany({
@@ -160,7 +165,9 @@ export default async function BattlesPage() {
                         <h3 className="text-lg font-semibold text-white mb-1 group-hover:text-[#BFFF00] transition-colors line-clamp-1">
                           {battle.box.name}
                         </h3>
-                        <p className="text-sm text-[#8888aa] mb-4">{modeLabel}</p>
+                        <p className="text-sm text-[#8888aa] mb-4">
+                          {modeLabel} · {WIN_CONDITION_SHORT[battle.winCondition] || battle.winCondition}
+                        </p>
 
                         <div className="flex items-center gap-2 mb-4">
                           {getVisibleParticipants(battle).slice(0, 4).map((p: any, i: number) => (

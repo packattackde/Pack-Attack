@@ -9,6 +9,7 @@ const battleSchema = z.object({
   boxId: z.string(),
   rounds: z.union([z.literal(3), z.literal(5), z.literal(7)]),
   battleMode: z.enum(['LOWEST_CARD', 'HIGHEST_CARD', 'ALL_CARDS']),
+  winCondition: z.enum(['HIGHEST', 'LOWEST']),
   maxParticipants: z.number().int().min(2).max(4),
 });
 
@@ -123,6 +124,7 @@ export async function POST(request: NextRequest) {
           entryFee: Math.round(entryFee),
           rounds: data.rounds,
           battleMode: data.battleMode,
+          winCondition: data.winCondition,
           maxParticipants: data.maxParticipants,
           lobbyExpiresAt,
           participants: {
@@ -153,7 +155,8 @@ export async function POST(request: NextRequest) {
       boxImageUrl: box.imageUrl || undefined,
       players: data.maxParticipants,
       rounds: data.rounds,
-      winCondition: data.battleMode,
+      winCondition: data.winCondition,
+      rewardMode: data.battleMode,
       privacy: 'PUBLIC',
       entryCost: entryFee,
       creatorUsername: user.name || user.email || 'Anonym',

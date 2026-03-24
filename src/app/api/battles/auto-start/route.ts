@@ -82,9 +82,10 @@ async function startBattle(battleId: string): Promise<{ status: string; message:
     return results;
   });
 
-  const sorted = battle.participants.map(p => ({ ...p, total: participantTotals[p.id] })).sort((a, b) => b.total - a.total);
-  const highestTotal = sorted[0].total;
-  const isDraw = sorted.filter(p => p.total === highestTotal).length > 1;
+  const useLowest = battle.winCondition === 'LOWEST';
+  const sorted = battle.participants.map(p => ({ ...p, total: participantTotals[p.id] })).sort((a, b) => useLowest ? a.total - b.total : b.total - a.total);
+  const bestTotal = sorted[0].total;
+  const isDraw = sorted.filter(p => p.total === bestTotal).length > 1;
 
   if (isDraw) {
     await prisma.battle.update({ where: { id: battleId }, data: { status: 'FINISHED_DRAW', finishedAt: new Date() } });
