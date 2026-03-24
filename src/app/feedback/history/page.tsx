@@ -213,7 +213,7 @@ export default function FeedbackHistoryPage() {
   // Not logged in
   if (sessionStatus === 'loading') {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display flex items-center justify-center">
+      <div className="min-h-screen font-display flex items-center justify-center">
         <div className="w-6 h-6 border-2 border-white/20 border-t-[#BFFF00] rounded-full animate-spin" />
       </div>
     );
@@ -221,7 +221,7 @@ export default function FeedbackHistoryPage() {
 
   if (!session) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display">
+      <div className="min-h-screen font-display">
         <div className="fixed inset-0 bg-grid opacity-20" />
         <div className="fixed inset-0 radial-gradient" />
         <div className="relative container max-w-2xl pt-20 pb-20 px-4 text-center">
@@ -240,7 +240,7 @@ export default function FeedbackHistoryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display">
+    <div className="min-h-screen font-display">
       <div className="fixed inset-0 bg-grid opacity-20" />
       <div className="fixed inset-0 radial-gradient" />
 

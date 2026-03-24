@@ -38,7 +38,7 @@ export default async function AdminBoxesPage() {
   const boxes = await getBoxes();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a]">
+    <div className="min-h-screen">
       <div className="container py-12">
         <div className="mb-8 flex items-center justify-between">
           <div>

@@ -139,7 +139,7 @@ export default function FeedbackAnalyticsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display flex items-center justify-center">
+      <div className="min-h-screen font-display flex items-center justify-center">
         <div className="w-6 h-6 border-2 border-white/20 border-t-teal-400 rounded-full animate-spin" />
       </div>
     );
@@ -147,7 +147,7 @@ export default function FeedbackAnalyticsPage() {
 
   if (!analytics) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display flex items-center justify-center">
+      <div className="min-h-screen font-display flex items-center justify-center">
         <p className="text-gray-500">Failed to load analytics.</p>
       </div>
     );
@@ -160,7 +160,7 @@ export default function FeedbackAnalyticsPage() {
   const problemCategories = categoryAnalytics.filter((c) => c.avgExperience !== null && c.avgExperience < 3);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display">
+    <div className="min-h-screen font-display">
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
 

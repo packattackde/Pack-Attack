@@ -126,7 +126,7 @@ export default function FeedbackPage() {
   const selectedCat = categories.find((c) => c.value === category);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display">
+    <div className="min-h-screen font-display">
       {/* Background Effects */}
       <div className="fixed inset-0 bg-grid opacity-20 pointer-events-none" />
       <div className="fixed inset-0 radial-gradient pointer-events-none" />

@@ -96,7 +96,7 @@ export default function CreateBoxPage() {
   // Show loading state while checking authentication
   if (status === 'loading') {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto mb-4" />
           <p className="text-[#8888aa]">Loading...</p>
@@ -108,7 +108,7 @@ export default function CreateBoxPage() {
   // Don't render content for non-admin users
   if (!session || session.user?.role !== 'ADMIN') {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto mb-4" />
           <p className="text-[#8888aa]">Redirecting...</p>
@@ -413,7 +413,7 @@ export default function CreateBoxPage() {
   const highestCard = getHighestValueCard();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a]">
+    <div className="min-h-screen">
       <div className="container py-12">
         <Card className="max-w-6xl mx-auto border-[rgba(255,255,255,0.06)] bg-[#12123a]">
           <CardHeader>

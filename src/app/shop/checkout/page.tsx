@@ -126,7 +126,7 @@ export default function ShopCheckoutPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] flex items-center justify-center font-display">
+      <div className="min-h-screen flex items-center justify-center font-display">
         <div className="text-white flex items-center gap-3">
           <div className="w-6 h-6 border-2 border-[rgba(191,255,0,0.3)] border-t-transparent rounded-full animate-spin" />
           Loading checkout...
@@ -137,7 +137,7 @@ export default function ShopCheckoutPage() {
 
   if (orderSuccess) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] flex items-center justify-center font-display">
+      <div className="min-h-screen flex items-center justify-center font-display">
         <div className="fixed inset-0 bg-grid opacity-30" />
         <div className="fixed inset-0 radial-gradient" />
         
@@ -174,7 +174,7 @@ export default function ShopCheckoutPage() {
   const grandTotal = cart.total + shippingCost;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display">
+    <div className="min-h-screen font-display">
       {/* Background Effects */}
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
