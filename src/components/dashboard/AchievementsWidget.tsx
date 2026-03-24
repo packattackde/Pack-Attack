@@ -11,6 +11,16 @@ interface Achievement {
   target: number;
 }
 
+interface ApiAchievement {
+  id: string;
+  name: string;
+  icon: string;
+  progress: number;
+  requirement: number;
+  isUnlocked: boolean;
+  isSecret: boolean;
+}
+
 interface AchievementsWidgetProps {
   className?: string;
 }
@@ -26,10 +36,22 @@ export default function AchievementsWidget({ className = '' }: AchievementsWidge
         if (!res.ok) throw new Error('Failed to fetch');
         return res.json();
       })
-      .then((data: Achievement[]) => {
+      .then((data) => {
+        // API returns { achievements: [...], byCategory: {...}, summary: {...} }
+        const rawList: ApiAchievement[] = Array.isArray(data) ? data : (data.achievements ?? []);
+        // Map API fields to widget fields and filter to incomplete, non-secret achievements
+        const mapped: Achievement[] = rawList
+          .filter((a) => !a.isUnlocked && !a.isSecret)
+          .map((a) => ({
+            id: a.id,
+            name: a.name,
+            icon: a.icon,
+            progress: a.progress,
+            target: a.requirement,
+          }));
         // Sort by progress percentage descending, pick top 3 closest to completion
-        const sorted = [...data]
-          .filter((a) => a.progress < a.target)
+        const sorted = mapped
+          .filter((a) => a.target > 0)
           .sort((a, b) => b.progress / b.target - a.progress / a.target)
           .slice(0, 3);
         setAchievements(sorted);

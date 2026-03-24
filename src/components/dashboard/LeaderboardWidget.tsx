@@ -46,28 +46,35 @@ export default function LeaderboardWidget({
 
       <p className="text-[10px] text-[#7777a0] mb-3">{month}</p>
 
-      <div className="space-y-1.5">
-        {topEntries.map((entry) => (
-          <div
-            key={entry.rank}
-            className="flex items-center gap-2.5 py-1.5"
-          >
-            <span
-              className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 ${getRankStyle(
-                entry.rank
-              )}`}
+      {topEntries.length === 0 ? (
+        <div className="text-center py-6">
+          <p className="text-sm text-[#8888aa]">No rankings yet this month</p>
+          <p className="text-[11px] text-[#7777a0] mt-1">Start opening packs to climb the leaderboard!</p>
+        </div>
+      ) : (
+        <div className="space-y-1.5">
+          {topEntries.map((entry) => (
+            <div
+              key={entry.rank}
+              className="flex items-center gap-2.5 py-1.5"
             >
-              {entry.rank}
-            </span>
-            <span className="text-sm text-[#f0f0f5] font-medium flex-1 truncate">
-              {entry.name}
-            </span>
-            <span className="text-[11px] text-[#8888aa] font-semibold flex-shrink-0">
-              {entry.points.toLocaleString()} pts
-            </span>
-          </div>
-        ))}
-      </div>
+              <span
+                className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 ${getRankStyle(
+                  entry.rank
+                )}`}
+              >
+                {entry.rank}
+              </span>
+              <span className="text-sm text-[#f0f0f5] font-medium flex-1 truncate">
+                {entry.name}
+              </span>
+              <span className="text-[11px] text-[#8888aa] font-semibold flex-shrink-0">
+                {entry.points.toLocaleString()} pts
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* User's own rank */}
       <div className="mt-3 flex items-center gap-2.5 py-2 px-2.5 rounded-lg border border-[rgba(191,255,0,0.12)] bg-[rgba(191,255,0,0.03)]">

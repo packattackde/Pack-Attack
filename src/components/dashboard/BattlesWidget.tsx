@@ -54,9 +54,9 @@ export default function BattlesWidget({ battles, className = '' }: BattlesWidget
                     </p>
                   </div>
 
-                  <div className="relative flex-shrink-0">
+                  <div className="flex items-center gap-2 flex-shrink-0">
                     {almostFull && (
-                      <span className="absolute -top-2.5 -right-1.5 text-[8px] font-bold text-red-400 bg-[rgba(239,68,68,0.15)] px-1.5 py-0.5 rounded-full whitespace-nowrap">
+                      <span className="text-[10px] font-semibold text-red-400 animate-pulse whitespace-nowrap">
                         Almost full!
                       </span>
                     )}
