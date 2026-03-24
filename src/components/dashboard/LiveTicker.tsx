@@ -17,6 +17,7 @@ interface TickerItem {
   boxName: string
   timestamp: string
   isNew?: boolean
+  isMegaHit?: boolean // coinValue >= 1000
 }
 
 interface LiveTickerProps {
@@ -67,6 +68,8 @@ export default function LiveTicker({ className }: LiveTickerProps) {
   const [connected, setConnected] = useState(false)
   const [paused, setPaused] = useState(false)
   const [, setTick] = useState(0) // force re-render for timestamps
+  const [soundEnabled, setSoundEnabled] = useState(true)
+  const soundEnabledRef = useRef(true)
   const eventSourceRef = useRef<EventSource | null>(null)
   const retryTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const retryDelayRef = useRef(3000)
@@ -87,7 +90,9 @@ export default function LiveTicker({ className }: LiveTickerProps) {
 
     es.onmessage = (event) => {
       try {
-        const data: TickerItem = { ...JSON.parse(event.data), isNew: true }
+        const parsed = JSON.parse(event.data)
+        const isMegaHit = parsed.coinValue >= 1000
+        const data: TickerItem = { ...parsed, isNew: true, isMegaHit }
         const tier = getRarityTier(data.rarity)
 
         setItems((prev) => {
@@ -95,18 +100,45 @@ export default function LiveTicker({ className }: LiveTickerProps) {
           return next.slice(0, 20)
         })
 
-        // Remove isNew flag after animation completes
+        // Play sound for mega hits (>= 1000 coins) if sound is enabled
+        if (isMegaHit && soundEnabledRef.current) {
+          try {
+            // Try mp3 file first, fall back to Web Audio API beep
+            const audio = new Audio('/sounds/mega-hit.mp3')
+            audio.volume = 0.4
+            audio.play().catch(() => {
+              // Fallback: Web Audio API chime
+              try {
+                const ctx = new AudioContext()
+                const osc = ctx.createOscillator()
+                const gain = ctx.createGain()
+                osc.connect(gain)
+                gain.connect(ctx.destination)
+                osc.type = 'sine'
+                osc.frequency.setValueAtTime(880, ctx.currentTime)
+                osc.frequency.setValueAtTime(1320, ctx.currentTime + 0.1)
+                osc.frequency.setValueAtTime(1760, ctx.currentTime + 0.2)
+                gain.gain.setValueAtTime(0.15, ctx.currentTime)
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5)
+                osc.start(ctx.currentTime)
+                osc.stop(ctx.currentTime + 0.5)
+              } catch {}
+            })
+          } catch {}
+        }
+
+        // Remove isNew/isMegaHit flags after animation completes
         setTimeout(() => {
           setItems((prev) => prev.map(item =>
-            item.pullId === data.pullId ? { ...item, isNew: false } : item
+            item.pullId === data.pullId ? { ...item, isNew: false, isMegaHit: false } : item
           ))
-        }, 3000)
+        }, isMegaHit ? 5000 : 3000)
 
-        // Pause ticker briefly for legendary pulls
-        if (tier === 'legendary') {
+        // Pause ticker for legendary pulls or mega hits
+        if (tier === 'legendary' || isMegaHit) {
           setPaused(true)
           if (pauseTimeoutRef.current) clearTimeout(pauseTimeoutRef.current)
-          pauseTimeoutRef.current = setTimeout(() => setPaused(false), 2000)
+          pauseTimeoutRef.current = setTimeout(() => setPaused(false), isMegaHit ? 3000 : 2000)
         }
       } catch {
         // ignore malformed messages
@@ -126,6 +158,9 @@ export default function LiveTicker({ className }: LiveTickerProps) {
       retryDelayRef.current = Math.min(delay * 2, 30000)
     }
   }, [])
+
+  // Keep ref in sync with state for use in EventSource callback
+  useEffect(() => { soundEnabledRef.current = soundEnabled }, [soundEnabled])
 
   // Load initial history on mount so ticker isn't empty
   useEffect(() => {
@@ -191,14 +226,43 @@ export default function LiveTicker({ className }: LiveTickerProps) {
           100% { transform: translateX(-50%); }
         }
         @keyframes ticker-new-item {
-          0% { opacity: 0; transform: scale(0.8); filter: brightness(2); }
-          30% { opacity: 1; transform: scale(1.05); filter: brightness(1.5); }
-          60% { transform: scale(1); filter: brightness(1.2); box-shadow: 0 0 20px rgba(191,255,0,0.4); }
-          100% { filter: brightness(1); box-shadow: none; }
+          0% { opacity: 0; transform: scale(0.7) translateX(-20px); filter: brightness(2.5); }
+          20% { opacity: 1; transform: scale(1.1) translateX(0); filter: brightness(2); box-shadow: 0 0 25px rgba(191,255,0,0.5); }
+          50% { transform: scale(1.02); filter: brightness(1.3); box-shadow: 0 0 15px rgba(191,255,0,0.3); }
+          100% { transform: scale(1); filter: brightness(1); box-shadow: none; }
         }
         .ticker-item-new {
-          animation: ticker-new-item 1.5s ease-out;
+          animation: ticker-new-item 2s cubic-bezier(0.23,1,0.32,1);
         }
+        @keyframes ticker-mega-hit {
+          0% { opacity: 0; transform: scale(0.5); filter: brightness(4); }
+          15% { opacity: 1; transform: scale(1.2); filter: brightness(2.5); box-shadow: 0 0 40px rgba(251,191,36,0.8), 0 0 80px rgba(251,191,36,0.3); }
+          30% { transform: scale(1.05); box-shadow: 0 0 30px rgba(251,191,36,0.6), 0 0 60px rgba(251,191,36,0.2); }
+          50% { filter: brightness(1.5); box-shadow: 0 0 25px rgba(251,191,36,0.5); }
+          100% { transform: scale(1); filter: brightness(1); box-shadow: 0 0 15px rgba(251,191,36,0.2); }
+        }
+        @keyframes mega-sparkle {
+          0% { opacity: 0; transform: translateY(0) scale(0); }
+          30% { opacity: 1; transform: translateY(-8px) scale(1); }
+          100% { opacity: 0; transform: translateY(-30px) scale(0.3); }
+        }
+        .ticker-item-mega {
+          animation: ticker-mega-hit 3s cubic-bezier(0.23,1,0.32,1);
+          border-color: rgba(251,191,36,0.5) !important;
+          background: rgba(251,191,36,0.06) !important;
+          position: relative;
+        }
+        .ticker-item-mega::before,
+        .ticker-item-mega::after {
+          content: '✦';
+          position: absolute;
+          font-size: 10px;
+          color: #fbbf24;
+          pointer-events: none;
+          animation: mega-sparkle 1.5s ease-out forwards;
+        }
+        .ticker-item-mega::before { top: -4px; left: 20%; animation-delay: 0.1s; }
+        .ticker-item-mega::after { top: -4px; right: 20%; animation-delay: 0.4s; }
       `}</style>
 
       <div className="flex items-center h-full">
@@ -214,6 +278,13 @@ export default function LiveTicker({ className }: LiveTickerProps) {
           <span className="text-[10px] sm:text-[11px] font-bold text-white tracking-wider uppercase">
             Live
           </span>
+          <button
+            onClick={(e) => { e.stopPropagation(); setSoundEnabled(!soundEnabled); }}
+            className="ml-1 text-[12px] opacity-50 hover:opacity-100 transition-opacity"
+            title={soundEnabled ? 'Sound aus' : 'Sound an'}
+          >
+            {soundEnabled ? '🔊' : '🔇'}
+          </button>
         </div>
 
         {/* Ticker track */}
@@ -240,7 +311,7 @@ export default function LiveTicker({ className }: LiveTickerProps) {
                   <Link
                     key={`${item.pullId}-${idx}`}
                     href={`/open/${item.boxId}`}
-                    className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg shrink-0 transition-colors hover:bg-[rgba(255,255,255,0.04)] ${item.isNew ? 'ticker-item-new' : ''}`}
+                    className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg shrink-0 transition-colors hover:bg-[rgba(255,255,255,0.04)] ${item.isMegaHit ? 'ticker-item-mega' : item.isNew ? 'ticker-item-new' : ''}`}
                     style={
                       isLegendary
                         ? {
