@@ -17,6 +17,7 @@ interface Pull {
   cardName: string;
   cardImage: string | null;
   rarity: string;
+  coinValue: number;
   timestamp: string;
 }
 
@@ -99,7 +100,7 @@ export default function RecentPullsWidget({ hits, pulls, className = '' }: Recen
           {pulls.map((pull, idx) => (
             <div key={idx} className="flex-1 min-w-0 flex flex-col items-center">
               <div
-                onClick={() => setLightboxCard({ name: pull.cardName, image: pull.cardImage, rarity: pull.rarity, coinValue: 0 })}
+                onClick={() => setLightboxCard({ name: pull.cardName, image: pull.cardImage, rarity: pull.rarity, coinValue: pull.coinValue })}
                 className={`w-full aspect-[63/88] rounded-md overflow-hidden relative ${getRarityBorderClass(pull.rarity)} transition-transform hover:scale-105 cursor-pointer`}
               >
                 {pull.cardImage ? (

@@ -222,6 +222,7 @@ export default async function DashboardPage() {
     cardName: p.card?.name || 'Unknown Card',
     cardImage: p.card?.imageUrlGatherer || null,
     rarity: p.card?.rarity || 'common',
+    coinValue: p.card?.coinValue ? Number(p.card.coinValue) : 0,
     timestamp: p.timestamp.toISOString(),
   }));
 
