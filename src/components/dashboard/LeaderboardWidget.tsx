@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { GiLaurelCrown } from 'react-icons/gi';
 
 interface LeaderboardEntry {
   rank: number;
@@ -41,7 +42,7 @@ export default function LeaderboardWidget({
   return (
     <div className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl p-4 sm:p-6 ${className}`}>
       <div className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-3 flex items-center gap-1.5">
-        🥇 Leaderboard
+<GiLaurelCrown className="w-3.5 h-3.5 text-[#BFFF00]" /> Leaderboard
       </div>
 
       <p className="text-[10px] text-[#7777a0] mb-3">{month}</p>

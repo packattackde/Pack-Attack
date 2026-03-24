@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { GiCardPlay, GiSpeaker, GiSpeakerOff } from 'react-icons/gi'
 
 interface TickerItem {
   pullId: string
@@ -283,7 +284,7 @@ export default function LiveTicker({ className }: LiveTickerProps) {
             className="ml-1 text-[12px] opacity-50 hover:opacity-100 transition-opacity"
             title={soundEnabled ? 'Sound aus' : 'Sound an'}
           >
-            {soundEnabled ? '🔊' : '🔇'}
+            {soundEnabled ? <GiSpeaker className="w-3.5 h-3.5" /> : <GiSpeakerOff className="w-3.5 h-3.5" />}
           </button>
         </div>
 
@@ -341,7 +342,7 @@ export default function LiveTicker({ className }: LiveTickerProps) {
                       </div>
                     ) : (
                       <div className="w-[28px] h-[38px] rounded bg-[#1e1e55] flex items-center justify-center shrink-0 text-[14px]">
-                        🃏
+<GiCardPlay className="w-4 h-4 text-[#7777a0]" />
                       </div>
                     )}
 

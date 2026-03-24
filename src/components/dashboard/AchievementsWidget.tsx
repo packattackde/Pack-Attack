@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { GiMedal, GiArcheryTarget } from 'react-icons/gi';
 
 interface Achievement {
   id: string;
@@ -114,7 +115,7 @@ export default function AchievementsWidget({ className = '' }: AchievementsWidge
           {recentUnlocks.length > 0 && (
             <div className="mb-5">
               <div className="text-[10px] font-semibold uppercase tracking-wider text-[#fbbf24] mb-3 flex items-center gap-1.5">
-                🏅 Recently Unlocked
+<GiMedal className="w-3.5 h-3.5 text-[#BFFF00]" /> Recently Unlocked
               </div>
               <div className="flex gap-2">
                 {recentUnlocks.map((ach) => (
@@ -136,7 +137,7 @@ export default function AchievementsWidget({ className = '' }: AchievementsWidge
           {/* Next Up */}
           <div>
             <div className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-3 flex items-center gap-1.5">
-              🎯 Next Up
+<GiArcheryTarget className="w-3.5 h-3.5 text-[#BFFF00]" /> Next Up
             </div>
             {nextUp.length === 0 ? (
               <p className="text-[11px] text-[#8888aa] text-center py-3">All achievements unlocked! 🎉</p>

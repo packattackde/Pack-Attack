@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import CardLightbox from './CardLightbox';
+import { GiFireGem, GiCardPlay, GiTwoCoins } from 'react-icons/gi';
 
 interface Hit {
   cardName: string;
@@ -55,7 +56,7 @@ export default function RecentPullsWidget({ hits, pulls, className = '' }: Recen
       {hits.length > 0 && (
         <div className="mb-5">
           <div className="text-[10px] font-semibold uppercase tracking-wider text-[#fbbf24] mb-3 flex items-center gap-1.5">
-            🔥 My Last Hits
+<GiFireGem className="w-3.5 h-3.5 text-[#BFFF00]" /> My Last Hits
           </div>
           <div className="flex gap-2 sm:gap-3 justify-center">
             {hits.map((hit, idx) => (
@@ -75,7 +76,7 @@ export default function RecentPullsWidget({ hits, pulls, className = '' }: Recen
                     />
                   ) : (
                     <div className="w-full h-full bg-[#252560] flex items-center justify-center">
-                      <span className="text-lg">🎴</span>
+                      <GiCardPlay className="w-5 h-5 text-[#7777a0]" />
                     </div>
                   )}
                 </div>
@@ -83,7 +84,7 @@ export default function RecentPullsWidget({ hits, pulls, className = '' }: Recen
                   {hit.cardName}
                 </p>
                 <p className="text-[8px] text-[#BFFF00] font-bold">
-                  🪙 {hit.coinValue.toFixed(2)}
+<GiTwoCoins className="w-3 h-3 text-[#BFFF00] inline" /> {hit.coinValue.toFixed(2)}
                 </p>
               </div>
             ))}
@@ -94,7 +95,7 @@ export default function RecentPullsWidget({ hits, pulls, className = '' }: Recen
       {/* Row 2: Last Pulls (any rarity) */}
       <div>
         <div className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-3 flex items-center gap-1.5">
-          🎴 My Last Pulls
+<GiCardPlay className="w-3.5 h-3.5 text-[#BFFF00]" /> My Last Pulls
         </div>
         <div className="flex gap-2">
           {pulls.map((pull, idx) => (
@@ -114,7 +115,7 @@ export default function RecentPullsWidget({ hits, pulls, className = '' }: Recen
                   />
                 ) : (
                   <div className="w-full h-full bg-[#252560] flex items-center justify-center">
-                    <span className="text-sm">🎴</span>
+                    <GiCardPlay className="w-4 h-4 text-[#7777a0]" />
                   </div>
                 )}
               </div>

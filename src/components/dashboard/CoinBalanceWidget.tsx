@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { GiTwoCoins } from 'react-icons/gi'
 
 interface CoinBalanceWidgetProps {
   coins: number
@@ -24,11 +25,11 @@ export default function CoinBalanceWidget({
       className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl p-4 sm:p-6 ${className}`}
     >
       <p className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-3">
-        💰 MY BALANCE
+<GiTwoCoins className="w-3.5 h-3.5 text-[#BFFF00] inline" /> MY BALANCE
       </p>
 
       <p className="text-2xl sm:text-3xl font-extrabold text-[#fbbf24]">
-        🪙 {coins.toFixed(2)}
+<GiTwoCoins className="w-7 h-7 text-[#fbbf24] inline" /> {coins.toFixed(2)}
       </p>
 
       <p className="text-xs text-[#8888aa] mt-1">
@@ -41,7 +42,7 @@ export default function CoinBalanceWidget({
           isLow ? 'animate-pulse' : ''
         }`}
       >
-        🪙 Coins aufladen
+<GiTwoCoins className="w-4 h-4 text-[#BFFF00] inline" /> Coins aufladen
       </Link>
 
       {isLow && (

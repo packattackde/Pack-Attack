@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { GiCardboardBox, GiCrossedSwords } from 'react-icons/gi'
 
 interface WelcomeWidgetProps {
   userName: string
@@ -41,13 +42,13 @@ export default function WelcomeWidget({
             href="/boxes"
             className="min-h-[44px] flex items-center justify-center px-4 py-2 bg-[#BFFF00] text-black font-semibold rounded-xl text-sm whitespace-nowrap hover:brightness-110 transition"
           >
-            📦 Open Box
+            <GiCardboardBox className="w-4 h-4" /> Open Box
           </Link>
           <Link
             href="/battles"
             className="min-h-[44px] flex items-center justify-center px-4 py-2 border border-[rgba(191,255,0,0.3)] text-[#BFFF00] font-semibold rounded-xl text-sm whitespace-nowrap hover:bg-[rgba(191,255,0,0.05)] transition"
           >
-            ⚔️ Join Battle
+            <GiCrossedSwords className="w-4 h-4" /> Join Battle
           </Link>
         </div>
       </div>
