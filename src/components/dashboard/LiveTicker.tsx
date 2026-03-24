@@ -301,7 +301,10 @@ export default function LiveTicker({ className }: LiveTickerProps) {
             <div
               className="flex gap-3 w-max"
               style={{
-                animation: `ticker-scroll ${animationDuration}s linear infinite`,
+                animationName: 'ticker-scroll',
+                animationDuration: `${animationDuration}s`,
+                animationTimingFunction: 'linear',
+                animationIterationCount: 'infinite',
                 animationPlayState: paused ? 'paused' : 'running',
               }}
             >
