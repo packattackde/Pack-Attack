@@ -120,9 +120,9 @@ export default function ShopManagePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 flex items-center justify-center font-display">
+      <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] flex items-center justify-center font-display">
         <div className="text-white flex items-center gap-3">
-          <div className="w-6 h-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+          <div className="w-6 h-6 border-2 border-[rgba(191,255,0,0.3)] border-t-transparent rounded-full animate-spin" />
           Loading...
         </div>
       </div>
@@ -132,40 +132,40 @@ export default function ShopManagePage() {
   // Show shop creation form if no shop exists
   if (shop === null) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display">
+      <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display">
         <div className="fixed inset-0 bg-grid opacity-30" />
         <div className="fixed inset-0 radial-gradient" />
 
         <div className="relative container py-12">
           <div className="max-w-xl mx-auto">
             <div className="text-center mb-8">
-              <div className="w-20 h-20 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 flex items-center justify-center mx-auto mb-6">
+              <div className="w-20 h-20 rounded-full bg-gradient-to-r from-[#BFFF00] to-[#BFFF00] flex items-center justify-center mx-auto mb-6">
                 <Store className="w-10 h-10 text-white" />
               </div>
               <h1 className="text-3xl font-bold text-white mb-3">Create Your Shop</h1>
-              <p className="text-gray-400">Set up your shop to start selling TCG products</p>
+              <p className="text-[#8888aa]">Set up your shop to start selling TCG products</p>
             </div>
 
-            <form onSubmit={handleCreateShop} className="glass-strong rounded-2xl p-8 space-y-6">
+            <form onSubmit={handleCreateShop} className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-8 space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Shop Name *</label>
+                <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Shop Name *</label>
                 <input
                   type="text"
                   required
                   value={shopName}
                   onChange={(e) => setShopName(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl glass text-white placeholder-gray-500 border border-gray-700 focus:border-emerald-500 focus:outline-none"
+                  className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
                   placeholder="My Awesome Card Shop"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Description</label>
+                <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Description</label>
                 <textarea
                   value={shopDescription}
                   onChange={(e) => setShopDescription(e.target.value)}
                   rows={4}
-                  className="w-full px-4 py-3 rounded-xl glass text-white placeholder-gray-500 border border-gray-700 focus:border-emerald-500 focus:outline-none resize-none"
+                  className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none resize-none"
                   placeholder="Tell customers about your shop..."
                 />
               </div>
@@ -173,7 +173,7 @@ export default function ShopManagePage() {
               <button
                 type="submit"
                 disabled={creating}
-                className="w-full py-4 bg-gradient-to-r from-emerald-600 to-cyan-600 text-white font-semibold rounded-xl hover:from-emerald-500 hover:to-cyan-500 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full py-4 bg-[#BFFF00] text-black font-semibold rounded-xl hover:brightness-110 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {creating ? (
                   <>
@@ -195,7 +195,7 @@ export default function ShopManagePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display">
+    <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display">
       {/* Background Effects */}
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
@@ -205,7 +205,7 @@ export default function ShopManagePage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <Store className="w-8 h-8 text-emerald-400" />
+              <Store className="w-8 h-8 text-[#BFFF00]" />
               <h1 className="text-3xl font-bold text-white">{shop?.name}</h1>
               {shop?.isActive ? (
                 <span className="px-2 py-1 rounded-lg bg-green-500/20 text-green-400 text-xs font-medium">Active</span>
@@ -213,11 +213,11 @@ export default function ShopManagePage() {
                 <span className="px-2 py-1 rounded-lg bg-red-500/20 text-red-400 text-xs font-medium">Inactive</span>
               )}
             </div>
-            <p className="text-gray-400">Manage your shop, products, and orders</p>
+            <p className="text-[#8888aa]">Manage your shop, products, and orders</p>
           </div>
           <Link
             href="/shop/manage/products/new"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-600 to-cyan-600 text-white font-semibold rounded-xl hover:from-emerald-500 hover:to-cyan-500 transition-all"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-[#BFFF00] text-black font-semibold rounded-xl hover:brightness-110 transition-all"
           >
             <Plus className="w-5 h-5" />
             Add Product
@@ -226,37 +226,37 @@ export default function ShopManagePage() {
 
         {/* Stats */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <div className="glass-strong rounded-xl p-6">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl p-6">
             <div className="flex items-center gap-4">
-              <div className="p-3 rounded-xl bg-emerald-500/20">
-                <Package className="w-6 h-6 text-emerald-400" />
+              <div className="p-3 rounded-xl bg-[rgba(191,255,0,0.15)]">
+                <Package className="w-6 h-6 text-[#BFFF00]" />
               </div>
               <div>
-                <p className="text-gray-400 text-sm">Products</p>
+                <p className="text-[#8888aa] text-sm">Products</p>
                 <p className="text-2xl font-bold text-white">{shop?._count.products || 0}</p>
               </div>
             </div>
           </div>
 
-          <div className="glass-strong rounded-xl p-6">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl p-6">
             <div className="flex items-center gap-4">
-              <div className="p-3 rounded-xl bg-blue-500/20">
-                <ShoppingBag className="w-6 h-6 text-blue-400" />
+              <div className="p-3 rounded-xl bg-[rgba(191,255,0,0.1)]">
+                <ShoppingBag className="w-6 h-6 text-[#BFFF00]" />
               </div>
               <div>
-                <p className="text-gray-400 text-sm">Orders</p>
+                <p className="text-[#8888aa] text-sm">Orders</p>
                 <p className="text-2xl font-bold text-white">{shop?._count.orders || 0}</p>
               </div>
             </div>
           </div>
 
-          <div className="glass-strong rounded-xl p-6">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl p-6">
             <div className="flex items-center gap-4">
-              <div className="p-3 rounded-xl bg-purple-500/20">
-                <BarChart3 className="w-6 h-6 text-purple-400" />
+              <div className="p-3 rounded-xl bg-[rgba(191,255,0,0.1)]">
+                <BarChart3 className="w-6 h-6 text-[#BFFF00]" />
               </div>
               <div>
-                <p className="text-gray-400 text-sm">Active Products</p>
+                <p className="text-[#8888aa] text-sm">Active Products</p>
                 <p className="text-2xl font-bold text-white">
                   {shop?.products.filter(p => p.isActive).length || 0}
                 </p>
@@ -264,13 +264,13 @@ export default function ShopManagePage() {
             </div>
           </div>
 
-          <div className="glass-strong rounded-xl p-6">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl p-6">
             <div className="flex items-center gap-4">
               <div className="p-3 rounded-xl bg-amber-500/20">
                 <ImageIcon className="w-6 h-6 text-amber-400" />
               </div>
               <div>
-                <p className="text-gray-400 text-sm">Featured</p>
+                <p className="text-[#8888aa] text-sm">Featured</p>
                 <p className="text-2xl font-bold text-white">
                   {shop?.products.filter(p => p.featured).length || 0}
                 </p>
@@ -281,34 +281,34 @@ export default function ShopManagePage() {
 
         {/* Quick Links */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Link href="/shop/manage/products" className="glass-strong rounded-2xl p-6 hover:bg-white/5 transition-colors group">
+          <Link href="/shop/manage/products" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:bg-white/5 transition-colors group">
             <div className="flex items-center gap-4 mb-4">
-              <div className="p-3 rounded-xl bg-emerald-500/20 group-hover:bg-emerald-500/30 transition-colors">
-                <Package className="w-6 h-6 text-emerald-400" />
+              <div className="p-3 rounded-xl bg-[rgba(191,255,0,0.15)] group-hover:bg-[rgba(191,255,0,0.2)] transition-colors">
+                <Package className="w-6 h-6 text-[#BFFF00]" />
               </div>
               <h2 className="text-xl font-bold text-white">Products</h2>
             </div>
-            <p className="text-gray-400">Manage your product listings, prices, and inventory</p>
+            <p className="text-[#8888aa]">Manage your product listings, prices, and inventory</p>
           </Link>
 
-          <Link href="/shop/manage/orders" className="glass-strong rounded-2xl p-6 hover:bg-white/5 transition-colors group">
+          <Link href="/shop/manage/orders" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:bg-white/5 transition-colors group">
             <div className="flex items-center gap-4 mb-4">
-              <div className="p-3 rounded-xl bg-blue-500/20 group-hover:bg-blue-500/30 transition-colors">
-                <ShoppingBag className="w-6 h-6 text-blue-400" />
+              <div className="p-3 rounded-xl bg-[rgba(191,255,0,0.1)] group-hover:bg-[rgba(191,255,0,0.15)] transition-colors">
+                <ShoppingBag className="w-6 h-6 text-[#BFFF00]" />
               </div>
               <h2 className="text-xl font-bold text-white">Orders</h2>
             </div>
-            <p className="text-gray-400">View and manage customer orders and shipping</p>
+            <p className="text-[#8888aa]">View and manage customer orders and shipping</p>
           </Link>
 
-          <Link href="/shop/manage/settings" className="glass-strong rounded-2xl p-6 hover:bg-white/5 transition-colors group">
+          <Link href="/shop/manage/settings" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:bg-white/5 transition-colors group">
             <div className="flex items-center gap-4 mb-4">
-              <div className="p-3 rounded-xl bg-purple-500/20 group-hover:bg-purple-500/30 transition-colors">
-                <Settings className="w-6 h-6 text-purple-400" />
+              <div className="p-3 rounded-xl bg-[rgba(191,255,0,0.1)] group-hover:bg-[rgba(191,255,0,0.2)] transition-colors">
+                <Settings className="w-6 h-6 text-[#BFFF00]" />
               </div>
               <h2 className="text-xl font-bold text-white">Settings</h2>
             </div>
-            <p className="text-gray-400">Update your shop details, logo, and preferences</p>
+            <p className="text-[#8888aa]">Update your shop details, logo, and preferences</p>
           </Link>
         </div>
       </div>

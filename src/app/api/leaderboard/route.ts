@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
       FROM "User" u
       LEFT JOIN "BattleParticipant" bp ON bp."userId" = u.id
       LEFT JOIN "Battle" b ON b.id = bp."battleId" 
-        AND b.status = 'FINISHED' 
+        AND b.status = 'FINISHED_WIN' 
         AND b."finishedAt" >= ${startDate}
         AND b."finishedAt" <= ${endDate}
       WHERE u."isBot" = false

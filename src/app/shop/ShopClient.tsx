@@ -151,24 +151,24 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display">
+    <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display">
       {/* Background Effects */}
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
-      <div className="fixed top-20 left-10 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl hidden lg:block" />
-      <div className="fixed bottom-20 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl hidden lg:block" />
+      <div className="fixed top-20 left-10 w-72 h-72 bg-[rgba(191,255,0,0.08)] rounded-full blur-3xl hidden lg:block" />
+      <div className="fixed bottom-20 right-10 w-96 h-96 bg-[rgba(191,255,0,0.05)] rounded-full blur-3xl hidden lg:block" />
 
       <div className="relative container py-12">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-2 mb-4 rounded-full glass text-sm">
-            <Store className="w-4 h-4 text-emerald-400" />
-            <span className="text-gray-300">TCG Marketplace</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 mb-4 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
+            <Store className="w-4 h-4 text-[#BFFF00]" />
+            <span className="text-[#f0f0f5]">TCG Marketplace</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Shop <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">Cards & Products</span>
+            Shop <span className="text-[#BFFF00]">Cards & Products</span>
           </h1>
-          <p className="text-gray-400 max-w-2xl mx-auto">
+          <p className="text-[#8888aa] max-w-2xl mx-auto">
             Browse products from verified sellers. Find singles, sealed products, and accessories.
           </p>
         </div>
@@ -178,13 +178,13 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
           <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center">
             {/* Search */}
             <div className="relative flex-1">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8888aa]" />
               <input
                 type="text"
                 placeholder="Search products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 rounded-xl glass-strong text-white placeholder-gray-500 border border-gray-700 focus:border-emerald-500 focus:outline-none transition-colors"
+                className="w-full pl-12 pr-4 py-3 rounded-xl bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none transition-colors"
               />
             </div>
 
@@ -193,16 +193,16 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="appearance-none pl-4 pr-10 py-3 rounded-xl glass-strong text-white border border-gray-700 focus:border-emerald-500 focus:outline-none transition-colors cursor-pointer min-w-[180px]"
+                className="appearance-none pl-4 pr-10 py-3 rounded-xl bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none transition-colors cursor-pointer min-w-[180px]"
               >
-                <option value="all" className="bg-gray-900">All Categories</option>
+                <option value="all" className="bg-[#0B0B2B]">All Categories</option>
                 {categories.map((cat) => (
-                  <option key={cat.category} value={cat.category} className="bg-gray-900">
+                  <option key={cat.category} value={cat.category} className="bg-[#0B0B2B]">
                     {categoryDisplayNames[cat.category] || cat.category} ({cat._count})
                   </option>
                 ))}
               </select>
-              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8888aa] pointer-events-none" />
             </div>
 
             {/* Game Filter */}
@@ -210,22 +210,22 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
               <select
                 value={selectedGame}
                 onChange={(e) => setSelectedGame(e.target.value)}
-                className="appearance-none pl-4 pr-10 py-3 rounded-xl glass-strong text-white border border-gray-700 focus:border-emerald-500 focus:outline-none transition-colors cursor-pointer min-w-[180px]"
+                className="appearance-none pl-4 pr-10 py-3 rounded-xl bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none transition-colors cursor-pointer min-w-[180px]"
               >
-                <option value="all" className="bg-gray-900">All Games</option>
+                <option value="all" className="bg-[#0B0B2B]">All Games</option>
                 {games.filter(g => g.game).map((g) => (
-                  <option key={g.game} value={g.game!} className="bg-gray-900">
+                  <option key={g.game} value={g.game!} className="bg-[#0B0B2B]">
                     {gameDisplayNames[g.game!] || g.game} ({g._count})
                   </option>
                 ))}
               </select>
-              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8888aa] pointer-events-none" />
             </div>
 
             {/* Cart Link */}
             <Link
               href="/shop/cart"
-              className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-cyan-600 text-white font-semibold hover:from-emerald-500 hover:to-cyan-500 transition-all"
+              className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#BFFF00] text-black font-semibold hover:brightness-110 transition-all"
             >
               <ShoppingCart className="w-5 h-5" />
               <span>Cart</span>
@@ -236,7 +236,7 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
           {(selectedCategory !== 'all' || selectedGame !== 'all' || searchQuery) && (
             <div className="flex flex-wrap gap-2 mt-4">
               {searchQuery && (
-                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-sm">
+                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[rgba(191,255,0,0.15)] text-[#BFFF00] text-sm">
                   Search: "{searchQuery}"
                   <button onClick={() => setSearchQuery('')} className="ml-1 hover:text-white">×</button>
                 </span>
@@ -248,7 +248,7 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
                 </span>
               )}
               {selectedGame !== 'all' && (
-                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 text-sm">
+                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[rgba(191,255,0,0.15)] text-[#BFFF00] text-sm">
                   {gameDisplayNames[selectedGame] || selectedGame}
                   <button onClick={() => setSelectedGame('all')} className="ml-1 hover:text-white">×</button>
                 </span>
@@ -259,7 +259,7 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
                   setSelectedCategory('all');
                   setSelectedGame('all');
                 }}
-                className="px-3 py-1 rounded-full bg-gray-700/50 text-gray-400 text-sm hover:bg-gray-600/50 transition-colors"
+                className="px-3 py-1 rounded-full bg-[#12123a] text-[#8888aa] text-sm hover:bg-[rgba(255,255,255,0.08)] transition-colors"
               >
                 Clear All
               </button>
@@ -292,19 +292,19 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
         <div>
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-              <Package className="w-6 h-6 text-emerald-400" />
+              <Package className="w-6 h-6 text-[#BFFF00]" />
               {selectedCategory !== 'all' || selectedGame !== 'all' ? 'Filtered Results' : 'All Products'}
             </h2>
-            <span className="text-gray-400">
+            <span className="text-[#8888aa]">
               {filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''}
             </span>
           </div>
 
           {regularProducts.length === 0 && featuredProducts.length === 0 ? (
-            <div className="glass-strong rounded-2xl p-12 text-center">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
               <Package className="w-16 h-16 text-gray-600 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-white mb-2">No Products Found</h3>
-              <p className="text-gray-400">
+              <p className="text-[#8888aa]">
                 {searchQuery || selectedCategory !== 'all' || selectedGame !== 'all'
                   ? 'Try adjusting your filters or search query'
                   : 'No products are available at the moment. Check back later!'}
@@ -345,10 +345,10 @@ const ProductCard = memo(function ProductCard({
     : null;
 
   return (
-    <div className={`group glass-strong rounded-2xl overflow-hidden transition-all hover:scale-[1.02] ${featured ? 'ring-2 ring-amber-500/50' : ''}`}>
+    <div className={`group bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl overflow-hidden transition-all hover:scale-[1.02] ${featured ? 'ring-2 ring-amber-500/50' : ''}`}>
       {/* Image */}
       <Link href={`/shop/product/${product.id}`}>
-        <div className="relative aspect-square bg-gray-800">
+        <div className="relative aspect-square bg-[#12123a]">
           {product.images[0] ? (
             <Image
               src={product.images[0]}
@@ -406,24 +406,24 @@ const ProductCard = memo(function ProductCard({
 
         {/* Product Name */}
         <Link href={`/shop/product/${product.id}`}>
-          <h3 className="font-semibold text-white mb-1 line-clamp-2 hover:text-emerald-400 transition-colors">
+          <h3 className="font-semibold text-white mb-1 line-clamp-2 hover:text-[#BFFF00] transition-colors">
             {product.name}
           </h3>
         </Link>
 
         {/* Category & Condition */}
         <div className="flex flex-wrap gap-1 mb-3">
-          <span className="px-2 py-0.5 rounded bg-gray-700/50 text-gray-400 text-xs">
+          <span className="px-2 py-0.5 rounded bg-[#12123a] text-[#8888aa] text-xs">
             {categoryDisplayNames[product.category] || product.category}
           </span>
-          <span className="px-2 py-0.5 rounded bg-gray-700/50 text-gray-400 text-xs">
+          <span className="px-2 py-0.5 rounded bg-[#12123a] text-[#8888aa] text-xs">
             {conditionDisplayNames[product.condition] || product.condition}
           </span>
         </div>
 
         {/* Price */}
         <div className="flex items-center gap-2 mb-4">
-          <span className="text-xl font-bold text-emerald-400">€{product.price.toFixed(2)}</span>
+          <span className="text-xl font-bold text-[#BFFF00]">€{product.price.toFixed(2)}</span>
           {product.comparePrice && (
             <span className="text-sm text-gray-500 line-through">€{product.comparePrice.toFixed(2)}</span>
           )}
@@ -433,7 +433,7 @@ const ProductCard = memo(function ProductCard({
         <button
           onClick={() => onAddToCart(product.id)}
           disabled={isAdding}
-          className="w-full py-2.5 bg-gradient-to-r from-emerald-600 to-cyan-600 text-white font-semibold rounded-xl hover:from-emerald-500 hover:to-cyan-500 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+          className="w-full py-2.5 bg-[#BFFF00] text-black font-semibold rounded-xl hover:brightness-110 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
         >
           {isAdding ? (
             <>

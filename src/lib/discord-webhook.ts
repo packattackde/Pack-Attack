@@ -11,23 +11,21 @@ type BattleNotification = {
 };
 
 const winConditionEmoji: Record<string, string> = {
-    NORMAL: '👑',
-    UPSIDE_DOWN: '🔄',
-    SHARE: '🤝',
-    JACKPOT: '🎰',
+    LOWEST_CARD: '⬇️',
+    HIGHEST_CARD: '⬆️',
+    ALL_CARDS: '🃏',
 };
 
 const winConditionNames: Record<string, string> = {
-    NORMAL: 'Highest Wins',
-    UPSIDE_DOWN: 'Lowest Wins',
-    SHARE: 'Share Mode',
-    JACKPOT: 'Jackpot',
+    LOWEST_CARD: 'Niedrigste Karte',
+    HIGHEST_CARD: 'Höchste Karte',
+    ALL_CARDS: 'Alle Karten',
 };
 
 export async function sendBattleNotificationWebhook(battle: BattleNotification) {
     const webhookUrl = process.env.DISCORD_BATTLE_WEBHOOK_URL;
     if (!webhookUrl) {
-        console.error('⚠️  DISCORD_BATTLE_WEBHOOK_URL not configured');
+        console.error('DISCORD_BATTLE_WEBHOOK_URL not configured');
         return;
     }
 
@@ -37,20 +35,19 @@ export async function sendBattleNotificationWebhook(battle: BattleNotification) 
     const battleIdShort = battle.battleId.slice(-6);
 
     const embed = {
-        title: `⚔️ Neues Battle erstellt! #${battleIdShort}`,
-        description: `**${battle.creatorUsername}** hat ein neues Battle gestartet!\n\n🎮 **[Jetzt beitreten!](${battleUrl})**`,
+        title: `Neues Battle erstellt! #${battleIdShort}`,
+        description: `**${battle.creatorUsername}** hat ein neues Battle gestartet!\n\n[Jetzt beitreten!](${battleUrl})`,
         color: 0x8b5cf6,
         fields: [
-            { name: '📦 Box', value: battle.boxName, inline: true },
-            { name: '👥 Spieler', value: `${battle.players} Spieler`, inline: true },
-            { name: '🔄 Runden', value: `${battle.rounds}`, inline: true },
+            { name: 'Box', value: battle.boxName, inline: true },
+            { name: 'Spieler', value: `${battle.players} Spieler`, inline: true },
+            { name: 'Runden', value: `${battle.rounds}`, inline: true },
             {
-                name: `${winConditionEmoji[battle.winCondition] ?? '🎮'} Win Condition`,
+                name: `${winConditionEmoji[battle.winCondition] ?? ''} Spielmodus`,
                 value: winConditionNames[battle.winCondition] ?? battle.winCondition,
                 inline: true,
             },
-            { name: '🪙 Entry Cost', value: `${battle.entryCost.toLocaleString()} Coins`, inline: true },
-            { name: '🔒 Privacy', value: battle.privacy === 'PUBLIC' ? '🌍 Öffentlich' : '🔐 Privat', inline: true },
+            { name: 'Einsatz', value: `${battle.entryCost.toLocaleString()} Coins`, inline: true },
         ],
         timestamp: new Date().toISOString(),
         footer: { text: 'Klicke auf den Link um beizutreten!' },
@@ -71,13 +68,13 @@ export async function sendBattleNotificationWebhook(battle: BattleNotification) 
 
         if (!res.ok) {
             const text = await res.text().catch(() => '');
-            console.error('❌ Discord webhook failed:', res.status, text);
+            console.error('Discord webhook failed:', res.status, text);
             throw new Error(`Discord webhook failed: ${res.status}`);
         }
 
-        console.log('✅ Battle notification sent via Discord webhook!');
+        console.log('Battle notification sent via Discord webhook');
     } catch (error) {
-        console.error('❌ Error sending Discord webhook:', error);
+        console.error('Error sending Discord webhook:', error);
         throw error;
     }
 }

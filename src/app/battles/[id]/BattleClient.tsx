@@ -2,21 +2,72 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Trophy, Users, Package, Coins, RefreshCw, ArrowLeft, Swords, Crown, Calendar, Equal } from 'lucide-react';
 import Link from 'next/link';
-import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { ArrowLeft, Swords, Coins, Users, Trophy, Crown, RefreshCw, ArrowRightLeft } from 'lucide-react';
 
-interface BattleClientProps {
-  battle: any;
+const MODE_LABELS: Record<string, string> = {
+  LOWEST_CARD: 'Niedrigste Karte',
+  HIGHEST_CARD: 'Höchste Karte',
+  ALL_CARDS: 'Alle Karten',
+};
+
+const STATUS_LABELS: Record<string, { label: string; color: string }> = {
+  FINISHED_WIN: { label: 'Abgeschlossen', color: 'bg-green-500/20 text-green-400' },
+  FINISHED_DRAW: { label: 'Unentschieden', color: 'bg-blue-500/20 text-blue-400' },
+  CANCELLED: { label: 'Storniert', color: 'bg-red-500/20 text-red-400' },
+};
+
+type Battle = {
+  id: string;
+  creatorId: string;
+  status: string;
+  rounds: number;
+  battleMode: string;
+  maxParticipants: number;
+  entryFee: number;
+  winnerId: string | null;
+  startedAt: string | null;
+  finishedAt: string | null;
+  creator: { id: string; name: string | null; email: string };
+  box: any;
+  participants: Array<{
+    id: string;
+    userId: string;
+    totalValue: number;
+    user: { id: string; name: string | null; email: string; isBot?: boolean };
+  }>;
+  winner: { id: string; name: string | null; email: string } | null;
+  pulls: Array<{
+    id: string;
+    roundNumber: number;
+    coinValue: number;
+    itemName: string | null;
+    itemImage: string | null;
+    itemRarity: string | null;
+    transferredToUserId: string | null;
+    participantId: string;
+    participant: { id: string; userId: string; user: any };
+  }>;
+};
+
+export function BattleClient({ battle, currentUserId, isAdmin }: {
+  battle: Battle;
   currentUserId: string | null;
   isAdmin: boolean;
-}
-
-export default function BattleClient({ battle, currentUserId, isAdmin }: BattleClientProps) {
+}) {
   const router = useRouter();
   const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const statusInfo = STATUS_LABELS[battle.status] || { label: battle.status, color: 'bg-gray-500/20 text-gray-400' };
+  const sortedParticipants = [...battle.participants].sort((a, b) => b.totalValue - a.totalValue);
+
+  const pullsByRound: Record<number, typeof battle.pulls> = {};
+  for (const pull of battle.pulls || []) {
+    if (!pullsByRound[pull.roundNumber]) pullsByRound[pull.roundNumber] = [];
+    pullsByRound[pull.roundNumber].push(pull);
+  }
+
+  const transferredPulls = (battle.pulls || []).filter(p => p.transferredToUserId);
 
   const handleRefresh = () => {
     setIsRefreshing(true);
@@ -24,459 +75,197 @@ export default function BattleClient({ battle, currentUserId, isAdmin }: BattleC
     setTimeout(() => setIsRefreshing(false), 1000);
   };
 
-  const calculateTotalValue = (participantId: string) => {
-    return battle.pulls
-      ?.filter((p: any) => p.participantId === participantId)
-      ?.reduce((sum: number, p: any) => sum + (p.pull?.cardValue || 0), 0) || 0;
-  };
-
-  const getWinnerDisplay = () => {
-    if (!battle.winner) return 'No winner';
-    return battle.winner?.name || battle.winner?.email || 'Unknown';
-  };
-
-  const getStatusBadge = () => {
-    switch (battle.status) {
-      case 'FINISHED':
-      case 'COMPLETED':
-        return <span className="px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-sm font-semibold">Completed</span>;
-      case 'CANCELLED':
-        return <span className="px-3 py-1 rounded-full bg-red-500/20 text-red-400 text-sm font-semibold">Cancelled</span>;
-      default:
-        return <span className="px-3 py-1 rounded-full bg-gray-500/20 text-gray-400 text-sm font-semibold">{battle.status}</span>;
-    }
-  };
-
-  const getBattleModeLabel = () => {
-    if (battle.shareMode) return 'Share Mode';
-    switch (battle.battleMode) {
-      case 'UPSIDE_DOWN':
-        return 'Lowest Wins';
-      case 'JACKPOT':
-        return 'Jackpot';
-      default:
-        return 'Highest Wins';
-    }
-  };
-
-  // Group pulls by round for round-by-round display
-  const pullsByRound: Map<number, any[]> = new Map();
-  battle.pulls?.forEach((pull: any) => {
-    const round = pull.roundNumber;
-    if (!pullsByRound.has(round)) {
-      pullsByRound.set(round, []);
-    }
-    pullsByRound.get(round)?.push(pull);
-  });
-
-  // Determine round winners
-  const roundWinners = Array.from(pullsByRound.entries()).map(([round, pulls]) => {
-    const isUpsideDown = battle.battleMode === 'UPSIDE_DOWN';
-    let winner = pulls[0];
-    
-    for (const pull of pulls) {
-      const pullValue = pull.pull?.cardValue || 0;
-      const winnerValue = winner.pull?.cardValue || 0;
-      
-      if (isUpsideDown) {
-        if (pullValue < winnerValue) winner = pull;
-      } else {
-        if (pullValue > winnerValue) winner = pull;
-      }
-    }
-    
-    return {
-      round,
-      winner,
-      winnerName: winner.participant?.user?.name || winner.participant?.user?.email || 'Unknown',
-      card: winner.pull?.card,
-      value: winner.pull?.cardValue || 0,
-    };
-  });
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display">
-      {/* Background Effects */}
-      <div className="fixed inset-0 bg-grid opacity-20 pointer-events-none" />
-      <div className="fixed inset-0 radial-gradient pointer-events-none" />
+    <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display">
+      <div className="fixed inset-0 bg-grid opacity-30" />
+      <div className="fixed inset-0 radial-gradient" />
 
-      <div className="relative container py-12">
-        {/* Back Button */}
-        <div className="mb-8 flex items-center justify-between">
-          <Link 
-            href="/battles"
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
-          >
+      <div className="relative container py-14 sm:py-16 max-w-5xl">
+        <div className="flex items-center justify-between mb-6">
+          <Link href="/battles" className="inline-flex items-center gap-2 text-[#8888aa] hover:text-white transition-colors">
             <ArrowLeft className="w-4 h-4" />
-            Back to Battles
+            Zurück zu Battles
           </Link>
-          <button
-            onClick={handleRefresh}
-            disabled={isRefreshing}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-gray-300 hover:text-white hover:bg-white/10 transition-all disabled:opacity-50"
-          >
+          <button onClick={handleRefresh} className="text-[#8888aa] hover:text-white transition-colors">
             <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-            Refresh
           </button>
         </div>
 
-        {/* Winner / Draw Banner */}
-        {(battle.winner || battle.isDraw) && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
-          >
-            {battle.isDraw ? (
-              <div className="relative overflow-hidden rounded-3xl border border-blue-500/30 bg-gradient-to-br from-blue-900/30 via-slate-900/20 to-blue-900/30 p-8">
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent" />
-                <div className="relative flex items-center gap-4">
-                  <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-600 shadow-lg shadow-blue-500/30">
-                    <Equal className="w-10 h-10 text-white" />
-                  </div>
-                  <div>
-                    <h2 className="text-3xl font-bold text-white mb-1">It's a Draw!</h2>
-                    <p className="text-xl text-gray-300">
-                      All players had the same total value — everyone keeps their own cards.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="relative overflow-hidden rounded-3xl border border-yellow-500/30 bg-gradient-to-br from-yellow-900/30 via-amber-900/20 to-orange-900/30 p-8">
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-yellow-500/10 via-transparent to-transparent" />
-                <div className="relative flex items-center gap-4">
-                  <div className="p-4 rounded-2xl bg-gradient-to-br from-yellow-500 to-amber-600 shadow-lg shadow-yellow-500/30">
-                    <Trophy className="w-10 h-10 text-white" />
-                  </div>
-                  <div>
-                    <h2 className="text-3xl font-bold text-white mb-1">Battle Complete!</h2>
-                    <p className="text-xl text-gray-300">
-                      Winner: <span className="font-bold text-yellow-400">{getWinnerDisplay()}</span>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-          </motion.div>
-        )}
+        {/* Result Banner */}
+        {battle.status === 'FINISHED_DRAW' ? (
+          <div className="bg-blue-500/10 border border-blue-500/30 rounded-2xl p-8 text-center mb-8">
+            <div className="text-5xl mb-4">🤝</div>
+            <h1 className="text-3xl font-bold text-white mb-2">Unentschieden!</h1>
+            <p className="text-[#8888aa]">Beide Spieler haben den gleichen Gesamtwert erreicht. Keine Karten wurden übertragen.</p>
+          </div>
+        ) : battle.status === 'FINISHED_WIN' && battle.winner ? (
+          <div className={`rounded-2xl p-8 text-center mb-8 ${
+            battle.winnerId === currentUserId
+              ? 'bg-[#BFFF00]/10 border border-[#BFFF00]/30'
+              : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)]'
+          }`}>
+            <div className="text-5xl mb-4">🏆</div>
+            <h1 className="text-3xl font-bold text-white mb-2">
+              {battle.winner.name || battle.winner.email} hat gewonnen!
+            </h1>
+            <p className="text-[#8888aa]">
+              {battle.battleMode === 'LOWEST_CARD' && 'Die niedrigste Karte des Verlierers wurde übertragen.'}
+              {battle.battleMode === 'HIGHEST_CARD' && 'Die höchste Karte des Verlierers wurde übertragen.'}
+              {battle.battleMode === 'ALL_CARDS' && 'Alle Karten des Verlierers wurden übertragen.'}
+            </p>
+          </div>
+        ) : battle.status === 'CANCELLED' ? (
+          <div className="bg-red-500/10 border border-red-500/30 rounded-2xl p-8 text-center mb-8">
+            <div className="text-5xl mb-4">❌</div>
+            <h1 className="text-3xl font-bold text-white mb-2">Battle storniert</h1>
+            <p className="text-[#8888aa]">Dieses Battle wurde storniert.</p>
+          </div>
+        ) : null}
 
-        <div className="grid gap-8 lg:grid-cols-3">
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Battle Info Card */}
-            <div className="glass-strong rounded-3xl p-6 border border-white/10">
-              <div className="flex items-center justify-between mb-6">
-                <h1 className="text-2xl font-bold text-white">Battle #{battle.id.slice(-6)}</h1>
-                {getStatusBadge()}
-              </div>
-              
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                  <div className="flex items-center gap-2 text-gray-400 mb-1">
-                    <Swords className="w-4 h-4" />
-                    <span className="text-sm">Mode</span>
-                  </div>
-                  <p className="text-white font-semibold">{getBattleModeLabel()}</p>
-                </div>
-                <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                  <div className="flex items-center gap-2 text-gray-400 mb-1">
-                    <Users className="w-4 h-4" />
-                    <span className="text-sm">Players</span>
-                  </div>
-                  <p className="text-white font-semibold">{battle.participants.length}/{battle.maxParticipants}</p>
-                </div>
-                <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                  <div className="flex items-center gap-2 text-gray-400 mb-1">
-                    <Coins className="w-4 h-4" />
-                    <span className="text-sm">Entry Fee</span>
-                  </div>
-                  <p className="text-white font-semibold">{battle.entryFee} coins</p>
-                </div>
-                <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                  <div className="flex items-center gap-2 text-gray-400 mb-1">
-                    <Package className="w-4 h-4" />
-                    <span className="text-sm">Rounds</span>
-                  </div>
-                  <p className="text-white font-semibold">{battle.rounds}</p>
-                </div>
+        {/* Battle Info */}
+        <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] rounded-2xl p-6 mb-8">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+            <div className="flex items-center gap-3">
+              <Swords className="w-5 h-5 text-[#BFFF00]" />
+              <h2 className="text-xl font-bold text-white">Battle #{battle.id.slice(-6)}</h2>
+              <span className={`px-3 py-1 rounded-full text-xs font-semibold ${statusInfo.color}`}>
+                {statusInfo.label}
+              </span>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+            <div className="bg-[#12123a] rounded-lg p-3">
+              <div className="text-[#8888aa] text-xs">Modus</div>
+              <div className="text-white font-medium">{MODE_LABELS[battle.battleMode] || battle.battleMode}</div>
+            </div>
+            <div className="bg-[#12123a] rounded-lg p-3">
+              <div className="text-[#8888aa] text-xs">Spieler</div>
+              <div className="text-white font-medium">{battle.participants.length}</div>
+            </div>
+            <div className="bg-[#12123a] rounded-lg p-3">
+              <div className="text-[#8888aa] text-xs">Runden</div>
+              <div className="text-white font-medium">{battle.rounds}</div>
+            </div>
+            <div className="bg-[#12123a] rounded-lg p-3">
+              <div className="text-[#8888aa] text-xs">Einsatz</div>
+              <div className="text-amber-400 font-medium flex items-center gap-1">
+                <Coins className="w-3 h-3" /> {battle.entryFee}
               </div>
             </div>
+          </div>
+        </div>
 
-            {/* Participants & Results */}
-            <div className="glass-strong rounded-3xl p-6 border border-white/10">
-              <h2 className="text-xl font-bold text-white mb-6">Battle Results</h2>
-              
-              <div className="space-y-4">
-                {/* Filter out bots for non-admin users */}
-                {(isAdmin ? battle.participants : battle.participants.filter((p: any) => !p.user?.isBot)).map((participant: any) => {
-                  const totalValue = calculateTotalValue(participant.id);
-                  const isWinner = !battle.isDraw && participant.userId === battle.winnerId;
-                  const pulls = battle.pulls?.filter((p: any) => p.participantId === participant.id) || [];
-                  
-                  return (
-                    <motion.div
-                      key={participant.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className={`rounded-2xl border p-5 transition-all ${
-                        battle.isDraw
-                          ? 'border-blue-500/50 bg-gradient-to-br from-blue-900/20 to-slate-900/20'
-                          : isWinner 
-                            ? 'border-yellow-500/50 bg-gradient-to-br from-yellow-900/30 to-amber-900/20' 
-                            : 'border-white/10 bg-white/5'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-3">
-                          <span className="text-lg font-bold text-white">
-                            {participant.user?.name || participant.user?.email || 'Unknown'}
-                          </span>
-                          {isAdmin && participant.user?.isBot && (
-                            <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 text-xs font-semibold">
-                              Bot
-                            </span>
-                          )}
-                          {battle.isDraw && (
-                            <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 text-xs font-semibold">
-                              <Equal className="w-3 h-3" />
-                              Draw
-                            </div>
-                          )}
-                          {isWinner && (
-                            <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-yellow-500/20 text-yellow-400 text-xs font-semibold">
-                              <Trophy className="w-3 h-3" />
-                              Winner
-                            </div>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Coins className="w-5 h-5 text-yellow-400" />
-                          <span className="text-xl font-bold text-yellow-400">
-                            {totalValue.toFixed(0)}
-                          </span>
-                        </div>
-                      </div>
-                      
-                      {/* Card Grid with Images */}
-                      {pulls.length > 0 && (
-                        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
-                          {pulls.map((pull: any, index: number) => (
-                            <motion.div
-                              key={pull.id || index}
-                              initial={{ opacity: 0, scale: 0.8 }}
-                              animate={{ opacity: 1, scale: 1 }}
-                              transition={{ delay: index * 0.05 }}
-                              className="group relative"
-                            >
-                              <div className="relative aspect-[2/3] overflow-hidden rounded-xl border border-white/20 bg-gray-800 shadow-lg group-hover:shadow-xl transition-shadow">
-                                {pull.pull?.card ? (
-                                  <>
-                                    <Image
-                                      src={pull.pull.card.imageUrlGatherer || pull.pull.card.imageUrlScryfall || '/placeholder-card.png'}
-                                      alt={pull.pull.card.name}
-                                      fill
-                                      className="object-cover transition-transform group-hover:scale-105"
-                                      unoptimized
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-                                    <div className="absolute bottom-0 left-0 right-0 p-2">
-                                      <p className="text-xs text-white font-medium truncate">{pull.pull.card.name}</p>
-                                      <div className="flex items-center gap-1 mt-1">
-                                        <Coins className="w-3 h-3 text-yellow-400" />
-                                        <span className="text-sm font-bold text-yellow-400">
-                                          {(pull.pull.cardValue || 0).toFixed(0)}
-                                        </span>
-                                      </div>
-                                    </div>
-                                    <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded bg-purple-500/80 text-white text-xs font-semibold">
-                                      R{pull.roundNumber}
-                                    </div>
-                                  </>
-                                ) : (
-                                  <div className="flex items-center justify-center h-full text-gray-500 text-xs">
-                                    No card
-                                  </div>
-                                )}
-                              </div>
-                            </motion.div>
-                          ))}
-                        </div>
-                      )}
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </div>
+        {/* Participant Results */}
+        <div className="space-y-4 mb-8">
+          <h2 className="text-lg font-bold text-white flex items-center gap-2">
+            <Trophy className="w-5 h-5 text-amber-400" />
+            Ergebnisse
+          </h2>
+          {sortedParticipants.map((p, i) => {
+            const isWinner = p.userId === battle.winnerId;
+            const playerPulls = (battle.pulls || []).filter(pull => pull.participantId === p.id);
 
-            {/* Round Winners */}
-            {roundWinners.length > 0 && (
-              <div className="glass-strong rounded-3xl p-6 border border-white/10">
-                <h2 className="text-xl font-bold text-white mb-6">Round Winners</h2>
-                <div className="space-y-3">
-                  {roundWinners.map((round) => (
-                    <div
-                      key={round.round}
-                      className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10"
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold">
-                          {round.round}
-                        </div>
-                        <div>
-                          <p className="text-white font-semibold">{round.winnerName}</p>
-                          <p className="text-gray-400 text-sm">{round.card?.name || 'Unknown Card'}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        {round.card && (
-                          <div className="relative w-12 h-16 rounded-lg overflow-hidden border border-white/20 hidden sm:block">
-                            <Image
-                              src={round.card.imageUrlGatherer || round.card.imageUrlScryfall || '/placeholder-card.png'}
-                              alt={round.card.name}
-                              fill
-                              className="object-cover"
-                              unoptimized
-                            />
-                          </div>
+            return (
+              <div
+                key={p.id}
+                className={`bg-[#1a1a4a] border rounded-2xl p-5 ${
+                  isWinner ? 'border-[#BFFF00]/30 shadow-[0_0_20px_rgba(191,255,0,0.08)]' : 'border-[rgba(255,255,255,0.08)]'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                      isWinner ? 'bg-[#BFFF00] text-black' : 'bg-[#12123a] text-[#8888aa]'
+                    }`}>
+                      {i + 1}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-white font-semibold">{p.user.name || p.user.email}</span>
+                        {isWinner && <Crown className="w-4 h-4 text-[#BFFF00]" />}
+                        {isAdmin && p.user.isBot && (
+                          <span className="text-xs px-1.5 py-0.5 bg-purple-500/20 text-purple-400 rounded">Bot</span>
                         )}
-                        <div className="flex items-center gap-1 text-yellow-400 font-bold">
-                          <Coins className="w-4 h-4" />
-                          {round.value.toFixed(0)}
-                        </div>
+                      </div>
+                      <div className="text-xs text-[#8888aa]">
+                        {isWinner ? 'Gewinner' : battle.status === 'FINISHED_DRAW' ? 'Unentschieden' : 'Verlierer'}
                       </div>
                     </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Battle Timeline */}
-            <div className="glass-strong rounded-3xl p-6 border border-white/10">
-              <h2 className="text-xl font-bold text-white mb-6">Battle Summary</h2>
-              <div className="space-y-4">
-                <div className="flex items-center gap-3 text-gray-300">
-                  <Calendar className="w-5 h-5 text-gray-500" />
-                  <span>Created: {new Date(battle.createdAt).toLocaleString()}</span>
-                </div>
-                {battle.endedAt && (
-                  <div className="flex items-center gap-3 text-gray-300">
-                    <Trophy className="w-5 h-5 text-yellow-500" />
-                    <span>Ended: {new Date(battle.endedAt).toLocaleString()}</span>
                   </div>
-                )}
-              </div>
-            </div>
-          </div>
+                  <div className="text-right">
+                    <div className="text-xl font-bold text-amber-400">{p.totalValue.toFixed(2)}</div>
+                    <div className="text-xs text-[#8888aa]">Gesamtwert</div>
+                  </div>
+                </div>
 
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Box Details - Fanned Card Style */}
-            <div className="glass rounded-xl overflow-hidden card-lift border border-white/10">
-              {/* Card Preview Section - Fanned Cards */}
-              <div className="relative h-48 bg-gradient-to-b from-gray-800/50 to-gray-900/80 flex items-end justify-center pb-2 overflow-hidden">
-                {/* Background glow effect */}
-                <div className="absolute inset-0 bg-gradient-to-t from-amber-500/10 via-transparent to-transparent" />
-                
-                {/* Fanned Cards Display */}
-                {battle.box?.cards && battle.box.cards.length > 0 ? (
-                  <div className="relative h-40 w-full flex items-center justify-center">
-                    {battle.box.cards.slice(0, 3).map((card: any, index: number) => {
-                      const rotations = [-15, 0, 15];
-                      const translations = [-20, 0, 20];
-                      const zIndexes = [1, 3, 2];
-                      return (
-                        <div
-                          key={card.id || index}
-                          className="absolute transition-transform duration-300 hover:scale-105"
-                          style={{
-                            transform: `rotate(${rotations[index]}deg) translateX(${translations[index]}px)`,
-                            zIndex: zIndexes[index],
-                          }}
-                        >
-                          <div className="relative w-20 h-[110px] rounded-md overflow-hidden border-2 border-gray-600 shadow-lg hover:border-amber-400/50 transition-colors bg-gray-800">
-                            {card.imageUrlGatherer || card.imageUrlScryfall ? (
-                              <Image
-                                src={card.imageUrlGatherer || card.imageUrlScryfall}
-                                alt={card.name}
-                                fill
-                                className="object-cover"
-                                unoptimized
-                              />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center bg-gray-700">
-                                <span className="text-[8px] text-gray-500">?</span>
-                              </div>
-                            )}
-                            {/* Value badge on top card */}
-                            {index === 1 && card.coinValue && (
-                              <div className="absolute bottom-1 left-1/2 -translate-x-1/2 px-1.5 py-0.5 rounded bg-black/80 flex items-center gap-0.5">
-                                <Coins className="w-2 h-2 text-amber-400" />
-                                <span className="text-[8px] font-bold text-amber-400">{card.coinValue}</span>
-                              </div>
-                            )}
+                {/* Player's cards */}
+                <div className="grid gap-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-7">
+                  {playerPulls.map((pull) => {
+                    const isTransferred = !!pull.transferredToUserId;
+                    return (
+                      <div
+                        key={pull.id}
+                        className={`p-2 rounded-lg text-center ${
+                          isTransferred ? 'bg-red-500/10 border border-red-500/20' : 'bg-[#12123a]'
+                        }`}
+                      >
+                        {pull.itemImage && (
+                          <img src={pull.itemImage} alt={pull.itemName || ''} className="w-full h-16 object-cover rounded mb-1" />
+                        )}
+                        <div className="text-xs text-white truncate">{pull.itemName || '?'}</div>
+                        <div className="text-xs text-amber-400">{pull.coinValue.toFixed(2)}</div>
+                        {isTransferred && (
+                          <div className="text-[10px] text-red-400 flex items-center justify-center gap-0.5 mt-0.5">
+                            <ArrowRightLeft className="w-2.5 h-2.5" /> Übertragen
                           </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                ) : battle.box?.imageUrl ? (
-                  <div className="relative w-full h-full">
-                    <Image
-                      src={battle.box.imageUrl}
-                      alt={battle.box.name}
-                      fill
-                      className="object-cover opacity-80"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent" />
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-center h-full">
-                    <Package className="w-12 h-12 text-gray-600" />
-                  </div>
-                )}
-
-                {/* Game Badge */}
-                {battle.box?.games && battle.box.games[0] && (
-                  <div className={`absolute top-2 right-2 px-2 py-0.5 rounded-full text-[10px] font-semibold badge-${battle.box.games[0].toLowerCase()} z-10`}>
-                    {battle.box.games[0]}
-                  </div>
-                )}
-              </div>
-
-              {/* Box Info */}
-              <div className="p-4 border-t border-gray-800">
-                <h3 className="text-sm font-semibold text-white mb-2 line-clamp-1">
-                  {battle.box?.name || 'Unknown Box'}
-                </h3>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1">
-                    <Coins className="w-4 h-4 text-amber-400" />
-                    <span className="text-sm font-bold text-amber-400">{battle.box?.price?.toLocaleString() || 0}</span>
-                    <span className="text-xs text-gray-500">coins</span>
-                  </div>
-                </div>
-                <div className="mt-2 pt-2 border-t border-gray-800/50 flex items-center justify-between text-[11px] text-gray-500">
-                  <span>{battle.box?.cardsPerPack || 1} cards/pack</span>
-                  <span>{battle.rounds} rounds</span>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
-            </div>
+            );
+          })}
+        </div>
 
-            {/* Actions */}
-            <div className="glass-strong rounded-3xl p-6 border border-white/10">
-              <div className="space-y-3">
-                <Button asChild variant="outline" className="w-full">
-                  <Link href="/battles">View All Battles</Link>
-                </Button>
-                {currentUserId && (
-                  <Button asChild className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
-                    <Link href="/battles/create">Create New Battle</Link>
-                  </Button>
-                )}
-              </div>
+        {/* Transferred Cards Summary */}
+        {transferredPulls.length > 0 && (
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] rounded-2xl p-6 mb-8">
+            <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+              <ArrowRightLeft className="w-5 h-5 text-red-400" />
+              Übertragene Karten
+            </h2>
+            <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+              {transferredPulls.map((pull) => {
+                const fromPlayer = battle.participants.find(p => p.id === pull.participantId);
+                const toPlayer = battle.participants.find(p => p.userId === pull.transferredToUserId);
+                return (
+                  <div key={pull.id} className="bg-[#12123a] rounded-lg p-3 flex items-center gap-3">
+                    {pull.itemImage && (
+                      <img src={pull.itemImage} alt={pull.itemName || ''} className="w-12 h-12 rounded object-cover" />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm text-white font-medium truncate">{pull.itemName || 'Unbekannt'}</div>
+                      <div className="text-xs text-amber-400">{pull.coinValue.toFixed(2)} Coins</div>
+                      <div className="text-xs text-[#8888aa]">
+                        {fromPlayer?.user?.name || '?'} → {toPlayer?.user?.name || '?'}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
+        )}
+
+        {/* Actions */}
+        <div className="flex gap-3">
+          <Link href="/battles" className="px-6 py-3 bg-[#12123a] text-white font-semibold rounded-xl hover:bg-[#1a1a4a] transition-all border border-[rgba(255,255,255,0.12)]">
+            Zurück zur Lobby
+          </Link>
+          <Link href="/battles/create" className="px-6 py-3 bg-[#BFFF00] text-black font-semibold rounded-xl hover:bg-[#d4ff4d] transition-all">
+            Neues Battle
+          </Link>
         </div>
       </div>
     </div>

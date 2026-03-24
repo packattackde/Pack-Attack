@@ -87,7 +87,7 @@ export default async function AdminOrdersPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold text-white">Order Management</h1>
-        <p className="text-gray-400 mt-1">View and manage all customer orders. Assign orders to shop owners for fulfillment.</p>
+        <p className="text-[#8888aa] mt-1">View and manage all customer orders. Assign orders to shop owners for fulfillment.</p>
       </div>
 
       <OrdersClient orders={orders} shops={shops} />

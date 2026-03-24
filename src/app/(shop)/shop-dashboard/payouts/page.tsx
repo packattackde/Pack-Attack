@@ -96,22 +96,22 @@ export default async function ShopPayoutsPage({
         <div className="mb-8">
           <Link
             href={backHref}
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-4"
+            className="inline-flex items-center gap-2 text-[#8888aa] hover:text-white transition-colors mb-4"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Dashboard
           </Link>
 
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass text-sm mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm mb-3">
             <Store className="w-4 h-4 text-emerald-400" />
-            <span className="text-gray-300">{isAdmin && targetShop ? `Admin → ${shop.name}` : shop.name}</span>
+            <span className="text-[#f0f0f5]">{isAdmin && targetShop ? `Admin → ${shop.name}` : shop.name}</span>
           </div>
 
           <h1 className="text-3xl md:text-4xl font-bold mb-2 font-heading">
             <span className="text-white">Payout </span>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">Management</span>
           </h1>
-          <p className="text-gray-400">Request payouts for delivered items. Rate: {COIN_TO_EURO_RATE} coins = 1 EUR.</p>
+          <p className="text-[#8888aa]">Request payouts for delivered items. Rate: {COIN_TO_EURO_RATE} coins = 1 EUR.</p>
         </div>
 
         <PayoutsClient

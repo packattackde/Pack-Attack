@@ -81,7 +81,7 @@ export default async function CollectionPage() {
   }, {} as Record<string, number>);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display">
+    <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display">
       {/* Background Effects */}
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
@@ -89,41 +89,41 @@ export default async function CollectionPage() {
       <div className="relative container py-12">
         {/* Header */}
         <div className="mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full glass text-sm">
-            <Layers className="w-4 h-4 text-emerald-400" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
+            <Layers className="w-4 h-4 text-[#BFFF00]" />
             <span className="text-gray-300">Your Cards</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-3">
             <span className="text-white">My </span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">Collection</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#BFFF00] to-[#7fff00]">Collection</span>
           </h1>
-          <p className="text-gray-400 text-lg">Manage your card collection</p>
+          <p className="text-[#8888aa] text-lg">Manage your card collection</p>
         </div>
 
         {/* Stats Bar */}
         {totalCards > 0 && (
-          <div className="glass-strong rounded-2xl p-6 mb-8">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 mb-8">
             <div className={`grid grid-cols-2 gap-4 ${(rarities['None'] || 0) > 0 ? 'md:grid-cols-5' : 'md:grid-cols-4'}`}>
               <div className="text-center">
-                <div className="text-2xl font-bold text-white">{totalCards}</div>
-                <div className="text-sm text-gray-400">Total Cards</div>
+                <div className="text-2xl font-bold text-[#BFFF00]">{totalCards}</div>
+                <div className="text-sm text-[#8888aa]">Total Cards</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-amber-400">{totalValue.toLocaleString()}</div>
-                <div className="text-sm text-gray-400">Total Value</div>
+                <div className="text-sm text-[#8888aa]">Total Value</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-purple-400">{rarities['Rare'] || 0}</div>
-                <div className="text-sm text-gray-400">Rare Cards</div>
+                <div className="text-sm text-[#8888aa]">Rare Cards</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-amber-500">{(rarities['Mythic'] || 0) + (rarities['Legendary'] || 0)}</div>
-                <div className="text-sm text-gray-400">Mythic/Legendary</div>
+                <div className="text-sm text-[#8888aa]">Mythic/Legendary</div>
               </div>
               {(rarities['None'] || 0) > 0 && (
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-teal-400">{rarities['None']}</div>
-                  <div className="text-sm text-gray-400">Sealed Products</div>
+                  <div className="text-2xl font-bold text-[#BFFF00]">{rarities['None']}</div>
+                  <div className="text-sm text-[#8888aa]">Sealed Products</div>
                 </div>
               )}
             </div>
@@ -131,15 +131,15 @@ export default async function CollectionPage() {
         )}
 
         {pullsWithCart.length === 0 ? (
-          <div className="glass-strong rounded-2xl p-12 text-center">
-            <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20">
-              <Package className="w-10 h-10 text-emerald-400" />
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
+            <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[#BFFF00]/20 to-[#7fff00]/20">
+              <Package className="w-10 h-10 text-[#BFFF00]" />
             </div>
             <h2 className="text-2xl font-bold text-white mb-3">Collection Empty</h2>
-            <p className="text-gray-400 mb-6">Open some boxes to start building your collection!</p>
+            <p className="text-[#8888aa] mb-6">Open some boxes to start building your collection!</p>
             <Link 
               href="/boxes" 
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-600 to-cyan-600 text-white font-semibold rounded-xl transition-all hover:scale-105"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[#BFFF00] text-black font-semibold rounded-xl transition-all hover:scale-105 hover:shadow-[0_0_24px_rgba(191,255,0,0.3)]"
             >
               <Sparkles className="w-5 h-5" />
               Browse Boxes

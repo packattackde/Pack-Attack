@@ -110,7 +110,7 @@ const statusConfig: Record<string, { icon: typeof Clock; label: string; color: s
 
 const priorityConfig: Record<string, { label: string; color: string; dot: string }> = {
   LOW: { label: 'Low', color: 'gray', dot: 'bg-gray-400' },
-  MEDIUM: { label: 'Medium', color: 'blue', dot: 'bg-blue-400' },
+  MEDIUM: { label: 'Medium', color: 'blue', dot: 'bg-[#BFFF00]' },
   HIGH: { label: 'High', color: 'amber', dot: 'bg-amber-400' },
   URGENT: { label: 'Urgent', color: 'red', dot: 'bg-red-400 animate-pulse' },
 };
@@ -415,13 +415,13 @@ export default function AdminFeedbackPage() {
   // ─── Render ──────────────────────────────────────────
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display">
+    <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display">
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
 
       <div className="relative container py-8 sm:py-12">
         {/* Back + Header */}
-        <Link href="/admin" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-300 transition-colors font-medium mb-6 touch-target">
+        <Link href="/admin" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-[#f0f0f5] transition-colors font-medium mb-6 touch-target">
           <ArrowLeft className="w-4 h-4" />
           Back to Admin
         </Link>
@@ -429,11 +429,11 @@ export default function AdminFeedbackPage() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
           <div>
             <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-400">Feedback</span> Management
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#BFFF00] to-[#d4ff4d]">Feedback</span> Management
             </h1>
             <p className="text-gray-500">{total} {activeTab === 'archive' ? 'archived' : 'active'} ticket{total !== 1 ? 's' : ''}</p>
           </div>
-          <Link href="/admin/feedback/analytics" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-sm font-medium text-gray-300 hover:bg-white/[0.08] hover:text-white hover:border-white/[0.15] transition-all">
+          <Link href="/admin/feedback/analytics" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-sm font-medium text-[#f0f0f5] hover:bg-white/[0.08] hover:text-white hover:border-white/[0.15] transition-all">
             <BarChart3 className="w-4 h-4 text-teal-400" />
             Analytics
           </Link>
@@ -446,7 +446,7 @@ export default function AdminFeedbackPage() {
             className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               activeTab === 'active'
                 ? 'bg-teal-500/15 text-teal-400 border border-teal-500/30'
-                : 'bg-white/[0.04] text-gray-400 border border-white/[0.08] hover:bg-white/[0.08] hover:text-gray-300'
+                : 'bg-white/[0.04] text-[#8888aa] border border-white/[0.08] hover:bg-white/[0.08] hover:text-[#f0f0f5]'
             }`}
           >
             <Inbox className="w-4 h-4" />
@@ -461,15 +461,15 @@ export default function AdminFeedbackPage() {
             onClick={() => switchTab('archive')}
             className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               activeTab === 'archive'
-                ? 'bg-gray-500/15 text-gray-300 border border-gray-500/30'
-                : 'bg-white/[0.04] text-gray-400 border border-white/[0.08] hover:bg-white/[0.08] hover:text-gray-300'
+                ? 'bg-gray-500/15 text-[#f0f0f5] border border-gray-500/30'
+                : 'bg-white/[0.04] text-[#8888aa] border border-white/[0.08] hover:bg-white/[0.08] hover:text-[#f0f0f5]'
             }`}
           >
             <Archive className="w-4 h-4" />
             Archive
             {archiveCount > 0 && (
               <span className={`px-1.5 py-0.5 rounded-full text-[11px] font-bold ${
-                activeTab === 'archive' ? 'bg-gray-500/25 text-gray-300' : 'bg-white/[0.08] text-gray-500'
+                activeTab === 'archive' ? 'bg-gray-500/25 text-[#f0f0f5]' : 'bg-white/[0.08] text-gray-500'
               }`}>{archiveCount}</span>
             )}
           </button>
@@ -477,18 +477,18 @@ export default function AdminFeedbackPage() {
 
         {/* Filters */}
         <div className="flex flex-wrap items-center gap-3 mb-6">
-          <div className="flex items-center gap-2 text-sm text-gray-400">
+          <div className="flex items-center gap-2 text-sm text-[#8888aa]">
             <Filter className="w-4 h-4" />
             <span className="font-medium">Filters:</span>
           </div>
 
           <div className="relative flex-1 min-w-[200px] max-w-sm">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500 pointer-events-none" />
-            <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search feedback..." className="w-full h-9 pl-10 pr-3 rounded-lg bg-white/4 border border-white/8 text-sm text-gray-300 placeholder-gray-600 focus:border-blue-500/40 focus:ring-1 focus:ring-blue-500/20 outline-none transition-all" />
+            <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search feedback..." className="w-full h-9 pl-10 pr-3 rounded-lg bg-white/4 border border-white/8 text-sm text-[#f0f0f5] placeholder-gray-600 focus:border-[rgba(191,255,0,0.3)] focus:ring-1 focus:ring-[rgba(191,255,0,0.2)] outline-none transition-all" />
           </div>
 
           {activeTab === 'active' && (
-            <select value={filterStatus} onChange={(e) => { setFilterStatus(e.target.value); setPage(1); }} className="h-9 px-3 rounded-lg bg-white/4 border border-white/8 text-sm text-gray-300 focus:border-blue-500/40 focus:ring-1 focus:ring-blue-500/20 outline-none transition-all [&>option]:bg-gray-900 [&>option]:text-gray-100">
+            <select value={filterStatus} onChange={(e) => { setFilterStatus(e.target.value); setPage(1); }} className="h-9 px-3 rounded-lg bg-white/4 border border-white/8 text-sm text-[#f0f0f5] focus:border-[rgba(191,255,0,0.3)] focus:ring-1 focus:ring-[rgba(191,255,0,0.2)] outline-none transition-all [&>option]:bg-[#0B0B2B] [&>option]:text-gray-100">
               <option value="">All Statuses</option>
               <option value="OPEN">Open</option>
               <option value="CLAIMED">Claimed</option>
@@ -497,7 +497,7 @@ export default function AdminFeedbackPage() {
             </select>
           )}
 
-          <select value={filterCategory} onChange={(e) => { setFilterCategory(e.target.value); setPage(1); }} className="h-9 px-3 rounded-lg bg-white/4 border border-white/8 text-sm text-gray-300 focus:border-blue-500/40 focus:ring-1 focus:ring-blue-500/20 outline-none transition-all [&>option]:bg-gray-900 [&>option]:text-gray-100">
+          <select value={filterCategory} onChange={(e) => { setFilterCategory(e.target.value); setPage(1); }} className="h-9 px-3 rounded-lg bg-white/4 border border-white/8 text-sm text-[#f0f0f5] focus:border-[rgba(191,255,0,0.3)] focus:ring-1 focus:ring-[rgba(191,255,0,0.2)] outline-none transition-all [&>option]:bg-[#0B0B2B] [&>option]:text-gray-100">
             <option value="">All Categories</option>
             <option value="BUG_REPORT">Bug Reports</option>
             <option value="FEATURE_REQUEST">Feature Requests</option>
@@ -507,7 +507,7 @@ export default function AdminFeedbackPage() {
             <option value="SHOP_ISSUE">Shop Issues</option>
           </select>
 
-          <select value={filterPriority} onChange={(e) => { setFilterPriority(e.target.value); setPage(1); }} className="h-9 px-3 rounded-lg bg-white/4 border border-white/8 text-sm text-gray-300 focus:border-blue-500/40 focus:ring-1 focus:ring-blue-500/20 outline-none transition-all [&>option]:bg-gray-900 [&>option]:text-gray-100">
+          <select value={filterPriority} onChange={(e) => { setFilterPriority(e.target.value); setPage(1); }} className="h-9 px-3 rounded-lg bg-white/4 border border-white/8 text-sm text-[#f0f0f5] focus:border-[rgba(191,255,0,0.3)] focus:ring-1 focus:ring-[rgba(191,255,0,0.2)] outline-none transition-all [&>option]:bg-[#0B0B2B] [&>option]:text-gray-100">
             <option value="">All Priorities</option>
             <option value="LOW">Low</option>
             <option value="MEDIUM">Medium</option>
@@ -515,7 +515,7 @@ export default function AdminFeedbackPage() {
             <option value="URGENT">Urgent</option>
           </select>
 
-          <button onClick={toggleSort} className="inline-flex items-center gap-1.5 h-9 px-3 rounded-lg bg-white/4 border border-white/8 text-sm text-gray-300 hover:bg-white/[0.06] hover:text-white transition-all">
+          <button onClick={toggleSort} className="inline-flex items-center gap-1.5 h-9 px-3 rounded-lg bg-white/4 border border-white/8 text-sm text-[#f0f0f5] hover:bg-white/[0.06] hover:text-white transition-all">
             {sortOrder === 'desc' ? <><ArrowDown className="w-3.5 h-3.5" /> Latest First</> : <><ArrowUp className="w-3.5 h-3.5" /> Oldest First</>}
           </button>
         </div>
@@ -523,7 +523,7 @@ export default function AdminFeedbackPage() {
         {/* List */}
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <div className="w-6 h-6 border-2 border-white/20 border-t-blue-400 rounded-full animate-spin" />
+            <div className="w-6 h-6 border-2 border-white/20 border-t-[#BFFF00] rounded-full animate-spin" />
           </div>
         ) : feedbacks.length === 0 ? (
           <div className="text-center py-20">
@@ -555,7 +555,7 @@ export default function AdminFeedbackPage() {
                   className={`rounded-xl border transition-all duration-200 ${
                     isExpanded ? 'border-white/[0.12] bg-white/[0.04]'
                     : isSelected ? 'border-teal-500/30 bg-teal-500/[0.03]'
-                    : 'border-white/[0.06] bg-white/[0.02] hover:border-white/[0.1]'
+                    : 'border-white/[0.06] bg-[#1e1e55] hover:border-white/[0.1]'
                   }`}
                 >
                   {/* ── Row header ── */}
@@ -613,7 +613,7 @@ export default function AdminFeedbackPage() {
                     <div className="border-t border-white/[0.06]">
                       {/* User message */}
                       <div className="px-5 pt-4 pb-3">
-                        <div className="text-sm text-gray-300 whitespace-pre-wrap leading-relaxed">{fb.message}</div>
+                        <div className="text-sm text-[#f0f0f5] whitespace-pre-wrap leading-relaxed">{fb.message}</div>
                         {fb.originalMessage && fb.originalMessage !== fb.message && (
                           <div className="mt-2">
                             <button
@@ -633,7 +633,7 @@ export default function AdminFeedbackPage() {
                           </div>
                         )}
                         {fb.userAgent && (
-                          <div className="mt-3 text-xs text-gray-600 bg-white/[0.02] rounded-lg p-3 border border-white/[0.04]">
+                          <div className="mt-3 text-xs text-gray-600 bg-[#1e1e55] rounded-lg p-3 border border-white/[0.04]">
                             <span className="font-medium text-gray-500">User Agent:</span> {fb.userAgent}
                           </div>
                         )}
@@ -656,7 +656,7 @@ export default function AdminFeedbackPage() {
                                   return (
                                     <button key={key} onClick={() => updateStatus(fb.id, key)} disabled={isCurrent || updatingId === fb.id}
                                       className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                                        isCurrent ? `bg-${conf.color}-500/20 text-${conf.color}-400 border border-${conf.color}-500/30` : 'bg-white/[0.03] text-gray-400 border border-white/[0.06] hover:bg-white/[0.06] hover:text-white'
+                                        isCurrent ? `bg-${conf.color}-500/20 text-${conf.color}-400 border border-${conf.color}-500/30` : 'bg-[#1a1a4a] text-[#8888aa] border border-white/[0.06] hover:bg-white/[0.06] hover:text-white'
                                       } disabled:opacity-50`}>
                                       <Icon className="w-3 h-3" />{conf.label}
                                     </button>
@@ -702,7 +702,7 @@ export default function AdminFeedbackPage() {
                                 {/* Assign row */}
                                 <div className="flex items-center gap-3">
                                   <span className="text-xs text-gray-500 w-16 shrink-0">Assigned:</span>
-                                  <select value={fb.assignedToId || ''} onChange={(e) => assignAdmin(fb.id, e.target.value || null)} className="h-8 px-2 rounded-lg bg-white/4 border border-white/8 text-xs text-gray-300 focus:border-teal-500/40 outline-none transition-all [&>option]:bg-gray-900 [&>option]:text-gray-100">
+                                  <select value={fb.assignedToId || ''} onChange={(e) => assignAdmin(fb.id, e.target.value || null)} className="h-8 px-2 rounded-lg bg-white/4 border border-white/8 text-xs text-[#f0f0f5] focus:border-teal-500/40 outline-none transition-all [&>option]:bg-[#0B0B2B] [&>option]:text-gray-100">
                                     <option value="">Unassigned</option>
                                     {adminUsers.map((admin) => <option key={admin.id} value={admin.id}>{admin.name || admin.email}</option>)}
                                   </select>
@@ -719,13 +719,13 @@ export default function AdminFeedbackPage() {
                               <div className="flex flex-wrap items-center gap-3">
                                 <div className="flex items-center gap-2">
                                   <span className="text-xs text-gray-500">Category:</span>
-                                  <select value={fb.category} onChange={(e) => reassignCategory(fb.id, e.target.value)} className="h-8 px-2 rounded-lg bg-white/4 border border-white/8 text-xs text-gray-300 focus:border-teal-500/40 outline-none transition-all [&>option]:bg-gray-900 [&>option]:text-gray-100">
+                                  <select value={fb.category} onChange={(e) => reassignCategory(fb.id, e.target.value)} className="h-8 px-2 rounded-lg bg-white/4 border border-white/8 text-xs text-[#f0f0f5] focus:border-teal-500/40 outline-none transition-all [&>option]:bg-[#0B0B2B] [&>option]:text-gray-100">
                                     {Object.entries(categoryConfig).map(([key, conf]) => <option key={key} value={key}>{conf.label}</option>)}
                                   </select>
                                 </div>
                                 <div className="flex items-center gap-2">
                                   <span className="text-xs text-gray-500">Priority:</span>
-                                  <select value={fb.priority} onChange={(e) => updatePriority(fb.id, e.target.value)} className="h-8 px-2 rounded-lg bg-white/4 border border-white/8 text-xs text-gray-300 focus:border-teal-500/40 outline-none transition-all [&>option]:bg-gray-900 [&>option]:text-gray-100">
+                                  <select value={fb.priority} onChange={(e) => updatePriority(fb.id, e.target.value)} className="h-8 px-2 rounded-lg bg-white/4 border border-white/8 text-xs text-[#f0f0f5] focus:border-teal-500/40 outline-none transition-all [&>option]:bg-[#0B0B2B] [&>option]:text-gray-100">
                                     {Object.entries(priorityConfig).map(([key, conf]) => <option key={key} value={key}>{conf.label}</option>)}
                                   </select>
                                 </div>
@@ -767,7 +767,7 @@ export default function AdminFeedbackPage() {
                               <textarea
                                 value={editingNotes[fb.id] ?? fb.adminNotes ?? ''}
                                 onChange={(e) => handleNotesChange(fb.id, e.target.value)}
-                                className="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.06] text-sm text-gray-300 placeholder-gray-600 focus:border-teal-500/30 focus:ring-1 focus:ring-teal-500/15 outline-none transition-all resize-y min-h-[60px]"
+                                className="w-full px-3 py-2 rounded-lg bg-[#1a1a4a] border border-white/[0.06] text-sm text-[#f0f0f5] placeholder-gray-600 focus:border-teal-500/30 focus:ring-1 focus:ring-teal-500/15 outline-none transition-all resize-y min-h-[60px]"
                                 placeholder="Internal notes (auto-saves)..."
                                 rows={2}
                               />
@@ -790,15 +790,15 @@ export default function AdminFeedbackPage() {
                         ) : fb.messages && fb.messages.length > 0 ? (
                           <div className="space-y-3 mb-4 max-h-80 overflow-y-auto pr-1">
                             {fb.messages.map((msg) => (
-                              <div key={msg.id} className={`rounded-lg p-3 text-sm ${msg.isAdmin ? 'bg-indigo-500/[0.07] border border-indigo-500/15 ml-4' : 'bg-white/[0.03] border border-white/[0.06] mr-4'}`}>
+                              <div key={msg.id} className={`rounded-lg p-3 text-sm ${msg.isAdmin ? 'bg-indigo-500/[0.07] border border-indigo-500/15 ml-4' : 'bg-[#1a1a4a] border border-white/[0.06] mr-4'}`}>
                                 <div className="flex items-center gap-2 mb-1.5">
-                                  <span className={`text-xs font-semibold ${msg.isAdmin ? 'text-indigo-400' : 'text-gray-300'}`}>
+                                  <span className={`text-xs font-semibold ${msg.isAdmin ? 'text-indigo-400' : 'text-[#f0f0f5]'}`}>
                                     {msg.isAdmin && <Shield className="w-3 h-3 inline mr-1" />}
                                     {msg.user.name || msg.user.email}
                                   </span>
                                   <span className="text-[10px] text-gray-600">{formatDate(msg.createdAt)}</span>
                                 </div>
-                                <p className="text-gray-300 whitespace-pre-wrap leading-relaxed">{msg.content}</p>
+                                <p className="text-[#f0f0f5] whitespace-pre-wrap leading-relaxed">{msg.content}</p>
                               </div>
                             ))}
                           </div>
@@ -826,7 +826,7 @@ export default function AdminFeedbackPage() {
                       <div className="px-5 py-3 border-t border-white/[0.04]">
                         <button type="button"
                           onClick={() => { if (showActivity === fb.id) { setShowActivity(null); } else { setShowActivity(fb.id); if (!fb.activities) loadActivity(fb.id); } }}
-                          className="flex items-center gap-2 text-xs font-semibold text-gray-500 hover:text-gray-300 transition-colors">
+                          className="flex items-center gap-2 text-xs font-semibold text-gray-500 hover:text-[#f0f0f5] transition-colors">
                           <Activity className="w-3.5 h-3.5" />
                           Activity Log
                           {showActivity === fb.id ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
@@ -844,7 +844,7 @@ export default function AdminFeedbackPage() {
                                   <div key={act.id} className="flex items-start gap-3 pl-4 py-2 relative">
                                     <div className="absolute left-[-3px] top-3 w-1.5 h-1.5 rounded-full bg-gray-600" />
                                     <div className="flex-1 min-w-0">
-                                      <p className="text-xs text-gray-400">{getActivityDescription(act)}</p>
+                                      <p className="text-xs text-[#8888aa]">{getActivityDescription(act)}</p>
                                       <p className="text-[10px] text-gray-600 mt-0.5">{formatDate(act.createdAt)}</p>
                                     </div>
                                   </div>
@@ -870,7 +870,7 @@ export default function AdminFeedbackPage() {
             <span className="text-sm font-medium text-white">{selectedIds.size} selected</span>
             <div className="w-px h-6 bg-white/10" />
 
-            <select value={bulkAction} onChange={(e) => { setBulkAction(e.target.value); setBulkValue(''); }} className="h-8 px-2 rounded-lg bg-white/[0.06] border border-white/10 text-xs text-gray-300 outline-none [&>option]:bg-gray-900 [&>option]:text-gray-100">
+            <select value={bulkAction} onChange={(e) => { setBulkAction(e.target.value); setBulkValue(''); }} className="h-8 px-2 rounded-lg bg-white/[0.06] border border-white/10 text-xs text-[#f0f0f5] outline-none [&>option]:bg-[#0B0B2B] [&>option]:text-gray-100">
               <option value="">Choose action...</option>
               <option value="update_status">Change Status</option>
               <option value="reassign_category">Change Category</option>
@@ -879,25 +879,25 @@ export default function AdminFeedbackPage() {
             </select>
 
             {bulkAction === 'update_status' && (
-              <select value={bulkValue} onChange={(e) => setBulkValue(e.target.value)} className="h-8 px-2 rounded-lg bg-white/[0.06] border border-white/10 text-xs text-gray-300 outline-none [&>option]:bg-gray-900 [&>option]:text-gray-100">
+              <select value={bulkValue} onChange={(e) => setBulkValue(e.target.value)} className="h-8 px-2 rounded-lg bg-white/[0.06] border border-white/10 text-xs text-[#f0f0f5] outline-none [&>option]:bg-[#0B0B2B] [&>option]:text-gray-100">
                 <option value="">Select status...</option>
                 {Object.entries(statusConfig).map(([key, conf]) => <option key={key} value={key}>{conf.label}</option>)}
               </select>
             )}
             {bulkAction === 'reassign_category' && (
-              <select value={bulkValue} onChange={(e) => setBulkValue(e.target.value)} className="h-8 px-2 rounded-lg bg-white/[0.06] border border-white/10 text-xs text-gray-300 outline-none [&>option]:bg-gray-900 [&>option]:text-gray-100">
+              <select value={bulkValue} onChange={(e) => setBulkValue(e.target.value)} className="h-8 px-2 rounded-lg bg-white/[0.06] border border-white/10 text-xs text-[#f0f0f5] outline-none [&>option]:bg-[#0B0B2B] [&>option]:text-gray-100">
                 <option value="">Select category...</option>
                 {Object.entries(categoryConfig).map(([key, conf]) => <option key={key} value={key}>{conf.label}</option>)}
               </select>
             )}
             {bulkAction === 'update_priority' && (
-              <select value={bulkValue} onChange={(e) => setBulkValue(e.target.value)} className="h-8 px-2 rounded-lg bg-white/[0.06] border border-white/10 text-xs text-gray-300 outline-none [&>option]:bg-gray-900 [&>option]:text-gray-100">
+              <select value={bulkValue} onChange={(e) => setBulkValue(e.target.value)} className="h-8 px-2 rounded-lg bg-white/[0.06] border border-white/10 text-xs text-[#f0f0f5] outline-none [&>option]:bg-[#0B0B2B] [&>option]:text-gray-100">
                 <option value="">Select priority...</option>
                 {Object.entries(priorityConfig).map(([key, conf]) => <option key={key} value={key}>{conf.label}</option>)}
               </select>
             )}
             {bulkAction === 'assign' && (
-              <select value={bulkValue} onChange={(e) => setBulkValue(e.target.value)} className="h-8 px-2 rounded-lg bg-white/[0.06] border border-white/10 text-xs text-gray-300 outline-none [&>option]:bg-gray-900 [&>option]:text-gray-100">
+              <select value={bulkValue} onChange={(e) => setBulkValue(e.target.value)} className="h-8 px-2 rounded-lg bg-white/[0.06] border border-white/10 text-xs text-[#f0f0f5] outline-none [&>option]:bg-[#0B0B2B] [&>option]:text-gray-100">
                 <option value="">Select admin...</option>
                 {adminUsers.map((admin) => <option key={admin.id} value={admin.id}>{admin.name || admin.email}</option>)}
               </select>
@@ -910,7 +910,7 @@ export default function AdminFeedbackPage() {
             </button>
 
             <button onClick={() => { setSelectedIds(new Set()); setBulkAction(''); setBulkValue(''); }}
-              className="inline-flex items-center justify-center w-8 h-8 rounded-lg text-gray-400 hover:text-white hover:bg-white/[0.06] transition-all">
+              className="inline-flex items-center justify-center w-8 h-8 rounded-lg text-[#8888aa] hover:text-white hover:bg-white/[0.06] transition-all">
               <XCircle className="w-4 h-4" />
             </button>
           </div>
@@ -920,12 +920,12 @@ export default function AdminFeedbackPage() {
         {totalPages > 1 && (
           <div className="flex items-center justify-center gap-2 mt-8">
             <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1}
-              className="flex items-center justify-center w-9 h-9 rounded-lg border border-white/[0.06] bg-white/[0.02] text-gray-400 hover:bg-white/[0.06] hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all touch-target">
+              className="flex items-center justify-center w-9 h-9 rounded-lg border border-white/[0.06] bg-[#1e1e55] text-[#8888aa] hover:bg-white/[0.06] hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all touch-target">
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <span className="text-sm text-gray-400 tabular-nums px-3">Page {page} of {totalPages}</span>
+            <span className="text-sm text-[#8888aa] tabular-nums px-3">Page {page} of {totalPages}</span>
             <button onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages}
-              className="flex items-center justify-center w-9 h-9 rounded-lg border border-white/[0.06] bg-white/[0.02] text-gray-400 hover:bg-white/[0.06] hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all touch-target">
+              className="flex items-center justify-center w-9 h-9 rounded-lg border border-white/[0.06] bg-[#1e1e55] text-[#8888aa] hover:bg-white/[0.06] hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all touch-target">
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>

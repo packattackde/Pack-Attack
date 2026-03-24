@@ -2,9 +2,9 @@ export type Role = 'USER' | 'ADMIN' | 'SHOP_OWNER';
 
 export type CardGame = 'MAGIC_THE_GATHERING' | 'ONE_PIECE' | 'POKEMON' | 'LORCANA';
 
-export type BattleStatus = 'WAITING' | 'IN_PROGRESS' | 'FINISHED' | 'CANCELLED';
+export type BattleStatus = 'OPEN' | 'FULL' | 'READY' | 'ACTIVE' | 'FINISHED_WIN' | 'FINISHED_DRAW' | 'CANCELLED';
 
-export type BattleMode = 'NORMAL' | 'UPSIDE_DOWN' | 'JACKPOT';
+export type BattleMode = 'LOWEST_CARD' | 'HIGHEST_CARD' | 'ALL_CARDS';
 
 export type PaymentStatus = 'PENDING' | 'COMPLETED' | 'FAILED' | 'REFUNDED';
 

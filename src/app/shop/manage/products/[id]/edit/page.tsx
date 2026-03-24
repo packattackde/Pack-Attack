@@ -192,9 +192,9 @@ export default function EditProductPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 flex items-center justify-center font-display">
+      <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] flex items-center justify-center font-display">
         <div className="text-white flex items-center gap-3">
-          <Loader2 className="w-6 h-6 animate-spin text-emerald-500" />
+          <Loader2 className="w-6 h-6 animate-spin text-[#BFFF00]" />
           Loading product...
         </div>
       </div>
@@ -203,14 +203,14 @@ export default function EditProductPage() {
 
   if (notFound) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 flex items-center justify-center font-display">
+      <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] flex items-center justify-center font-display">
         <div className="text-center">
           <Package className="w-16 h-16 text-gray-600 mx-auto mb-4" />
           <h2 className="text-xl font-semibold text-white mb-2">Product Not Found</h2>
-          <p className="text-gray-400 mb-6">This product doesn&apos;t exist or you don&apos;t have access.</p>
+          <p className="text-[#8888aa] mb-6">This product doesn&apos;t exist or you don&apos;t have access.</p>
           <Link
             href="/shop/manage/products"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-600 to-cyan-600 text-white font-semibold rounded-xl"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-[#BFFF00] text-white font-semibold rounded-xl"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Products
@@ -221,61 +221,61 @@ export default function EditProductPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display">
+    <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display">
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
 
       <div className="relative container py-12">
-        <Link href="/shop/manage/products" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-8">
+        <Link href="/shop/manage/products" className="inline-flex items-center gap-2 text-[#8888aa] hover:text-white transition-colors mb-8">
           <ArrowLeft className="w-4 h-4" />
           Back to Products
         </Link>
 
         <div className="max-w-2xl mx-auto">
           <div className="flex items-center gap-3 mb-8">
-            <Package className="w-8 h-8 text-blue-400" />
+            <Package className="w-8 h-8 text-[#BFFF00]" />
             <h1 className="text-3xl font-bold text-white">Edit Product</h1>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Basic Info */}
-            <div className="glass-strong rounded-2xl p-6 space-y-4">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 space-y-4">
               <h2 className="text-lg font-semibold text-white mb-4">Basic Information</h2>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Product Name *</label>
+                <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Product Name *</label>
                 <input
                   type="text"
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl glass text-white placeholder-gray-500 border border-gray-700 focus:border-blue-500 focus:outline-none"
+                  className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
                   placeholder="e.g., Charizard VMAX - Rainbow Rare"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Description</label>
+                <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Description</label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={4}
-                  className="w-full px-4 py-3 rounded-xl glass text-white placeholder-gray-500 border border-gray-700 focus:border-blue-500 focus:outline-none resize-none"
+                  className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none resize-none"
                   placeholder="Describe your product..."
                 />
               </div>
 
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Category *</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Category *</label>
                   <select
                     required
                     value={formData.category}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl glass text-white border border-gray-700 focus:border-blue-500 focus:outline-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
                   >
                     {categories.map((cat) => (
-                      <option key={cat.value} value={cat.value} className="bg-gray-900">
+                      <option key={cat.value} value={cat.value} className="bg-[#0B0B2B]">
                         {cat.label}
                       </option>
                     ))}
@@ -283,14 +283,14 @@ export default function EditProductPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Game</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Game</label>
                   <select
                     value={formData.game}
                     onChange={(e) => setFormData({ ...formData, game: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl glass text-white border border-gray-700 focus:border-blue-500 focus:outline-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
                   >
                     {games.map((game) => (
-                      <option key={game.value} value={game.value} className="bg-gray-900">
+                      <option key={game.value} value={game.value} className="bg-[#0B0B2B]">
                         {game.label}
                       </option>
                     ))}
@@ -299,14 +299,14 @@ export default function EditProductPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Condition</label>
+                <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Condition</label>
                 <select
                   value={formData.condition}
                   onChange={(e) => setFormData({ ...formData, condition: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl glass text-white border border-gray-700 focus:border-blue-500 focus:outline-none"
+                  className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
                 >
                   {conditions.map((cond) => (
-                    <option key={cond.value} value={cond.value} className="bg-gray-900">
+                    <option key={cond.value} value={cond.value} className="bg-[#0B0B2B]">
                       {cond.label}
                     </option>
                   ))}
@@ -315,12 +315,12 @@ export default function EditProductPage() {
             </div>
 
             {/* Pricing & Inventory */}
-            <div className="glass-strong rounded-2xl p-6 space-y-4">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 space-y-4">
               <h2 className="text-lg font-semibold text-white mb-4">Pricing & Inventory</h2>
 
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Price (€) *</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Price (€) *</label>
                   <input
                     type="number"
                     required
@@ -328,20 +328,20 @@ export default function EditProductPage() {
                     step="0.01"
                     value={formData.price}
                     onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl glass text-white placeholder-gray-500 border border-gray-700 focus:border-blue-500 focus:outline-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
                     placeholder="0.00"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Compare Price (€)</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Compare Price (€)</label>
                   <input
                     type="number"
                     min="0.01"
                     step="0.01"
                     value={formData.comparePrice}
                     onChange={(e) => setFormData({ ...formData, comparePrice: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl glass text-white placeholder-gray-500 border border-gray-700 focus:border-blue-500 focus:outline-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
                     placeholder="Original price for discount display"
                   />
                 </div>
@@ -349,25 +349,25 @@ export default function EditProductPage() {
 
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Stock Quantity *</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Stock Quantity *</label>
                   <input
                     type="number"
                     required
                     min="0"
                     value={formData.stock}
                     onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl glass text-white placeholder-gray-500 border border-gray-700 focus:border-blue-500 focus:outline-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
                     placeholder="0"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">SKU (Optional)</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">SKU (Optional)</label>
                   <input
                     type="text"
                     value={formData.sku}
                     onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl glass text-white placeholder-gray-500 border border-gray-700 focus:border-blue-500 focus:outline-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
                     placeholder="Product SKU"
                   />
                 </div>
@@ -380,9 +380,9 @@ export default function EditProductPage() {
                     id="featured"
                     checked={formData.featured}
                     onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                    className="w-5 h-5 rounded bg-gray-800 border-gray-600 text-blue-500 focus:ring-blue-500"
+                    className="w-5 h-5 rounded bg-[#12123a] border-[rgba(255,255,255,0.06)] text-[#BFFF00] focus:ring-[rgba(191,255,0,0.3)]"
                   />
-                  <label htmlFor="featured" className="text-gray-300">Featured</label>
+                  <label htmlFor="featured" className="text-[#f0f0f5]">Featured</label>
                 </div>
 
                 <div className="flex items-center gap-3">
@@ -391,15 +391,15 @@ export default function EditProductPage() {
                     id="isActive"
                     checked={formData.isActive}
                     onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                    className="w-5 h-5 rounded bg-gray-800 border-gray-600 text-blue-500 focus:ring-blue-500"
+                    className="w-5 h-5 rounded bg-[#12123a] border-[rgba(255,255,255,0.06)] text-[#BFFF00] focus:ring-[rgba(191,255,0,0.3)]"
                   />
-                  <label htmlFor="isActive" className="text-gray-300">Active (visible in shop)</label>
+                  <label htmlFor="isActive" className="text-[#f0f0f5]">Active (visible in shop)</label>
                 </div>
               </div>
             </div>
 
             {/* Images */}
-            <div className="glass-strong rounded-2xl p-6 space-y-4">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 space-y-4">
               <h2 className="text-lg font-semibold text-white mb-4">Images</h2>
 
               <div className="flex gap-2">
@@ -408,13 +408,13 @@ export default function EditProductPage() {
                   value={imageUrl}
                   onChange={(e) => setImageUrl(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addImage(); } }}
-                  className="flex-1 px-4 py-3 rounded-xl glass text-white placeholder-gray-500 border border-gray-700 focus:border-blue-500 focus:outline-none"
+                  className="flex-1 px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
                   placeholder="Enter image URL"
                 />
                 <button
                   type="button"
                   onClick={addImage}
-                  className="px-4 py-3 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-500 transition-colors"
+                  className="px-4 py-3 rounded-xl bg-[#BFFF00] text-black font-semibold hover:brightness-110 transition-colors"
                 >
                   <Plus className="w-5 h-5" />
                 </button>
@@ -423,7 +423,7 @@ export default function EditProductPage() {
               {formData.images.length > 0 ? (
                 <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
                   {formData.images.map((image, index) => (
-                    <div key={index} className="relative aspect-square rounded-lg overflow-hidden bg-gray-800">
+                    <div key={index} className="relative aspect-square rounded-lg overflow-hidden bg-[#12123a]">
                       <img
                         src={image}
                         alt={`Product ${index + 1}`}
@@ -445,9 +445,9 @@ export default function EditProductPage() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-8 border-2 border-dashed border-gray-700 rounded-xl">
+                <div className="text-center py-8 border-2 border-dashed border-[rgba(255,255,255,0.1)] rounded-xl">
                   <ImageIcon className="w-12 h-12 text-gray-600 mx-auto mb-3" />
-                  <p className="text-gray-400">No images added yet</p>
+                  <p className="text-[#8888aa]">No images added yet</p>
                   <p className="text-gray-500 text-sm">Add image URLs above</p>
                 </div>
               )}
@@ -457,14 +457,14 @@ export default function EditProductPage() {
             <div className="flex gap-4">
               <Link
                 href="/shop/manage/products"
-                className="flex-1 py-4 glass text-gray-300 font-semibold rounded-xl hover:bg-white/10 transition-colors text-center"
+                className="flex-1 py-4 bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#f0f0f5] font-semibold rounded-xl hover:bg-white/10 transition-colors text-center"
               >
                 Cancel
               </Link>
               <button
                 type="submit"
                 disabled={submitting}
-                className="flex-1 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-xl hover:from-blue-500 hover:to-cyan-500 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                className="flex-1 py-4 bg-gradient-to-r from-[#BFFF00] to-[#BFFF00] text-black font-semibold rounded-xl hover:brightness-110 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {submitting ? (
                   <>

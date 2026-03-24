@@ -93,7 +93,7 @@ export async function GET(request: NextRequest) {
         prisma.saleHistory.aggregate({ where: { userId: user.id }, _sum: { coinsReceived: true } }),
         prisma.pull.count({ where: { userId: user.id, card: { rarity: { in: ['mythic', 'Mythic', 'MYTHIC', 'legendary', 'Legendary', 'LEGENDARY'] } } } }),
         prisma.pull.count({ where: { userId: user.id, card: { rarity: { in: ['rare', 'Rare', 'RARE'] } } } }),
-        prisma.battle.count({ where: { winnerId: user.id, battleMode: 'JACKPOT' } }),
+        prisma.battle.count({ where: { winnerId: user.id, battleMode: 'ALL_CARDS' } }),
       ]);
 
       // Build progress map

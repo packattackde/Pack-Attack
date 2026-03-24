@@ -213,15 +213,15 @@ export default function FeedbackHistoryPage() {
   // Not logged in
   if (sessionStatus === 'loading') {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display flex items-center justify-center">
-        <div className="w-6 h-6 border-2 border-white/20 border-t-blue-400 rounded-full animate-spin" />
+      <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display flex items-center justify-center">
+        <div className="w-6 h-6 border-2 border-white/20 border-t-[#BFFF00] rounded-full animate-spin" />
       </div>
     );
   }
 
   if (!session) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display">
+      <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display">
         <div className="fixed inset-0 bg-grid opacity-20" />
         <div className="fixed inset-0 radial-gradient" />
         <div className="relative container max-w-2xl pt-20 pb-20 px-4 text-center">
@@ -230,7 +230,7 @@ export default function FeedbackHistoryPage() {
           <p className="text-gray-500 mb-6">You need to be signed in to view your feedback history.</p>
           <Link
             href="/login"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-semibold text-sm rounded-xl transition-all hover:shadow-lg hover:shadow-blue-500/20"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r bg-[#BFFF00] text-black font-semibold text-sm rounded-xl transition-all hover:shadow-lg hover:shadow-[0_0_24px_rgba(191,255,0,0.3)]"
           >
             Sign In
           </Link>
@@ -240,7 +240,7 @@ export default function FeedbackHistoryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display">
+    <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display">
       <div className="fixed inset-0 bg-grid opacity-20" />
       <div className="fixed inset-0 radial-gradient" />
 
@@ -248,7 +248,7 @@ export default function FeedbackHistoryPage() {
         {/* Back link */}
         <Link
           href="/feedback"
-          className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-300 transition-colors font-medium mb-6 touch-target"
+          className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-[#f0f0f5] transition-colors font-medium mb-6 touch-target"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Feedback
@@ -258,7 +258,7 @@ export default function FeedbackHistoryPage() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
           <div>
             <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
-              My <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-400">Feedback</span>
+              My <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#BFFF00] to-[#d4ff4d]">Feedback</span>
             </h1>
             <p className="text-gray-500">
               {feedbacks.length} submission{feedbacks.length !== 1 ? 's' : ''}
@@ -269,7 +269,7 @@ export default function FeedbackHistoryPage() {
             {/* Sort */}
             <button
               onClick={toggleSort}
-              className="inline-flex items-center gap-1.5 h-9 px-3 rounded-lg bg-white/4 border border-white/8 text-sm text-gray-300 hover:bg-white/[0.06] hover:text-white transition-all"
+              className="inline-flex items-center gap-1.5 h-9 px-3 rounded-lg bg-white/4 border border-white/8 text-sm text-[#f0f0f5] hover:bg-white/[0.06] hover:text-white transition-all"
             >
               {sortOrder === 'desc' ? (
                 <><ArrowDown className="w-3.5 h-3.5" /> Latest First</>
@@ -281,7 +281,7 @@ export default function FeedbackHistoryPage() {
             {/* New Feedback */}
             <Link
               href="/feedback"
-              className="inline-flex items-center gap-1.5 h-9 px-3 rounded-lg bg-blue-500/15 text-blue-400 border border-blue-500/20 hover:bg-blue-500/25 text-sm font-medium transition-all"
+              className="inline-flex items-center gap-1.5 h-9 px-3 rounded-lg bg-[rgba(191,255,0,0.1)] text-[#BFFF00] border border-[rgba(191,255,0,0.3)]/20 hover:bg-[rgba(191,255,0,0.15)] text-sm font-medium transition-all"
             >
               <Plus className="w-3.5 h-3.5" />
               New
@@ -292,7 +292,7 @@ export default function FeedbackHistoryPage() {
         {/* Feedback List */}
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <div className="w-6 h-6 border-2 border-white/20 border-t-blue-400 rounded-full animate-spin" />
+            <div className="w-6 h-6 border-2 border-white/20 border-t-[#BFFF00] rounded-full animate-spin" />
           </div>
         ) : feedbacks.length === 0 ? (
           <div className="text-center py-20">
@@ -301,7 +301,7 @@ export default function FeedbackHistoryPage() {
             <p className="text-gray-600 text-sm mb-6">You haven&apos;t submitted any feedback.</p>
             <Link
               href="/feedback"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-semibold text-sm rounded-xl transition-all hover:shadow-lg hover:shadow-blue-500/20"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r bg-[#BFFF00] text-black font-semibold text-sm rounded-xl transition-all hover:shadow-lg hover:shadow-[0_0_24px_rgba(191,255,0,0.3)]"
             >
               <Plus className="w-4 h-4" />
               Send Feedback
@@ -322,7 +322,7 @@ export default function FeedbackHistoryPage() {
                   className={`rounded-xl border transition-all duration-200 ${
                     isExpanded
                       ? 'border-white/[0.12] bg-white/[0.04]'
-                      : 'border-white/[0.06] bg-white/[0.02] hover:border-white/[0.1]'
+                      : 'border-white/[0.06] bg-[#1e1e55] hover:border-white/[0.1]'
                   }`}
                 >
                   {/* Header row */}
@@ -381,7 +381,7 @@ export default function FeedbackHistoryPage() {
                               <button
                                 type="button"
                                 onClick={() => setShowOriginal(showOriginal === fb.id ? null : fb.id)}
-                                className="text-[10px] text-gray-600 hover:text-gray-400 transition-colors"
+                                className="text-[10px] text-gray-600 hover:text-[#8888aa] transition-colors"
                               >
                                 {showOriginal === fb.id ? 'Hide original' : 'Show original'}
                               </button>
@@ -390,7 +390,7 @@ export default function FeedbackHistoryPage() {
                               <button
                                 type="button"
                                 onClick={() => { setEditingId(fb.id); setEditMessage(fb.message); }}
-                                className="inline-flex items-center gap-1 text-[10px] text-gray-500 hover:text-blue-400 transition-colors"
+                                className="inline-flex items-center gap-1 text-[10px] text-gray-500 hover:text-[#BFFF00] transition-colors"
                               >
                                 <Pencil className="w-3 h-3" />
                                 Edit
@@ -410,13 +410,13 @@ export default function FeedbackHistoryPage() {
                               value={editMessage}
                               onChange={(e) => setEditMessage(e.target.value.slice(0, 5000))}
                               rows={5}
-                              className="w-full px-3 py-2 rounded-lg bg-white/4 border border-blue-500/30 text-sm text-white placeholder-gray-600 focus:border-blue-500/40 focus:ring-1 focus:ring-blue-500/20 outline-none transition-all resize-y min-h-[100px]"
+                              className="w-full px-3 py-2 rounded-lg bg-white/4 border border-[rgba(191,255,0,0.3)]/30 text-sm text-white placeholder-gray-600 focus:border-[rgba(191,255,0,0.3)] focus:ring-1 focus:ring-[rgba(191,255,0,0.2)] outline-none transition-all resize-y min-h-[100px]"
                             />
                             <div className="flex items-center justify-end gap-2 mt-2">
                               <button
                                 type="button"
                                 onClick={() => { setEditingId(null); setEditMessage(''); }}
-                                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-gray-400 hover:text-white hover:bg-white/[0.06] transition-all"
+                                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-[#8888aa] hover:text-white hover:bg-white/[0.06] transition-all"
                               >
                                 <X className="w-3 h-3" />
                                 Cancel
@@ -425,10 +425,10 @@ export default function FeedbackHistoryPage() {
                                 type="button"
                                 onClick={() => saveEdit(fb.id)}
                                 disabled={!editMessage.trim() || savingEdit || editMessage.trim() === fb.message}
-                                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium text-blue-400 bg-blue-500/10 border border-blue-500/20 hover:bg-blue-500/20 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium text-[#BFFF00] bg-[rgba(191,255,0,0.1)] border border-[rgba(191,255,0,0.3)]/20 hover:bg-[rgba(191,255,0,0.15)] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                               >
                                 {savingEdit ? (
-                                  <div className="w-3 h-3 border-2 border-blue-400/30 border-t-blue-400 rounded-full animate-spin" />
+                                  <div className="w-3 h-3 border-2 border-[#BFFF00]/30 border-t-[#BFFF00] rounded-full animate-spin" />
                                 ) : (
                                   <Save className="w-3 h-3" />
                                 )}
@@ -437,7 +437,7 @@ export default function FeedbackHistoryPage() {
                             </div>
                           </div>
                         ) : (
-                          <div className="text-sm text-gray-300 whitespace-pre-wrap leading-relaxed bg-white/[0.02] rounded-lg p-3 border border-white/[0.04]">
+                          <div className="text-sm text-[#f0f0f5] whitespace-pre-wrap leading-relaxed bg-[#1e1e55] rounded-lg p-3 border border-white/[0.04]">
                             {fb.message}
                             {fb.originalMessage && (
                               <p className="text-[10px] text-gray-600 mt-2 italic">Edited</p>
@@ -465,17 +465,17 @@ export default function FeedbackHistoryPage() {
                                 className={`rounded-lg p-3 text-sm ${
                                   msg.isAdmin
                                     ? 'bg-indigo-500/[0.07] border border-indigo-500/15 ml-4'
-                                    : 'bg-white/[0.03] border border-white/[0.06] mr-4'
+                                    : 'bg-[#1a1a4a] border border-white/[0.06] mr-4'
                                 }`}
                               >
                                 <div className="flex items-center gap-2 mb-1.5">
-                                  <span className={`text-xs font-semibold ${msg.isAdmin ? 'text-indigo-400' : 'text-gray-300'}`}>
+                                  <span className={`text-xs font-semibold ${msg.isAdmin ? 'text-indigo-400' : 'text-[#f0f0f5]'}`}>
                                     {msg.isAdmin && <Shield className="w-3 h-3 inline mr-1" />}
                                     {msg.isAdmin ? (msg.user.name || 'Admin') : 'You'}
                                   </span>
                                   <span className="text-[10px] text-gray-600">{formatDate(msg.createdAt)}</span>
                                 </div>
-                                <p className="text-gray-300 whitespace-pre-wrap leading-relaxed">{msg.content}</p>
+                                <p className="text-[#f0f0f5] whitespace-pre-wrap leading-relaxed">{msg.content}</p>
                               </div>
                             ))}
                           </div>

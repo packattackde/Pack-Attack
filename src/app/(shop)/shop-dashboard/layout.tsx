@@ -35,7 +35,7 @@ export default async function ShopDashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950">
+    <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a]">
       {children}
     </div>
   );

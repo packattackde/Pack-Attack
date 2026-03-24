@@ -199,15 +199,15 @@ export default async function ShopDashboard({
       <div className="relative container py-8 md:py-12">
         {/* Header */}
         <div className="mb-10">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 rounded-full glass text-sm">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
             <Store className="w-4 h-4 text-emerald-400" />
-            <span className="text-gray-300">{viewingSpecificShop ? `Admin → ${shop?.name}` : isAdmin ? 'Admin View' : shop?.name || 'Shop Dashboard'}</span>
+            <span className="text-[#f0f0f5]">{viewingSpecificShop ? `Admin → ${shop?.name}` : isAdmin ? 'Admin View' : shop?.name || 'Shop Dashboard'}</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-3 font-heading">
             <span className="text-white">{viewingSpecificShop ? `${shop?.name} ` : 'Shop '}</span>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400">Dashboard</span>
           </h1>
-          <p className="text-gray-400 text-lg max-w-2xl">
+          <p className="text-[#8888aa] text-lg max-w-2xl">
             {viewingSpecificShop
               ? `Viewing ${shop?.name}'s dashboard as admin. You see exactly what the shop owner sees.`
               : isAdmin 
@@ -223,29 +223,29 @@ export default async function ShopDashboard({
             <div className="relative">
               <Package className="w-6 h-6 text-emerald-400 mb-3" />
               <div className="text-3xl font-bold text-white mb-1">{stats.totalBoxes}</div>
-              <div className="text-sm text-gray-400">Total Boxes</div>
+              <div className="text-sm text-[#8888aa]">Total Boxes</div>
             </div>
           </div>
           
-          <div className="glass rounded-2xl p-5 relative overflow-hidden group hover:ring-2 hover:ring-teal-500/30 transition-all">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-2xl p-5 relative overflow-hidden group hover:ring-2 hover:ring-teal-500/30 transition-all">
             <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 to-transparent" />
             <div className="relative">
               <Sparkles className="w-6 h-6 text-teal-400 mb-3" />
               <div className="text-3xl font-bold text-white mb-1">{stats.activeBoxes}</div>
-              <div className="text-sm text-gray-400">Active Boxes</div>
+              <div className="text-sm text-[#8888aa]">Active Boxes</div>
             </div>
           </div>
           
-          <div className="glass rounded-2xl p-5 relative overflow-hidden group hover:ring-2 hover:ring-cyan-500/30 transition-all">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-2xl p-5 relative overflow-hidden group hover:ring-2 hover:ring-cyan-500/30 transition-all">
             <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent" />
             <div className="relative">
               <ShoppingCart className="w-6 h-6 text-cyan-400 mb-3" />
               <div className="text-3xl font-bold text-white mb-1">{stats.totalOrders}</div>
-              <div className="text-sm text-gray-400">Total Orders</div>
+              <div className="text-sm text-[#8888aa]">Total Orders</div>
             </div>
           </div>
           
-          <div className="glass rounded-2xl p-5 relative overflow-hidden group hover:ring-2 hover:ring-amber-500/30 transition-all">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-2xl p-5 relative overflow-hidden group hover:ring-2 hover:ring-amber-500/30 transition-all">
             <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent" />
             <div className="relative">
               <Euro className="w-6 h-6 text-amber-400 mb-3" />
@@ -254,19 +254,19 @@ export default async function ShopDashboard({
             </div>
           </div>
           
-          <div className="glass rounded-2xl p-5 relative overflow-hidden group hover:ring-2 hover:ring-purple-500/30 transition-all">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-2xl p-5 relative overflow-hidden group hover:ring-2 hover:ring-purple-500/30 transition-all">
             <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent" />
             <div className="relative">
               <Users className="w-6 h-6 text-purple-400 mb-3" />
               <div className="text-3xl font-bold text-white mb-1">{stats.uniqueCustomers}</div>
-              <div className="text-sm text-gray-400">Unique Customers</div>
+              <div className="text-sm text-[#8888aa]">Unique Customers</div>
             </div>
           </div>
         </div>
 
         {/* Order Status Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-          <div className="glass rounded-xl p-4 flex items-center gap-4">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 flex items-center gap-4">
             <div className="p-3 rounded-xl bg-yellow-500/10">
               <Clock className="w-5 h-5 text-yellow-400" />
             </div>
@@ -276,17 +276,17 @@ export default async function ShopDashboard({
             </div>
           </div>
           
-          <div className="glass rounded-xl p-4 flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-blue-500/10">
-              <Package className="w-5 h-5 text-blue-400" />
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 flex items-center gap-4">
+            <div className="p-3 rounded-xl bg-[rgba(191,255,0,0.1)]">
+              <Package className="w-5 h-5 text-[#BFFF00]" />
             </div>
             <div>
               <div className="text-2xl font-bold text-white">{stats.processingOrders}</div>
-              <div className="text-xs text-blue-400">Processing</div>
+              <div className="text-xs text-[#BFFF00]">Processing</div>
             </div>
           </div>
           
-          <div className="glass rounded-xl p-4 flex items-center gap-4">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 flex items-center gap-4">
             <div className="p-3 rounded-xl bg-purple-500/10">
               <Truck className="w-5 h-5 text-purple-400" />
             </div>
@@ -296,7 +296,7 @@ export default async function ShopDashboard({
             </div>
           </div>
           
-          <div className="glass rounded-xl p-4 flex items-center gap-4">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 flex items-center gap-4">
             <div className="p-3 rounded-xl bg-green-500/10">
               <CheckCircle className="w-5 h-5 text-green-400" />
             </div>
@@ -312,7 +312,7 @@ export default async function ShopDashboard({
           {/* Orders Management */}
           <Link 
             href={viewingSpecificShop ? `/shop-dashboard/orders?shopId=${shop?.id}` : '/shop-dashboard/orders'} 
-            className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-emerald-500/50 transition-all group relative overflow-hidden"
+            className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-emerald-500/50 transition-all group relative overflow-hidden"
           >
             {stats.pendingOrders > 0 && (
               <div className="absolute -top-1 -right-1 w-8 h-8 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg animate-pulse">
@@ -325,7 +325,7 @@ export default async function ShopDashboard({
                 <ShoppingCart className="w-7 h-7 text-emerald-400" />
               </div>
               <h3 className="text-xl font-bold text-white mb-2 group-hover:text-emerald-400 transition-colors">Box Orders</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">
+              <p className="text-[#8888aa] text-sm leading-relaxed">
                 Orders from your custom boxes. Process and ship cards.
               </p>
               <div className="mt-4 flex items-center text-emerald-400 text-sm font-medium">
@@ -370,7 +370,7 @@ export default async function ShopDashboard({
           {/* My Stock */}
           <Link 
             href={viewingSpecificShop ? `/shop-dashboard/stock?shopId=${shop?.id}` : '/shop-dashboard/stock'} 
-            className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-teal-500/50 transition-all group relative overflow-hidden"
+            className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-teal-500/50 transition-all group relative overflow-hidden"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="relative">
@@ -378,7 +378,7 @@ export default async function ShopDashboard({
                 <Database className="w-7 h-7 text-teal-400" />
               </div>
               <h3 className="text-xl font-bold text-white mb-2 group-hover:text-teal-400 transition-colors">My Stock</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">
+              <p className="text-[#8888aa] text-sm leading-relaxed">
                 View and manage your card inventory. Connect your stock via API integration.
               </p>
               <div className="mt-4 flex items-center text-teal-400 text-sm font-medium">
@@ -393,7 +393,7 @@ export default async function ShopDashboard({
           {/* Payouts */}
           <Link 
             href={viewingSpecificShop ? `/shop-dashboard/payouts?shopId=${shop?.id}` : '/shop-dashboard/payouts'} 
-            className="glass-strong rounded-2xl p-6 hover:ring-2 hover:ring-amber-500/50 transition-all group relative overflow-hidden"
+            className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-amber-500/50 transition-all group relative overflow-hidden"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="relative">
@@ -401,7 +401,7 @@ export default async function ShopDashboard({
                 <Wallet className="w-7 h-7 text-amber-400" />
               </div>
               <h3 className="text-xl font-bold text-white mb-2 group-hover:text-amber-400 transition-colors">Payouts</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">
+              <p className="text-[#8888aa] text-sm leading-relaxed">
                 Request payouts for your earned coins. 5 coins = 1 EUR.
               </p>
               <div className="mt-4 flex items-center text-amber-400 text-sm font-medium">
@@ -422,7 +422,7 @@ export default async function ShopDashboard({
         )}
 
         {/* Recent Orders Section */}
-        <div className="glass-strong rounded-2xl p-6">
+        <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-xl bg-emerald-500/10">
@@ -449,10 +449,10 @@ export default async function ShopDashboard({
               {stats.recentOrders.map((order: any) => (
                 <div 
                   key={order.id} 
-                  className="flex items-center justify-between p-4 rounded-xl bg-gray-800/50 hover:bg-gray-800/70 transition-colors"
+                  className="flex items-center justify-between p-4 rounded-xl bg-[#12123a] hover:bg-[#12123a] transition-colors"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-lg bg-gray-700 overflow-hidden flex-shrink-0">
+                    <div className="w-12 h-12 rounded-lg bg-[#12123a] overflow-hidden flex-shrink-0">
                       {order.cardImage ? (
                         <img 
                           src={order.cardImage} 
@@ -467,7 +467,7 @@ export default async function ShopDashboard({
                     </div>
                     <div>
                       <p className="font-medium text-white truncate max-w-[200px]">{order.cardName}</p>
-                      <p className="text-sm text-gray-400">
+                      <p className="text-sm text-[#8888aa]">
                         {order.user.name || order.user.email}{order.box ? ` • ${order.box.name}` : ' • Admin Assigned'}
                       </p>
                     </div>
@@ -475,7 +475,7 @@ export default async function ShopDashboard({
                   <div className="text-right">
                     <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${
                       order.status === 'PENDING' ? 'bg-yellow-500/10 text-yellow-400' :
-                      order.status === 'CONFIRMED' ? 'bg-blue-500/10 text-blue-400' :
+                      order.status === 'CONFIRMED' ? 'bg-[rgba(191,255,0,0.1)] text-[#BFFF00]' :
                       order.status === 'PROCESSING' ? 'bg-purple-500/10 text-purple-400' :
                       order.status === 'SHIPPED' ? 'bg-indigo-500/10 text-indigo-400' :
                       order.status === 'DELIVERED' ? 'bg-green-500/10 text-green-400' :

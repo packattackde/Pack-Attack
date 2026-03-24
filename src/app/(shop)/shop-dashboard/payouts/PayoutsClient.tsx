@@ -36,7 +36,7 @@ type Payout = {
 
 const statusConfig: Record<string, { color: string; bgColor: string; icon: React.ElementType; label: string }> = {
   REQUESTED: { color: 'text-yellow-400', bgColor: 'bg-yellow-400/10', icon: Clock, label: 'Pending' },
-  PROCESSING: { color: 'text-blue-400', bgColor: 'bg-blue-400/10', icon: Loader2, label: 'Approved' },
+  PROCESSING: { color: 'text-[#BFFF00]', bgColor: 'bg-[rgba(191,255,0,0.1)]', icon: Loader2, label: 'Approved' },
   COMPLETED: { color: 'text-green-400', bgColor: 'bg-green-400/10', icon: CheckCircle, label: 'Paid' },
   REJECTED: { color: 'text-red-400', bgColor: 'bg-red-400/10', icon: XCircle, label: 'Rejected' },
 };
@@ -148,7 +148,7 @@ export function PayoutsClient({
           </div>
         </div>
 
-        <div className="glass-strong rounded-2xl p-6 relative overflow-hidden">
+        <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent" />
           <div className="relative">
             <Banknote className="w-8 h-8 text-green-400 mb-3" />
@@ -157,7 +157,7 @@ export function PayoutsClient({
           </div>
         </div>
 
-        <div className="glass-strong rounded-2xl p-6 flex flex-col justify-center">
+        <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 flex flex-col justify-center">
           {hasPending ? (
             <div className="text-center">
               <AlertCircle className="w-8 h-8 text-yellow-400 mx-auto mb-2" />
@@ -197,7 +197,7 @@ export function PayoutsClient({
             className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
               filterStatus === s
                 ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg'
-                : 'glass text-gray-400 hover:text-white'
+                : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white'
             }`}
           >
             {s === 'ALL' ? 'All' : statusConfig[s]?.label || s}
@@ -210,9 +210,9 @@ export function PayoutsClient({
       <div>
         <h2 className="text-xl font-bold text-white mb-4">Payout History</h2>
         {filteredPayouts.length === 0 ? (
-          <div className="glass-strong rounded-2xl p-12 text-center">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
             <Wallet className="w-12 h-12 text-gray-700 mx-auto mb-3" />
-            <p className="text-gray-400">No payouts yet</p>
+            <p className="text-[#8888aa]">No payouts yet</p>
             <p className="text-gray-600 text-sm mt-1">Request a payout when you have delivered items</p>
           </div>
         ) : (
@@ -223,7 +223,7 @@ export function PayoutsClient({
               const isExpanded = expandedPayout === payout.id;
 
               return (
-                <div key={payout.id} className="glass-strong rounded-xl overflow-hidden">
+                <div key={payout.id} className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl overflow-hidden">
                   <div
                     className="p-5 cursor-pointer hover:bg-white/5 transition-colors"
                     onClick={() => setExpandedPayout(isExpanded ? null : payout.id)}
@@ -248,22 +248,22 @@ export function PayoutsClient({
                         <div className={`px-3 py-1.5 rounded-xl text-xs font-medium ${config.color} ${config.bgColor}`}>
                           {config.label}
                         </div>
-                        {isExpanded ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
+                        {isExpanded ? <ChevronUp className="w-4 h-4 text-[#8888aa]" /> : <ChevronDown className="w-4 h-4 text-[#8888aa]" />}
                       </div>
                     </div>
                   </div>
 
                   {isExpanded && (
-                    <div className="border-t border-gray-800 p-5 space-y-3">
+                    <div className="border-t border-[rgba(255,255,255,0.06)] p-5 space-y-3">
                       {payout.adminNotes && (
-                        <div className="p-3 rounded-lg bg-gray-800/50 text-sm text-gray-400">
+                        <div className="p-3 rounded-lg bg-[#12123a] text-sm text-[#8888aa]">
                           <span className="text-gray-500 font-medium">Admin: </span>{payout.adminNotes}
                         </div>
                       )}
 
                       {payout.shopMessage && (
-                        <div className="p-3 rounded-lg bg-blue-900/20 border border-blue-800/30 text-sm text-blue-300">
-                          <span className="text-blue-400 font-medium flex items-center gap-1.5 mb-1">
+                        <div className="p-3 rounded-lg bg-[rgba(191,255,0,0.05)] border border-[rgba(191,255,0,0.15)] text-sm text-[#BFFF00]/80">
+                          <span className="text-[#BFFF00] font-medium flex items-center gap-1.5 mb-1">
                             <MessageSquare className="w-3.5 h-3.5" /> Your message:
                           </span>
                           {payout.shopMessage}
@@ -281,7 +281,7 @@ export function PayoutsClient({
                                 placeholder="Explain what was resolved or provide additional info..."
                                 rows={3}
                                 maxLength={2000}
-                                className="w-full px-3 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white text-sm focus:border-emerald-500 focus:outline-none resize-none placeholder:text-gray-600"
+                                className="w-full px-3 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white text-sm focus:border-emerald-500 focus:outline-none resize-none placeholder:text-gray-600"
                               />
                               <div className="flex items-center gap-2">
                                 <button
@@ -294,7 +294,7 @@ export function PayoutsClient({
                                 </button>
                                 <button
                                   onClick={() => { setResubmitId(null); setResubmitMessage(''); }}
-                                  className="px-4 py-2 rounded-xl text-sm font-medium glass text-gray-400 hover:text-white transition-all"
+                                  className="px-4 py-2 rounded-xl text-sm font-medium bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white transition-all"
                                 >
                                   Cancel
                                 </button>
@@ -316,15 +316,15 @@ export function PayoutsClient({
                       )}
 
                       {payout.status === 'REJECTED' && payout.resubmittedAt && (
-                        <div className="p-3 rounded-lg bg-gray-800/30 text-sm text-gray-500 italic">
+                        <div className="p-3 rounded-lg bg-[#12123a] text-sm text-gray-500 italic">
                           This payout was already resubmitted on {new Date(payout.resubmittedAt).toLocaleDateString('de-DE', { year: 'numeric', month: 'short', day: 'numeric' })} and rejected again. No further resubmissions are possible.
                         </div>
                       )}
 
-                      <div className="text-sm font-medium text-gray-400 mb-2">Included Items</div>
+                      <div className="text-sm font-medium text-[#8888aa] mb-2">Included Items</div>
                       <div className="space-y-2 max-h-80 overflow-y-auto">
                         {payout.items.map((item) => (
-                          <div key={item.id} className="flex items-center gap-3 glass rounded-lg p-3">
+                          <div key={item.id} className="flex items-center gap-3 bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-lg p-3">
                             {item.cardImage && (
                               <img
                                 src={item.cardImage}

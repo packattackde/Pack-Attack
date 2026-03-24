@@ -173,9 +173,9 @@ export default function ManageProductsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 flex items-center justify-center font-display">
+      <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] flex items-center justify-center font-display">
         <div className="text-white flex items-center gap-3">
-          <div className="w-6 h-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+          <div className="w-6 h-6 border-2 border-[rgba(191,255,0,0.3)] border-t-transparent rounded-full animate-spin" />
           Loading products...
         </div>
       </div>
@@ -183,13 +183,13 @@ export default function ManageProductsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display">
+    <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display">
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
 
       <div className="relative container py-12">
         {/* Breadcrumb */}
-        <Link href="/shop/manage" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-8">
+        <Link href="/shop/manage" className="inline-flex items-center gap-2 text-[#8888aa] hover:text-white transition-colors mb-8">
           <ArrowLeft className="w-4 h-4" />
           Back to Dashboard
         </Link>
@@ -197,15 +197,15 @@ export default function ManageProductsPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div className="flex items-center gap-3">
-            <Package className="w-8 h-8 text-emerald-400" />
+            <Package className="w-8 h-8 text-[#BFFF00]" />
             <h1 className="text-3xl font-bold text-white">Products</h1>
-            <span className="px-3 py-1 rounded-full bg-gray-700/50 text-gray-300 text-sm">
+            <span className="px-3 py-1 rounded-full bg-[#12123a] text-[#f0f0f5] text-sm">
               {products.length} total
             </span>
           </div>
           <Link
             href="/shop/manage/products/new"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-600 to-cyan-600 text-white font-semibold rounded-xl hover:from-emerald-500 hover:to-cyan-500 transition-all"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-[#BFFF00] text-black font-semibold rounded-xl hover:brightness-110 transition-all"
           >
             <Plus className="w-5 h-5" />
             Add Product
@@ -214,30 +214,30 @@ export default function ManageProductsPage() {
 
         {/* Search */}
         <div className="relative mb-6">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8888aa]" />
           <input
             type="text"
             placeholder="Search products..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 rounded-xl glass-strong text-white placeholder-gray-500 border border-gray-700 focus:border-emerald-500 focus:outline-none transition-colors"
+            className="w-full pl-12 pr-4 py-3 rounded-xl bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none transition-colors"
           />
         </div>
 
         {/* Products Table */}
         {filteredProducts.length === 0 ? (
-          <div className="glass-strong rounded-2xl p-12 text-center">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
             <Package className="w-16 h-16 text-gray-600 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-white mb-2">
               {searchQuery ? 'No Products Found' : 'No Products Yet'}
             </h2>
-            <p className="text-gray-400 mb-6">
+            <p className="text-[#8888aa] mb-6">
               {searchQuery ? 'Try a different search term' : 'Add your first product to get started'}
             </p>
             {!searchQuery && (
               <Link
                 href="/shop/manage/products/new"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-600 to-cyan-600 text-white font-semibold rounded-xl"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#BFFF00] text-black font-semibold rounded-xl"
               >
                 <Plus className="w-5 h-5" />
                 Add Product
@@ -245,25 +245,25 @@ export default function ManageProductsPage() {
             )}
           </div>
         ) : (
-          <div className="glass-strong rounded-2xl overflow-hidden">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-gray-700/50">
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-400">Product</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-400">Category</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-400">Price</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-400">Stock</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-400">Status</th>
-                    <th className="px-6 py-4 text-right text-sm font-semibold text-gray-400">Actions</th>
+                  <tr className="border-b border-[rgba(255,255,255,0.06)]/50">
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-[#8888aa]">Product</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-[#8888aa]">Category</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-[#8888aa]">Price</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-[#8888aa]">Stock</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-[#8888aa]">Status</th>
+                    <th className="px-6 py-4 text-right text-sm font-semibold text-[#8888aa]">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-700/50">
+                <tbody className="divide-y divide-[rgba(255,255,255,0.06)]">
                   {filteredProducts.map((product) => (
                     <tr key={product.id} className="hover:bg-white/5 transition-colors">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-4">
-                          <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gray-800 flex-shrink-0">
+                          <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-[#12123a] flex-shrink-0">
                             {product.images[0] ? (
                               <Image
                                 src={product.images[0]}
@@ -288,12 +288,12 @@ export default function ManageProductsPage() {
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="text-gray-300">
+                        <span className="text-[#f0f0f5]">
                           {categoryDisplayNames[product.category] || product.category}
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="text-emerald-400 font-semibold">
+                        <span className="text-[#BFFF00] font-semibold">
                           €{product.price.toFixed(2)}
                         </span>
                       </td>
@@ -306,7 +306,7 @@ export default function ManageProductsPage() {
                         <span className={`px-2 py-1 rounded-lg text-xs font-medium ${
                           product.isActive 
                             ? 'bg-green-500/20 text-green-400' 
-                            : 'bg-gray-500/20 text-gray-400'
+                            : 'bg-gray-500/20 text-[#8888aa]'
                         }`}>
                           {product.isActive ? 'Active' : 'Hidden'}
                         </span>
@@ -318,7 +318,7 @@ export default function ManageProductsPage() {
                             className={`p-2 rounded-lg transition-colors ${
                               product.featured 
                                 ? 'text-amber-400 hover:bg-amber-500/20' 
-                                : 'text-gray-400 hover:bg-gray-700/50'
+                                : 'text-[#8888aa] hover:bg-[#12123a]'
                             }`}
                             title={product.featured ? 'Remove from featured' : 'Add to featured'}
                           >
@@ -329,7 +329,7 @@ export default function ManageProductsPage() {
                             className={`p-2 rounded-lg transition-colors ${
                               product.isActive 
                                 ? 'text-green-400 hover:bg-green-500/20' 
-                                : 'text-gray-400 hover:bg-gray-700/50'
+                                : 'text-[#8888aa] hover:bg-[#12123a]'
                             }`}
                             title={product.isActive ? 'Hide product' : 'Show product'}
                           >
@@ -337,7 +337,7 @@ export default function ManageProductsPage() {
                           </button>
                           <Link
                             href={`/shop/manage/products/${product.id}/edit`}
-                            className="p-2 rounded-lg text-blue-400 hover:bg-blue-500/20 transition-colors"
+                            className="p-2 rounded-lg text-[#BFFF00] hover:bg-[rgba(191,255,0,0.15)] transition-colors"
                             title="Edit product"
                           >
                             <Edit className="w-4 h-4" />

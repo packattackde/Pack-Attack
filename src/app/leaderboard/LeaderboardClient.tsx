@@ -94,7 +94,7 @@ export function LeaderboardClient() {
   const restOfLeaderboard = data?.fullLeaderboard.slice(3) || [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display">
+    <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display">
       {/* Background Effects */}
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
@@ -105,26 +105,26 @@ export function LeaderboardClient() {
       <div className="relative container py-12">
         {/* Header */}
         <div className="mb-10 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full glass text-sm border border-amber-500/20">
+          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-[#1a1a4a] shadow-md text-sm border border-amber-500/20">
             <Trophy className="w-4 h-4 text-amber-400" />
-            <span className="text-gray-300">Battle Rankings</span>
+            <span className="text-[#f0f0f5]">Battle Rankings</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-3">
             <span className="text-white">Battle </span>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400">Leaderboard</span>
           </h1>
-          <p className="text-gray-400 text-lg mb-6">
+          <p className="text-[#8888aa] text-lg mb-6">
             Top 10 players each month win coin prizes!
           </p>
 
           {/* Period Toggle */}
-          <div className="inline-flex items-center gap-1 p-1 mb-6 rounded-xl glass border border-gray-700">
+          <div className="inline-flex items-center gap-1 p-1 mb-6 rounded-xl bg-[#1a1a4a] shadow-md border border-[rgba(255,255,255,0.06)]">
             <button
               onClick={() => setPeriod('current')}
               className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all ${
                 period === 'current'
                   ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white'
-                  : 'text-gray-400 hover:text-white'
+                  : 'text-[#8888aa] hover:text-white'
               }`}
             >
               This Month
@@ -134,7 +134,7 @@ export function LeaderboardClient() {
               className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all ${
                 period === 'previous'
                   ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white'
-                  : 'text-gray-400 hover:text-white'
+                  : 'text-[#8888aa] hover:text-white'
               }`}
             >
               Last Month
@@ -145,7 +145,7 @@ export function LeaderboardClient() {
           {period === 'current' && (
             <div className="flex items-center justify-center gap-3 text-sm">
               <Clock className="w-4 h-4 text-amber-400" />
-              <span className="text-gray-400">Resets in:</span>
+              <span className="text-[#8888aa]">Resets in:</span>
               <span className="font-mono font-bold text-white">
                 {countdown.days}d {countdown.hours}h {countdown.minutes}m {countdown.seconds}s
               </span>
@@ -154,17 +154,17 @@ export function LeaderboardClient() {
         </div>
 
         {loading ? (
-          <div className="glass-strong rounded-2xl p-12 text-center">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
             <div className="w-12 h-12 border-4 border-amber-400/30 border-t-amber-400 rounded-full animate-spin mx-auto mb-4" />
-            <span className="text-gray-400">Loading rankings...</span>
+            <span className="text-[#8888aa]">Loading rankings...</span>
           </div>
         ) : !data || data.leaderboard.length === 0 ? (
-          <div className="glass-strong rounded-2xl p-12 text-center">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
             <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-500/20">
               <Trophy className="w-10 h-10 text-amber-400" />
             </div>
             <h2 className="text-2xl font-bold text-white mb-3">No Rankings Yet</h2>
-            <p className="text-gray-400 mb-6">Be the first champion of this season!</p>
+            <p className="text-[#8888aa] mb-6">Be the first champion of this season!</p>
             <Link
               href="/battles"
               className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-semibold rounded-xl transition-all hover:scale-105"
@@ -180,12 +180,12 @@ export function LeaderboardClient() {
               {/* 2nd Place */}
               <div className="order-2 md:order-1 md:mt-8">
                 {top3[1] ? (
-                  <div className="glass-strong rounded-2xl p-6 text-center border border-slate-500/30">
+                  <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 text-center border border-slate-500/30">
                     <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-gradient-to-br from-slate-300 to-slate-500 flex items-center justify-center">
                       <span className="text-2xl font-black text-white">2</span>
                     </div>
                     <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-slate-400 to-slate-600 p-1">
-                      <div className="w-full h-full rounded-full bg-gray-900 flex items-center justify-center overflow-hidden">
+                      <div className="w-full h-full rounded-full bg-[#0B0B2B] flex items-center justify-center overflow-hidden">
                         {top3[1].userAvatar ? (
                           <img src={top3[1].userAvatar} alt="" className="w-full h-full object-cover" />
                         ) : (
@@ -202,7 +202,7 @@ export function LeaderboardClient() {
                     </div>
                   </div>
                 ) : (
-                  <div className="glass rounded-2xl p-6 text-center border border-gray-700 min-h-[280px] flex items-center justify-center">
+                  <div className="bg-[#1a1a4a] shadow-md rounded-2xl p-6 text-center border border-[rgba(255,255,255,0.06)] min-h-[280px] flex items-center justify-center">
                     <span className="text-gray-600 text-2xl">—</span>
                   </div>
                 )}
@@ -211,7 +211,7 @@ export function LeaderboardClient() {
               {/* 1st Place */}
               <div className="order-1 md:order-2">
                 {top3[0] ? (
-                  <div className="glass-strong rounded-2xl p-6 text-center border-2 border-amber-500/50 relative overflow-hidden">
+                  <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 text-center border-2 border-amber-500/50 relative overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-b from-amber-500/10 to-transparent" />
                     <div className="relative">
                       <Crown className="w-12 h-12 mx-auto mb-2 text-amber-400" />
@@ -219,7 +219,7 @@ export function LeaderboardClient() {
                         CHAMPION
                       </span>
                       <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 p-1 shadow-lg shadow-amber-500/30">
-                        <div className="w-full h-full rounded-full bg-gray-900 flex items-center justify-center overflow-hidden">
+                        <div className="w-full h-full rounded-full bg-[#0B0B2B] flex items-center justify-center overflow-hidden">
                           {top3[0].userAvatar ? (
                             <img src={top3[0].userAvatar} alt="" className="w-full h-full object-cover" />
                           ) : (
@@ -231,7 +231,7 @@ export function LeaderboardClient() {
                       <div className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-orange-400 mb-1">
                         {formatNumber(top3[0].points)} <span className="text-sm text-amber-500/70">PTS</span>
                       </div>
-                      <div className="text-xs text-gray-400 mb-4">{top3[0].battlesWon} wins / {top3[0].battlesPlayed} battles</div>
+                      <div className="text-xs text-[#8888aa] mb-4">{top3[0].battlesWon} wins / {top3[0].battlesPlayed} battles</div>
                       <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-amber-500/20 rounded-xl border border-amber-500/30">
                         <Coins className="w-5 h-5 text-amber-400" />
                         <span className="text-xl font-black text-amber-400">{top3[0].prize.toLocaleString()}</span>
@@ -239,7 +239,7 @@ export function LeaderboardClient() {
                     </div>
                   </div>
                 ) : (
-                  <div className="glass rounded-2xl p-6 text-center border border-gray-700 min-h-[320px] flex items-center justify-center">
+                  <div className="bg-[#1a1a4a] shadow-md rounded-2xl p-6 text-center border border-[rgba(255,255,255,0.06)] min-h-[320px] flex items-center justify-center">
                     <span className="text-gray-600 text-2xl">—</span>
                   </div>
                 )}
@@ -248,12 +248,12 @@ export function LeaderboardClient() {
               {/* 3rd Place */}
               <div className="order-3 md:mt-8">
                 {top3[2] ? (
-                  <div className="glass-strong rounded-2xl p-6 text-center border border-orange-600/30">
+                  <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 text-center border border-orange-600/30">
                     <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
                       <span className="text-2xl font-black text-white">3</span>
                     </div>
                     <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-orange-500 to-orange-700 p-1">
-                      <div className="w-full h-full rounded-full bg-gray-900 flex items-center justify-center overflow-hidden">
+                      <div className="w-full h-full rounded-full bg-[#0B0B2B] flex items-center justify-center overflow-hidden">
                         {top3[2].userAvatar ? (
                           <img src={top3[2].userAvatar} alt="" className="w-full h-full object-cover" />
                         ) : (
@@ -270,7 +270,7 @@ export function LeaderboardClient() {
                     </div>
                   </div>
                 ) : (
-                  <div className="glass rounded-2xl p-6 text-center border border-gray-700 min-h-[280px] flex items-center justify-center">
+                  <div className="bg-[#1a1a4a] shadow-md rounded-2xl p-6 text-center border border-[rgba(255,255,255,0.06)] min-h-[280px] flex items-center justify-center">
                     <span className="text-gray-600 text-2xl">—</span>
                   </div>
                 )}
@@ -279,22 +279,22 @@ export function LeaderboardClient() {
 
             {/* Rest of Rankings */}
             {restOfLeaderboard.length > 0 && (
-              <div className="glass-strong rounded-2xl overflow-hidden mb-10">
-                <div className="px-6 py-4 border-b border-gray-700">
+              <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl overflow-hidden mb-10">
+                <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.06)]">
                   <h2 className="font-semibold text-white text-center">Full Rankings</h2>
                 </div>
-                <div className="divide-y divide-gray-700/50">
+                <div className="divide-y divide-[rgba(255,255,255,0.06)]">
                   {restOfLeaderboard.map((entry) => (
                     <div key={entry.userId} className="px-6 py-4 flex items-center gap-4 hover:bg-white/5 transition-colors">
-                      <div className="w-10 h-10 rounded-lg bg-gray-800 flex items-center justify-center flex-shrink-0">
-                        <span className="font-bold text-gray-400">#{entry.rank}</span>
+                      <div className="w-10 h-10 rounded-lg bg-[#12123a] flex items-center justify-center flex-shrink-0">
+                        <span className="font-bold text-[#8888aa]">#{entry.rank}</span>
                       </div>
                       <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 p-0.5 flex-shrink-0">
-                        <div className="w-full h-full rounded-full bg-gray-900 flex items-center justify-center overflow-hidden">
+                        <div className="w-full h-full rounded-full bg-[#0B0B2B] flex items-center justify-center overflow-hidden">
                           {entry.userAvatar ? (
                             <img src={entry.userAvatar} alt="" className="w-full h-full object-cover" />
                           ) : (
-                            <span className="text-xs font-bold text-blue-400">{getInitials(entry.userName)}</span>
+                            <span className="text-xs font-bold text-[#BFFF00]">{getInitials(entry.userName)}</span>
                           )}
                         </div>
                       </div>
@@ -317,12 +317,12 @@ export function LeaderboardClient() {
             )}
 
             {/* CTA */}
-            <div className="glass-strong rounded-2xl p-8 text-center">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-8 text-center">
               <div className="inline-flex items-center justify-center w-16 h-16 mb-4 rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-500/20">
                 <Swords className="w-8 h-8 text-amber-400" />
               </div>
               <h2 className="text-xl font-bold text-white mb-2">Ready to Compete?</h2>
-              <p className="text-gray-400 mb-6">Join battles to earn points and climb the leaderboard!</p>
+              <p className="text-[#8888aa] mb-6">Join battles to earn points and climb the leaderboard!</p>
               <Link
                 href="/battles"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-semibold rounded-xl transition-all hover:scale-105 shimmer"
