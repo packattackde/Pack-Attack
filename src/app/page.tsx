@@ -303,6 +303,8 @@ export default async function DashboardPage() {
             pulls={serializedPulls}
           />
 
+          <AchievementsWidget className="sm:col-span-3 lg:col-span-4" />
+
           <LeaderboardWidget
             className="sm:col-span-3 lg:col-span-3"
             entries={serializedLeaderboard}
@@ -310,8 +312,6 @@ export default async function DashboardPage() {
             userPoints={userLeaderboard?.points ?? 0}
             month={currentMonth}
           />
-
-          <AchievementsWidget className="sm:col-span-3 lg:col-span-4" />
         </div>
       </div>
     </div>
