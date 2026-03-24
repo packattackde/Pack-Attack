@@ -6,13 +6,14 @@ import Link from 'next/link'
 import CardLightbox from './CardLightbox'
 
 interface BestPullWidgetProps {
-  cardName: string
-  cardImage: string | null
-  rarity: string
-  coinValue: number
-  pullerName: string
-  boxId: string
-  boxName: string
+  cardName?: string
+  cardImage?: string | null
+  rarity?: string
+  coinValue?: number
+  pullerName?: string
+  boxId?: string
+  boxName?: string
+  isEmpty?: boolean
   className?: string
 }
 
@@ -34,10 +35,33 @@ export default function BestPullWidget({
   pullerName,
   boxId,
   boxName,
+  isEmpty,
   className = '',
 }: BestPullWidgetProps) {
-  const glowColor = getRarityColor(rarity)
+  const glowColor = getRarityColor(rarity || 'rare')
   const [lightboxOpen, setLightboxOpen] = useState(false)
+
+  // Empty state — no pulls today
+  if (isEmpty || !cardName) {
+    return (
+      <div className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl p-5 sm:p-6 ${className}`}>
+        <div className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-4 flex items-center gap-1.5">
+          🏆 Today&apos;s Best Pull
+        </div>
+        <div className="flex flex-col items-center text-center py-4">
+          <span className="text-4xl mb-3">🎴</span>
+          <h4 className="text-lg font-bold text-[#f0f0f5] mb-1">No hits yet today</h4>
+          <p className="text-[12px] text-[#8888aa] mb-5">Be the first to pull something amazing!</p>
+          <Link
+            href="/boxes"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-[#BFFF00] text-black text-sm font-bold rounded-xl shadow-[0_0_15px_rgba(191,255,0,0.2)] hover:shadow-[0_0_25px_rgba(191,255,0,0.35)] hover:scale-105 transition-all"
+          >
+            📦 Open a Box →
+          </Link>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <>
@@ -90,7 +114,7 @@ export default function BestPullWidget({
               {rarity}
             </span>
             <p className="text-[#BFFF00] font-extrabold mt-2 text-2xl">
-              🪙 {coinValue.toFixed(2)}
+              🪙 {(coinValue ?? 0).toFixed(2)}
             </p>
             <p className="text-xs text-[#7777a0] mt-0.5">by {pullerName}</p>
           </div>
@@ -108,10 +132,10 @@ export default function BestPullWidget({
         isOpen={lightboxOpen}
         onClose={() => setLightboxOpen(false)}
         card={{
-          name: cardName,
-          image: cardImage,
-          rarity,
-          coinValue,
+          name: cardName || '',
+          image: cardImage ?? null,
+          rarity: rarity || 'common',
+          coinValue: coinValue ?? 0,
           boxId,
           boxName,
         }}

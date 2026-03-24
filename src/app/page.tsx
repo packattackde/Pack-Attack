@@ -274,13 +274,7 @@ export default async function DashboardPage() {
           ) : (
             <BestPullWidget
               className="sm:col-span-3 lg:col-span-4"
-              cardName="No pulls yet today"
-              cardImage={null}
-              rarity="common"
-              coinValue={0}
-              pullerName=""
-              boxId=""
-              boxName=""
+              isEmpty
             />
           )}
 
