@@ -42,7 +42,7 @@ export default function LeaderboardWidget({
   const userInTop10 = topEntries.some((_, i) => i + 1 === userRank);
 
   return (
-    <div className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl p-4 sm:p-6 ${className}`}>
+    <div className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl h-full p-4 sm:p-6 ${className}`}>
       <div className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-2 flex items-center gap-1.5">
         <GiLaurelCrown className="w-3.5 h-3.5 text-[#BFFF00]" /> Leaderboard
       </div>

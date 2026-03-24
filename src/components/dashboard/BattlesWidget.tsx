@@ -20,7 +20,7 @@ export default function BattlesWidget({ battles, className = '' }: BattlesWidget
   const displayBattles = battles.slice(0, 3);
 
   return (
-    <div className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl p-4 sm:p-6 ${className}`}>
+    <div className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl h-full p-4 sm:p-6 ${className}`}>
       <div className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-3 flex items-center gap-1.5">
 <GiCrossedSwords className="w-3.5 h-3.5 text-[#BFFF00]" /> Active Battles
       </div>

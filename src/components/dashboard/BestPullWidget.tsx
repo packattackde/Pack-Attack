@@ -46,7 +46,7 @@ export default function BestPullWidget({
   // Empty state — no pulls today
   if (isEmpty || !cardName) {
     return (
-      <div className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl p-4 sm:p-6 ${className}`}>
+      <div className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl h-full p-4 sm:p-6 ${className}`}>
         <div className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-4 flex items-center gap-1.5">
 <GiTrophyCup className="w-3.5 h-3.5 text-[#BFFF00]" /> Today&apos;s Best Pull
         </div>
@@ -68,7 +68,7 @@ export default function BestPullWidget({
   return (
     <>
       <div
-        className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl p-4 sm:p-6 relative overflow-hidden ${className}`}
+        className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl h-full p-4 sm:p-6 relative overflow-hidden ${className}`}
         style={{
           background: `linear-gradient(135deg, #1a1a4a 0%, ${glowColor}08 50%, #1a1a4a 100%)`,
         }}

@@ -80,7 +80,7 @@ export default function AchievementsWidget({ className = '' }: AchievementsWidge
   }, []);
 
   return (
-    <div className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl p-4 sm:p-6 ${className}`}>
+    <div className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl h-full p-4 sm:p-6 ${className}`}>
       <style>{`
         @keyframes bar-pulse {
           0%, 100% { box-shadow: 0 0 0 rgba(191,255,0,0); }

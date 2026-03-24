@@ -26,7 +26,7 @@ export default function WelcomeWidget({
 }: WelcomeWidgetProps) {
   return (
     <div
-      className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl p-4 sm:p-6 ${className}`}
+      className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl h-full p-4 sm:p-6 ${className}`}
     >
       {/* Top row: greeting + CTA buttons */}
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">

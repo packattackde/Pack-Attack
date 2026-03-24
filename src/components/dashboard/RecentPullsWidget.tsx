@@ -46,7 +46,7 @@ export default function RecentPullsWidget({ hits, pulls, className = '' }: Recen
   const [lightboxCard, setLightboxCard] = useState<{ name: string; image: string | null; rarity: string; coinValue: number } | null>(null);
 
   return (
-    <div className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl p-4 sm:p-6 ${className}`}>
+    <div className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl h-full p-4 sm:p-6 ${className}`}>
       <CardLightbox
         isOpen={!!lightboxCard}
         onClose={() => setLightboxCard(null)}
