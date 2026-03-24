@@ -79,7 +79,7 @@ export default function BestPullWidget({
         <div className="flex flex-row gap-4 items-start">
           {/* Card image with rarity glow */}
           <div
-            className="relative w-[80px] h-[112px] flex-shrink-0 rounded-lg overflow-hidden cursor-pointer transition-transform hover:scale-105"
+            className="relative w-[100px] h-[140px] flex-shrink-0 rounded-lg overflow-hidden cursor-pointer transition-transform hover:scale-105"
             style={{
               boxShadow: `0 0 16px ${glowColor}, 0 0 32px ${glowColor}50, 0 0 48px ${glowColor}20`,
               border: `2px solid ${glowColor}`,
