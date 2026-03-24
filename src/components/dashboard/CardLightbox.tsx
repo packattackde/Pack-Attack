@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { formatCoins } from '@/lib/format';
+import { GiTwoCoins, GiCardboardBox, GiCardPlay } from 'react-icons/gi';
 
 interface CardLightboxProps {
   isOpen: boolean;
@@ -114,8 +115,8 @@ export default function CardLightbox({ isOpen, onClose, card }: CardLightboxProp
                 {card.rarity}
               </span>
 
-              <p className="text-[#BFFF00] font-extrabold text-3xl">
-                🪙 {formatCoins(card.coinValue)}
+              <p className="text-[#BFFF00] font-extrabold text-3xl flex items-center justify-center gap-2">
+                <GiTwoCoins className="w-7 h-7" /> {formatCoins(card.coinValue)}
               </p>
             </div>
 
@@ -126,14 +127,14 @@ export default function CardLightbox({ isOpen, onClose, card }: CardLightboxProp
                   href={`/open/${card.boxId}`}
                   className="block w-full text-center px-4 py-3 font-bold rounded-xl text-sm text-black bg-[#BFFF00] hover:brightness-110 transition shadow-[0_0_12px_rgba(191,255,0,0.3)]"
                 >
-                  📦 Open this Box →
+                  <span className="flex items-center justify-center gap-2"><GiCardboardBox className="w-4 h-4" /> Open this Box →</span>
                 </Link>
               )}
               <Link
                 href="/collection"
                 className="block w-full text-center px-4 py-3 font-semibold rounded-xl text-sm text-[#f0f0f5] bg-[rgba(255,255,255,0.08)] hover:bg-[rgba(255,255,255,0.12)] border border-[rgba(255,255,255,0.1)] transition"
               >
-                🎴 View Collection
+                <span className="flex items-center justify-center gap-2"><GiCardPlay className="w-4 h-4" /> View Collection</span>
               </Link>
             </div>
           </motion.div>
