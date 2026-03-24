@@ -293,13 +293,16 @@ export default function LiveTicker({ className }: LiveTickerProps) {
             <span className="text-[11px] text-[#555570]">Waiting for pulls...</span>
           </div>
         ) : (
-          <div className="flex-1 overflow-hidden">
+          <div
+            className="flex-1 overflow-hidden"
+            onMouseEnter={() => setPaused(true)}
+            onMouseLeave={() => setPaused(false)}
+          >
             <div
               className="flex gap-3 w-max"
               style={{
-                animation: paused
-                  ? 'none'
-                  : `ticker-scroll ${animationDuration}s linear infinite`,
+                animation: `ticker-scroll ${animationDuration}s linear infinite`,
+                animationPlayState: paused ? 'paused' : 'running',
               }}
             >
               {/* Render items twice for seamless infinite loop */}
