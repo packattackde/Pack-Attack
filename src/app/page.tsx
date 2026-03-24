@@ -28,6 +28,7 @@ export default async function DashboardPage() {
 
   const [
     user,
+    recentHits,
     recentPulls,
     totalPulls,
     totalBattles,
@@ -52,23 +53,29 @@ export default async function DashboardPage() {
         levelCoinsEarnedThisMonth: true,
       },
     }),
-    // Recent pulls (last 12, only ones with cards)
+    // Recent hits (coinValue >= 100, last 3)
+    prisma.pull.findMany({
+      where: {
+        user: { email: userEmail },
+        cardId: { not: null },
+        cardValue: { gte: 100 },
+      },
+      orderBy: { timestamp: 'desc' },
+      take: 3,
+      include: {
+        card: { select: { name: true, imageUrlGatherer: true, rarity: true, coinValue: true } },
+      },
+    }),
+    // Recent pulls (last 5, any rarity)
     prisma.pull.findMany({
       where: {
         user: { email: userEmail },
         cardId: { not: null },
       },
       orderBy: { timestamp: 'desc' },
-      take: 12,
+      take: 5,
       include: {
-        card: {
-          select: {
-            name: true,
-            imageUrlGatherer: true,
-            rarity: true,
-            coinValue: true,
-          },
-        },
+        card: { select: { name: true, imageUrlGatherer: true, rarity: true, coinValue: true } },
       },
     }),
     // Total pulls count
@@ -203,6 +210,14 @@ export default async function DashboardPage() {
     monthNames[new Date().getMonth()] + ' ' + new Date().getFullYear();
 
   // Serialize data for client components
+  const serializedHits = recentHits.map((p) => ({
+    cardName: p.card?.name || 'Unknown Card',
+    cardImage: p.card?.imageUrlGatherer || null,
+    rarity: p.card?.rarity || 'common',
+    coinValue: p.card?.coinValue ? Number(p.card.coinValue) : 0,
+    timestamp: p.timestamp.toISOString(),
+  }));
+
   const serializedPulls = recentPulls.map((p) => ({
     cardName: p.card?.name || 'Unknown Card',
     cardImage: p.card?.imageUrlGatherer || null,
@@ -302,6 +317,7 @@ export default async function DashboardPage() {
 
           <RecentPullsWidget
             className="sm:col-span-6 lg:col-span-5"
+            hits={serializedHits}
             pulls={serializedPulls}
           />
 

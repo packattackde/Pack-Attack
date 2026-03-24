@@ -2,7 +2,14 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import ScrollableRow from './ScrollableRow';
+
+interface Hit {
+  cardName: string;
+  cardImage: string | null;
+  rarity: string;
+  coinValue: number;
+  timestamp: string;
+}
 
 interface Pull {
   cardName: string;
@@ -12,6 +19,7 @@ interface Pull {
 }
 
 interface RecentPullsWidgetProps {
+  hits: Hit[];
   pulls: Pull[];
   className?: string;
 }
@@ -29,46 +37,28 @@ function getRarityBorderClass(rarity: string): string {
   return 'border border-[rgba(255,255,255,0.1)]';
 }
 
-function isFreshPull(timestamp: string): boolean {
-  const pullTime = new Date(timestamp).getTime();
-  const now = Date.now();
-  return now - pullTime < 5 * 60 * 1000; // 5 minutes
-}
-
-export default function RecentPullsWidget({ pulls, className = '' }: RecentPullsWidgetProps) {
+export default function RecentPullsWidget({ hits, pulls, className = '' }: RecentPullsWidgetProps) {
   return (
     <div className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl p-5 sm:p-6 ${className}`}>
-      <style>{`
-        @keyframes shimmer-glow {
-          0%, 100% { box-shadow: 0 0 4px rgba(191, 255, 0, 0.3); }
-          50% { box-shadow: 0 0 12px rgba(191, 255, 0, 0.6); }
-        }
-        .pull-shimmer { animation: shimmer-glow 2s ease-in-out infinite; }
-      `}</style>
 
-      <div className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-3 flex items-center gap-1.5">
-        🎴 My Recent Pulls
-      </div>
-
-      <ScrollableRow>
-        <div className="flex gap-3">
-          {pulls.map((pull, idx) => {
-            const fresh = isFreshPull(pull.timestamp);
-            const borderClass = getRarityBorderClass(pull.rarity);
-
-            return (
-              <div key={idx} className="flex-shrink-0 w-[100px]">
+      {/* Row 1: Last Hits (high value) */}
+      {hits.length > 0 && (
+        <div className="mb-5">
+          <div className="text-[10px] font-semibold uppercase tracking-wider text-[#fbbf24] mb-3 flex items-center gap-1.5">
+            🔥 My Last Hits
+          </div>
+          <div className="flex gap-3">
+            {hits.map((hit, idx) => (
+              <div key={idx} className="flex-shrink-0 flex flex-col items-center">
                 <div
-                  className={`w-[100px] h-[140px] rounded-lg overflow-hidden ${borderClass} ${
-                    fresh ? 'pull-shimmer' : ''
-                  } transition-transform hover:scale-105 cursor-pointer`}
+                  className={`w-[75px] h-[105px] rounded-lg overflow-hidden ${getRarityBorderClass(hit.rarity)} transition-transform hover:scale-105 cursor-pointer`}
                 >
-                  {pull.cardImage ? (
+                  {hit.cardImage ? (
                     <Image
-                      src={pull.cardImage}
-                      alt={pull.cardName}
-                      width={100}
-                      height={140}
+                      src={hit.cardImage}
+                      alt={hit.cardName}
+                      width={75}
+                      height={105}
                       className="w-full h-full object-cover"
                       unoptimized
                     />
@@ -78,14 +68,51 @@ export default function RecentPullsWidget({ pulls, className = '' }: RecentPulls
                     </div>
                   )}
                 </div>
-                <p className="text-[9px] text-[#8888aa] truncate mt-1.5 text-center w-[100px]">
-                  {pull.cardName}
+                <p className="text-[9px] text-[#f0f0f5] font-semibold truncate mt-1.5 text-center w-[75px]">
+                  {hit.cardName}
+                </p>
+                <p className="text-[8px] text-[#BFFF00] font-bold">
+                  🪙 {hit.coinValue.toFixed(2)}
                 </p>
               </div>
-            );
-          })}
+            ))}
+          </div>
         </div>
-      </ScrollableRow>
+      )}
+
+      {/* Row 2: Last Pulls (any rarity) */}
+      <div>
+        <div className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-3 flex items-center gap-1.5">
+          🎴 My Last Pulls
+        </div>
+        <div className="flex gap-2">
+          {pulls.map((pull, idx) => (
+            <div key={idx} className="flex-shrink-0 flex flex-col items-center">
+              <div
+                className={`w-[56px] h-[78px] rounded-md overflow-hidden ${getRarityBorderClass(pull.rarity)} transition-transform hover:scale-105 cursor-pointer`}
+              >
+                {pull.cardImage ? (
+                  <Image
+                    src={pull.cardImage}
+                    alt={pull.cardName}
+                    width={56}
+                    height={78}
+                    className="w-full h-full object-cover"
+                    unoptimized
+                  />
+                ) : (
+                  <div className="w-full h-full bg-[#252560] flex items-center justify-center">
+                    <span className="text-sm">🎴</span>
+                  </div>
+                )}
+              </div>
+              <p className="text-[8px] text-[#8888aa] truncate mt-1 text-center w-[56px]">
+                {pull.cardName}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
 
       <Link
         href="/collection"
