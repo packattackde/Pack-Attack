@@ -1,7 +1,9 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import CardLightbox from './CardLightbox';
 
 interface Hit {
   cardName: string;
@@ -38,8 +40,15 @@ function getRarityBorderClass(rarity: string): string {
 }
 
 export default function RecentPullsWidget({ hits, pulls, className = '' }: RecentPullsWidgetProps) {
+  const [lightboxCard, setLightboxCard] = useState<{ name: string; image: string | null; rarity: string; coinValue: number } | null>(null);
+
   return (
     <div className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl p-5 sm:p-6 ${className}`}>
+      <CardLightbox
+        isOpen={!!lightboxCard}
+        onClose={() => setLightboxCard(null)}
+        card={lightboxCard ? { name: lightboxCard.name, image: lightboxCard.image, rarity: lightboxCard.rarity, coinValue: lightboxCard.coinValue } : { name: '', image: null, rarity: 'common', coinValue: 0 }}
+      />
 
       {/* Row 1: Last Hits (high value) */}
       {hits.length > 0 && (
@@ -47,20 +56,21 @@ export default function RecentPullsWidget({ hits, pulls, className = '' }: Recen
           <div className="text-[10px] font-semibold uppercase tracking-wider text-[#fbbf24] mb-3 flex items-center gap-1.5">
             🔥 My Last Hits
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-3 justify-center">
             {hits.map((hit, idx) => (
-              <div key={idx} className="flex-shrink-0 flex flex-col items-center">
+              <div key={idx} className="flex-1 min-w-0 flex flex-col items-center">
                 <div
-                  className={`w-[75px] h-[105px] rounded-lg overflow-hidden ${getRarityBorderClass(hit.rarity)} transition-transform hover:scale-105 cursor-pointer`}
+                  onClick={() => setLightboxCard({ name: hit.cardName, image: hit.cardImage, rarity: hit.rarity, coinValue: hit.coinValue })}
+                  className={`w-full aspect-[63/88] max-w-[120px] rounded-lg overflow-hidden relative ${getRarityBorderClass(hit.rarity)} transition-transform hover:scale-105 cursor-pointer`}
                 >
                   {hit.cardImage ? (
                     <Image
                       src={hit.cardImage}
                       alt={hit.cardName}
-                      width={75}
-                      height={105}
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
                       unoptimized
+                      sizes="120px"
                     />
                   ) : (
                     <div className="w-full h-full bg-[#252560] flex items-center justify-center">
@@ -68,7 +78,7 @@ export default function RecentPullsWidget({ hits, pulls, className = '' }: Recen
                     </div>
                   )}
                 </div>
-                <p className="text-[9px] text-[#f0f0f5] font-semibold truncate mt-1.5 text-center w-[75px]">
+                <p className="text-[9px] text-[#f0f0f5] font-semibold truncate mt-1.5 text-center w-full max-w-[120px]">
                   {hit.cardName}
                 </p>
                 <p className="text-[8px] text-[#BFFF00] font-bold">
@@ -87,18 +97,19 @@ export default function RecentPullsWidget({ hits, pulls, className = '' }: Recen
         </div>
         <div className="flex gap-2">
           {pulls.map((pull, idx) => (
-            <div key={idx} className="flex-shrink-0 flex flex-col items-center">
+            <div key={idx} className="flex-1 min-w-0 flex flex-col items-center">
               <div
-                className={`w-[56px] h-[78px] rounded-md overflow-hidden ${getRarityBorderClass(pull.rarity)} transition-transform hover:scale-105 cursor-pointer`}
+                onClick={() => setLightboxCard({ name: pull.cardName, image: pull.cardImage, rarity: pull.rarity, coinValue: 0 })}
+                className={`w-full aspect-[63/88] rounded-md overflow-hidden relative ${getRarityBorderClass(pull.rarity)} transition-transform hover:scale-105 cursor-pointer`}
               >
                 {pull.cardImage ? (
                   <Image
                     src={pull.cardImage}
                     alt={pull.cardName}
-                    width={56}
-                    height={78}
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
                     unoptimized
+                    sizes="80px"
                   />
                 ) : (
                   <div className="w-full h-full bg-[#252560] flex items-center justify-center">
@@ -106,7 +117,7 @@ export default function RecentPullsWidget({ hits, pulls, className = '' }: Recen
                   </div>
                 )}
               </div>
-              <p className="text-[8px] text-[#8888aa] truncate mt-1 text-center w-[56px]">
+              <p className="text-[8px] text-[#8888aa] truncate mt-1 text-center w-full">
                 {pull.cardName}
               </p>
             </div>
