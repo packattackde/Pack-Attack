@@ -19,7 +19,7 @@ export default function BattlesWidget({ battles, className = '' }: BattlesWidget
   const displayBattles = battles.slice(0, 3);
 
   return (
-    <div className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl p-5 sm:p-6 ${className}`}>
+    <div className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl p-4 sm:p-6 ${className}`}>
       <div className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-3 flex items-center gap-1.5">
         ⚔️ Active Battles
       </div>
@@ -62,7 +62,7 @@ export default function BattlesWidget({ battles, className = '' }: BattlesWidget
                     )}
                     <Link
                       href={`/battles/${battle.id}`}
-                      className={`bg-[#BFFF00] text-black text-[11px] font-bold rounded-lg px-3 py-1.5 inline-block hover:brightness-110 transition ${
+                      className={`bg-[#BFFF00] text-black text-[11px] font-bold rounded-lg px-3 py-1.5 min-h-[44px] min-w-[44px] inline-flex items-center justify-center hover:brightness-110 transition ${
                         almostFull ? 'animate-pulse' : ''
                       }`}
                     >

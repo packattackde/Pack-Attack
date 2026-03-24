@@ -21,13 +21,13 @@ export default function CoinBalanceWidget({
 
   return (
     <div
-      className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl p-5 sm:p-6 ${className}`}
+      className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl p-4 sm:p-6 ${className}`}
     >
       <p className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-3">
         💰 MY BALANCE
       </p>
 
-      <p className="text-3xl font-extrabold text-[#fbbf24]">
+      <p className="text-2xl sm:text-3xl font-extrabold text-[#fbbf24]">
         🪙 {coins.toFixed(2)}
       </p>
 
@@ -37,7 +37,7 @@ export default function CoinBalanceWidget({
 
       <Link
         href="/purchase-coins"
-        className={`mt-4 block w-full text-center px-4 py-2.5 font-semibold rounded-xl text-sm text-black bg-gradient-to-r from-[#fbbf24] to-[#f59e0b] hover:brightness-110 transition ${
+        className={`mt-4 block w-full text-center px-4 py-2.5 min-h-[44px] font-semibold rounded-xl text-sm text-black bg-gradient-to-r from-[#fbbf24] to-[#f59e0b] hover:brightness-110 transition ${
           isLow ? 'animate-pulse' : ''
         }`}
       >

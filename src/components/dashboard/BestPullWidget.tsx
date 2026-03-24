@@ -44,7 +44,7 @@ export default function BestPullWidget({
   // Empty state — no pulls today
   if (isEmpty || !cardName) {
     return (
-      <div className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl p-5 sm:p-6 ${className}`}>
+      <div className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl p-4 sm:p-6 ${className}`}>
         <div className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-4 flex items-center gap-1.5">
           🏆 Today&apos;s Best Pull
         </div>
@@ -54,7 +54,7 @@ export default function BestPullWidget({
           <p className="text-[12px] text-[#8888aa] mb-5">Be the first to pull something amazing!</p>
           <Link
             href="/boxes"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-[#BFFF00] text-black text-sm font-bold rounded-xl shadow-[0_0_15px_rgba(191,255,0,0.2)] hover:shadow-[0_0_25px_rgba(191,255,0,0.35)] hover:scale-105 transition-all"
+            className="min-h-[44px] inline-flex items-center gap-2 px-6 py-3 bg-[#BFFF00] text-black text-sm font-bold rounded-xl shadow-[0_0_15px_rgba(191,255,0,0.2)] hover:shadow-[0_0_25px_rgba(191,255,0,0.35)] hover:scale-105 transition-all"
           >
             📦 Open a Box →
           </Link>
@@ -66,7 +66,7 @@ export default function BestPullWidget({
   return (
     <>
       <div
-        className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl p-5 sm:p-6 relative overflow-hidden ${className}`}
+        className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl p-4 sm:p-6 relative overflow-hidden ${className}`}
         style={{
           background: `linear-gradient(135deg, #1a1a4a 0%, ${glowColor}08 50%, #1a1a4a 100%)`,
         }}
@@ -113,7 +113,7 @@ export default function BestPullWidget({
             >
               {rarity}
             </span>
-            <p className="text-[#BFFF00] font-extrabold mt-2 text-2xl">
+            <p className="text-[#BFFF00] font-extrabold mt-2 text-xl sm:text-2xl">
               🪙 {(coinValue ?? 0).toFixed(2)}
             </p>
             <p className="text-xs text-[#7777a0] mt-0.5">by {pullerName}</p>
@@ -122,7 +122,7 @@ export default function BestPullWidget({
 
         <Link
           href={`/open/${boxId}`}
-          className="mt-4 block w-full text-center px-4 py-3 font-bold rounded-xl text-sm text-black bg-[#BFFF00] hover:brightness-110 transition shadow-[0_0_12px_rgba(191,255,0,0.3)]"
+          className="min-h-[44px] mt-4 block w-full text-center px-4 py-3 font-bold rounded-xl text-sm text-black bg-[#BFFF00] hover:brightness-110 transition shadow-[0_0_12px_rgba(191,255,0,0.3)]"
         >
           📦 Open this Box →
         </Link>

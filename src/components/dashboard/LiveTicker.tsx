@@ -209,7 +209,7 @@ export default function LiveTicker({ className }: LiveTickerProps) {
 
   return (
     <div
-      className={`bg-[#0B0B2B] border border-[rgba(255,255,255,0.06)] rounded-xl h-14 sm:h-16 overflow-hidden relative ${className ?? ''}`}
+      className={`bg-[#0B0B2B] border border-[rgba(255,255,255,0.06)] rounded-xl h-12 sm:h-14 overflow-hidden relative ${className ?? ''}`}
     >
       {/* Pulse animation keyframes + ticker scroll */}
       <style>{`

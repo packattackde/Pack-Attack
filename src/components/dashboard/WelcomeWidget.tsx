@@ -25,7 +25,7 @@ export default function WelcomeWidget({
 }: WelcomeWidgetProps) {
   return (
     <div
-      className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl p-5 sm:p-6 ${className}`}
+      className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl p-4 sm:p-6 ${className}`}
     >
       {/* Top row: greeting + CTA buttons */}
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
@@ -36,16 +36,16 @@ export default function WelcomeWidget({
           <p className="text-sm text-[#8888aa] mt-1">{dynamicSubtitle}</p>
         </div>
 
-        <div className="flex flex-row flex-wrap gap-2">
+        <div className="flex flex-col sm:flex-row flex-wrap gap-2 w-full sm:w-auto">
           <Link
             href="/boxes"
-            className="px-4 py-2 bg-[#BFFF00] text-black font-semibold rounded-xl text-sm whitespace-nowrap hover:brightness-110 transition"
+            className="min-h-[44px] flex items-center justify-center px-4 py-2 bg-[#BFFF00] text-black font-semibold rounded-xl text-sm whitespace-nowrap hover:brightness-110 transition"
           >
             📦 Open Box
           </Link>
           <Link
             href="/battles"
-            className="px-4 py-2 border border-[rgba(191,255,0,0.3)] text-[#BFFF00] font-semibold rounded-xl text-sm whitespace-nowrap hover:bg-[rgba(191,255,0,0.05)] transition"
+            className="min-h-[44px] flex items-center justify-center px-4 py-2 border border-[rgba(191,255,0,0.3)] text-[#BFFF00] font-semibold rounded-xl text-sm whitespace-nowrap hover:bg-[rgba(191,255,0,0.05)] transition"
           >
             ⚔️ Join Battle
           </Link>
@@ -55,7 +55,7 @@ export default function WelcomeWidget({
       {/* Level section */}
       <div className="mt-5">
         <div className="flex items-center gap-3 mb-2">
-          <span className="text-lg font-extrabold text-[#BFFF00]">
+          <span className="text-base sm:text-lg font-extrabold text-[#BFFF00]">
             Level {level}
           </span>
           <span className="text-xs font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[rgba(191,255,0,0.1)] text-[#BFFF00] border border-[rgba(191,255,0,0.2)]">

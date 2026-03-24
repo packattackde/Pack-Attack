@@ -240,7 +240,7 @@ export default async function DashboardPage() {
         <LiveTicker className="mb-5" />
 
         {/* Bento Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-6 lg:grid-cols-12 gap-4 sm:gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-6 lg:grid-cols-12 gap-3 sm:gap-4 lg:gap-5">
           <WelcomeWidget
             className="sm:col-span-6 lg:col-span-8"
             userName={user.name || 'Player'}

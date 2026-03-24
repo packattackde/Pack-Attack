@@ -44,7 +44,7 @@ export default function RecentPullsWidget({ hits, pulls, className = '' }: Recen
   const [lightboxCard, setLightboxCard] = useState<{ name: string; image: string | null; rarity: string; coinValue: number } | null>(null);
 
   return (
-    <div className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl p-5 sm:p-6 ${className}`}>
+    <div className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl p-4 sm:p-6 ${className}`}>
       <CardLightbox
         isOpen={!!lightboxCard}
         onClose={() => setLightboxCard(null)}
@@ -57,12 +57,12 @@ export default function RecentPullsWidget({ hits, pulls, className = '' }: Recen
           <div className="text-[10px] font-semibold uppercase tracking-wider text-[#fbbf24] mb-3 flex items-center gap-1.5">
             🔥 My Last Hits
           </div>
-          <div className="flex gap-3 justify-center">
+          <div className="flex gap-2 sm:gap-3 justify-center">
             {hits.map((hit, idx) => (
               <div key={idx} className="flex-1 min-w-0 flex flex-col items-center">
                 <div
                   onClick={() => setLightboxCard({ name: hit.cardName, image: hit.cardImage, rarity: hit.rarity, coinValue: hit.coinValue })}
-                  className={`w-full aspect-[63/88] max-w-[120px] rounded-lg overflow-hidden relative ${getRarityBorderClass(hit.rarity)} transition-transform hover:scale-105 cursor-pointer`}
+                  className={`w-full aspect-[63/88] max-w-[100px] sm:max-w-[120px] rounded-lg overflow-hidden relative ${getRarityBorderClass(hit.rarity)} transition-transform hover:scale-105 cursor-pointer`}
                 >
                   {hit.cardImage ? (
                     <Image
@@ -79,7 +79,7 @@ export default function RecentPullsWidget({ hits, pulls, className = '' }: Recen
                     </div>
                   )}
                 </div>
-                <p className="text-[9px] text-[#f0f0f5] font-semibold truncate mt-1.5 text-center w-full max-w-[120px]">
+                <p className="text-[9px] text-[#f0f0f5] font-semibold truncate mt-1.5 text-center w-full max-w-[100px] sm:max-w-[120px]">
                   {hit.cardName}
                 </p>
                 <p className="text-[8px] text-[#BFFF00] font-bold">
