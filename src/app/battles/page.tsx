@@ -53,7 +53,7 @@ export default async function BattlesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display">
+    <div className="min-h-screen font-display">
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
       <div className="fixed top-20 right-10 w-96 h-96 bg-[rgba(191,255,0,0.08)] rounded-full blur-3xl hidden lg:block" />

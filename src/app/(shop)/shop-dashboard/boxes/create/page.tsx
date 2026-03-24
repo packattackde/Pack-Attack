@@ -59,7 +59,7 @@ export default function CreateShopBoxPage() {
   // Show loading state while checking authentication
   if (status === 'loading') {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin text-emerald-500 mx-auto mb-4" />
           <p className="text-[#8888aa]">Loading...</p>
@@ -71,7 +71,7 @@ export default function CreateShopBoxPage() {
   // Don't render content for non-authorized users
   if (!session || (session.user?.role !== 'ADMIN' && session.user?.role !== 'SHOP_OWNER')) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin text-emerald-500 mx-auto mb-4" />
           <p className="text-[#8888aa]">Redirecting...</p>

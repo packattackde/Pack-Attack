@@ -103,9 +103,9 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
   const maxTotal = Math.max(...sortedParticipants.map(p => p.totalValue), 1);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display">
-      <div className="fixed inset-0 bg-grid opacity-30" />
-      <div className="fixed inset-0 radial-gradient" />
+    <div className="min-h-screen font-display">
+      <div className="fixed inset-0 bg-grid opacity-20 pointer-events-none" />
+      <div className="fixed inset-0 radial-gradient pointer-events-none" />
 
       <div className="relative container py-14 sm:py-16 max-w-5xl">
         <div className="flex items-center justify-between mb-6">
