@@ -220,7 +220,7 @@ export default async function DashboardPage() {
   const userLbEntry = leaderboardData.find(e => e.userId === user.id);
 
   return (
-    <div className="min-h-screen bg-[#06061a] font-display flex flex-col">
+    <div className="min-h-screen font-display flex flex-col">
       <div className="max-w-[1360px] mx-auto px-3 sm:px-6 py-4 sm:py-6 w-full flex-1 flex flex-col">
         {/* Live Ticker */}
         <LiveTicker className="mb-5" />

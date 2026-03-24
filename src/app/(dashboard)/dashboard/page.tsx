@@ -102,7 +102,7 @@ export default async function UserDashboard() {
   }));
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display">
+    <div className="min-h-screen font-display">
       {/* Background Effects */}
       <div className="fixed inset-0 bg-grid opacity-20" />
       <div className="fixed inset-0 radial-gradient" />
