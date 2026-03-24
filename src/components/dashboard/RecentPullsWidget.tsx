@@ -71,7 +71,7 @@ export default function RecentPullsWidget({ hits, pulls, className = '' }: Recen
                       src={hit.cardImage}
                       alt={hit.cardName}
                       fill
-                      className="object-cover mix-blend-multiply"
+                      className="object-cover"
                       unoptimized
                       sizes="120px"
                     />
@@ -110,7 +110,7 @@ export default function RecentPullsWidget({ hits, pulls, className = '' }: Recen
                     src={pull.cardImage}
                     alt={pull.cardName}
                     fill
-                    className="object-cover mix-blend-multiply"
+                    className="object-cover"
                     unoptimized
                     sizes="80px"
                   />

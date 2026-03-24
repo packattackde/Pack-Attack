@@ -89,7 +89,7 @@ export default function CardLightbox({ isOpen, onClose, card }: CardLightboxProp
                     src={card.image}
                     alt={card.name}
                     fill
-                    className="object-cover mix-blend-multiply"
+                    className="object-cover"
                     unoptimized
                   />
                 ) : (

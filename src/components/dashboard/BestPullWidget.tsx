@@ -92,7 +92,7 @@ export default function BestPullWidget({
                 src={cardImage}
                 alt={cardName}
                 fill
-                className="object-cover mix-blend-multiply"
+                className="object-cover"
                 unoptimized
               />
             ) : (
