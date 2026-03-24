@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import CardLightbox from './CardLightbox'
 import { GiTrophyCup, GiCardPickup, GiCardboardBox, GiTwoCoins, GiCardPlay } from 'react-icons/gi'
+import { formatCoins } from '@/lib/format'
 
 interface BestPullWidgetProps {
   cardName?: string
@@ -115,7 +116,7 @@ export default function BestPullWidget({
               {rarity}
             </span>
             <p className="text-[#BFFF00] font-extrabold mt-2 text-xl sm:text-2xl">
-            <span className="inline-flex items-center gap-1.5"><GiTwoCoins className="w-5 h-5 text-[#BFFF00]" /> {(coinValue ?? 0).toFixed(2)}</span>
+            <span className="inline-flex items-center gap-1.5"><GiTwoCoins className="w-5 h-5 text-[#BFFF00]" /> {formatCoins(coinValue ?? 0)}</span>
             </p>
             <div className="flex items-center gap-2 mt-2 px-2.5 py-1.5 rounded-lg bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.08)] w-fit">
               <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#BFFF00] to-[#7fff00] flex items-center justify-center text-[9px] font-bold text-black">

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import CardLightbox from './CardLightbox';
 import { GiFireGem, GiCardPlay, GiTwoCoins } from 'react-icons/gi';
+import { formatCoins } from '@/lib/format';
 
 interface Hit {
   cardName: string;
@@ -84,7 +85,7 @@ export default function RecentPullsWidget({ hits, pulls, className = '' }: Recen
                   {hit.cardName}
                 </p>
                 <p className="text-[8px] text-[#BFFF00] font-bold flex items-center justify-center gap-1">
-                  <GiTwoCoins className="w-3 h-3" /> {hit.coinValue.toFixed(2)}
+                  <GiTwoCoins className="w-3 h-3" /> {formatCoins(hit.coinValue)}
                 </p>
               </div>
             ))}

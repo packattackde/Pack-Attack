@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { GiTwoCoins } from 'react-icons/gi'
+import { formatCoins } from '@/lib/format'
 
 interface CoinBalanceWidgetProps {
   coins: number
@@ -29,7 +30,7 @@ export default function CoinBalanceWidget({
       </p>
 
       <p className="text-2xl sm:text-3xl font-extrabold text-[#fbbf24]">
-<span className="flex items-center gap-2"><GiTwoCoins className="w-7 h-7 text-[#fbbf24]" /> {coins.toFixed(2)}</span>
+<span className="flex items-center gap-2"><GiTwoCoins className="w-7 h-7 text-[#fbbf24]" /> {formatCoins(coins)}</span>
       </p>
 
       <p className="text-xs text-[#8888aa] mt-1">

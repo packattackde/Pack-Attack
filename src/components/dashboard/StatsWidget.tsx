@@ -11,11 +11,9 @@ interface StatsWidgetProps {
   className?: string
 }
 
-function formatLargeNumber(n: number): string {
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`
-  if (n >= 1_000) return `${(n / 1_000).toFixed(1)}k`
-  return n.toString()
-}
+import { formatCoins } from '@/lib/format'
+
+const formatLargeNumber = formatCoins;
 
 function StatCard({
   value,

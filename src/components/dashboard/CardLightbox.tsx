@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import { formatCoins } from '@/lib/format';
 
 interface CardLightboxProps {
   isOpen: boolean;
@@ -114,7 +115,7 @@ export default function CardLightbox({ isOpen, onClose, card }: CardLightboxProp
               </span>
 
               <p className="text-[#BFFF00] font-extrabold text-3xl">
-                🪙 {card.coinValue.toFixed(2)}
+                🪙 {formatCoins(card.coinValue)}
               </p>
             </div>
 
