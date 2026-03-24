@@ -2,97 +2,74 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
+import { Bot, Plus } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
-interface AddBotsControlProps {
-  battleId: string;
-  maxAddable: number;
-}
-
-export function AddBotsControl({ battleId, maxAddable }: AddBotsControlProps) {
+export function AddBotsControl({ battleId, maxSlots }: { battleId: string; maxSlots: number }) {
   const router = useRouter();
   const { addToast } = useToast();
   const [count, setCount] = useState(1);
   const [submitting, setSubmitting] = useState(false);
 
-  const handleCountChange = (value: number) => {
-    if (!Number.isFinite(value)) return;
-    const clamped = Math.min(Math.max(value, 1), maxAddable);
-    setCount(clamped);
-  };
+  const maxAddable = Math.min(maxSlots, 3);
 
-  const handleAddBots = async () => {
+  if (maxSlots <= 0) {
+    return (
+      <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-4 text-sm text-purple-400">
+        Alle Plätze belegt
+      </div>
+    );
+  }
+
+  const handleAdd = async () => {
     setSubmitting(true);
     try {
-      const response = await fetch(`/api/battles/${battleId}/bots`, {
+      const res = await fetch(`/api/battles/${battleId}/bots`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ count }),
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to add bots');
+      const data = await res.json();
+      if (!res.ok) {
+        addToast({ title: 'Fehler', description: data.error, variant: 'destructive' });
+        return;
       }
-
-      addToast({
-        title: 'Bots added',
-        description: `${count} bot${count > 1 ? 's' : ''} joined the battle.`,
-      });
-
+      addToast({ title: 'Bots hinzugefügt', description: `${data.added} Bot(s) beigetreten` });
       router.refresh();
-    } catch (error) {
-      addToast({
-        title: 'Error',
-        description: error instanceof Error ? error.message : 'Failed to add bots',
-        variant: 'destructive',
-      });
+    } catch {
+      addToast({ title: 'Fehler', description: 'Bots konnten nicht hinzugefügt werden', variant: 'destructive' });
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <div className="rounded-xl border-2 border-amber-500/50 bg-gradient-to-br from-amber-900/30 to-amber-800/10 p-5 shadow-lg shadow-amber-500/10">
-      <div className="mb-2 text-base font-bold text-amber-300 flex items-center gap-2">
-        <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-xs uppercase tracking-wider">Admin Only</span>
-        Testing Tool
+    <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-4">
+      <div className="flex items-center gap-2 mb-3">
+        <Bot className="w-4 h-4 text-purple-400" />
+        <span className="text-sm font-semibold text-purple-400">Nur Admin — Test-Bots</span>
       </div>
-      <p className="mb-4 text-sm text-[#f0f0f5]">
-        Instantly fill open slots with testing bots to simulate a full lobby.
-      </p>
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <label className="flex items-center gap-2 text-sm text-[#f0f0f5]">
-          Bots to add:
+      <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          <label className="text-sm text-[#8888aa]">Anzahl:</label>
           <input
             type="number"
             min={1}
             max={maxAddable}
             value={count}
-            onChange={(event) => handleCountChange(parseInt(event.target.value, 10))}
-            className="w-20 rounded-lg border-2 border-[rgba(255,255,255,0.06)] bg-[#0B0B2B] px-3 py-2 text-center text-white font-bold focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all"
+            onChange={(e) => setCount(Math.min(maxAddable, Math.max(1, parseInt(e.target.value) || 1)))}
+            className="w-16 px-2 py-1 bg-[#12123a] border border-[rgba(255,255,255,0.12)] rounded text-white text-sm"
           />
-        </label>
-        <Button
-          type="button"
-          onClick={handleAddBots}
+        </div>
+        <button
+          onClick={handleAdd}
           disabled={submitting}
-          className="flex-1 py-3 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold rounded-lg transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-amber-500/30 border border-amber-400/30"
+          className="px-4 py-1.5 bg-purple-500 text-white text-sm font-semibold rounded-lg hover:bg-purple-600 transition-all disabled:opacity-50 flex items-center gap-1"
         >
-          {submitting ? 'Adding Bots...' : `Add ${count} Bot${count > 1 ? 's' : ''}`}
-        </Button>
-      </div>
-      <div className="mt-3 flex items-center justify-between text-xs">
-        <span className="text-[#8888aa]">Open slots available: <span className="text-amber-400 font-bold">{maxAddable}</span></span>
-        <span className="text-green-400">✓ 8 bots ready</span>
+          {submitting ? 'Füge hinzu...' : <><Plus className="w-3 h-3" /> {count} Bot(s) hinzufügen</>}
+        </button>
+        <span className="text-xs text-[#8888aa]">{maxSlots} Platz/Plätze frei</span>
       </div>
     </div>
   );
 }
-
-
-

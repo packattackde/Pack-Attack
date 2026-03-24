@@ -83,7 +83,7 @@ export async function POST() {
         },
       }),
       prisma.battle.count({
-        where: { winnerId: user.id, battleMode: 'JACKPOT' },
+        where: { winnerId: user.id, battleMode: 'ALL_CARDS' },
       }),
     ]);
 

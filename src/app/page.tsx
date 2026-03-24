@@ -100,7 +100,7 @@ async function getFeaturedBoxes() {
 async function getActiveBattles() {
   try {
     const battles = await prisma.battle.findMany({
-      where: { status: { in: ['WAITING', 'IN_PROGRESS'] } },
+      where: { status: { in: ['OPEN', 'FULL', 'READY', 'ACTIVE'] } },
       orderBy: { createdAt: 'desc' },
       take: 3,
       include: {
@@ -385,23 +385,23 @@ export default async function HomePage() {
                   >
                     <div className="flex items-center justify-between mb-4">
                       <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold uppercase tracking-wide ${
-                        battle.status === 'WAITING'
+                        battle.status === 'OPEN'
                           ? 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20'
                           : 'bg-green-500/10 text-green-400 border border-green-500/20'
                       }`}>
-                        {battle.status === 'WAITING' ? (
+                        {battle.status === 'OPEN' ? (
                           <>
                             <Clock className="w-3 h-3" />
-                            Waiting
+                            Offen
                           </>
                         ) : (
                           <>
                             <Zap className="w-3 h-3" />
-                            In Progress
+                            Läuft
                           </>
                         )}
                       </span>
-                      <span className="text-xs text-[#7777a0] font-medium">{battle.maxParticipants} players</span>
+                      <span className="text-xs text-[#7777a0] font-medium">{battle.maxParticipants} Spieler</span>
                     </div>
 
                     <h3 className="text-base font-semibold text-white mb-3 group-hover:text-[#BFFF00] transition-colors">
