@@ -234,13 +234,13 @@ export default async function DashboardPage() {
   }));
 
   return (
-    <div className="min-h-screen bg-[#06061a] font-display">
-      <div className="max-w-[1360px] mx-auto px-3 sm:px-6 py-4 sm:py-6">
+    <div className="min-h-screen bg-[#06061a] font-display flex flex-col">
+      <div className="max-w-[1360px] mx-auto px-3 sm:px-6 py-4 sm:py-6 w-full flex-1 flex flex-col">
         {/* Live Ticker */}
         <LiveTicker className="mb-5" />
 
         {/* Bento Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-6 lg:grid-cols-12 gap-3 sm:gap-4 lg:gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-6 lg:grid-cols-12 gap-3 sm:gap-4 lg:gap-5 flex-1">
           <WelcomeWidget
             className="sm:col-span-6 lg:col-span-8"
             userName={user.name || 'Player'}
