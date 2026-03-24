@@ -16,6 +16,7 @@ interface TickerItem {
   boxId: string
   boxName: string
   timestamp: string
+  isNew?: boolean
 }
 
 interface LiveTickerProps {
@@ -86,13 +87,20 @@ export default function LiveTicker({ className }: LiveTickerProps) {
 
     es.onmessage = (event) => {
       try {
-        const data: TickerItem = JSON.parse(event.data)
+        const data: TickerItem = { ...JSON.parse(event.data), isNew: true }
         const tier = getRarityTier(data.rarity)
 
         setItems((prev) => {
           const next = [data, ...prev]
           return next.slice(0, 20)
         })
+
+        // Remove isNew flag after animation completes
+        setTimeout(() => {
+          setItems((prev) => prev.map(item =>
+            item.pullId === data.pullId ? { ...item, isNew: false } : item
+          ))
+        }, 3000)
 
         // Pause ticker briefly for legendary pulls
         if (tier === 'legendary') {
@@ -119,12 +127,32 @@ export default function LiveTicker({ className }: LiveTickerProps) {
     }
   }, [])
 
+  // Load initial history on mount so ticker isn't empty
+  useEffect(() => {
+    async function loadHistory() {
+      try {
+        const res = await fetch('/api/pulls/recent?minValue=100&limit=15');
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            setItems(data.slice(0, 15));
+          }
+        }
+      } catch {
+        // Silently fail — SSE will populate eventually
+      }
+    }
+    loadHistory();
+  }, []);
+
   useEffect(() => {
     connect()
 
-    // Update timestamps every 30s
+    // Update timestamps every 30s + prune items older than 24h
     const interval = setInterval(() => {
       setTick((t) => t + 1)
+      const cutoff = Date.now() - 24 * 60 * 60 * 1000;
+      setItems((prev) => prev.filter(item => new Date(item.timestamp).getTime() > cutoff))
     }, 30000)
 
     return () => {
@@ -161,6 +189,15 @@ export default function LiveTicker({ className }: LiveTickerProps) {
         @keyframes ticker-scroll {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
+        }
+        @keyframes ticker-new-item {
+          0% { opacity: 0; transform: scale(0.8); filter: brightness(2); }
+          30% { opacity: 1; transform: scale(1.05); filter: brightness(1.5); }
+          60% { transform: scale(1); filter: brightness(1.2); box-shadow: 0 0 20px rgba(191,255,0,0.4); }
+          100% { filter: brightness(1); box-shadow: none; }
+        }
+        .ticker-item-new {
+          animation: ticker-new-item 1.5s ease-out;
         }
       `}</style>
 
@@ -203,7 +240,7 @@ export default function LiveTicker({ className }: LiveTickerProps) {
                   <Link
                     key={`${item.pullId}-${idx}`}
                     href={`/open/${item.boxId}`}
-                    className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg shrink-0 transition-colors hover:bg-[rgba(255,255,255,0.04)]"
+                    className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg shrink-0 transition-colors hover:bg-[rgba(255,255,255,0.04)] ${item.isNew ? 'ticker-item-new' : ''}`}
                     style={
                       isLegendary
                         ? {
