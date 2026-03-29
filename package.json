@@ -23,7 +23,8 @@
     "test:chromium": "playwright test --project=chromium",
     "test:api": "playwright test tests/api/",
     "test:e2e": "playwright test tests/e2e/",
-    "test:report": "playwright show-report"
+    "test:report": "playwright show-report",
+    "neon:dev-branch": "powershell -ExecutionPolicy Bypass -File ./scripts/neon-create-dev-branch.ps1"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.4",
