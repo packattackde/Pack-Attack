@@ -1,12 +1,13 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/use-toast';
 import { Coins, Package, Sparkles, ArrowLeft, Layers, Zap, Square, BadgeDollarSign } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { emitCoinBalanceUpdate } from '@/lib/coin-events';
+import { PackOpeningFlow } from '@/components/PackOpeningFlow';
 
 type BoxCard = {
   id: string;
@@ -41,10 +42,10 @@ const COMMON_TIER: RarityTier = {
 };
 
 const UNCOMMON_TIER: RarityTier = {
-  border: 'border-green-400',
+  border: 'border-[#E879F9]',
   shadow: '',
-  bg: 'bg-green-500/20',
-  text: 'text-green-400',
+  bg: 'bg-[#C84FFF]/20',
+  text: 'text-[#E879F9]',
   animation: '',
   lindwurm: 'lindwurm-uncommon',
   glowColor: 'rgba(74, 222, 128, 0.8)',
@@ -178,7 +179,7 @@ const getRarityGlow = (rarity: string | undefined): RarityTier => {
 const TIER_ORDER = ['lindwurm-common', 'lindwurm-uncommon', 'lindwurm-rare', 'lindwurm-epic', 'lindwurm-legendary'] as const;
 const TIER_META: Record<string, { label: string; btnClass: string }> = {
   'lindwurm-common':    { label: 'Commons',    btnClass: 'border-gray-500/60 text-gray-300 hover:bg-gray-500/10' },
-  'lindwurm-uncommon':  { label: 'Uncommons',  btnClass: 'border-green-500/60 text-green-400 hover:bg-green-500/10' },
+  'lindwurm-uncommon':  { label: 'Uncommons',  btnClass: 'border-[#C84FFF]/60 text-[#E879F9] hover:bg-[#C84FFF]/10' },
   'lindwurm-rare':      { label: 'Rares',      btnClass: 'border-blue-500/60 text-blue-400 hover:bg-blue-500/10' },
   'lindwurm-epic':      { label: 'Epics',      btnClass: 'border-purple-500/60 text-purple-400 hover:bg-purple-500/10' },
   'lindwurm-legendary': { label: 'Legendaries', btnClass: 'border-amber-500/60 text-amber-400 hover:bg-amber-500/10' },
@@ -201,7 +202,7 @@ function CardBack({ url }: { url?: string | null }) {
 
   if (!useFallback) {
     return (
-      <div className="absolute inset-0 rounded-xl overflow-hidden border border-blue-400/20">
+      <div className="absolute inset-0 rounded-xl overflow-hidden border border-[rgba(200,79,255,0.15)]">
         <Image
           src={src}
           alt="Card back"
@@ -215,12 +216,12 @@ function CardBack({ url }: { url?: string | null }) {
   }
   return (
     <div
-      className="absolute inset-0 rounded-xl overflow-hidden border border-blue-400/20"
+      className="absolute inset-0 rounded-xl overflow-hidden border border-[rgba(200,79,255,0.15)]"
       style={{ background: 'linear-gradient(135deg, #1e3a5f 0%, #0f172a 50%, #1e3a5f 100%)' }}
     >
-      <div className="absolute inset-2 rounded-lg border border-blue-300/20 flex items-center justify-center">
-        <div className="w-10 h-10 rounded-md border border-blue-300/15 flex items-center justify-center">
-          <Sparkles className="w-4 h-4 text-blue-400/40" />
+      <div className="absolute inset-2 rounded-lg border border-[rgba(200,79,255,0.15)] flex items-center justify-center">
+        <div className="w-10 h-10 rounded-md border border-[rgba(200,79,255,0.1)] flex items-center justify-center">
+          <Sparkles className="w-4 h-4 text-[rgba(200,79,255,0.4)]" />
         </div>
       </div>
     </div>
@@ -272,9 +273,6 @@ export default function OpenBoxPage() {
   const [openedCardIds, setOpenedCardIds] = useState<Set<string>>(new Set());
   const [featuredPullId, setFeaturedPullId] = useState<string | null>(null);
   const [featuredCardId, setFeaturedCardId] = useState<string | null>(null);
-  const [currentReveal, setCurrentReveal] = useState<any | null>(null);
-  const [currentRevealIndex, setCurrentRevealIndex] = useState(0);
-  const [revealTotal, setRevealTotal] = useState(0);
   const [showConfirm, setShowConfirm] = useState(false);
   // Summary sell-by-rarity
   const [soldPullIds, setSoldPullIds] = useState<Set<string>>(new Set());
@@ -288,23 +286,14 @@ export default function OpenBoxPage() {
   const [showAutoConfirm, setShowAutoConfirm] = useState(false);
   const autoStopRef = useRef(false);
   // Deck animation
-  const [deckPhase, setDeckPhase] = useState<'idle'|'stacking'|'shuffling'|'drawing'|'revealed'|'summary'>('idle');
-  const [deckKey, setDeckKey] = useState(0);
+  const [deckPhase, setDeckPhase] = useState<'idle'|'opening'|'summary'>('idle');
   const revealTimeoutsRef = useRef<Array<ReturnType<typeof setTimeout>>>([]);
   const pendingPullsRef = useRef<any[]>([]);
 
   const clearRevealTimeouts = () => {
     revealTimeoutsRef.current.forEach((timeoutId) => clearTimeout(timeoutId));
     revealTimeoutsRef.current = [];
-    setCurrentReveal(null);
-    setCurrentRevealIndex(0);
-    setRevealTotal(0);
     setDeckPhase('idle');
-  };
-
-  const scheduleTimeout = (callback: () => void, delay: number) => {
-    const timeoutId = setTimeout(callback, delay);
-    revealTimeoutsRef.current.push(timeoutId);
   };
 
   const handleSkip = () => {
@@ -312,9 +301,6 @@ export default function OpenBoxPage() {
     if (allPulls.length === 0) return;
     revealTimeoutsRef.current.forEach(clearTimeout);
     revealTimeoutsRef.current = [];
-    setCurrentReveal(null);
-    setCurrentRevealIndex(0);
-    setRevealTotal(0);
     setPulls(allPulls);
     setOpenedCardIds(new Set(allPulls.map((p: any) => p.card?.id).filter(Boolean)));
     setOpening(false);
@@ -370,11 +356,7 @@ export default function OpenBoxPage() {
     setPulls([]);
     setFeaturedPullId(null);
     setFeaturedCardId(null);
-    setCurrentReveal(null);
-    setCurrentRevealIndex(0);
-    setRevealTotal(0);
-    setDeckKey(k => k + 1);
-    setDeckPhase('stacking');
+    setDeckPhase('opening');
 
     try {
       const res = await fetch('/api/packs/open', {
@@ -408,7 +390,6 @@ export default function OpenBoxPage() {
       setFeaturedCardId(featured?.card?.id ?? null);
       setUserCoins(data.remainingCoins);
       emitCoinBalanceUpdate({ balance: data.remainingCoins });
-      setRevealTotal(pullsData.length);
 
       if (pullsData.length === 0) {
         setDeckPhase('idle');
@@ -417,52 +398,8 @@ export default function OpenBoxPage() {
         return;
       }
 
-      const numCards = pullsData.length;
-      const STACK_MS  = 700;  // stacking phase duration
-      const SHUFFLE_MS = 750; // shuffle phase duration
-      const DRAW_MS   = 550;  // top-card lift animation
-      const REVEAL_MS = 2800; // card shown duration
-
-      // Phase transitions: stacking → shuffling → draw/reveal sequence
-      scheduleTimeout(() => setDeckPhase('shuffling'), STACK_MS);
-
-      scheduleTimeout(() => {
-        let t = 0;
-        pullsData.forEach((pull: any, index: number) => {
-          const isLast = index === pullsData.length - 1;
-
-          scheduleTimeout(() => setDeckPhase('drawing'), t);
-          t += DRAW_MS;
-
-          scheduleTimeout(() => {
-            setCurrentReveal(pull);
-            setCurrentRevealIndex(index + 1);
-            setDeckPhase('revealed');
-            setOpenedCardIds(prev => {
-              const next = new Set(prev);
-              if (pull.card?.id) next.add(pull.card.id);
-              return next;
-            });
-            setPulls(prev => [...prev, pull]);
-          }, t);
-          t += REVEAL_MS;
-
-          if (!isLast) {
-            scheduleTimeout(() => {
-              setCurrentReveal(null);
-              setDeckKey(k => k + 1);
-              setDeckPhase('shuffling');
-            }, t);
-            t += SHUFFLE_MS;
-          } else {
-            scheduleTimeout(() => {
-              setCurrentReveal(null);
-              setDeckPhase('summary');
-              setOpening(false);
-            }, t);
-          }
-        });
-      }, STACK_MS + SHUFFLE_MS);
+      // PackOpeningFlow handles the full animation sequence.
+      // Pulls are stored in pendingPullsRef and passed to the component.
     } catch (error) {
       console.error('Error opening box:', error);
       clearRevealTimeouts();
@@ -569,9 +506,9 @@ export default function OpenBoxPage() {
 
   if (!box) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 flex items-center justify-center font-display">
-        <div className="text-white flex items-center gap-3">
-          <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen flex items-center justify-center font-display">
+        <div className="text-[#f0f0f5] flex items-center gap-3">
+          <div className="w-6 h-6 border-2 border-[#C84FFF] border-t-transparent rounded-full animate-spin" />
           Loading pack...
         </div>
       </div>
@@ -580,12 +517,12 @@ export default function OpenBoxPage() {
 
   if (!box.cards || !Array.isArray(box.cards)) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display">
+      <div className="min-h-screen font-display">
         <div className="fixed inset-0 bg-grid opacity-30" />
         <div className="relative container py-12">
-          <div className="glass-strong rounded-2xl p-12 text-center">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
             <Package className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400">This pack has no cards yet.</p>
+            <p className="text-[#8888aa]">This pack has no cards yet.</p>
           </div>
         </div>
       </div>
@@ -595,47 +532,47 @@ export default function OpenBoxPage() {
   const totalCost = box.price * quantity;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display">
+    <div className="min-h-screen font-display">
       {/* Background Effects */}
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
-      <div className="fixed top-20 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl hidden lg:block" />
+      <div className="fixed top-20 left-10 w-72 h-72 bg-[rgba(200,79,255,0.1)] rounded-full blur-3xl hidden lg:block" />
 
       <div className="relative container py-12">
         {/* Back Link */}
-        <Link href="/boxes" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-6">
+        <Link href="/boxes" className="inline-flex items-center gap-2 text-[#8888aa] hover:text-[#f0f0f5] transition-colors mb-6">
           <ArrowLeft className="w-4 h-4" />
           Back to Boxes
         </Link>
 
         <div className="max-w-6xl mx-auto">
           {/* Box Info Card */}
-          <div className="glass-strong rounded-2xl p-6 mb-6">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 mb-6">
             <div className="flex flex-col md:flex-row items-start gap-6">
               <div className="relative w-full md:w-48 aspect-[3/4] rounded-xl overflow-hidden flex-shrink-0">
                 {box.imageUrl ? (
                   <Image src={box.imageUrl} alt={box.name} fill className="object-cover"  />
                 ) : (
-                  <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                  <div className="w-full h-full bg-[#12123a] flex items-center justify-center">
                     <Package className="w-12 h-12 text-gray-600" />
                   </div>
                 )}
               </div>
               <div className="flex-1">
-                <div className="inline-flex items-center gap-2 px-3 py-1 mb-3 rounded-full glass text-sm">
-                  <Package className="w-4 h-4 text-blue-400" />
-                  <span className="text-gray-300">Pack Opening</span>
+                <div className="inline-flex items-center gap-2 px-3 py-1 mb-3 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
+                  <Package className="w-4 h-4 text-[#C84FFF]" />
+                  <span className="text-[#8888aa]">Pack Opening</span>
                 </div>
-                <h1 className="text-3xl font-bold text-white mb-3">{box.name}</h1>
-                <p className="text-gray-400 mb-4">{box.description}</p>
+                <h1 className="text-3xl font-bold text-[#f0f0f5] mb-3">{box.name}</h1>
+                <p className="text-[#8888aa] mb-4">{box.description}</p>
                 <div className="flex flex-wrap gap-4">
                   <div className="flex items-center gap-2">
                     <Coins className="w-5 h-5 text-amber-400" />
-                    <span className="text-white font-semibold">{box.price.toFixed(2)} coins/pack</span>
+                    <span className="text-[#f0f0f5] font-semibold">{box.price.toFixed(2)} coins/pack</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Layers className="w-5 h-5 text-gray-400" />
-                    <span className="text-gray-400">{box.cardsPerPack} cards/pack</span>
+                    <Layers className="w-5 h-5 text-[#8888aa]" />
+                    <span className="text-[#8888aa]">{box.cardsPerPack} cards/pack</span>
                   </div>
                 </div>
               </div>
@@ -643,16 +580,16 @@ export default function OpenBoxPage() {
           </div>
 
           {/* Open Box Card */}
-          <div className="glass-strong rounded-2xl p-6 mb-6">
-            <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-blue-400" />
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 mb-6">
+            <h2 className="text-xl font-bold text-[#f0f0f5] mb-4 flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-[#C84FFF]" />
               Open Pack
             </h2>
             
             <div className="space-y-4">
               {/* Quantity Selection */}
               <div>
-                <label className="block text-sm font-medium mb-3 text-gray-300">Quantity</label>
+                <label className="block text-sm font-medium mb-3 text-[#8888aa]">Quantity</label>
                 <div className="flex flex-wrap gap-3">
                   {[1, 2, 3, 4].map((qty) => (
                     <button
@@ -661,8 +598,8 @@ export default function OpenBoxPage() {
                       onClick={() => setQuantity(qty)}
                       className={`px-6 py-3 rounded-xl border-2 font-semibold transition-all ${
                         quantity === qty
-                          ? 'border-blue-500 bg-blue-500/10 text-blue-400'
-                          : 'border-gray-700 bg-gray-800/50 text-gray-400 hover:border-gray-600'
+                          ? 'border-[rgba(200,79,255,0.3)] bg-[rgba(200,79,255,0.1)] text-[#C84FFF]'
+                          : 'border-[rgba(255,255,255,0.06)] bg-[#12123a]/50 text-[#8888aa] hover:border-[rgba(255,255,255,0.12)]'
                       }`}
                     >
                       {qty}x
@@ -672,18 +609,18 @@ export default function OpenBoxPage() {
               </div>
 
               {/* Cost Display */}
-              <div className="p-4 rounded-xl bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20">
+              <div className="p-4 rounded-xl bg-gradient-to-r from-[rgba(200,79,255,0.08)] to-[rgba(200,79,255,0.03)] border border-[rgba(200,79,255,0.15)]">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-gray-400">Total Cost:</span>
+                  <span className="text-[#8888aa]">Total Cost:</span>
                   <div className="flex items-center gap-2">
                     <Coins className="w-5 h-5 text-amber-400" />
-                    <span className="text-2xl font-bold text-white">{totalCost.toFixed(2)}</span>
+                    <span className="text-2xl font-bold text-[#f0f0f5]">{totalCost.toFixed(2)}</span>
                   </div>
                 </div>
                 {userCoins !== null && (
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-400">Your Balance:</span>
-                    <span className={userCoins >= totalCost ? 'text-green-400 font-semibold' : 'text-red-400 font-semibold'}>
+                    <span className="text-[#8888aa]">Your Balance:</span>
+                    <span className={userCoins >= totalCost ? 'text-[#E879F9] font-semibold' : 'text-red-400 font-semibold'}>
                       {userCoins.toFixed(2)} coins
                     </span>
                   </div>
@@ -694,11 +631,11 @@ export default function OpenBoxPage() {
               <button
                 onClick={() => setShowConfirm(true)}
                 disabled={opening || isAutoOpening || (userCoins !== null && userCoins < totalCost)}
-                className="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold rounded-xl transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2 shimmer"
+                className="w-full py-4 bg-[#C84FFF] hover:bg-[#E879F9] text-white font-semibold rounded-xl transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2 shimmer shadow-[0_0_24px_rgba(200,79,255,0.3)]"
               >
                 {opening ? (
                   <>
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
                     Opening...
                   </>
                 ) : (
@@ -710,10 +647,10 @@ export default function OpenBoxPage() {
               </button>
 
               {/* Auto Open Section */}
-              <div className="border-t border-gray-700/50 pt-4">
+              <div className="border-t border-[rgba(255,255,255,0.06)] pt-4">
                 <div className="flex items-center gap-2 mb-3">
                   <Zap className="w-4 h-4 text-amber-400" />
-                  <span className="text-sm font-semibold text-gray-300">Auto Open</span>
+                  <span className="text-sm font-semibold text-[#8888aa]">Auto Open</span>
                   <span className="text-xs text-gray-500 ml-1">— opens boxes automatically until coins run out</span>
                 </div>
 
@@ -723,7 +660,7 @@ export default function OpenBoxPage() {
                       <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 grid grid-cols-3 gap-4 text-center">
                         <div>
                           <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Boxes</p>
-                          <p className="text-lg font-bold text-white">{autoBoxesOpened}</p>
+                          <p className="text-lg font-bold text-[#f0f0f5]">{autoBoxesOpened}</p>
                         </div>
                         <div>
                           <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Spent</p>
@@ -731,7 +668,7 @@ export default function OpenBoxPage() {
                         </div>
                         <div>
                           <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Remaining</p>
-                          <p className="text-lg font-bold text-green-400">{(userCoins ?? 0).toFixed(2)}</p>
+                          <p className="text-lg font-bold text-[#E879F9]">{(userCoins ?? 0).toFixed(2)}</p>
                         </div>
                       </div>
                       <button
@@ -754,7 +691,7 @@ export default function OpenBoxPage() {
                             value={autoMaxCoins}
                             onChange={(e) => setAutoMaxCoins(e.target.value)}
                             placeholder="Max coins (leave empty = unlimited)"
-                            className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-600 text-sm focus:border-amber-500/60 focus:outline-none"
+                            className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-[#f0f0f5] placeholder-gray-600 text-sm focus:border-amber-500/60 focus:outline-none"
                         />
                       </div>
                       <button
@@ -772,10 +709,10 @@ export default function OpenBoxPage() {
           </div>
 
           {/* What's in the box */}
-          <div className="glass-strong rounded-2xl p-6">
-            <h2 className="text-xl font-bold text-white mb-2">What's in the pack?</h2>
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6">
+            <h2 className="text-xl font-bold text-[#f0f0f5] mb-2">What's in the pack?</h2>
             {box.cards.length > 0 && (
-              <p className="text-sm text-gray-400 mb-4">{box.cards.length} card{box.cards.length !== 1 ? 's' : ''} available</p>
+              <p className="text-sm text-[#8888aa] mb-4">{box.cards.length} card{box.cards.length !== 1 ? 's' : ''} available</p>
             )}
             
             {box.cards.length > 0 ? (
@@ -797,7 +734,7 @@ export default function OpenBoxPage() {
                       key={card.id}
                       className={`relative group transition-all duration-300 rounded-2xl p-3 flex flex-col h-full ${
                         isOpened
-                          ? `ring-2 ring-offset-2 ring-offset-gray-900 z-10 ${isFeatured ? 'scale-[1.02]' : ''} ${cardRarityGlow.border.replace('border-', 'ring-')}`
+                          ? `ring-2 ring-offset-2 ring-offset-[#06061a] z-10 ${isFeatured ? 'scale-[1.02]' : ''} ${cardRarityGlow.border.replace('border-', 'ring-')}`
                           : ''
                       }`}
                       style={{
@@ -845,7 +782,7 @@ export default function OpenBoxPage() {
                         {card.imageUrlGatherer ? (
                           <Image src={card.imageUrlGatherer} alt={card.name} fill className="object-cover" unoptimized />
                         ) : (
-                          <div className="w-full h-full bg-gray-800/60 flex items-center justify-center">
+                          <div className="w-full h-full bg-[#12123a]/60 flex items-center justify-center">
                             <span className="text-gray-600 text-xs">No Image</span>
                           </div>
                         )}
@@ -875,7 +812,7 @@ export default function OpenBoxPage() {
                 })}
               </div>
             ) : (
-              <div className="text-center py-8 text-gray-400">
+              <div className="text-center py-8 text-[#8888aa]">
                 <p>No cards available in this pack yet.</p>
               </div>
             )}
@@ -883,8 +820,8 @@ export default function OpenBoxPage() {
 
           {/* Your Pulls */}
           {pulls.length > 0 && (
-            <div className="glass-strong rounded-2xl p-6 mt-6">
-              <h2 className="text-xl font-bold text-white mb-4">Your Pulls</h2>
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 mt-6">
+              <h2 className="text-xl font-bold text-[#f0f0f5] mb-4">Your Pulls</h2>
               <div className={`grid gap-5 ${
                 pulls.length === 1 ? 'grid-cols-1 max-w-xs mx-auto' :
                 pulls.length === 2 ? 'grid-cols-2 max-w-md mx-auto' :
@@ -958,7 +895,7 @@ export default function OpenBoxPage() {
               <div className="mt-4 flex flex-wrap gap-3">
                 <button
                   onClick={() => router.push('/collection')}
-                  className="px-6 py-3 rounded-xl font-semibold text-white gradient-border bg-gray-900/50 hover:bg-gray-800/50 transition-all"
+                  className="px-6 py-3 rounded-xl font-semibold text-[#f0f0f5] gradient-border bg-[#06061a]/50 hover:bg-[#12123a]/50 transition-all"
                 >
                   View Collection
                 </button>
@@ -970,7 +907,7 @@ export default function OpenBoxPage() {
                     setFeaturedPullId(null);
                     setFeaturedCardId(null);
                   }}
-                  className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-semibold rounded-xl transition-all hover:scale-105"
+                  className="px-6 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl transition-all hover:scale-105 shadow-[0_0_24px_rgba(200,79,255,0.3)]"
                 >
                   Open More
                 </button>
@@ -980,166 +917,27 @@ export default function OpenBoxPage() {
         </div>
       </div>
 
-      {/* Deck Animation Overlay */}
-      {deckPhase !== 'idle' && deckPhase !== 'summary' && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm">
-          <div className="relative flex flex-col items-center">
-
-            {/* Status label */}
-            <p className="mb-6 text-xs font-semibold uppercase tracking-[0.2em] text-gray-500 text-center min-h-[16px]">
-              {deckPhase === 'stacking' && `Opening ${quantity} pack${quantity > 1 ? 's' : ''}…`}
-              {(deckPhase === 'shuffling' || deckPhase === 'drawing') && (
-                currentRevealIndex === 0
-                  ? 'Shuffling deck…'
-                  : `Pull ${currentRevealIndex + 1} of ${revealTotal}`
-              )}
-              {deckPhase === 'revealed' && `Pull ${currentRevealIndex} of ${revealTotal}`}
-            </p>
-
-            {/* Card container */}
-            <div
-              className="relative"
-              style={{ width: 'min(260px, 65vw)', height: 'calc(min(260px, 65vw) * 88 / 63)' }}
-            >
-              {/* Face-down deck stack */}
-              {deckPhase !== 'revealed' && (
-                <div
-                  key={deckKey}
-                  className={`absolute inset-0 ${deckPhase === 'shuffling' ? 'deck-shuffle' : ''}`}
-                >
-                  {(() => {
-                    const deckCount = Math.max(1, revealTotal - currentRevealIndex);
-                    return Array.from({ length: deckCount }, (_, i) => deckCount - 1 - i).map((offset) => (
-                      <div
-                        key={offset}
-                        className="absolute inset-0"
-                        style={{
-                          transform: offset > 0 ? `translate(${offset * -3}px, ${offset * -4}px)` : undefined,
-                          zIndex: deckCount - offset,
-                        }}
-                      >
-                        <div
-                          className={`absolute inset-0 ${
-                            deckPhase === 'stacking' ? 'deck-card-in' : ''
-                          } ${offset === 0 && deckPhase === 'drawing' ? 'deck-draw-lift' : ''}`}
-                          style={{
-                            animationDelay: deckPhase === 'stacking' ? `${(deckCount - 1 - offset) * 80}ms` : '0ms',
-                          }}
-                        >
-                          <CardBack url={box.cardBackUrl} />
-                        </div>
-                      </div>
-                    ));
-                  })()}
-                </div>
-              )}
-
-              {/* Revealed card — full 3D flip: back → face */}
-              {deckPhase === 'revealed' && currentReveal?.card && (() => {
-                const rarityGlow = getRarityGlow(currentReveal.card.rarity);
-                const fx = getRarityEffects(rarityGlow.lindwurm);
-                const shimmerBg = `linear-gradient(105deg, transparent, ${rarityGlow.glowColor.replace('1)', '0.4)')}, transparent)`;
-                return (
-                  <>
-                    {/* Pulsing glow halo (behind card, first in DOM) */}
-                    {fx.glowClass && (
-                      <div className={`absolute inset-0 rounded-xl pointer-events-none ${fx.glowClass}`} />
-                    )}
-
-                    {/* 3D flip card */}
-                    <div className="absolute inset-0" style={{ perspective: '900px' }}>
-                      <div className="deck-flip-full absolute inset-0" style={{ transformStyle: 'preserve-3d' }}>
-                        {/* Front face: card back */}
-                        <div
-                          className="absolute inset-0"
-                          style={{ backfaceVisibility: 'hidden' }}
-                        >
-                          <CardBack url={box.cardBackUrl} />
-                        </div>
-
-                        {/* Back face: card image */}
-                        <div
-                          className="absolute inset-0 rounded-xl overflow-hidden border"
-                          style={{
-                            backfaceVisibility: 'hidden',
-                            transform: 'rotateY(180deg)',
-                            borderColor: rarityGlow.glowColor,
-                            boxShadow: `0 0 40px 10px ${rarityGlow.glowColor.replace('1)', '0.4)')}, 0 25px 60px rgba(0,0,0,0.7)`,
-                          }}
-                        >
-                          {currentReveal.card.imageUrlGatherer ? (
-                            <Image src={currentReveal.card.imageUrlGatherer} alt={currentReveal.card.name} fill className="object-contain" unoptimized />
-                          ) : (
-                            <div className="flex h-full w-full items-center justify-center bg-gray-800 text-gray-500">No Image</div>
-                          )}
-                          {/* Shimmer sweep on card face (rare+) */}
-                          {fx.shimmerDur && (
-                            <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-xl" style={{ zIndex: 10 }}>
-                              <div className="rarity-shimmer-line" style={{ background: shimmerBg, animationDuration: fx.shimmerDur, animationDelay: '0.7s' }} />
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Spark particles floating up (epic / legendary) */}
-                    {fx.sparks?.map((s, i) => (
-                      <span
-                        key={i}
-                        className="spark-particle"
-                        style={{
-                          left: `${s.x}%`,
-                          top: `${s.y}%`,
-                          width: `${s.size}px`,
-                          height: `${s.size}px`,
-                          background: rarityGlow.particleColor,
-                          boxShadow: `0 0 ${s.size * 2}px ${s.size}px ${rarityGlow.glowColor.replace('1)', '0.7)')}`,
-                          animationDelay: `${0.7 + s.delay}s`,
-                          animationDuration: `${s.dur}s`,
-                          zIndex: 20,
-                        }}
-                      />
-                    ))}
-                  </>
-                );
-              })()}
-            </div>
-
-            {/* Card info shown on reveal */}
-            {deckPhase === 'revealed' && currentReveal?.card && (() => {
-              const rarityGlow = getRarityGlow(currentReveal.card.rarity);
-              return (
-                <div
-                  className="mt-5 flex flex-col items-center gap-1.5 deck-info-reveal"
-                  style={{ maxWidth: 'min(260px, 65vw)' }}
-                >
-                  <h3 className="text-xl font-bold text-white text-center leading-snug">
-                    {currentReveal.card.name}
-                  </h3>
-                  <div className="flex items-center gap-2 text-sm text-gray-400">
-                    <span>{box.name}</span>
-                    <span className="text-gray-600">·</span>
-                    <span className={`font-semibold ${rarityGlow.text}`}>{currentReveal.card.rarity || 'Common'}</span>
-                  </div>
-                  <div className="mt-1.5 flex items-center gap-2 px-5 py-2 rounded-xl bg-white/[0.04] border border-white/[0.08]">
-                    <Coins className="h-5 w-5 text-amber-400" />
-                    <span className="text-lg font-bold text-white">
-                      {currentReveal.card.coinValue?.toFixed(2)} coins
-                    </span>
-                  </div>
-                </div>
-              );
-            })()}
-
-            {/* Skip button */}
-            <button
-              onClick={handleSkip}
-              className="mt-8 px-6 py-2 rounded-xl text-sm font-medium text-gray-500 hover:text-white border border-gray-800 hover:border-gray-600 transition-all"
-            >
-              Skip
-            </button>
-          </div>
-        </div>
+      {/* Pack Opening Flow — handles booster, card reveal, best pull */}
+      {deckPhase === 'opening' && box && pendingPullsRef.current.length > 0 && (
+        <PackOpeningFlow
+          pulls={pendingPullsRef.current}
+          boxName={box.name}
+          cardBackUrl={box.cardBackUrl}
+          bestPullId={featuredPullId}
+          onComplete={() => {
+            setPulls(pendingPullsRef.current);
+            setOpenedCardIds(new Set(pendingPullsRef.current.map((p: any) => p.card?.id).filter(Boolean)));
+            setOpening(false);
+            setDeckPhase('summary');
+          }}
+          onSkip={() => {
+            const allPulls = pendingPullsRef.current;
+            setPulls(allPulls);
+            setOpenedCardIds(new Set(allPulls.map((p: any) => p.card?.id).filter(Boolean)));
+            setOpening(false);
+            setDeckPhase('summary');
+          }}
+        />
       )}
 
       {/* Summary Overlay */}
@@ -1149,7 +947,7 @@ export default function OpenBoxPage() {
           <div className="relative flex flex-col items-center w-full max-w-2xl py-8">
 
             <p className="mb-1 text-xs font-semibold uppercase tracking-[0.2em] text-gray-500">Opening Results</p>
-            <h2 className="text-2xl font-bold text-white mb-6">
+            <h2 className="text-2xl font-bold text-[#f0f0f5] mb-6">
               {(() => {
                 const boxes = Math.round(pulls.length / (box.cardsPerPack || 1));
                 const unique = new Set(pulls.map(p => p.card?.id ?? p.id)).size;
@@ -1192,7 +990,7 @@ export default function OpenBoxPage() {
                       <div key={group.cardId} className={`relative flex flex-col transition-opacity ${allSold ? 'opacity-40' : ''}`}>
                         {/* Count badge */}
                         {group.pullIds.length > 1 && (
-                          <div className="absolute top-1.5 left-1.5 z-30 bg-gray-900/90 border border-gray-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none pointer-events-none">
+                          <div className="absolute top-1.5 left-1.5 z-30 bg-[#06061a]/90 border border-[rgba(255,255,255,0.06)] text-[#f0f0f5] text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none pointer-events-none">
                             ×{group.pullIds.length}
                           </div>
                         )}
@@ -1216,7 +1014,7 @@ export default function OpenBoxPage() {
                             {group.card?.imageUrlGatherer ? (
                               <Image src={group.card.imageUrlGatherer} alt={group.card.name} fill className="object-cover" unoptimized />
                             ) : (
-                              <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                              <div className="w-full h-full bg-[#12123a] flex items-center justify-center">
                                 <span className="text-gray-600 text-xs">No Image</span>
                               </div>
                             )}
@@ -1231,7 +1029,7 @@ export default function OpenBoxPage() {
                               <p className="text-[10px] text-white truncate">{group.card?.name}</p>
                               <p className={`text-[10px] font-semibold ${rarityGlow.text}`}>
                                 {group.card?.coinValue?.toFixed(2)} coins
-                                {group.pullIds.length > 1 && <span className="text-gray-400 font-normal"> ×{group.pullIds.length}</span>}
+                                {group.pullIds.length > 1 && <span className="text-[#8888aa] font-normal"> ×{group.pullIds.length}</span>}
                               </p>
                             </div>
                             {/* Sold overlay */}
@@ -1302,7 +1100,7 @@ export default function OpenBoxPage() {
               <Coins className="w-6 h-6 text-amber-400 flex-shrink-0" />
               <div>
                 <p className="text-xs text-gray-500 uppercase tracking-widest">Total Value</p>
-                <p className="text-2xl font-bold text-white">
+                <p className="text-2xl font-bold text-[#f0f0f5]">
                   {pulls.filter(p => !soldPullIds.has(p.id)).reduce((sum, p) => sum + (p.card?.coinValue ?? 0), 0).toFixed(2)} coins
                 </p>
                 {soldPullIds.size > 0 && (
@@ -1313,7 +1111,7 @@ export default function OpenBoxPage() {
 
             <button
               onClick={() => setDeckPhase('idle')}
-              className="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold rounded-xl transition-all hover:scale-105"
+              className="px-8 py-3 bg-[#C84FFF] hover:bg-[#E879F9] text-white font-semibold rounded-xl transition-all hover:scale-105 shadow-[0_0_24px_rgba(200,79,255,0.3)]"
             >
               Close
             </button>
@@ -1326,14 +1124,14 @@ export default function OpenBoxPage() {
       {sellConfirm && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setSellConfirm(null)} />
-          <div className="relative z-10 w-full max-w-sm rounded-2xl bg-gray-900 border border-gray-700 p-6 shadow-2xl">
+          <div className="relative z-10 w-full max-w-sm rounded-2xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] p-6 shadow-2xl">
             <div className="flex items-center gap-2 mb-1">
               <BadgeDollarSign className="w-5 h-5 text-amber-400" />
-              <h3 className="text-lg font-bold text-white">Sell {TIER_META[sellConfirm.tier]?.label}?</h3>
+              <h3 className="text-lg font-bold text-[#f0f0f5]">Sell {TIER_META[sellConfirm.tier]?.label}?</h3>
             </div>
-            <p className="text-gray-400 text-sm mb-5">
+            <p className="text-[#8888aa] text-sm mb-5">
               Sell{' '}
-              <span className="text-white font-semibold">{sellConfirm.pullIds.length} {TIER_META[sellConfirm.tier]?.label}</span>
+              <span className="text-[#f0f0f5] font-semibold">{sellConfirm.pullIds.length} {TIER_META[sellConfirm.tier]?.label}</span>
               {' '}for{' '}
               <span className="text-amber-400 font-semibold">{sellConfirm.coins.toFixed(2)} coins</span>?
               {' '}This cannot be undone.
@@ -1342,47 +1140,7 @@ export default function OpenBoxPage() {
               <button
                 onClick={() => setSellConfirm(null)}
                 disabled={sellingSummary}
-                className="flex-1 py-2.5 rounded-xl border border-gray-600 text-gray-300 hover:text-white hover:border-gray-500 font-medium transition-colors disabled:opacity-50"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSellByTier}
-                disabled={sellingSummary}
-                className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-semibold transition-all hover:scale-[1.02] flex items-center justify-center gap-2 disabled:opacity-50 disabled:hover:scale-100"
-              >
-                {sellingSummary ? (
-                  <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Selling...</>
-                ) : (
-                  <><BadgeDollarSign className="w-4 h-4" /> Sell</>
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Sell-by-rarity confirmation dialog */}
-      {sellConfirm && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setSellConfirm(null)} />
-          <div className="relative z-10 w-full max-w-sm rounded-2xl bg-gray-900 border border-gray-700 p-6 shadow-2xl">
-            <div className="flex items-center gap-2 mb-1">
-              <BadgeDollarSign className="w-5 h-5 text-amber-400" />
-              <h3 className="text-lg font-bold text-white">Sell {TIER_META[sellConfirm.tier]?.label}?</h3>
-            </div>
-            <p className="text-gray-400 text-sm mb-5">
-              Sell{' '}
-              <span className="text-white font-semibold">{sellConfirm.pullIds.length} {TIER_META[sellConfirm.tier]?.label}</span>
-              {' '}for{' '}
-              <span className="text-amber-400 font-semibold">{sellConfirm.coins.toFixed(2)} coins</span>?
-              {' '}This cannot be undone.
-            </p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setSellConfirm(null)}
-                disabled={sellingSummary}
-                className="flex-1 py-2.5 rounded-xl border border-gray-600 text-gray-300 hover:text-white hover:border-gray-500 font-medium transition-colors disabled:opacity-50"
+                className="flex-1 py-2.5 rounded-xl border border-[rgba(255,255,255,0.06)] text-[#8888aa] hover:text-[#f0f0f5] hover:border-[rgba(255,255,255,0.12)] font-medium transition-colors disabled:opacity-50"
               >
                 Cancel
               </button>
@@ -1409,12 +1167,12 @@ export default function OpenBoxPage() {
             className="absolute inset-0 bg-black/70 backdrop-blur-sm"
             onClick={() => setShowAutoConfirm(false)}
           />
-          <div className="relative z-10 w-full max-w-sm rounded-2xl bg-gray-900 border border-gray-700 p-6 shadow-2xl">
+          <div className="relative z-10 w-full max-w-sm rounded-2xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] p-6 shadow-2xl">
             <div className="flex items-center gap-2 mb-1">
               <Zap className="w-5 h-5 text-amber-400" />
-              <h3 className="text-lg font-bold text-white">Start Auto Open?</h3>
+              <h3 className="text-lg font-bold text-[#f0f0f5]">Start Auto Open?</h3>
             </div>
-            <p className="text-gray-400 text-sm mb-5">
+            <p className="text-[#8888aa] text-sm mb-5">
               {autoMaxCoins !== '' && !isNaN(parseFloat(autoMaxCoins))
                 ? <>Will open packs until you spend up to <span className="text-amber-400 font-semibold">{parseFloat(autoMaxCoins).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} coins</span> or run out of coins.</>
                 : <>Will open packs until your coins run out. Current balance: <span className="text-amber-400 font-semibold">{(userCoins ?? 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} coins</span>.</>
@@ -1423,7 +1181,7 @@ export default function OpenBoxPage() {
             <div className="flex gap-3">
               <button
                 onClick={() => setShowAutoConfirm(false)}
-                className="flex-1 py-2.5 rounded-xl border border-gray-600 text-gray-300 hover:text-white hover:border-gray-500 font-medium transition-colors"
+                className="flex-1 py-2.5 rounded-xl border border-[rgba(255,255,255,0.06)] text-[#8888aa] hover:text-[#f0f0f5] hover:border-[rgba(255,255,255,0.12)] font-medium transition-colors"
               >
                 Cancel
               </button>
@@ -1448,9 +1206,9 @@ export default function OpenBoxPage() {
             onClick={() => setShowConfirm(false)}
           />
           {/* Dialog */}
-          <div className="relative z-10 w-full max-w-sm rounded-2xl bg-gray-900 border border-gray-700 p-6 shadow-2xl">
-            <h3 className="text-lg font-bold text-white mb-1">Open {quantity}x Pack{quantity > 1 ? 's' : ''}?</h3>
-            <p className="text-gray-400 text-sm mb-5">
+          <div className="relative z-10 w-full max-w-sm rounded-2xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] p-6 shadow-2xl">
+            <h3 className="text-lg font-bold text-[#f0f0f5] mb-1">Open {quantity}x Pack{quantity > 1 ? 's' : ''}?</h3>
+            <p className="text-[#8888aa] text-sm mb-5">
               This will cost{' '}
               <span className="text-amber-400 font-semibold">
                 {totalCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} coins
@@ -1460,13 +1218,13 @@ export default function OpenBoxPage() {
             <div className="flex gap-3">
               <button
                 onClick={() => setShowConfirm(false)}
-                className="flex-1 py-2.5 rounded-xl border border-gray-600 text-gray-300 hover:text-white hover:border-gray-500 font-medium transition-colors"
+                className="flex-1 py-2.5 rounded-xl border border-[rgba(255,255,255,0.06)] text-[#8888aa] hover:text-[#f0f0f5] hover:border-[rgba(255,255,255,0.12)] font-medium transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={() => { setShowConfirm(false); handleOpen(); }}
-                className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold transition-all hover:scale-[1.02] flex items-center justify-center gap-2"
+                className="flex-1 py-2.5 rounded-xl bg-[#C84FFF] hover:bg-[#E879F9] text-white font-semibold transition-all hover:scale-[1.02] flex items-center justify-center gap-2 shadow-[0_0_24px_rgba(200,79,255,0.3)]"
               >
                 <Coins className="w-4 h-4" />
                 Confirm

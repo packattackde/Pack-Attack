@@ -174,8 +174,8 @@ export function PresetGallery({ onSelectPreset, isOpen, onClose }: PresetGallery
           <div className="p-6 border-b border-gray-700 flex-shrink-0">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600">
-                  <Sparkles className="h-6 w-6 text-white" />
+                <div className="p-2 rounded-xl bg-gradient-to-br from-[#C84FFF] to-[#8fbf00]">
+                  <Sparkles className="h-6 w-6 text-black" />
                 </div>
                 <div>
                   <h2 className="text-2xl font-bold text-white">Box Presets</h2>

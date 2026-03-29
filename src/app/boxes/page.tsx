@@ -5,10 +5,10 @@ import type { Metadata } from 'next';
 
 // SEO Metadata
 export const metadata: Metadata = {
-  title: 'Trading Card Boxes - Pack Attack',
+  title: 'Trading Card Boxes - PullForge',
   description: 'Browse our selection of trading card boxes. Open Pokemon, Magic: The Gathering, Yu-Gi-Oh, One Piece, Lorcana and more. Real cards, real thrills!',
   openGraph: {
-    title: 'Trading Card Boxes - Pack Attack',
+    title: 'Trading Card Boxes - PullForge',
     description: 'Browse our selection of trading card boxes from all major TCGs.',
     type: 'website',
   },
@@ -73,23 +73,25 @@ export default async function BoxesPage() {
   )].sort();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display">
+    <div className="min-h-screen font-display">
       {/* Background Effects */}
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
 
-      <div className="relative container py-12">
+      <div className="relative container py-14 sm:py-16">
         {/* Header */}
-        <div className="mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full glass text-sm">
-            <Package className="w-4 h-4 text-blue-400" />
-            <span className="text-gray-300">Card Packs</span>
+        <div className="mb-12">
+          <div className="inline-flex items-center gap-2.5 px-4 py-2 mb-5 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] text-sm shadow-md">
+            <div className="flex items-center justify-center w-5 h-5 rounded-full bg-[rgba(200,79,255,0.15)]">
+              <Package className="w-3 h-3 text-[#C84FFF]" />
+            </div>
+            <span className="text-[#f0f0f5] font-medium">Card Packs</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-3">
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-3 tracking-tight">
             <span className="text-white">All </span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Boxes</span>
+            <span className="text-[#C84FFF]">Boxes</span>
           </h1>
-          <p className="text-gray-400 text-lg">Browse and open packs to build your collection</p>
+          <p className="text-[#8888aa] text-lg">Browse and open packs to build your collection</p>
         </div>
 
         {/* Client-side filterable boxes */}

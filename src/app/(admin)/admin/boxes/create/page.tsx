@@ -96,10 +96,10 @@ export default function CreateBoxPage() {
   // Show loading state while checking authentication
   if (status === 'loading') {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto mb-4" />
-          <p className="text-gray-400">Loading...</p>
+          <p className="text-[#8888aa]">Loading...</p>
         </div>
       </div>
     );
@@ -108,10 +108,10 @@ export default function CreateBoxPage() {
   // Don't render content for non-admin users
   if (!session || session.user?.role !== 'ADMIN') {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto mb-4" />
-          <p className="text-gray-400">Redirecting...</p>
+          <p className="text-[#8888aa]">Redirecting...</p>
         </div>
       </div>
     );
@@ -413,9 +413,9 @@ export default function CreateBoxPage() {
   const highestCard = getHighestValueCard();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950">
+    <div className="min-h-screen">
       <div className="container py-12">
-        <Card className="max-w-6xl mx-auto border-gray-800 bg-gray-900/50">
+        <Card className="max-w-6xl mx-auto border-[rgba(255,255,255,0.06)] bg-[#12123a]">
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="text-white">Create New Box</CardTitle>
@@ -424,7 +424,7 @@ export default function CreateBoxPage() {
                   type="button"
                   variant="outline"
                   onClick={() => setShowPresetGallery(true)}
-                  className="border-blue-500/50 text-blue-400 hover:bg-blue-500/10 hover:text-blue-300"
+                  className="border-[rgba(200,79,255,0.3)]/50 text-[#C84FFF] hover:bg-[rgba(200,79,255,0.08)] hover:text-[#C84FFF]"
                 >
                   <FolderOpen className="h-4 w-4 mr-2" />
                   Load Preset
@@ -454,7 +454,7 @@ export default function CreateBoxPage() {
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:border-primary focus:outline-none"
+                    className="w-full px-4 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-primary focus:outline-none"
                   />
                 </div>
                 <div>
@@ -466,7 +466,7 @@ export default function CreateBoxPage() {
                     min="0.01"
                     value={formData.price}
                     onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                    className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:border-primary focus:outline-none"
+                    className="w-full px-4 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-primary focus:outline-none"
                   />
                 </div>
               </div>
@@ -477,7 +477,7 @@ export default function CreateBoxPage() {
                   required
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:border-primary focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-primary focus:outline-none"
                   rows={3}
                 />
               </div>
@@ -490,12 +490,12 @@ export default function CreateBoxPage() {
                   min="1"
                   value={formData.cardsPerPack}
                   onChange={(e) => setFormData({ ...formData, cardsPerPack: e.target.value })}
-                  className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:border-primary focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-primary focus:outline-none"
                 />
               </div>
 
               {/* Card Search */}
-              <div className="border-t border-gray-700 pt-6">
+              <div className="border-t border-[rgba(255,255,255,0.06)] pt-6">
                 <h3 className="text-lg font-semibold text-white mb-4">Add Cards to Box</h3>
                 
                 <div className="flex flex-wrap gap-2 mb-4">
@@ -507,7 +507,7 @@ export default function CreateBoxPage() {
                       setApiSource('default');
                       setSearchResults([]);
                     }}
-                    className="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white"
+                    className="px-4 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white"
                   >
                     {gameOptions.map(opt => (
                       <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -522,7 +522,7 @@ export default function CreateBoxPage() {
                         setApiSource(e.target.value as 'default' | 'justtcg');
                         setSearchResults([]);
                       }}
-                      className="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white"
+                      className="px-4 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white"
                       title="Select card data source"
                     >
                       <option value="default">
@@ -534,7 +534,7 @@ export default function CreateBoxPage() {
                   
                   {/* Show JustTCG badge for JustTCG-only games */}
                   {justTCGOnlyGames.includes(selectedGame) && (
-                    <span className="px-3 py-2 rounded-lg bg-blue-900/50 border border-blue-700 text-blue-300 text-sm">
+                    <span className="px-3 py-2 rounded-lg bg-[rgba(200,79,255,0.1)] border border-[rgba(200,79,255,0.3)] text-[#C84FFF] text-sm">
                       📊 JustTCG
                     </span>
                   )}
@@ -545,7 +545,7 @@ export default function CreateBoxPage() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), searchCards())}
-                    className="flex-1 min-w-[200px] px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:border-primary focus:outline-none"
+                    className="flex-1 min-w-[200px] px-4 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-primary focus:outline-none"
                   />
                   <Button type="button" onClick={searchCards} disabled={searching}>
                     <Search className="h-4 w-4 mr-2" />
@@ -555,9 +555,9 @@ export default function CreateBoxPage() {
 
                 {/* Search Results */}
                 {searchResults.length > 0 && (
-                  <div className="mb-6 p-4 rounded-lg bg-gray-800 border border-gray-700 max-h-[500px] overflow-y-auto">
+                  <div className="mb-6 p-4 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] max-h-[500px] overflow-y-auto">
                     <div className="flex items-center justify-between mb-3">
-                      <p className="text-sm text-gray-400">Search Results ({searchResults.length} found) - Click to add:</p>
+                      <p className="text-sm text-[#8888aa]">Search Results ({searchResults.length} found) - Click to add:</p>
                       <Button type="button" variant="ghost" size="sm" onClick={clearSearch}>
                         <X className="h-4 w-4 mr-1" />
                         Clear
@@ -572,7 +572,7 @@ export default function CreateBoxPage() {
                             type="button"
                             onClick={() => addCardToBox(card)}
                             className={`relative aspect-[63/88] rounded-lg overflow-hidden border-2 transition-all group ${
-                              isSelected ? 'border-green-500 ring-2 ring-green-500/50' : 'border-gray-600 hover:border-primary'
+                              isSelected ? 'border-[#C84FFF] ring-2 ring-[#C84FFF]/50' : 'border-gray-600 hover:border-primary'
                             }`}
                           >
                             {card.imageUrl && (
@@ -584,8 +584,8 @@ export default function CreateBoxPage() {
                               />
                             )}
                             {isSelected ? (
-                              <div className="absolute inset-0 bg-green-500/30 flex items-center justify-center">
-                                <div className="bg-green-500 rounded-full p-1">
+                              <div className="absolute inset-0 bg-[#C84FFF]/30 flex items-center justify-center">
+                                <div className="bg-[#C84FFF] rounded-full p-1">
                                   <Check className="h-4 w-4 text-white" />
                                 </div>
                               </div>
@@ -608,8 +608,8 @@ export default function CreateBoxPage() {
                 {boxCards.length > 0 && (
                   <div className="space-y-4">
                     <div className="flex items-center justify-between flex-wrap gap-2">
-                      <div className="text-sm text-gray-400">
-                        Total Pull Rate: <span className={`font-bold ${Math.abs(totalRate - 100) < 0.001 ? 'text-green-500' : 'text-red-500'}`}>
+                      <div className="text-sm text-[#8888aa]">
+                        Total Pull Rate: <span className={`font-bold ${Math.abs(totalRate - 100) < 0.001 ? 'text-[#E879F9]' : 'text-red-500'}`}>
                           {totalRate.toFixed(3)}%
                         </span>
                       </div>
@@ -620,7 +620,7 @@ export default function CreateBoxPage() {
                             <select
                               value={bulkShopId}
                               onChange={(e) => setBulkShopId(e.target.value)}
-                              className="px-2 py-1 rounded bg-gray-800 border border-gray-700 text-white text-xs focus:border-orange-500 focus:outline-none"
+                              className="px-2 py-1 rounded bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white text-xs focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                             >
                               <option value="">No Shop</option>
                               {shops.map((s) => (
@@ -644,7 +644,7 @@ export default function CreateBoxPage() {
 
                     <div className="space-y-2 max-h-96 overflow-y-auto">
                       {boxCards.map((card, index) => (
-                        <div key={index} className="flex items-center gap-4 p-4 rounded-lg bg-gray-800 border border-gray-700">
+                        <div key={index} className="flex items-center gap-4 p-4 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)]">
                           <div className="relative w-16 h-24 rounded overflow-hidden flex-shrink-0">
                             {card.imageUrl && (
                               <Image
@@ -657,11 +657,11 @@ export default function CreateBoxPage() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="font-semibold text-white truncate">{card.name}</p>
-                            <p className="text-xs text-gray-400">{card.setName} • {card.rarity}</p>
+                            <p className="text-xs text-[#8888aa]">{card.setName} • {card.rarity}</p>
                           </div>
                           <div className="flex items-center gap-2 flex-wrap">
                             <div>
-                              <label className="text-xs text-gray-400">Pull Rate (%)</label>
+                              <label className="text-xs text-[#8888aa]">Pull Rate (%)</label>
                               <input
                                 type="number"
                                 step="0.001"
@@ -669,27 +669,27 @@ export default function CreateBoxPage() {
                                 max="100"
                                 value={card.pullRate}
                                 onChange={(e) => updateCard(index, 'pullRate', parseFloat(e.target.value) || 0)}
-                                className="w-24 px-2 py-1 rounded bg-gray-700 border border-gray-600 text-white text-sm focus:border-primary focus:outline-none"
+                                className="w-24 px-2 py-1 rounded bg-[#12123a] border border-gray-600 text-white text-sm focus:border-primary focus:outline-none"
                               />
                             </div>
                             <div>
-                              <label className="text-xs text-gray-400">Coin Value</label>
+                              <label className="text-xs text-[#8888aa]">Coin Value</label>
                               <input
                                 type="number"
                                 step="0.01"
                                 min="0.01"
                                 value={card.coinValue}
                                 onChange={(e) => updateCard(index, 'coinValue', parseFloat(e.target.value) || 0.01)}
-                                className="w-24 px-2 py-1 rounded bg-gray-700 border border-gray-600 text-white text-sm focus:border-primary focus:outline-none"
+                                className="w-24 px-2 py-1 rounded bg-[#12123a] border border-gray-600 text-white text-sm focus:border-primary focus:outline-none"
                               />
                             </div>
                             {shops.length > 0 && (
                               <div>
-                                <label className="text-xs text-gray-400">Shop</label>
+                                <label className="text-xs text-[#8888aa]">Shop</label>
                                 <select
                                   value={card.shopId || ''}
                                   onChange={(e) => updateCard(index, 'shopId', e.target.value || undefined)}
-                                  className="w-32 px-2 py-1 rounded bg-gray-700 border border-gray-600 text-white text-sm focus:border-orange-500 focus:outline-none"
+                                  className="w-32 px-2 py-1 rounded bg-[#12123a] border border-gray-600 text-white text-sm focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                                 >
                                   <option value="">None</option>
                                   {shops.map((s) => (
@@ -714,7 +714,7 @@ export default function CreateBoxPage() {
 
                     {highestCard && (
                       <div className="p-4 rounded-lg bg-primary/10 border border-primary/50">
-                        <p className="text-sm text-gray-400 mb-2">Box Display Image (Highest Coin Value Card):</p>
+                        <p className="text-sm text-[#8888aa] mb-2">Box Display Image (Highest Coin Value Card):</p>
                         <div className="flex items-center gap-4">
                           <div className="relative w-24 h-36 rounded overflow-hidden">
                             <Image
@@ -726,7 +726,7 @@ export default function CreateBoxPage() {
                           </div>
                           <div>
                             <p className="font-semibold text-white">{highestCard.name}</p>
-                            <p className="text-sm text-gray-400">{highestCard.coinValue} coins</p>
+                            <p className="text-sm text-[#8888aa]">{highestCard.coinValue} coins</p>
                           </div>
                         </div>
                       </div>
@@ -735,7 +735,7 @@ export default function CreateBoxPage() {
                 )}
               </div>
 
-              <div className="flex gap-4 pt-4 border-t border-gray-700">
+              <div className="flex gap-4 pt-4 border-t border-[rgba(255,255,255,0.06)]">
                 <Button type="submit" disabled={loading || boxCards.length === 0 || Math.abs(totalRate - 100) > 0.001}>
                   {loading ? 'Creating...' : 'Create Box'}
                 </Button>

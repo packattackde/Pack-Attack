@@ -28,15 +28,15 @@ export default async function AdminShopsPage() {
         <div className="mb-8">
           <Link
             href="/admin"
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-4"
+            className="inline-flex items-center gap-2 text-[#8888aa] hover:text-white transition-colors mb-4"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Admin
           </Link>
 
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass text-sm mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm mb-3">
             <ShieldCheck className="w-4 h-4 text-orange-400" />
-            <span className="text-gray-300">Admin Panel</span>
+            <span className="text-[#f0f0f5]">Admin Panel</span>
           </div>
 
           <div className="flex items-center gap-3 mb-2">
@@ -46,7 +46,7 @@ export default async function AdminShopsPage() {
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-400">Management</span>
             </h1>
           </div>
-          <p className="text-gray-400">Oversee all card supplier shops, their stock, and orders.</p>
+          <p className="text-[#8888aa]">Oversee all card supplier shops, their stock, and orders.</p>
         </div>
 
         <ShopsClient />

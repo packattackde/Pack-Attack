@@ -7,11 +7,10 @@ import { sendBattleNotificationWebhook } from '@/lib/discord-webhook';
 
 const battleSchema = z.object({
   boxId: z.string(),
-  entryFee: z.number().int().min(0),
-  rounds: z.number().int().min(1),
-  battleMode: z.enum(['NORMAL', 'UPSIDE_DOWN', 'JACKPOT']),
-  shareMode: z.boolean().default(false),
-  maxParticipants: z.number().int().min(2).max(8),
+  rounds: z.union([z.literal(3), z.literal(5), z.literal(7)]),
+  battleMode: z.enum(['LOWEST_CARD', 'HIGHEST_CARD', 'ALL_CARDS']),
+  winCondition: z.enum(['HIGHEST', 'LOWEST']),
+  maxParticipants: z.number().int().min(2).max(4),
 });
 
 export async function GET() {
@@ -22,7 +21,7 @@ export async function GET() {
           creator: { select: { id: true, name: true, email: true } },
           box: true,
           participants: {
-            include: { user: { select: { id: true, name: true, email: true } } },
+            include: { user: { select: { id: true, name: true, email: true, isBot: true } } },
           },
           winner: { select: { id: true, name: true, email: true } },
         },
@@ -32,11 +31,9 @@ export async function GET() {
       'battles:list'
     );
 
-    // Convert Decimal values to numbers
     const serializedBattles = battles.map(battle => ({
       ...battle,
       entryFee: Number(battle.entryFee),
-      totalPrize: Number(battle.totalPrize),
       box: battle.box ? {
         ...battle.box,
         price: Number(battle.box.price),
@@ -56,7 +53,6 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    // Apply rate limiting - 5 battle creations per minute
     const rateLimitResult = await rateLimit(request, 'battleCreation');
     if (!rateLimitResult.success && rateLimitResult.response) {
       return rateLimitResult.response;
@@ -64,7 +60,7 @@ export async function POST(request: NextRequest) {
 
     const session = await getCurrentSession();
     if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Nicht autorisiert' }, { status: 401 });
     }
 
     const user = await prisma.user.findUnique({
@@ -72,43 +68,86 @@ export async function POST(request: NextRequest) {
     });
 
     if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Benutzer nicht gefunden' }, { status: 404 });
     }
 
     const body = await request.json();
     const data = battleSchema.parse(body);
+
+    // Check user is not already in an active battle
+    const activeBattle = await prisma.battleParticipant.findFirst({
+      where: {
+        userId: user.id,
+        battle: {
+          status: { in: ['OPEN', 'FULL', 'READY', 'ACTIVE'] },
+        },
+      },
+    });
+
+    if (activeBattle) {
+      return NextResponse.json({
+        error: 'Du bist bereits in einem aktiven Battle. Beende es zuerst.',
+      }, { status: 400 });
+    }
 
     const box = await prisma.box.findUnique({
       where: { id: data.boxId },
     });
 
     if (!box) {
-      return NextResponse.json({ error: 'Box not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Box nicht gefunden' }, { status: 404 });
     }
 
-    const battle = await prisma.battle.create({
-      data: {
-        creatorId: user.id,
-        boxId: data.boxId,
-        entryFee: data.entryFee,
-        rounds: data.rounds,
-        battleMode: data.battleMode,
-        shareMode: data.shareMode,
-        maxParticipants: data.maxParticipants,
-        participants: {
-          create: {
-            userId: user.id,
+    const entryFee = Number(box.price) * data.rounds;
+    const userCoins = Number(user.coins);
+
+    if (userCoins < entryFee) {
+      return NextResponse.json({
+        error: `Nicht genug Coins. Du brauchst ${entryFee.toFixed(0)} Coins (${Number(box.price).toFixed(0)} × ${data.rounds} Runden).`,
+        required: entryFee,
+        current: userCoins,
+      }, { status: 400 });
+    }
+
+    const lobbyExpiresAt = new Date(Date.now() + 15 * 60 * 1000);
+
+    // Deduct coins and create battle in transaction
+    const [, battle] = await prisma.$transaction([
+      prisma.user.update({
+        where: { id: user.id },
+        data: { coins: { decrement: entryFee } },
+      }),
+      prisma.battle.create({
+        data: {
+          creatorId: user.id,
+          boxId: data.boxId,
+          entryFee: Math.round(entryFee),
+          rounds: data.rounds,
+          battleMode: data.battleMode,
+          winCondition: data.winCondition,
+          maxParticipants: data.maxParticipants,
+          lobbyExpiresAt,
+          participants: {
+            create: {
+              userId: user.id,
+            },
           },
         },
-      },
-      include: {
-        creator: { select: { id: true, name: true, email: true } },
-        box: true,
-        participants: {
-          include: { user: { select: { id: true, name: true, email: true } } },
+        include: {
+          creator: { select: { id: true, name: true, email: true } },
+          box: true,
+          participants: {
+            include: { user: { select: { id: true, name: true, email: true } } },
+          },
         },
-      },
-    });
+      }),
+    ]);
+
+    const modeLabels: Record<string, string> = {
+      LOWEST_CARD: 'Niedrigste Karte',
+      HIGHEST_CARD: 'Höchste Karte',
+      ALL_CARDS: 'Alle Karten',
+    };
 
     sendBattleNotificationWebhook({
       battleId: battle.id,
@@ -116,19 +155,18 @@ export async function POST(request: NextRequest) {
       boxImageUrl: box.imageUrl || undefined,
       players: data.maxParticipants,
       rounds: data.rounds,
-      winCondition: data.shareMode ? 'SHARE' : data.battleMode,
+      winCondition: data.winCondition,
+      rewardMode: data.battleMode,
       privacy: 'PUBLIC',
-      entryCost: data.entryFee || (Number(box.price) * data.rounds),
-      creatorUsername: user.name || user.email || 'Anonymous',
+      entryCost: entryFee,
+      creatorUsername: user.name || user.email || 'Anonym',
     }).catch((error) => {
       console.error('Failed to send Discord notification:', error);
     });
 
-    // Convert Decimal values to numbers
     const serializedBattle = {
       ...battle,
       entryFee: Number(battle.entryFee),
-      totalPrize: Number(battle.totalPrize),
       box: battle.box ? {
         ...battle.box,
         price: Number(battle.box.price),
@@ -142,9 +180,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true, battle: serializedBattle });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: 'Invalid input', details: error.issues }, { status: 400 });
+      return NextResponse.json({ error: 'Ungültige Eingabe', details: error.issues }, { status: 400 });
     }
     console.error('Battle creation error:', error);
-    return NextResponse.json({ error: 'Failed to create battle' }, { status: 500 });
+    return NextResponse.json({ error: 'Battle konnte nicht erstellt werden' }, { status: 500 });
   }
 }

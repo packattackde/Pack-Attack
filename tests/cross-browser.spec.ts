@@ -11,7 +11,7 @@ test.describe('Cross-Browser Compatibility', () => {
       await page.goto('/');
       
       // Check page title
-      await expect(page).toHaveTitle(/Pack Attack/);
+      await expect(page).toHaveTitle(/PullForge/);
       
       // Check main heading renders
       const heading = page.locator('h1').first();

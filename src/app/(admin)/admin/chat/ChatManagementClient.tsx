@@ -140,20 +140,20 @@ function UserActionMenu({
       <button
         onClick={() => setOpen(!open)}
         disabled={processing}
-        className="ml-1 inline-flex items-center justify-center w-5 h-5 rounded text-gray-600 hover:text-gray-300 hover:bg-white/[0.06] transition-colors"
+        className="ml-1 inline-flex items-center justify-center w-5 h-5 rounded text-gray-600 hover:text-[#f0f0f5] hover:bg-white/[0.06] transition-colors"
         aria-label="User actions"
       >
         <MoreVertical className="w-3 h-3" />
       </button>
       {open && (
-        <div className="absolute left-0 top-6 z-50 w-44 py-1 rounded-lg bg-gray-900 border border-white/[0.1] shadow-xl shadow-black/40">
-          <button onClick={() => handleTimeout('1h')} className="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-gray-300 hover:bg-white/[0.06] hover:text-yellow-400 transition-colors">
+        <div className="absolute left-0 top-6 z-50 w-44 py-1 rounded-lg bg-[#0B0B2B] border border-white/[0.1] shadow-xl shadow-black/40">
+          <button onClick={() => handleTimeout('1h')} className="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-[#f0f0f5] hover:bg-white/[0.06] hover:text-yellow-400 transition-colors">
             <Clock className="w-3.5 h-3.5" /> Timeout 1 hour
           </button>
-          <button onClick={() => handleTimeout('1d')} className="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-gray-300 hover:bg-white/[0.06] hover:text-yellow-400 transition-colors">
+          <button onClick={() => handleTimeout('1d')} className="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-[#f0f0f5] hover:bg-white/[0.06] hover:text-yellow-400 transition-colors">
             <Clock className="w-3.5 h-3.5" /> Timeout 1 day
           </button>
-          <button onClick={() => handleTimeout('1w')} className="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-gray-300 hover:bg-white/[0.06] hover:text-yellow-400 transition-colors">
+          <button onClick={() => handleTimeout('1w')} className="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-[#f0f0f5] hover:bg-white/[0.06] hover:text-yellow-400 transition-colors">
             <Clock className="w-3.5 h-3.5" /> Timeout 1 week
           </button>
           <div className="h-px bg-white/[0.06] my-1" />
@@ -349,7 +349,7 @@ export default function ChatManagementClient() {
           className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
             tab === 'log'
               ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
-              : 'text-gray-400 hover:text-white hover:bg-white/[0.06]'
+              : 'text-[#8888aa] hover:text-white hover:bg-white/[0.06]'
           }`}
         >
           <MessageSquare className="w-4 h-4" />
@@ -360,7 +360,7 @@ export default function ChatManagementClient() {
           className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
             tab === 'bans'
               ? 'bg-red-500/20 text-red-300 border border-red-500/30'
-              : 'text-gray-400 hover:text-white hover:bg-white/[0.06]'
+              : 'text-[#8888aa] hover:text-white hover:bg-white/[0.06]'
           }`}
         >
           <Ban className="w-4 h-4" />
@@ -378,7 +378,7 @@ export default function ChatManagementClient() {
         <div className="space-y-4">
           {/* Filters */}
           <div className="flex flex-wrap gap-3 items-center">
-            <label className="flex items-center gap-2 text-sm text-gray-400 cursor-pointer">
+            <label className="flex items-center gap-2 text-sm text-[#8888aa] cursor-pointer">
               <input
                 type="checkbox"
                 checked={deletedOnly}
@@ -407,7 +407,7 @@ export default function ChatManagementClient() {
           </div>
 
           {/* Log table */}
-          <div className="glass-strong rounded-xl overflow-hidden">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl overflow-hidden">
             {logLoading ? (
               <div className="flex items-center justify-center p-12 text-gray-500 text-sm">
                 Loading...
@@ -421,16 +421,16 @@ export default function ChatManagementClient() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-white/[0.06]">
-                      <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase tracking-wider">
+                      <th className="text-left px-4 py-3 text-xs font-medium text-[#8888aa] uppercase tracking-wider">
                         Time
                       </th>
-                      <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase tracking-wider">
+                      <th className="text-left px-4 py-3 text-xs font-medium text-[#8888aa] uppercase tracking-wider">
                         User
                       </th>
-                      <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase tracking-wider">
+                      <th className="text-left px-4 py-3 text-xs font-medium text-[#8888aa] uppercase tracking-wider">
                         Message
                       </th>
-                      <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase tracking-wider">
+                      <th className="text-left px-4 py-3 text-xs font-medium text-[#8888aa] uppercase tracking-wider">
                         Status
                       </th>
                     </tr>
@@ -439,7 +439,7 @@ export default function ChatManagementClient() {
                     {logs.map((log) => (
                       <tr
                         key={log.id}
-                        className={`hover:bg-white/[0.02] ${log.isDeleted ? 'opacity-60' : ''}`}
+                        className={`hover:bg-[#1e1e55] ${log.isDeleted ? 'opacity-60' : ''}`}
                       >
                         <td className="px-4 py-2.5 text-xs text-gray-500 whitespace-nowrap">
                           {formatDate(log.createdAt)}
@@ -448,7 +448,7 @@ export default function ChatManagementClient() {
                           <div className="flex items-center gap-1.5">
                             <span
                               className={`text-xs font-medium ${
-                                log.userRole === 'ADMIN' ? 'text-red-400' : 'text-gray-300'
+                                log.userRole === 'ADMIN' ? 'text-red-400' : 'text-[#f0f0f5]'
                               }`}
                             >
                               {log.userName}
@@ -467,7 +467,7 @@ export default function ChatManagementClient() {
                         <td className="px-4 py-2.5">
                           <p
                             className={`text-xs max-w-md truncate ${
-                              log.isDeleted ? 'text-gray-600 line-through' : 'text-gray-300'
+                              log.isDeleted ? 'text-gray-600 line-through' : 'text-[#f0f0f5]'
                             }`}
                           >
                             {log.content}
@@ -480,7 +480,7 @@ export default function ChatManagementClient() {
                               Deleted
                             </span>
                           ) : (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-green-500/10 text-[10px] font-medium text-green-400">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-[#C84FFF]/10 text-[10px] font-medium text-[#E879F9]">
                               Active
                             </span>
                           )}
@@ -503,7 +503,7 @@ export default function ChatManagementClient() {
                 <button
                   onClick={() => loadLogs(logPagination.page - 1)}
                   disabled={logPagination.page <= 1}
-                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-gray-400 hover:text-white hover:bg-white/[0.06] disabled:opacity-30 transition-colors"
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-[#8888aa] hover:text-white hover:bg-white/[0.06] disabled:opacity-30 transition-colors"
                 >
                   <ChevronLeft className="w-3.5 h-3.5" />
                   Previous
@@ -511,7 +511,7 @@ export default function ChatManagementClient() {
                 <button
                   onClick={() => loadLogs(logPagination.page + 1)}
                   disabled={logPagination.page >= logPagination.totalPages}
-                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-gray-400 hover:text-white hover:bg-white/[0.06] disabled:opacity-30 transition-colors"
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-[#8888aa] hover:text-white hover:bg-white/[0.06] disabled:opacity-30 transition-colors"
                 >
                   Next
                   <ChevronRight className="w-3.5 h-3.5" />
@@ -526,8 +526,8 @@ export default function ChatManagementClient() {
       {tab === 'bans' && (
         <div className="space-y-4">
           {/* Ban a user by search */}
-          <div className="glass-strong rounded-xl p-4 space-y-3">
-            <div className="flex items-center gap-2 text-sm font-medium text-gray-300">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl p-4 space-y-3">
+            <div className="flex items-center gap-2 text-sm font-medium text-[#f0f0f5]">
               <UserPlus className="w-4 h-4 text-red-400" />
               Ban or timeout a user
             </div>
@@ -554,15 +554,15 @@ export default function ChatManagementClient() {
 
             {/* User search results */}
             {userResults.length > 0 && (
-              <div className="divide-y divide-white/[0.04] rounded-lg bg-white/[0.02] overflow-hidden">
+              <div className="divide-y divide-white/[0.04] rounded-lg bg-[#1e1e55] overflow-hidden">
                 {userResults.map((user) => (
                   <div key={user.id} className="flex items-center justify-between px-4 py-2.5">
                     <div className="flex items-center gap-2.5">
                       {user.image ? (
                         <img src={user.image} alt="" className="w-7 h-7 rounded-full object-cover" />
                       ) : (
-                        <div className="w-7 h-7 rounded-full bg-gray-800 flex items-center justify-center">
-                          <span className="text-xs font-medium text-gray-400">{(user.name || '?')[0].toUpperCase()}</span>
+                        <div className="w-7 h-7 rounded-full bg-[#12123a] flex items-center justify-center">
+                          <span className="text-xs font-medium text-[#8888aa]">{(user.name || '?')[0].toUpperCase()}</span>
                         </div>
                       )}
                       <div>
@@ -607,7 +607,7 @@ export default function ChatManagementClient() {
           </div>
 
           <div className="flex items-center gap-3">
-            <label className="flex items-center gap-2 text-sm text-gray-400 cursor-pointer">
+            <label className="flex items-center gap-2 text-sm text-[#8888aa] cursor-pointer">
               <input
                 type="checkbox"
                 checked={includeExpired}
@@ -618,7 +618,7 @@ export default function ChatManagementClient() {
             </label>
           </div>
 
-          <div className="glass-strong rounded-xl overflow-hidden">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl overflow-hidden">
             {bansLoading ? (
               <div className="flex items-center justify-center p-12 text-gray-500 text-sm">
                 Loading...
@@ -645,8 +645,8 @@ export default function ChatManagementClient() {
                           className="w-8 h-8 rounded-full object-cover"
                         />
                       ) : (
-                        <div className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center">
-                          <span className="text-xs font-medium text-gray-400">
+                        <div className="w-8 h-8 rounded-full bg-[#12123a] flex items-center justify-center">
+                          <span className="text-xs font-medium text-[#8888aa]">
                             {(ban.userName || '?')[0].toUpperCase()}
                           </span>
                         </div>
@@ -687,14 +687,14 @@ export default function ChatManagementClient() {
                           )}
                         </div>
                         {ban.reason && (
-                          <p className="text-xs text-gray-400 mt-0.5">Reason: {ban.reason}</p>
+                          <p className="text-xs text-[#8888aa] mt-0.5">Reason: {ban.reason}</p>
                         )}
                       </div>
                     </div>
                     {ban.active && !ban.isExpired && (
                       <button
                         onClick={() => removeBan(ban.id)}
-                        className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-gray-400 hover:text-white hover:bg-white/[0.06] border border-white/[0.08] transition-colors"
+                        className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-[#8888aa] hover:text-white hover:bg-white/[0.06] border border-white/[0.08] transition-colors"
                       >
                         <X className="w-3 h-3" />
                         Remove

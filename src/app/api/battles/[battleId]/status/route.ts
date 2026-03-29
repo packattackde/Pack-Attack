@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentSession } from '@/lib/auth';
 import { prisma, withRetry } from '@/lib/prisma';
 
-// GET - Get battle status for live updates
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ battleId: string }> }
@@ -10,7 +9,6 @@ export async function GET(
   try {
     const session = await getCurrentSession();
     const { battleId } = await params;
-    
     const isAdmin = session?.user?.role === 'ADMIN';
 
     const battle = await withRetry(
@@ -29,9 +27,9 @@ export async function GET(
                   imageUrlGatherer: true,
                   imageUrlScryfall: true,
                   coinValue: true,
-                }
-              }
-            }
+                },
+              },
+            },
           },
           participants: {
             include: { user: { select: { id: true, name: true, email: true, isBot: true } } },
@@ -57,18 +55,15 @@ export async function GET(
     );
 
     if (!battle) {
-      return NextResponse.json({ error: 'Battle not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Battle nicht gefunden' }, { status: 404 });
     }
 
-    // Check if all participants are ready
-    const allReady = battle.participants.length === battle.maxParticipants && 
+    const allReady = battle.participants.length === battle.maxParticipants &&
                      battle.participants.every(p => p.isReady);
 
-    // Serialize the battle data - convert all Decimal values to numbers
     const serializedBattle = {
       ...battle,
       entryFee: Number(battle.entryFee),
-      totalPrize: Number(battle.totalPrize),
       box: battle.box ? {
         ...battle.box,
         price: Number(battle.box.price),
@@ -79,7 +74,7 @@ export async function GET(
       } : null,
       pulls: battle.pulls?.map(pull => ({
         ...pull,
-        coinValue: Number(pull.coinValue), // BattlePull.coinValue
+        coinValue: Number(pull.coinValue),
         pull: pull.pull ? {
           ...pull.pull,
           cardValue: pull.pull.cardValue ? Number(pull.pull.cardValue) : null,
@@ -90,7 +85,6 @@ export async function GET(
           } : null,
         } : null,
       })),
-      // Filter out bot info for non-admins
       participants: battle.participants.map(p => ({
         ...p,
         totalValue: Number(p.totalValue),
@@ -101,15 +95,14 @@ export async function GET(
       })),
     };
 
-    return NextResponse.json({ 
-      success: true, 
+    return NextResponse.json({
+      success: true,
       battle: serializedBattle,
       allReady,
       isFull: battle.participants.length >= battle.maxParticipants,
     });
   } catch (error) {
     console.error('Error getting battle status:', error);
-    return NextResponse.json({ error: 'Failed to get battle status' }, { status: 500 });
+    return NextResponse.json({ error: 'Battle-Status konnte nicht geladen werden' }, { status: 500 });
   }
 }
-

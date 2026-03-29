@@ -55,12 +55,12 @@ type Order = {
 
 const statusColors: Record<string, string> = {
   PENDING: 'bg-yellow-500/20 text-yellow-400',
-  PAID: 'bg-blue-500/20 text-blue-400',
+  PAID: 'bg-[rgba(200,79,255,0.1)] text-[#C84FFF]',
   PROCESSING: 'bg-purple-500/20 text-purple-400',
   SHIPPED: 'bg-cyan-500/20 text-cyan-400',
-  DELIVERED: 'bg-green-500/20 text-green-400',
+  DELIVERED: 'bg-[#C84FFF]/20 text-[#E879F9]',
   CANCELLED: 'bg-red-500/20 text-red-400',
-  REFUNDED: 'bg-gray-500/20 text-gray-400',
+  REFUNDED: 'bg-gray-500/20 text-[#8888aa]',
 };
 
 const statusOptions = [
@@ -146,9 +146,9 @@ export default function ManageOrdersPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 flex items-center justify-center font-display">
+      <div className="min-h-screen flex items-center justify-center font-display">
         <div className="text-white flex items-center gap-3">
-          <div className="w-6 h-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+          <div className="w-6 h-6 border-2 border-[rgba(200,79,255,0.3)] border-t-transparent rounded-full animate-spin" />
           Loading orders...
         </div>
       </div>
@@ -156,37 +156,37 @@ export default function ManageOrdersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display">
+    <div className="min-h-screen font-display">
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
 
       <div className="relative container py-12">
         {/* Breadcrumb */}
-        <Link href="/shop/manage" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-8">
+        <Link href="/shop/manage" className="inline-flex items-center gap-2 text-[#8888aa] hover:text-white transition-colors mb-8">
           <ArrowLeft className="w-4 h-4" />
           Back to Dashboard
         </Link>
 
         {/* Header */}
         <div className="flex items-center gap-3 mb-8">
-          <ShoppingBag className="w-8 h-8 text-blue-400" />
+          <ShoppingBag className="w-8 h-8 text-[#C84FFF]" />
           <h1 className="text-3xl font-bold text-white">Orders</h1>
-          <span className="px-3 py-1 rounded-full bg-gray-700/50 text-gray-300 text-sm">
+          <span className="px-3 py-1 rounded-full bg-[#12123a] text-[#f0f0f5] text-sm">
             {orders.length} total
           </span>
         </div>
 
         {/* Orders */}
         {orders.length === 0 ? (
-          <div className="glass-strong rounded-2xl p-12 text-center">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
             <ShoppingBag className="w-16 h-16 text-gray-600 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-white mb-2">No Orders Yet</h2>
-            <p className="text-gray-400">Orders will appear here when customers purchase your products</p>
+            <p className="text-[#8888aa]">Orders will appear here when customers purchase your products</p>
           </div>
         ) : (
           <div className="space-y-4">
             {orders.map((order) => (
-              <div key={order.id} className="glass-strong rounded-2xl overflow-hidden">
+              <div key={order.id} className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl overflow-hidden">
                 {/* Order Header */}
                 <button
                   onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
@@ -195,38 +195,38 @@ export default function ManageOrdersPage() {
                   <div className="flex items-center gap-6">
                     <div>
                       <p className="font-semibold text-white">#{order.orderNumber.slice(0, 8)}</p>
-                      <p className="text-sm text-gray-400 flex items-center gap-1">
+                      <p className="text-sm text-[#8888aa] flex items-center gap-1">
                         <Clock className="w-3 h-3" />
                         {new Date(order.createdAt).toLocaleDateString()}
                       </p>
                     </div>
-                    <span className={`px-3 py-1 rounded-lg text-xs font-medium ${statusColors[order.status] || 'bg-gray-500/20 text-gray-400'}`}>
+                    <span className={`px-3 py-1 rounded-lg text-xs font-medium ${statusColors[order.status] || 'bg-gray-500/20 text-[#8888aa]'}`}>
                       {order.status}
                     </span>
                   </div>
                   <div className="flex items-center gap-6">
                     <div className="text-right">
-                      <p className="font-semibold text-emerald-400">€{order.total.toFixed(2)}</p>
-                      <p className="text-sm text-gray-400">{order.items.length} item(s)</p>
+                      <p className="font-semibold text-[#C84FFF]">€{order.total.toFixed(2)}</p>
+                      <p className="text-sm text-[#8888aa]">{order.items.length} item(s)</p>
                     </div>
-                    <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${expandedOrder === order.id ? 'rotate-180' : ''}`} />
+                    <ChevronDown className={`w-5 h-5 text-[#8888aa] transition-transform ${expandedOrder === order.id ? 'rotate-180' : ''}`} />
                   </div>
                 </button>
 
                 {/* Expanded Content */}
                 {expandedOrder === order.id && (
-                  <div className="px-6 pb-6 border-t border-gray-700/50 pt-4">
+                  <div className="px-6 pb-6 border-t border-[rgba(255,255,255,0.06)]/50 pt-4">
                     <div className="grid lg:grid-cols-3 gap-6">
                       {/* Items */}
                       <div className="lg:col-span-2">
                         <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
-                          <Package className="w-4 h-4 text-emerald-400" />
+                          <Package className="w-4 h-4 text-[#C84FFF]" />
                           Items
                         </h3>
                         <div className="space-y-3">
                           {order.items.map((item) => (
-                            <div key={item.id} className="flex items-center gap-4 p-3 rounded-xl bg-gray-800/50">
-                              <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gray-700 flex-shrink-0">
+                            <div key={item.id} className="flex items-center gap-4 p-3 rounded-xl bg-[#12123a]">
+                              <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-[#12123a] flex-shrink-0">
                                 {item.productImage ? (
                                   <Image
                                     src={item.productImage}
@@ -242,7 +242,7 @@ export default function ManageOrdersPage() {
                               </div>
                               <div className="flex-1">
                                 <p className="font-medium text-white">{item.productName}</p>
-                                <p className="text-sm text-gray-400">Qty: {item.quantity}</p>
+                                <p className="text-sm text-[#8888aa]">Qty: {item.quantity}</p>
                               </div>
                               <p className="font-semibold text-white">€{(item.price * item.quantity).toFixed(2)}</p>
                             </div>
@@ -250,18 +250,18 @@ export default function ManageOrdersPage() {
                         </div>
 
                         {/* Order Summary */}
-                        <div className="mt-4 p-4 rounded-xl bg-gray-800/50 space-y-2">
+                        <div className="mt-4 p-4 rounded-xl bg-[#12123a] space-y-2">
                           <div className="flex justify-between text-sm">
-                            <span className="text-gray-400">Subtotal</span>
+                            <span className="text-[#8888aa]">Subtotal</span>
                             <span className="text-white">€{order.subtotal.toFixed(2)}</span>
                           </div>
                           <div className="flex justify-between text-sm">
-                            <span className="text-gray-400">Shipping</span>
+                            <span className="text-[#8888aa]">Shipping</span>
                             <span className="text-white">€{order.shippingCost.toFixed(2)}</span>
                           </div>
-                          <div className="flex justify-between font-semibold border-t border-gray-700 pt-2">
+                          <div className="flex justify-between font-semibold border-t border-[rgba(255,255,255,0.06)] pt-2">
                             <span className="text-white">Total</span>
-                            <span className="text-emerald-400">€{order.total.toFixed(2)}</span>
+                            <span className="text-[#C84FFF]">€{order.total.toFixed(2)}</span>
                           </div>
                         </div>
                       </div>
@@ -271,12 +271,12 @@ export default function ManageOrdersPage() {
                         {/* Customer */}
                         <div>
                           <h3 className="font-semibold text-white mb-3 flex items-center gap-2">
-                            <User className="w-4 h-4 text-blue-400" />
+                            <User className="w-4 h-4 text-[#C84FFF]" />
                             Customer
                           </h3>
-                          <div className="p-4 rounded-xl bg-gray-800/50 space-y-2">
+                          <div className="p-4 rounded-xl bg-[#12123a] space-y-2">
                             <p className="text-white">{order.user.name || 'Anonymous'}</p>
-                            <p className="text-sm text-gray-400 flex items-center gap-1">
+                            <p className="text-sm text-[#8888aa] flex items-center gap-1">
                               <Mail className="w-3 h-3" /> {order.user.email}
                             </p>
                           </div>
@@ -288,15 +288,15 @@ export default function ManageOrdersPage() {
                             <Truck className="w-4 h-4 text-cyan-400" />
                             Ship To
                           </h3>
-                          <div className="p-4 rounded-xl bg-gray-800/50 space-y-1 text-sm">
+                          <div className="p-4 rounded-xl bg-[#12123a] space-y-1 text-sm">
                             <p className="text-white">{order.shippingName}</p>
-                            <p className="text-gray-400">{order.shippingAddress}</p>
-                            <p className="text-gray-400">{order.shippingZip} {order.shippingCity}</p>
-                            <p className="text-gray-400">{order.shippingCountry}</p>
+                            <p className="text-[#8888aa]">{order.shippingAddress}</p>
+                            <p className="text-[#8888aa]">{order.shippingZip} {order.shippingCity}</p>
+                            <p className="text-[#8888aa]">{order.shippingCountry}</p>
                             {order.shippingPhone && (
-                              <p className="text-gray-400">{order.shippingPhone}</p>
+                              <p className="text-[#8888aa]">{order.shippingPhone}</p>
                             )}
-                            <p className="text-gray-400 pt-2">{order.shippingEmail}</p>
+                            <p className="text-[#8888aa] pt-2">{order.shippingEmail}</p>
                           </div>
                         </div>
 
@@ -307,10 +307,10 @@ export default function ManageOrdersPage() {
                             value={order.status}
                             onChange={(e) => updateOrderStatus(order.id, e.target.value)}
                             disabled={updating === order.id}
-                            className="w-full px-4 py-3 rounded-xl glass text-white border border-gray-700 focus:border-emerald-500 focus:outline-none disabled:opacity-50"
+                            className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none disabled:opacity-50"
                           >
                             {statusOptions.map((status) => (
-                              <option key={status.value} value={status.value} className="bg-gray-900">
+                              <option key={status.value} value={status.value} className="bg-[#0B0B2B]">
                                 {status.label}
                               </option>
                             ))}
@@ -321,8 +321,8 @@ export default function ManageOrdersPage() {
                         {order.notes && (
                           <div>
                             <h3 className="font-semibold text-white mb-3">Customer Notes</h3>
-                            <div className="p-4 rounded-xl bg-gray-800/50">
-                              <p className="text-sm text-gray-300">{order.notes}</p>
+                            <div className="p-4 rounded-xl bg-[#12123a]">
+                              <p className="text-sm text-[#f0f0f5]">{order.notes}</p>
                             </div>
                           </div>
                         )}

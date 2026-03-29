@@ -3,13 +3,11 @@ import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { rateLimit } from '@/lib/rate-limit';
 
-// POST - Mark yourself as ready
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ battleId: string }> }
 ) {
   try {
-    // SECURITY: Rate limit ready operations
     const rateLimitResult = await rateLimit(request, 'general');
     if (!rateLimitResult.success && rateLimitResult.response) {
       return rateLimitResult.response;
@@ -17,7 +15,7 @@ export async function POST(
 
     const session = await getCurrentSession();
     if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Nicht autorisiert' }, { status: 401 });
     }
 
     const { battleId } = await params;
@@ -27,10 +25,9 @@ export async function POST(
     });
 
     if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Benutzer nicht gefunden' }, { status: 404 });
     }
 
-    // Get the battle
     const battle = await prisma.battle.findUnique({
       where: { id: battleId },
       include: {
@@ -41,25 +38,22 @@ export async function POST(
     });
 
     if (!battle) {
-      return NextResponse.json({ error: 'Battle not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Battle nicht gefunden' }, { status: 404 });
     }
 
-    if (battle.status !== 'WAITING') {
-      return NextResponse.json({ error: 'Battle is not in waiting state' }, { status: 400 });
+    if (battle.status !== 'FULL' && battle.status !== 'READY') {
+      return NextResponse.json({ error: 'Battle ist nicht im Wartezustand' }, { status: 400 });
     }
 
-    // Check if battle is full
     if (battle.participants.length < battle.maxParticipants) {
-      return NextResponse.json({ error: 'Battle is not full yet' }, { status: 400 });
+      return NextResponse.json({ error: 'Battle ist noch nicht voll' }, { status: 400 });
     }
 
-    // Find participant
     const participant = battle.participants.find(p => p.userId === user.id);
     if (!participant) {
-      return NextResponse.json({ error: 'You are not in this battle' }, { status: 400 });
+      return NextResponse.json({ error: 'Du bist nicht in diesem Battle' }, { status: 400 });
     }
 
-    // Mark as ready
     await prisma.battleParticipant.update({
       where: { id: participant.id },
       data: { isReady: true },
@@ -77,8 +71,16 @@ export async function POST(
 
     const allReady = updatedBattle?.participants.every(p => p.isReady) ?? false;
 
-    return NextResponse.json({ 
-      success: true, 
+    // If all ready, set status to READY
+    if (allReady && updatedBattle?.status === 'FULL') {
+      await prisma.battle.update({
+        where: { id: battleId },
+        data: { status: 'READY' },
+      });
+    }
+
+    return NextResponse.json({
+      success: true,
       isReady: true,
       allReady,
       participants: updatedBattle?.participants.map(p => ({
@@ -91,11 +93,10 @@ export async function POST(
     });
   } catch (error) {
     console.error('Error marking ready:', error);
-    return NextResponse.json({ error: 'Failed to mark as ready' }, { status: 500 });
+    return NextResponse.json({ error: 'Bereit-Markierung fehlgeschlagen' }, { status: 500 });
   }
 }
 
-// DELETE - Unready yourself
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ battleId: string }> }
@@ -103,7 +104,7 @@ export async function DELETE(
   try {
     const session = await getCurrentSession();
     if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Nicht autorisiert' }, { status: 401 });
     }
 
     const { battleId } = await params;
@@ -113,7 +114,7 @@ export async function DELETE(
     });
 
     if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Benutzer nicht gefunden' }, { status: 404 });
     }
 
     const participant = await prisma.battleParticipant.findFirst({
@@ -121,7 +122,7 @@ export async function DELETE(
     });
 
     if (!participant) {
-      return NextResponse.json({ error: 'You are not in this battle' }, { status: 400 });
+      return NextResponse.json({ error: 'Du bist nicht in diesem Battle' }, { status: 400 });
     }
 
     await prisma.battleParticipant.update({
@@ -129,10 +130,18 @@ export async function DELETE(
       data: { isReady: false },
     });
 
+    // If battle was READY, revert to FULL
+    const battle = await prisma.battle.findUnique({ where: { id: battleId } });
+    if (battle?.status === 'READY') {
+      await prisma.battle.update({
+        where: { id: battleId },
+        data: { status: 'FULL' },
+      });
+    }
+
     return NextResponse.json({ success: true, isReady: false });
   } catch (error) {
     console.error('Error unmarking ready:', error);
-    return NextResponse.json({ error: 'Failed to unmark ready' }, { status: 500 });
+    return NextResponse.json({ error: 'Bereit-Markierung konnte nicht aufgehoben werden' }, { status: 500 });
   }
 }
-

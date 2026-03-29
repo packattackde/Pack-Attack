@@ -219,7 +219,7 @@ export function EditBoxForm({ box, onSave }: { box: Box; onSave?: () => void }) 
     : '/assets/card-backs/pa_card_back.png';
 
   return (
-    <Card className="border-gray-800 bg-gray-900/50">
+    <Card className="border-[rgba(255,255,255,0.06)] bg-[#12123a]">
       <CardHeader>
         <CardTitle className="text-white">Edit Box Details</CardTitle>
       </CardHeader>
@@ -231,7 +231,7 @@ export function EditBoxForm({ box, onSave }: { box: Box; onSave?: () => void }) 
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:border-primary focus:outline-none"
+              className="w-full px-4 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-primary focus:outline-none"
               required
             />
           </div>
@@ -241,7 +241,7 @@ export function EditBoxForm({ box, onSave }: { box: Box; onSave?: () => void }) 
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:border-primary focus:outline-none"
+              className="w-full px-4 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-primary focus:outline-none"
               rows={3}
               required
             />
@@ -253,7 +253,7 @@ export function EditBoxForm({ box, onSave }: { box: Box; onSave?: () => void }) 
               type="text"
               value={formData.imageUrl}
               onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-              className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:border-primary focus:outline-none"
+              className="w-full px-4 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-primary focus:outline-none"
               required
             />
           </div>
@@ -262,14 +262,14 @@ export function EditBoxForm({ box, onSave }: { box: Box; onSave?: () => void }) 
           <div>
             <label className="block text-sm font-medium mb-2 text-white">
               Card Back Image
-              <span className="ml-2 text-xs text-gray-400 font-normal">
+              <span className="ml-2 text-xs text-[#8888aa] font-normal">
                 PNG/JPG · 63:88 ratio · 400×559 – 630×880 px
               </span>
             </label>
 
             <div className="flex gap-3 items-start">
               {/* Preview thumbnail */}
-              <div className="relative w-14 h-20 rounded-lg overflow-hidden border border-gray-700 flex-shrink-0 bg-gray-800">
+              <div className="relative w-14 h-20 rounded-lg overflow-hidden border border-[rgba(255,255,255,0.06)] flex-shrink-0 bg-[#12123a]">
                 <Image
                   src={selectedPreviewSrc}
                   alt="Card back preview"
@@ -284,7 +284,7 @@ export function EditBoxForm({ box, onSave }: { box: Box; onSave?: () => void }) 
                 <select
                   value={formData.cardBackUrl}
                   onChange={(e) => setFormData({ ...formData, cardBackUrl: e.target.value })}
-                  className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:border-primary focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-primary focus:outline-none"
                 >
                   <option value="">Default (pa_card_back.png)</option>
                   {availableImages.map(f => (
@@ -298,7 +298,7 @@ export function EditBoxForm({ box, onSave }: { box: Box; onSave?: () => void }) 
                     type="button"
                     variant="outline"
                     size="sm"
-                    className="border-gray-600 text-gray-300 hover:text-white"
+                    className="border-gray-600 text-[#f0f0f5] hover:text-white"
                     onClick={() => fileInputRef.current?.click()}
                     disabled={uploading}
                   >
@@ -334,7 +334,7 @@ export function EditBoxForm({ box, onSave }: { box: Box; onSave?: () => void }) 
                 step="0.01"
                 value={formData.price}
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:border-primary focus:outline-none"
+                className="w-full px-4 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-primary focus:outline-none"
                 min="0.01"
                 required
               />
@@ -346,7 +346,7 @@ export function EditBoxForm({ box, onSave }: { box: Box; onSave?: () => void }) 
                 type="number"
                 value={formData.cardsPerPack}
                 onChange={(e) => setFormData({ ...formData, cardsPerPack: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:border-primary focus:outline-none"
+                className="w-full px-4 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-primary focus:outline-none"
                 min="1"
                 required
               />
@@ -359,7 +359,7 @@ export function EditBoxForm({ box, onSave }: { box: Box; onSave?: () => void }) 
                 type="checkbox"
                 checked={formData.isActive}
                 onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                className="w-4 h-4 rounded bg-gray-800 border-gray-700 text-primary focus:ring-primary"
+                className="w-4 h-4 rounded bg-[#12123a] border-[rgba(255,255,255,0.06)] text-primary focus:ring-primary"
               />
               <span className="text-white">Active (visible in marketplace)</span>
             </label>

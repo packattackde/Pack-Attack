@@ -1,60 +1,54 @@
-import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { getCurrentSession } from '@/lib/auth';
-import BattleClient from './BattleClient';
-import BattleDrawClient from './BattleDrawClient';
+import { notFound } from 'next/navigation';
+import { BattleClient } from './BattleClient';
+import { BattleDrawClient } from './BattleDrawClient';
 
 async function getBattle(id: string) {
   const battle = await prisma.battle.findUnique({
     where: { id },
     include: {
       creator: { select: { id: true, name: true, email: true } },
-      participants: {
-        include: {
-          user: { select: { id: true, name: true, email: true, isBot: true } },
-        },
-        orderBy: { joinedAt: 'asc' },
-      },
       box: {
         include: {
           cards: {
             orderBy: { coinValue: 'desc' },
             take: 3,
-            select: {
-              id: true,
-              name: true,
-              imageUrlGatherer: true,
-              imageUrlScryfall: true,
-              coinValue: true,
-            }
-          }
-        }
+          },
+        },
+      },
+      participants: {
+        include: { user: { select: { id: true, name: true, email: true, isBot: true } } },
       },
       winner: { select: { id: true, name: true, email: true } },
       pulls: {
         include: {
-          participant: {
-            include: { user: true },
-          },
-          pull: {
-            include: { card: true },
-          },
+          participant: { include: { user: true } },
+          pull: { include: { card: true } },
         },
-        orderBy: [
-          { roundNumber: 'asc' },
-          { pulledAt: 'asc' },
-        ],
+        orderBy: [{ roundNumber: 'asc' }, { pulledAt: 'asc' }],
       },
     },
   });
 
   if (!battle) return null;
 
-  // Convert Decimal values to plain numbers for serialization
-  const serializedBattle = {
+  // Serialize to JSON and back to convert Date objects to strings
+  const serialized = JSON.parse(JSON.stringify({
     ...battle,
+    entryFee: Number(battle.entryFee),
+    box: battle.box ? {
+      ...battle.box,
+      price: Number(battle.box.price),
+      cards: battle.box.cards?.map(c => ({
+        ...c,
+        coinValue: Number(c.coinValue),
+        pullRate: Number(c.pullRate),
+      })),
+    } : null,
     pulls: battle.pulls?.map(pull => ({
       ...pull,
+      coinValue: Number(pull.coinValue),
       pull: pull.pull ? {
         ...pull.pull,
         cardValue: pull.pull.cardValue ? Number(pull.pull.cardValue) : null,
@@ -65,50 +59,39 @@ async function getBattle(id: string) {
         } : null,
       } : null,
     })),
-  };
+    participants: battle.participants.map(p => ({
+      ...p,
+      totalValue: Number(p.totalValue),
+    })),
+  }));
 
-  return serializedBattle;
+  return serialized;
 }
 
-export default async function BattleDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function BattlePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const battle = await getBattle(id);
 
-  if (!battle) {
-    notFound();
-  }
+  if (!battle) notFound();
 
   const session = await getCurrentSession();
-  const currentUserId = session?.user?.email
-    ? await prisma.user.findUnique({
-        where: { email: session.user.email },
-        select: { id: true },
-      }).then(user => user?.id || null)
-    : null;
+  let currentUserId: string | null = null;
+
+  if (session?.user?.email) {
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email },
+      select: { id: true },
+    });
+    currentUserId = user?.id || null;
+  }
 
   const isAdmin = session?.user?.role === 'ADMIN';
 
-  // Use BattleDrawClient for animated experience on waiting/in-progress battles
-  // Use BattleClient for already finished battles to show results immediately
-  if (battle.status === 'WAITING' || battle.status === 'IN_PROGRESS') {
-    return (
-      <BattleDrawClient 
-        battle={battle} 
-        currentUserId={currentUserId} 
-        isAdmin={isAdmin} 
-      />
-    );
+  // OPEN, FULL, READY, ACTIVE -> live lobby/game view
+  if (['OPEN', 'FULL', 'READY', 'ACTIVE'].includes(battle.status)) {
+    return <BattleDrawClient battle={battle} currentUserId={currentUserId} isAdmin={isAdmin} />;
   }
-  
-  return (
-    <BattleClient 
-      battle={battle} 
-      currentUserId={currentUserId} 
-      isAdmin={isAdmin} 
-    />
-  );
+
+  // FINISHED_WIN, FINISHED_DRAW, CANCELLED -> results view
+  return <BattleClient battle={battle} currentUserId={currentUserId} isAdmin={isAdmin} />;
 }

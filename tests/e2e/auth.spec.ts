@@ -11,7 +11,7 @@ test.describe('Authentication Pages', () => {
       await page.goto('/login');
       
       // Check page title
-      await expect(page).toHaveTitle(/Pack Attack/);
+      await expect(page).toHaveTitle(/PullForge/);
       
       // Check form elements are visible
       await expect(page.locator('input[type="email"], input[name="email"]')).toBeVisible();

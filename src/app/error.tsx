@@ -21,7 +21,7 @@ export default function Error({
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
       
-      <div className="relative glass-strong rounded-2xl p-8 max-w-md w-full text-center">
+      <div className="relative bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-8 max-w-md w-full text-center">
         <div className="inline-flex items-center justify-center w-16 h-16 mb-6 rounded-2xl bg-red-500/20">
           <AlertTriangle className="w-8 h-8 text-red-400" />
         </div>
@@ -42,7 +42,7 @@ export default function Error({
         <div className="flex gap-3">
           <button
             onClick={() => reset()}
-            className="flex-1 px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-semibold rounded-xl transition-all hover:scale-105 flex items-center justify-center gap-2"
+            className="flex-1 px-4 py-3 bg-gradient-to-r from-[#C84FFF] to-[#E879F9] text-white font-semibold rounded-xl transition-all hover:scale-105 flex items-center justify-center gap-2"
           >
             <RefreshCw className="w-4 h-4" />
             Try Again

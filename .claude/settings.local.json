@@ -8,7 +8,21 @@
       "Bash(grep:*)",
       "Bash(head:*)",
       "Bash(wc:*)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(bash \"C:\\\\Users\\\\marce\\\\.claude\\\\plugins\\\\cache\\\\claude-plugins-official\\\\superpowers\\\\5.0.5\\\\skills\\\\brainstorming\\\\scripts\\\\start-server.sh\" --project-dir \"C:\\\\Users\\\\marce\\\\IdeaProjects\\\\Pack-Attack\")",
+      "Bash(cat \"C:\\\\Users\\\\marce\\\\IdeaProjects\\\\Pack-Attack/.superpowers/brainstorm/\"*\"/.server-info\")",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(node color-sweep.js)",
+      "Bash(netstat -ano)",
+      "Bash(for dir:*)",
+      "Bash(do cat:*)",
+      "Bash(done)",
+      "Bash(bash \"C:\\\\Users\\\\marce\\\\.claude\\\\plugins\\\\cache\\\\claude-plugins-official\\\\superpowers\\\\5.0.5\\\\skills\\\\brainstorming\\\\scripts\\\\stop-server.sh\" \"C:\\\\Users\\\\marce\\\\IdeaProjects\\\\Pack-Attack/.superpowers/brainstorm/3382-1774283851\")",
+      "Bash(bash \"C:\\\\Users\\\\marce\\\\.claude\\\\plugins\\\\cache\\\\claude-plugins-official\\\\superpowers\\\\5.0.5\\\\skills\\\\brainstorming\\\\scripts\\\\start-server.sh\" --project-dir \"C:\\\\Users\\\\marce\\\\IdeaProjects\\\\Pack-Attack\" --host 0.0.0.0 --url-host localhost)",
+      "Bash(taskkill //F //PID 19920)",
+      "Bash(taskkill //F //PID 14616)",
+      "Bash(npx tsc:*)"
     ]
   }
 }

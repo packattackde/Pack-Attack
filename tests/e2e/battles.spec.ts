@@ -10,7 +10,7 @@ test.describe('Battles Page', () => {
     test('battles page loads correctly', async ({ page }) => {
       await page.goto('/battles');
       
-      await expect(page).toHaveTitle(/Pack Attack/);
+      await expect(page).toHaveTitle(/PullForge/);
       
       const heading = page.locator('h1').filter({ hasText: /Battle/i });
       await expect(heading).toBeVisible();

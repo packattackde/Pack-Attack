@@ -52,29 +52,29 @@ export default async function AdminUsersPage() {
   const totalUsers = await prisma.user.count({ where: { isBot: false } });
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display">
+    <div className="min-h-screen font-display">
       {/* Background Effects */}
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
 
       <div className="relative container py-12">
         {/* Back Link */}
-        <Link href="/admin" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-6">
+        <Link href="/admin" className="inline-flex items-center gap-2 text-[#8888aa] hover:text-white transition-colors mb-6">
           <ArrowLeft className="w-4 h-4" />
           Back to Admin
         </Link>
 
         {/* Header */}
         <div className="mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full glass text-sm">
-            <Users className="w-4 h-4 text-blue-400" />
-            <span className="text-gray-300">User Management</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
+            <Users className="w-4 h-4 text-[#C84FFF]" />
+            <span className="text-[#f0f0f5]">User Management</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-3">
             <span className="text-white">Manage </span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Users</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C84FFF] to-[#E879F9]">Users</span>
           </h1>
-          <p className="text-gray-400 text-lg">View, edit, and manage user accounts</p>
+          <p className="text-[#8888aa] text-lg">View, edit, and manage user accounts</p>
         </div>
 
         <UsersClient 

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getCurrentSession } from '@/lib/auth';
+import { deleteUserWithRelations } from '@/lib/admin-delete-user';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
 import { resendVerificationEmail } from '@/lib/email';
@@ -195,15 +196,16 @@ export async function DELETE(
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    // Delete user (cascade will handle related records based on schema)
-    await prisma.user.delete({
-      where: { id },
-    });
+    await deleteUserWithRelations(id, user.email);
 
     return NextResponse.json({ success: true, message: 'User deleted' });
   } catch (error) {
     console.error('Failed to delete user:', error);
-    return NextResponse.json({ error: 'Failed to delete user' }, { status: 500 });
+    const message =
+      error instanceof Error && error.message.includes('Foreign key')
+        ? 'Cannot delete user: related data could not be removed. Check server logs.'
+        : 'Failed to delete user';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 

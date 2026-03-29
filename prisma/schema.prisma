@@ -44,6 +44,8 @@ model User {
   orders              Order[]
   emailsSent          EmailLog[]
   leaderboardEntries  BattleLeaderboard[]
+  /// Battle-weighted leaderboard (points, streaks, decay) — one row per user
+  leaderboardStanding LeaderboardEntry?
   // Shop relations
   shop                Shop?
   shopOrders          ShopOrder[]
@@ -290,33 +292,32 @@ model Battle {
   boxId           String
   box             Box                 @relation(fields: [boxId], references: [id], onDelete: Cascade)
   entryFee        Int                 @default(0)
-  maxParticipants Int                 @default(4)
-  rounds          Int                 @default(1)
-  battleMode      BattleMode          @default(NORMAL)
-  shareMode       Boolean             @default(false)
-  status          BattleStatus        @default(WAITING)
-  isDraw          Boolean             @default(false)
+  maxParticipants Int                 @default(2)
+  rounds          Int                 @default(3)
+  battleMode      BattleMode          @default(LOWEST_CARD)
+  winCondition    WinCondition        @default(HIGHEST)
+  status          BattleStatus        @default(OPEN)
   winnerId        String?
   winner          User?               @relation("BattleWinner", fields: [winnerId], references: [id])
-  totalPrize      Int                 @default(0)
   participants    BattleParticipant[]
   pulls           BattlePull[]
   createdAt       DateTime            @default(now())
   updatedAt       DateTime            @updatedAt
   startedAt       DateTime?
   finishedAt      DateTime?
-  fullAt          DateTime? // Timestamp when battle became full
+  lobbyExpiresAt  DateTime?
+  autoStartAt     DateTime?
 
-  // PERFORMANCE: Indexes for common query patterns
   @@index([status])
   @@index([creatorId])
   @@index([battleMode])
-  @@index([winnerId]) // Winner queries
-  @@index([finishedAt]) // Leaderboard date range queries
-  @@index([status, createdAt]) // Battle list queries
-  @@index([winnerId, status]) // User win statistics
-  @@index([status, finishedAt]) // Leaderboard queries
-  @@index([status, fullAt]) // Auto-start queries
+  @@index([winnerId])
+  @@index([finishedAt])
+  @@index([status, createdAt])
+  @@index([winnerId, status])
+  @@index([status, finishedAt])
+  @@index([status, lobbyExpiresAt])
+  @@index([status, autoStartAt])
 }
 
 model BattleParticipant {
@@ -338,19 +339,20 @@ model BattleParticipant {
 }
 
 model BattlePull {
-  id            String            @id @default(cuid())
-  battleId      String
-  battle        Battle            @relation(fields: [battleId], references: [id], onDelete: Cascade)
-  participantId String
-  participant   BattleParticipant @relation(fields: [participantId], references: [id], onDelete: Cascade)
-  pullId        String?           @unique
-  pull          Pull?             @relation(fields: [pullId], references: [id])
-  roundNumber   Int
-  coinValue     Decimal           @db.Decimal(10, 2)
-  pulledAt      DateTime          @default(now())
-  itemName      String?
-  itemImage     String?
-  itemRarity    String?
+  id                  String            @id @default(cuid())
+  battleId            String
+  battle              Battle            @relation(fields: [battleId], references: [id], onDelete: Cascade)
+  participantId       String
+  participant         BattleParticipant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  pullId              String?           @unique
+  pull                Pull?             @relation(fields: [pullId], references: [id])
+  roundNumber         Int
+  coinValue           Decimal           @db.Decimal(10, 2)
+  pulledAt            DateTime          @default(now())
+  itemName            String?
+  itemImage           String?
+  itemRarity          String?
+  transferredToUserId String?
 
   @@index([battleId])
   @@index([participantId])
@@ -358,17 +360,24 @@ model BattlePull {
 }
 
 enum BattleStatus {
-  WAITING
-  COUNTDOWN
-  IN_PROGRESS
-  FINISHED
+  OPEN
+  FULL
+  READY
+  ACTIVE
+  FINISHED_WIN
+  FINISHED_DRAW
   CANCELLED
 }
 
 enum BattleMode {
-  NORMAL
-  UPSIDE_DOWN
-  JACKPOT
+  LOWEST_CARD
+  HIGHEST_CARD
+  ALL_CARDS
+}
+
+enum WinCondition {
+  HIGHEST
+  LOWEST
 }
 
 model SaleHistory {
@@ -498,6 +507,58 @@ model BattleLeaderboard {
   @@unique([userId, month, year])
   @@index([month, year])
   @@index([points])
+}
+
+// Battle-weighted leaderboard aggregate + audit trail (see lib/leaderboard/*)
+model LeaderboardEntry {
+  id                String             @id @default(cuid())
+  userId            String             @unique
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  totalPoints       Int                @default(0)
+  weeklyPoints      Int                @default(0)
+  monthlyPoints     Int                @default(0)
+  allTimePoints     Int                @default(0)
+  currentStreak     Int                @default(0)
+  bestStreak        Int                @default(0)
+  battlesThisWeek   Int                @default(0)
+  totalBattles      Int                @default(0)
+  totalWins         Int                @default(0)
+  totalLosses       Int                @default(0)
+  lastBattleAt      DateTime?
+  lastDecayAt       DateTime?
+  rank              Int?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  pointTransactions PointTransaction[]
+
+  @@index([totalPoints])
+  @@index([weeklyPoints])
+  @@index([monthlyPoints])
+}
+
+model PointTransaction {
+  id                 String               @id @default(cuid())
+  leaderboardEntryId String
+  leaderboardEntry   LeaderboardEntry     @relation(fields: [leaderboardEntryId], references: [id], onDelete: Cascade)
+  battleId           String?
+  type               PointTransactionType
+  points             Int
+  description        String?
+  metadata           Json?
+  createdAt          DateTime             @default(now())
+
+  @@index([leaderboardEntryId, createdAt])
+  @@index([battleId])
+}
+
+enum PointTransactionType {
+  BATTLE_WIN
+  BATTLE_LOSS
+  BATTLE_DRAW
+  CARD_HIT_BONUS
+  VOLUME_BONUS
+  DECAY
+  ADMIN_ADJUSTMENT
 }
 
 // ============================================

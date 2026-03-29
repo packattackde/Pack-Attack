@@ -42,10 +42,10 @@ type Order = {
 
 const statusConfig: Record<string, { color: string; bgColor: string; icon: React.ElementType; label: string }> = {
   PENDING: { color: 'text-yellow-400', bgColor: 'bg-yellow-400/10', icon: Clock, label: 'Pending' },
-  CONFIRMED: { color: 'text-blue-400', bgColor: 'bg-blue-400/10', icon: Check, label: 'Confirmed' },
+  CONFIRMED: { color: 'text-[#C84FFF]', bgColor: 'bg-[rgba(200,79,255,0.1)]', icon: Check, label: 'Confirmed' },
   PROCESSING: { color: 'text-purple-400', bgColor: 'bg-purple-400/10', icon: Package, label: 'Processing' },
   SHIPPED: { color: 'text-indigo-400', bgColor: 'bg-indigo-400/10', icon: Truck, label: 'Shipped' },
-  DELIVERED: { color: 'text-green-400', bgColor: 'bg-green-400/10', icon: CheckCircle, label: 'Delivered' },
+  DELIVERED: { color: 'text-[#E879F9]', bgColor: 'bg-[#C84FFF]/10', icon: CheckCircle, label: 'Delivered' },
   CANCELLED: { color: 'text-red-400', bgColor: 'bg-red-400/10', icon: XCircle, label: 'Cancelled' },
 };
 
@@ -167,10 +167,10 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
 
   if (orders.length === 0) {
     return (
-      <div className="glass-strong rounded-2xl p-12 text-center">
+      <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
         <Package className="w-16 h-16 text-gray-700 mx-auto mb-4" />
         <h3 className="text-xl font-bold text-white mb-2">No Orders Yet</h3>
-        <p className="text-gray-400 max-w-md mx-auto">
+        <p className="text-[#8888aa] max-w-md mx-auto">
           When users open your boxes and order cards, the orders will appear here for you to process and ship.
         </p>
       </div>
@@ -187,8 +187,8 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
             onClick={() => setFilterStatus(status)}
             className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
               filterStatus === status
-                ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg'
-                : 'glass text-gray-400 hover:text-white hover:bg-gray-800/50'
+                ? 'bg-gradient-to-r from-[#9333EA] to-[#7c3aed] text-white shadow-lg'
+                : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white hover:bg-[#12123a]'
             }`}
           >
             {status === 'ALL' ? 'All Orders' : statusConfig[status]?.label || status}
@@ -203,9 +203,9 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
 
       {/* Orders List */}
       {filteredOrders.length === 0 ? (
-        <div className="glass-strong rounded-2xl p-8 text-center">
+        <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-8 text-center">
           <AlertCircle className="w-10 h-10 text-gray-600 mx-auto mb-3" />
-          <p className="text-gray-400">No orders with this status</p>
+          <p className="text-[#8888aa]">No orders with this status</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -215,7 +215,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
             const isExpanded = expandedOrder === order.id;
 
             return (
-              <div key={order.id} className="glass-strong rounded-2xl overflow-hidden">
+              <div key={order.id} className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl overflow-hidden">
                 {/* Order Header */}
                 <div
                   className="p-5 cursor-pointer hover:bg-white/5 transition-colors"
@@ -224,7 +224,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                   <div className="flex items-center justify-between gap-4">
                     <div className="flex items-center gap-4 min-w-0">
                       {/* Card Image */}
-                      <div className="relative w-14 h-20 rounded-lg overflow-hidden flex-shrink-0 ring-1 ring-gray-700 bg-gray-800">
+                      <div className="relative w-14 h-20 rounded-lg overflow-hidden flex-shrink-0 ring-1 ring-gray-700 bg-[#12123a]">
                         {order.cardImage ? (
                           <Image
                             src={order.cardImage}
@@ -249,7 +249,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                           )}
                         </div>
                         <p className="font-semibold text-white truncate max-w-[200px]">{order.cardName}</p>
-                        <p className="text-sm text-gray-400 truncate">
+                        <p className="text-sm text-[#8888aa] truncate">
                           {order.user.name || order.user.email}{order.box ? ` • ${order.box.name}` : order.sourceOrderId ? ' • Admin Assigned' : ''}
                         </p>
                       </div>
@@ -269,9 +269,9 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                       </div>
                       
                       {isExpanded ? (
-                        <ChevronUp className="w-5 h-5 text-gray-400" />
+                        <ChevronUp className="w-5 h-5 text-[#8888aa]" />
                       ) : (
-                        <ChevronDown className="w-5 h-5 text-gray-400" />
+                        <ChevronDown className="w-5 h-5 text-[#8888aa]" />
                       )}
                     </div>
                   </div>
@@ -279,17 +279,17 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
 
                 {/* Expanded Details */}
                 {isExpanded && (
-                  <div className="border-t border-gray-800 p-5 space-y-5">
+                  <div className="border-t border-[rgba(255,255,255,0.06)] p-5 space-y-5">
                     <div className="grid md:grid-cols-2 gap-4">
                       {/* Customer Info */}
-                      <div className="glass rounded-xl p-4">
+                      <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                         <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
-                          <User className="w-4 h-4 text-emerald-400" />
+                          <User className="w-4 h-4 text-[#E879F9]" />
                           Customer
                         </h4>
                         <div className="space-y-2 text-sm">
-                          <p className="text-gray-300">{order.user.name || 'No name'}</p>
-                          <p className="text-gray-400 flex items-center gap-2">
+                          <p className="text-[#f0f0f5]">{order.user.name || 'No name'}</p>
+                          <p className="text-[#8888aa] flex items-center gap-2">
                             <Mail className="w-3 h-3" />
                             {order.user.email}
                           </p>
@@ -297,13 +297,13 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                       </div>
 
                       {/* Shipping Info */}
-                      <div className="glass rounded-xl p-4">
+                      <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                         <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
-                          <MapPin className="w-4 h-4 text-emerald-400" />
+                          <MapPin className="w-4 h-4 text-[#E879F9]" />
                           Shipping Address
                         </h4>
-                        <div className="space-y-1 text-sm text-gray-400">
-                          <p className="text-gray-300">{order.shippingName}</p>
+                        <div className="space-y-1 text-sm text-[#8888aa]">
+                          <p className="text-[#f0f0f5]">{order.shippingName}</p>
                           <p>{order.shippingAddress}</p>
                           <p>{order.shippingZip} {order.shippingCity}</p>
                           <p>{order.shippingCountry}</p>
@@ -319,9 +319,9 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                     </div>
 
                     {/* Card Details */}
-                    <div className="glass rounded-xl p-4">
+                    <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                       <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
-                        <Package className="w-4 h-4 text-emerald-400" />
+                        <Package className="w-4 h-4 text-[#E879F9]" />
                         Order Item
                       </h4>
                       <div className="flex items-center gap-4">
@@ -334,7 +334,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                               className="object-cover"
                             />
                           ) : (
-                            <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                            <div className="w-full h-full bg-[#12123a] flex items-center justify-center">
                               <Package className="w-8 h-8 text-gray-600" />
                             </div>
                           )}
@@ -342,7 +342,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                         <div>
                           <p className="font-semibold text-white">{order.cardName}</p>
                           {order.cardRarity && (
-                            <p className="text-sm text-gray-400">Rarity: {order.cardRarity}</p>
+                            <p className="text-sm text-[#8888aa]">Rarity: {order.cardRarity}</p>
                           )}
                           <p className="text-sm text-amber-400 mt-1">{(order.cardValue / 5).toFixed(2)} €</p>
                           <p className="text-xs text-gray-500 mt-1">From: {order.box?.name || 'Admin Assigned Order'}</p>
@@ -352,16 +352,16 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
 
                     {/* Customer Notes */}
                     {order.notes && (
-                      <div className="glass rounded-xl p-4">
+                      <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                         <h4 className="font-semibold text-white mb-2">Customer Notes</h4>
-                        <p className="text-sm text-gray-400">{order.notes}</p>
+                        <p className="text-sm text-[#8888aa]">{order.notes}</p>
                       </div>
                     )}
 
                     {/* Tracking Info */}
-                    <div className="glass rounded-xl p-4">
+                    <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                       <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
-                        <Truck className="w-4 h-4 text-emerald-400" />
+                        <Truck className="w-4 h-4 text-[#E879F9]" />
                         Tracking Information
                       </h4>
                       
@@ -372,21 +372,21 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                             placeholder="Tracking Number"
                             value={trackingData.number}
                             onChange={(e) => setTrackingData({ ...trackingData, number: e.target.value })}
-                            className="w-full px-3 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white text-sm focus:border-emerald-500 focus:outline-none"
+                            className="w-full px-3 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white text-sm focus:border-[#C84FFF] focus:outline-none"
                           />
                           <input
                             type="text"
                             placeholder="Tracking URL (optional)"
                             value={trackingData.url}
                             onChange={(e) => setTrackingData({ ...trackingData, url: e.target.value })}
-                            className="w-full px-3 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white text-sm focus:border-emerald-500 focus:outline-none"
+                            className="w-full px-3 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white text-sm focus:border-[#C84FFF] focus:outline-none"
                           />
                           <div className="flex gap-2">
                             <Button
                               size="sm"
                               onClick={() => handleTrackingUpdate(order.id)}
                               disabled={updatingOrder === order.id}
-                              className="bg-emerald-500 hover:bg-emerald-600"
+                              className="bg-[#C84FFF] hover:bg-[#9333EA]"
                             >
                               <Check className="w-4 h-4 mr-1" />
                               Save
@@ -398,7 +398,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                                 setEditingTracking(null);
                                 setTrackingData({ number: '', url: '' });
                               }}
-                              className="border-gray-700"
+                              className="border-[rgba(255,255,255,0.06)]"
                             >
                               Cancel
                             </Button>
@@ -413,7 +413,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                                 href={order.trackingUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-sm text-emerald-400 hover:text-emerald-300 flex items-center gap-1 mt-1"
+                                className="text-sm text-[#E879F9] hover:text-[#f0abfc] flex items-center gap-1 mt-1"
                               >
                                 Track Package <ExternalLink className="w-3 h-3" />
                               </a>
@@ -429,7 +429,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                                 url: order.trackingUrl || '',
                               });
                             }}
-                            className="border-gray-700 text-gray-400"
+                            className="border-[rgba(255,255,255,0.06)] text-[#8888aa]"
                           >
                             Edit
                           </Button>
@@ -439,7 +439,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                           size="sm"
                           variant="outline"
                           onClick={() => setEditingTracking(order.id)}
-                          className="border-emerald-500/50 text-emerald-400 hover:bg-emerald-500/10"
+                          className="border-[#C84FFF]/50 text-[#E879F9] hover:bg-[#C84FFF]/10"
                         >
                           <Truck className="w-4 h-4 mr-2" />
                           Add Tracking
@@ -448,9 +448,9 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                     </div>
 
                     {/* Shop Notes */}
-                    <div className="glass rounded-xl p-4">
+                    <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                       <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
-                        <MessageSquare className="w-4 h-4 text-emerald-400" />
+                        <MessageSquare className="w-4 h-4 text-[#E879F9]" />
                         Internal Notes
                       </h4>
                       
@@ -461,14 +461,14 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                             value={shopNotes}
                             onChange={(e) => setShopNotes(e.target.value)}
                             rows={3}
-                            className="w-full px-3 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white text-sm focus:border-emerald-500 focus:outline-none resize-none"
+                            className="w-full px-3 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white text-sm focus:border-[#C84FFF] focus:outline-none resize-none"
                           />
                           <div className="flex gap-2">
                             <Button
                               size="sm"
                               onClick={() => handleNotesUpdate(order.id)}
                               disabled={updatingOrder === order.id}
-                              className="bg-emerald-500 hover:bg-emerald-600"
+                              className="bg-[#C84FFF] hover:bg-[#9333EA]"
                             >
                               <Check className="w-4 h-4 mr-1" />
                               Save
@@ -480,7 +480,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                                 setEditingNotes(null);
                                 setShopNotes('');
                               }}
-                              className="border-gray-700"
+                              className="border-[rgba(255,255,255,0.06)]"
                             >
                               Cancel
                             </Button>
@@ -488,7 +488,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                         </div>
                       ) : order.shopNotes ? (
                         <div className="flex items-start justify-between">
-                          <p className="text-sm text-gray-400">{order.shopNotes}</p>
+                          <p className="text-sm text-[#8888aa]">{order.shopNotes}</p>
                           <Button
                             size="sm"
                             variant="outline"
@@ -496,7 +496,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                               setEditingNotes(order.id);
                               setShopNotes(order.shopNotes || '');
                             }}
-                            className="border-gray-700 text-gray-400 ml-4 flex-shrink-0"
+                            className="border-[rgba(255,255,255,0.06)] text-[#8888aa] ml-4 flex-shrink-0"
                           >
                             Edit
                           </Button>
@@ -506,7 +506,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                           size="sm"
                           variant="outline"
                           onClick={() => setEditingNotes(order.id)}
-                          className="border-gray-700 text-gray-400"
+                          className="border-[rgba(255,255,255,0.06)] text-[#8888aa]"
                         >
                           <MessageSquare className="w-4 h-4 mr-2" />
                           Add Notes
@@ -515,8 +515,8 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                     </div>
 
                     {/* Status Update */}
-                    <div className="pt-4 border-t border-gray-800">
-                      <p className="text-sm text-gray-400 mb-3">Update Order Status:</p>
+                    <div className="pt-4 border-t border-[rgba(255,255,255,0.06)]">
+                      <p className="text-sm text-[#8888aa] mb-3">Update Order Status:</p>
                       <div className="flex gap-2 flex-wrap">
                         {['PENDING', 'CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'].map((s) => {
                           const cfg = statusConfig[s];
@@ -529,7 +529,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                               className={`px-4 py-2 rounded-xl text-sm font-medium transition-all disabled:opacity-50 flex items-center gap-2 ${
                                 order.status === s
                                   ? `${cfg.bgColor} ${cfg.color} ring-2 ring-offset-2 ring-offset-gray-900 ring-current`
-                                  : 'glass hover:bg-white/10 text-gray-400'
+                                  : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md hover:bg-white/10 text-[#8888aa]'
                               }`}
                             >
                               <StatusIcon className="w-4 h-4" />

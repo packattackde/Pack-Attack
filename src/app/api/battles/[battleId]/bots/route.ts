@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 
 const addBotsSchema = z.object({
-  count: z.number().int().min(1).max(8).default(1),
+  count: z.number().int().min(1).max(3).default(1),
 });
 
 export async function POST(
@@ -17,26 +17,21 @@ export async function POST(
 
     const session = await getCurrentSession();
 
-    // Check if user is authenticated
     if (!session?.user?.email) {
-      console.error('No session or email found');
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
+      return NextResponse.json({ error: 'Nicht authentifiziert' }, { status: 401 });
     }
 
-    // Get user with role from database
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },
       select: { id: true, role: true },
     });
 
-    // Check if user is admin
     if (!user || user.role !== 'ADMIN') {
-      console.error('User not admin:', user?.role);
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
+      return NextResponse.json({ error: 'Admin-Zugang erforderlich' }, { status: 403 });
     }
 
     if (!battleId) {
-      return NextResponse.json({ error: 'Battle id missing' }, { status: 400 });
+      return NextResponse.json({ error: 'Battle-ID fehlt' }, { status: 400 });
     }
 
     const payload = await request.json();
@@ -52,27 +47,27 @@ export async function POST(
     });
 
     if (!battle) {
-      return NextResponse.json({ error: 'Battle not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Battle nicht gefunden' }, { status: 404 });
     }
 
-    if (battle.status !== 'WAITING') {
-      return NextResponse.json({ error: 'Bots can only join waiting battles' }, { status: 400 });
+    if (battle.status !== 'OPEN') {
+      return NextResponse.json({ error: 'Bots können nur offenen Battles beitreten' }, { status: 400 });
     }
 
     const spotsLeft = battle.maxParticipants - battle.participants.length;
 
     if (spotsLeft <= 0) {
-      return NextResponse.json({ error: 'Battle is already full' }, { status: 400 });
+      return NextResponse.json({ error: 'Battle ist bereits voll' }, { status: 400 });
     }
 
     if (count > spotsLeft) {
       return NextResponse.json(
-        { error: `Only ${spotsLeft} bot slot${spotsLeft === 1 ? '' : 's'} available` },
+        { error: `Nur ${spotsLeft} Platz/Plätze verfügbar` },
         { status: 400 }
       );
     }
 
-    const existingIds = battle.participants.map((participant) => participant.userId);
+    const existingIds = battle.participants.map(p => p.userId);
 
     const availableBots = await prisma.user.findMany({
       where: {
@@ -84,29 +79,22 @@ export async function POST(
     });
 
     if (availableBots.length === 0) {
-      // Check if any bots exist at all
-      const totalBots = await prisma.user.count({
-        where: { isBot: true },
-      });
-      
+      const totalBots = await prisma.user.count({ where: { isBot: true } });
       if (totalBots === 0) {
-        console.error('No bot users exist in database. Run: npm run create-bots');
         return NextResponse.json(
-          { error: 'No bot users exist. Please run the create-bots script.' },
+          { error: 'Keine Bot-Benutzer vorhanden. Bitte create-bots Script ausführen.' },
           { status: 400 }
         );
       }
-      
-      console.error('All bots are already in this battle');
       return NextResponse.json(
-        { error: 'All available bots are already in this battle' },
+        { error: 'Alle verfügbaren Bots sind bereits in diesem Battle' },
         { status: 400 }
       );
     }
 
     if (availableBots.length < count) {
       return NextResponse.json(
-        { error: `Only ${availableBots.length} bot${availableBots.length === 1 ? '' : 's'} available` },
+        { error: `Nur ${availableBots.length} Bot(s) verfügbar` },
         { status: 400 }
       );
     }
@@ -117,24 +105,33 @@ export async function POST(
           data: {
             battleId,
             userId: bot.id,
-            isReady: true, // Bots are always ready
+            isReady: true,
           },
         })
       )
     );
 
-    // Revalidate the battle page to show the new bots
+    // Check if battle is now full
+    const newCount = battle.participants.length + availableBots.length;
+    if (newCount >= battle.maxParticipants) {
+      await prisma.battle.update({
+        where: { id: battleId },
+        data: {
+          status: 'FULL',
+          autoStartAt: new Date(Date.now() + 3 * 60 * 1000),
+        },
+      });
+    }
+
     revalidatePath(`/battles/${battleId}`);
     revalidatePath('/battles');
 
-    console.log(`Successfully added ${availableBots.length} bots to battle ${battleId}`);
     return NextResponse.json({ success: true, added: availableBots.length });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: 'Invalid input', details: error.issues }, { status: 400 });
+      return NextResponse.json({ error: 'Ungültige Eingabe', details: error.issues }, { status: 400 });
     }
-
     console.error('Add bots error:', error);
-    return NextResponse.json({ error: 'Failed to add bots' }, { status: 500 });
+    return NextResponse.json({ error: 'Bots konnten nicht hinzugefügt werden' }, { status: 500 });
   }
 }

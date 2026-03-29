@@ -4,10 +4,10 @@ import type { Metadata } from 'next';
 
 // SEO Metadata
 export const metadata: Metadata = {
-  title: 'Card Shop - Pack Attack',
+  title: 'Card Shop - PullForge',
   description: 'Buy real trading cards from our shop. Pokemon, Magic, Yu-Gi-Oh and more. Cards shipped directly to your door!',
   openGraph: {
-    title: 'Card Shop - Pack Attack',
+    title: 'Card Shop - PullForge',
     description: 'Buy real trading cards from our shop. Fast shipping worldwide!',
     type: 'website',
   },

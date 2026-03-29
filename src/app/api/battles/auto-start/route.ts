@@ -1,356 +1,205 @@
-import { NextResponse } from 'next/server';
-import { prisma, withRetry } from '@/lib/prisma';
+import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 import { awardXp } from '@/lib/level';
+import { awardBattleLeaderboardForFinishedBattle } from '@/lib/leaderboard/award';
 
-// This endpoint checks for battles that have been full for 5 minutes
-// and automatically starts them if all players haven't pressed start
-export async function POST(request: Request) {
+const CRON_SECRET = process.env.CRON_SECRET || 'your-secret-key';
+
+function drawRandomCard(cards: Array<{ id: string; name: string; coinValue: number; pullRate: number; imageUrlGatherer: string | null; imageUrlScryfall: string | null; rarity: string | null }>) {
+  const totalWeight = cards.reduce((sum, c) => sum + c.pullRate, 0);
+  let roll = Math.random() * totalWeight;
+  for (const card of cards) {
+    roll -= card.pullRate;
+    if (roll <= 0) return card;
+  }
+  return cards[cards.length - 1];
+}
+
+async function startBattle(battleId: string): Promise<{ status: string; message: string }> {
+  const battle = await prisma.battle.findUnique({
+    where: { id: battleId },
+    include: {
+      participants: { include: { user: { select: { id: true, isBot: true } } } },
+      box: { include: { cards: true } },
+    },
+  });
+
+  if (!battle) return { status: 'error', message: 'Battle nicht gefunden' };
+
+  await prisma.battleParticipant.updateMany({
+    where: { battleId, isReady: false },
+    data: { isReady: true },
+  });
+
+  await prisma.battle.update({
+    where: { id: battleId },
+    data: { status: 'ACTIVE', startedAt: new Date() },
+  });
+
+  const boxCards = battle.box.cards.map(c => ({
+    id: c.id, name: c.name, coinValue: Number(c.coinValue), pullRate: Number(c.pullRate),
+    imageUrlGatherer: c.imageUrlGatherer, imageUrlScryfall: c.imageUrlScryfall, rarity: c.rarity,
+  }));
+
+  if (boxCards.length === 0) {
+    await prisma.battle.update({ where: { id: battleId }, data: { status: 'CANCELLED', finishedAt: new Date() } });
+    return { status: 'cancelled', message: 'Box hat keine Karten' };
+  }
+
+  const participantTotals: Record<string, number> = {};
+  for (const p of battle.participants) participantTotals[p.id] = 0;
+
+  const pullOps: Array<{ pullData: any; participantId: string; round: number; card: any; coinValue: number }> = [];
+  for (let round = 1; round <= battle.rounds; round++) {
+    for (const p of battle.participants) {
+      const card = drawRandomCard(boxCards);
+      participantTotals[p.id] += card.coinValue;
+      pullOps.push({
+        pullData: { boxId: battle.boxId, userId: p.userId, cardId: card.id, cardValue: card.coinValue },
+        participantId: p.id, round, card, coinValue: card.coinValue,
+      });
+    }
+  }
+
+  const createdPulls = await prisma.$transaction(async (tx) => {
+    const results: Array<{ pullId: string; participantId: string; round: number; coinValue: number }> = [];
+    for (const op of pullOps) {
+      const pull = await tx.pull.create({ data: op.pullData });
+      await tx.battlePull.create({
+        data: {
+          battleId, participantId: op.participantId, pullId: pull.id, roundNumber: op.round,
+          coinValue: op.coinValue, itemName: op.card.name,
+          itemImage: op.card.imageUrlGatherer || op.card.imageUrlScryfall, itemRarity: op.card.rarity,
+        },
+      });
+      results.push({ pullId: pull.id, participantId: op.participantId, round: op.round, coinValue: op.coinValue });
+    }
+    for (const p of battle.participants) {
+      await tx.battleParticipant.update({
+        where: { id: p.id },
+        data: { totalValue: Math.round(participantTotals[p.id]), roundsPulled: battle.rounds },
+      });
+    }
+    return results;
+  });
+
+  const useLowest = battle.winCondition === 'LOWEST';
+  const sorted = battle.participants.map(p => ({ ...p, total: participantTotals[p.id] })).sort((a, b) => useLowest ? a.total - b.total : b.total - a.total);
+  const bestTotal = sorted[0].total;
+  const isDraw = sorted.filter(p => p.total === bestTotal).length > 1;
+
+  if (isDraw) {
+    await prisma.battle.update({ where: { id: battleId }, data: { status: 'FINISHED_DRAW', finishedAt: new Date() } });
+    for (const p of battle.participants) {
+      try { await awardXp(p.userId, 20, prisma as any); } catch {}
+    }
+    try {
+      await awardBattleLeaderboardForFinishedBattle(prisma, battleId);
+    } catch {}
+    return { status: 'draw', message: 'Unentschieden' };
+  }
+
+  const winnerId = sorted[0].userId;
+  const losers = sorted.filter(p => p.userId !== winnerId);
+  const transferOps: string[] = [];
+
+  for (const loser of losers) {
+    const loserPulls = createdPulls.filter(p => p.participantId === loser.id)
+      .sort((a, b) => a.coinValue !== b.coinValue ? a.coinValue - b.coinValue : a.round - b.round);
+
+    if (battle.battleMode === 'LOWEST_CARD' && loserPulls.length > 0) {
+      transferOps.push(loserPulls[0].pullId);
+    } else if (battle.battleMode === 'HIGHEST_CARD' && loserPulls.length > 0) {
+      transferOps.push(loserPulls[loserPulls.length - 1].pullId);
+    } else if (battle.battleMode === 'ALL_CARDS') {
+      transferOps.push(...loserPulls.map(p => p.pullId));
+    }
+  }
+
+  if (transferOps.length > 0) {
+    await prisma.$transaction(async (tx) => {
+      for (const pullId of transferOps) {
+        await tx.pull.update({ where: { id: pullId }, data: { userId: winnerId } });
+        await tx.battlePull.updateMany({ where: { pullId }, data: { transferredToUserId: winnerId } });
+      }
+    });
+  }
+
+  await prisma.battle.update({ where: { id: battleId }, data: { status: 'FINISHED_WIN', winnerId, finishedAt: new Date() } });
+
+  for (const p of battle.participants) {
+    try { await awardXp(p.userId, p.userId === winnerId ? 50 : 20, prisma as any); } catch {}
+  }
+
   try {
-    // Verify this is an authorized call (you can add API key auth here)
+    await awardBattleLeaderboardForFinishedBattle(prisma, battleId);
+  } catch {}
+
+  return { status: 'finished', message: `Gewinner: ${winnerId}` };
+}
+
+export async function POST(request: NextRequest) {
+  try {
     const authHeader = request.headers.get('authorization');
-    const expectedKey = process.env.CRON_SECRET || 'your-secret-key';
-    
-    if (authHeader !== `Bearer ${expectedKey}`) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (authHeader !== `Bearer ${CRON_SECRET}`) {
+      return NextResponse.json({ error: 'Nicht autorisiert' }, { status: 401 });
     }
 
-    // Find battles that are:
-    // 1. Still in WAITING status
-    // 2. Have been full for at least 5 minutes (OR created 5+ mins ago if fullAt not set)
-    // 3. Have all participants joined
-    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+    const now = new Date();
 
-    // Get ALL waiting battles and filter by full status
-    const allWaitingBattles = await withRetry(
-      () => prisma.battle.findMany({
-        where: {
-          status: 'WAITING',
-        },
-        include: {
-          participants: {
-            include: { user: true },
-          },
-          box: {
-            include: { cards: true },
-          },
-        },
-      }),
-      'auto-start:findBattles'
-    );
-
-    // Filter to only FULL battles that have been waiting 5+ minutes
-    const battlesToStart = allWaitingBattles.filter(battle => {
-      if (battle.participants.length < battle.maxParticipants) {
-        return false;
-      }
-      const timeToCheck = battle.fullAt || battle.createdAt;
-      return timeToCheck <= fiveMinutesAgo;
+    // 1. Cancel expired lobbies (OPEN battles past lobbyExpiresAt)
+    const expiredBattles = await prisma.battle.findMany({
+      where: {
+        status: 'OPEN',
+        lobbyExpiresAt: { lte: now },
+      },
+      include: { participants: true },
     });
 
-    console.log(`[AUTO-START] Found ${battlesToStart.length} battles to auto-start`);
-
-    const results = [];
-
-    for (const battle of battlesToStart) {
-      try {
-        // Verify battle is full
-        if (battle.participants.length < battle.maxParticipants) {
-          console.log(`[AUTO-START] Battle ${battle.id} is not full, skipping`);
-          continue;
+    for (const battle of expiredBattles) {
+      // Refund entry fees to all participants
+      for (const p of battle.participants) {
+        const refund = Number(battle.entryFee);
+        if (refund > 0) {
+          await prisma.user.update({
+            where: { id: p.userId },
+            data: { coins: { increment: refund } },
+          });
         }
+      }
+      await prisma.battle.update({
+        where: { id: battle.id },
+        data: { status: 'CANCELLED', finishedAt: now },
+      });
+    }
 
-        // Auto-mark all participants as ready (including non-bots)
-        await prisma.battleParticipant.updateMany({
-          where: {
-            battleId: battle.id,
-            isReady: false,
-          },
-          data: { isReady: true },
-        });
+    // 2. Auto-start full battles past autoStartAt
+    const readyBattles = await prisma.battle.findMany({
+      where: {
+        status: { in: ['FULL', 'READY'] },
+        autoStartAt: { lte: now },
+      },
+    });
 
-        // Now start the battle using the same logic as the manual start
-        await startBattle(battle);
+    const results: Array<{ battleId: string; status: string; message: string }> = [];
 
-        results.push({
-          battleId: battle.id,
-          status: 'started',
-          message: 'Battle auto-started after 5 minutes',
-        });
-
-        console.log(`[AUTO-START] Successfully started battle ${battle.id}`);
-      } catch (error) {
-        console.error(`[AUTO-START] Failed to start battle ${battle.id}:`, error);
-        results.push({
-          battleId: battle.id,
-          status: 'error',
-          error: error instanceof Error ? error.message : 'Unknown error',
-        });
+    for (const battle of readyBattles) {
+      try {
+        const result = await startBattle(battle.id);
+        results.push({ battleId: battle.id, ...result });
+      } catch (error: any) {
+        results.push({ battleId: battle.id, status: 'error', message: error.message });
       }
     }
 
     return NextResponse.json({
       success: true,
-      processed: battlesToStart.length,
+      expired: expiredBattles.length,
+      processed: readyBattles.length,
       results,
     });
   } catch (error) {
-    console.error('[AUTO-START] Error:', error);
-    return NextResponse.json(
-      { error: 'Failed to process auto-start' },
-      { status: 500 }
-    );
+    console.error('Cron auto-start error:', error);
+    return NextResponse.json({ error: 'Cron-Job fehlgeschlagen' }, { status: 500 });
   }
-}
-
-// Helper function to start a battle (extracted from start route logic)
-async function startBattle(battle: any) {
-  // Start the battle
-  await prisma.battle.update({
-    where: { id: battle.id },
-    data: {
-      status: 'IN_PROGRESS',
-      startedAt: new Date(),
-    },
-  });
-
-  // Pre-fetch all cards for random selection
-  const boxCards = battle.box.cards;
-  if (boxCards.length === 0) {
-    throw new Error('No cards in box');
-  }
-
-  const totalPullRate = boxCards.reduce((sum: number, card: any) => sum + Number(card.pullRate), 0);
-
-  // Helper to draw a random card
-  const drawRandomCard = () => {
-    const random = Math.random() * totalPullRate;
-    let accumulator = 0;
-    for (const card of boxCards) {
-      accumulator += Number(card.pullRate);
-      if (random <= accumulator) return card;
-    }
-    return boxCards[boxCards.length - 1];
-  };
-
-  // Prepare all pull data in memory
-  interface PullData {
-    participantId: string;
-    participantUserId: string;
-    cardId: string;
-    cardValue: number;
-    cardName: string;
-    cardImage: string | null;
-    cardRarity: string | null;
-    round: number;
-  }
-  const allPullsData: PullData[] = [];
-  const allPullIds: string[] = [];
-  const participantTotals = new Map<string, number>();
-
-  for (const participant of battle.participants) {
-    let participantTotal = 0;
-
-    for (let round = 1; round <= battle.rounds; round++) {
-      for (let cardIndex = 0; cardIndex < battle.box.cardsPerPack; cardIndex++) {
-        const card = drawRandomCard();
-        const cardCoinValue = Number(card.coinValue);
-        
-        allPullsData.push({
-          participantId: participant.id,
-          participantUserId: participant.userId,
-          cardId: card.id,
-          cardValue: cardCoinValue,
-          cardName: card.name,
-          cardImage: card.imageUrlGatherer,
-          cardRarity: card.rarity,
-          round,
-        });
-        
-        participantTotal += cardCoinValue;
-      }
-    }
-
-    participantTotals.set(participant.id, participantTotal);
-  }
-
-  // Execute all database operations in a single transaction
-  await prisma.$transaction(async (tx) => {
-    // Batch create all pulls
-    for (const pullData of allPullsData) {
-      const pull = await tx.pull.create({
-        data: {
-          userId: pullData.participantUserId,
-          boxId: battle.box.id,
-          cardId: pullData.cardId,
-          cardValue: pullData.cardValue,
-        },
-      });
-
-      await tx.battlePull.create({
-        data: {
-          battleId: battle.id,
-          participantId: pullData.participantId,
-          pullId: pull.id,
-          roundNumber: pullData.round,
-          coinValue: pullData.cardValue,
-          itemName: pullData.cardName,
-          itemImage: pullData.cardImage,
-          itemRarity: pullData.cardRarity,
-        },
-      });
-
-      allPullIds.push(pull.id);
-    }
-
-    // Batch update all participant totals
-    for (const participant of battle.participants) {
-      await tx.battleParticipant.update({
-        where: { id: participant.id },
-        data: {
-          totalValue: participantTotals.get(participant.id) || 0,
-          roundsPulled: battle.rounds,
-        },
-      });
-    }
-  });
-
-  // Determine winner based on battle mode
-  let winnerId: string | null = null;
-  let isDraw = false;
-  
-  if (battle.shareMode) {
-    const randomIndex = Math.floor(Math.random() * battle.participants.length);
-    winnerId = battle.participants[randomIndex].userId;
-  } else if (battle.battleMode === 'JACKPOT') {
-    const randomIndex = Math.floor(Math.random() * battle.participants.length);
-    winnerId = battle.participants[randomIndex].userId;
-  } else {
-    const values = Array.from(participantTotals.entries());
-    const isUpsideDown = battle.battleMode === 'UPSIDE_DOWN';
-    
-    const targetValue = isUpsideDown
-      ? Math.min(...values.map(([, v]) => v))
-      : Math.max(...values.map(([, v]) => v));
-    
-    const tiedParticipants = values.filter(([, v]) => v === targetValue);
-    
-    if (tiedParticipants.length > 1) {
-      // Tiebreaker: count individual round wins for each tied participant
-      const tiedIds = new Set(tiedParticipants.map(([id]) => id));
-      const roundWins = new Map<string, number>();
-      for (const id of tiedIds) roundWins.set(id, 0);
-
-      for (let r = 1; r <= battle.rounds; r++) {
-        const roundPulls = allPullsData.filter(p => p.round === r);
-        const roundTotals = new Map<string, number>();
-        for (const pull of roundPulls) {
-          roundTotals.set(pull.participantId, (roundTotals.get(pull.participantId) || 0) + pull.cardValue);
-        }
-        let bestRoundVal = isUpsideDown ? Infinity : -Infinity;
-        for (const [pid, val] of roundTotals) {
-          if (!tiedIds.has(pid)) continue;
-          if (isUpsideDown ? val < bestRoundVal : val > bestRoundVal) bestRoundVal = val;
-        }
-        for (const [pid, val] of roundTotals) {
-          if (tiedIds.has(pid) && val === bestRoundVal) {
-            roundWins.set(pid, (roundWins.get(pid) || 0) + 1);
-          }
-        }
-      }
-
-      const maxRoundWins = Math.max(...roundWins.values());
-      const roundWinners = Array.from(roundWins.entries()).filter(([, w]) => w === maxRoundWins);
-
-      if (roundWinners.length === 1) {
-        const participant = battle.participants.find((p: any) => p.id === roundWinners[0][0]);
-        winnerId = participant?.userId || null;
-        console.log(`[AUTO-START] Tiebreaker resolved by round wins (${maxRoundWins} rounds won)`);
-      } else {
-        isDraw = true;
-        winnerId = null;
-        console.log(`[AUTO-START] True draw: ${roundWinners.length} participants tied on value AND round wins`);
-      }
-    } else {
-      const [winnerParticipantId] = tiedParticipants[0];
-      const participant = battle.participants.find((p: any) => p.id === winnerParticipantId);
-      winnerId = participant?.userId || null;
-    }
-  }
-
-  // Distribute cards
-  await prisma.$transaction(async (tx) => {
-    if (battle.shareMode) {
-      const shuffledPullIds = shuffleArray(allPullIds);
-      const participantUserIds = battle.participants.map((p: any) => p.userId);
-      
-      const userPullMap = new Map<string, string[]>();
-      for (let i = 0; i < shuffledPullIds.length; i++) {
-        const recipientUserId = participantUserIds[i % participantUserIds.length];
-        const existing = userPullMap.get(recipientUserId) || [];
-        existing.push(shuffledPullIds[i]);
-        userPullMap.set(recipientUserId, existing);
-      }
-      
-      for (const [userId, pullIds] of userPullMap) {
-        await tx.pull.updateMany({
-          where: { id: { in: pullIds } },
-          data: { userId },
-        });
-      }
-    } else if (isDraw) {
-      // DRAW: each player keeps the cards they drew
-      console.log(`[AUTO-START] DRAW: All ${battle.participants.length} participants keep their own cards`);
-    } else {
-      if (winnerId) {
-        await tx.pull.updateMany({
-          where: { id: { in: allPullIds } },
-          data: { userId: winnerId },
-        });
-      }
-    }
-  });
-
-  // Calculate total prize
-  const totalPrize = battle.entryFee * battle.participants.length;
-
-  // Update battle with winner and finish status
-  await prisma.battle.update({
-    where: { id: battle.id },
-    data: {
-      status: 'FINISHED',
-      winnerId,
-      totalPrize: isDraw ? 0 : totalPrize,
-      finishedAt: new Date(),
-    },
-  });
-
-  // Award entry fee prize to winner (not on draw)
-  if (!battle.shareMode && !isDraw && winnerId && totalPrize > 0) {
-    await prisma.user.update({
-      where: { id: winnerId },
-      data: {
-        coins: { increment: totalPrize },
-      },
-    });
-  }
-
-  // Award XP: 150 XP for all participants, +250 bonus for winner (non-draw, non-share)
-  for (const participant of battle.participants) {
-    await awardXp(participant.userId, 150, prisma);
-  }
-  if (!battle.shareMode && !isDraw && winnerId) {
-    await awardXp(winnerId, 250, prisma);
-  }
-
-  console.log(`[AUTO-START] Battle ${battle.id} completed. ${isDraw ? 'DRAW' : `Winner: ${winnerId}`}`);
-}
-
-// Fisher-Yates shuffle algorithm
-function shuffleArray<T>(array: T[]): T[] {
-  const shuffled = [...array];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
 }

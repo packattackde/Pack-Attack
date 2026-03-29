@@ -14,16 +14,16 @@ export default function LeaderboardPage() {
 
 function LeaderboardSkeleton() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display">
+    <div className="min-h-screen font-display">
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
       <div className="relative container py-12">
         <div className="animate-pulse space-y-8">
-          <div className="h-12 w-64 bg-gray-800 rounded-lg" />
-          <div className="h-64 bg-gray-800 rounded-2xl" />
+          <div className="h-12 w-64 bg-[#12123a] rounded-lg" />
+          <div className="h-64 bg-[#12123a] rounded-2xl" />
           <div className="space-y-4">
             {[...Array(5)].map((_, i) => (
-              <div key={i} className="h-20 bg-gray-800 rounded-xl" />
+              <div key={i} className="h-20 bg-[#12123a] rounded-xl" />
             ))}
           </div>
         </div>

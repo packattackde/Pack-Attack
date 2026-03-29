@@ -50,6 +50,16 @@
   animation: pulse-live 2s ease-in-out infinite;
 }
 
+@keyframes legendary-pulse {
+  0%, 100% { box-shadow: 0 0 15px rgba(251, 191, 36, 0.1); }
+  50% { box-shadow: 0 0 25px rgba(251, 191, 36, 0.2); }
+}
+
+@keyframes neon-breathe {
+  0%, 100% { box-shadow: 0 0 12px var(--pa-neon-glow); }
+  50% { box-shadow: 0 0 24px var(--pa-neon-glow); }
+}
+
 /* Shimmer effect for buttons */
 .shimmer {
   position: relative;
@@ -76,65 +86,76 @@
    GLASS MORPHISM EFFECTS
    ============================================ */
 
-.glass {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
+@layer components {
+  .glass {
+    background: #1a1a4a !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+  }
 
-.glass-strong {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  .glass-strong {
+    background: #1e1e55 !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4) !important;
+  }
 }
 
 /* ============================================
    GRADIENT UTILITIES
    ============================================ */
 
-.gradient-border {
-  position: relative;
-  background: transparent;
-}
+@layer components {
+  .gradient-border {
+    position: relative;
+    background: transparent;
+  }
 
-.gradient-border::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  padding: 1px;
-  border-radius: inherit;
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-}
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, #C84FFF, #9333EA, #C84FFF);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
 
-/* Background grid pattern */
-.bg-grid {
-  background-image: 
-    linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
-  background-size: 50px 50px;
-}
+  /* Background grid pattern */
+  .bg-grid {
+    background-image:
+      linear-gradient(rgba(200, 79, 255, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(200, 79, 255, 0.02) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
 
-/* Radial gradient overlay */
-.radial-gradient {
-  background: radial-gradient(ellipse at center, transparent 0%, rgb(3 7 18) 70%);
-}
+  /* Radial gradient overlay */
+  .radial-gradient {
+    background: radial-gradient(ellipse at center, transparent 0%, var(--pa-bg-deep) 70%);
+  }
 
-/* ============================================
-   CARD EFFECTS
-   ============================================ */
+  /* ============================================
+     CARD EFFECTS
+     ============================================ */
 
-.card-lift {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+  /* Fan-out animation for box card previews */
+  .group:hover .fan-card {
+    transform: var(--fan-hover) !important;
+  }
 
-.card-lift:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px -12px rgba(59, 130, 246, 0.25);
+  .card-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+
+  .card-lift:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px -12px rgba(200, 79, 255, 0.15), 0 8px 16px -8px rgba(0, 0, 0, 0.4);
+  }
 }
 
 /* ============================================
@@ -328,20 +349,9 @@
 
 /* ============================================
    CSS RESET & CROSS-BROWSER NORMALIZATION
+   Note: Tailwind v4 @import "tailwindcss" already includes Preflight reset.
+   Do NOT add * { margin: 0; padding: 0; } here — it overrides Tailwind utilities.
    ============================================ */
-
-/* Box sizing rules */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-/* Remove default margin and padding */
-* {
-  margin: 0;
-  padding: 0;
-}
 
 /* Prevent font size inflation on mobile */
 html {
@@ -354,8 +364,64 @@ html {
 
 /* Core root settings */
 :root {
-  --primary: 59 130 246;
-  --secondary: 139 92 246;
+  /* === PULLFORGE DESIGN SYSTEM === */
+  /* Core Backgrounds */
+  --pa-bg-deep: #06061a;
+  --pa-bg-base: #0B0B2B;
+  --pa-bg-surface: #10103a;
+  --pa-bg-elevated: #16164a;
+  --pa-bg-card: #1a1a4a;
+
+  /* Neon Purple — Primary Brand */
+  --pa-neon: #C84FFF;
+  --pa-neon-dim: #9333EA;
+  --pa-neon-glow: rgba(200, 79, 255, 0.3);
+  --pa-neon-subtle: rgba(200, 79, 255, 0.08);
+
+  /* Text */
+  --pa-text-primary: #f0f0f5;
+  --pa-text-secondary: #8888aa;
+  --pa-text-muted: #7777a0;
+  --pa-text-on-neon: #ffffff;
+
+  /* Borders */
+  --pa-border: rgba(255, 255, 255, 0.06);
+  --pa-border-hover: rgba(255, 255, 255, 0.12);
+  --pa-bg-hover: rgba(255, 255, 255, 0.06);
+
+  /* Rarity Colors */
+  --rarity-common: #8b8ba0;
+  --rarity-uncommon: #c084fc;
+  --rarity-rare: #60a5fa;
+  --rarity-epic: #a78bfa;
+  --rarity-legendary: #fbbf24;
+  --rarity-mythic: #ff6b6b;
+
+  /* Semantic */
+  --pa-success: #C84FFF;
+  --pa-warning: #fbbf24;
+  --pa-error: #ef4444;
+  --pa-info: #60a5fa;
+
+  /* Spacing Scale */
+  --pa-space-xs: 4px;
+  --pa-space-sm: 8px;
+  --pa-space-md: 12px;
+  --pa-space-lg: 16px;
+  --pa-space-xl: 20px;
+  --pa-space-2xl: 24px;
+  --pa-space-3xl: 32px;
+  --pa-space-4xl: 48px;
+
+  /* Border Radius Scale */
+  --pa-radius-sm: 8px;
+  --pa-radius-md: 12px;
+  --pa-radius-lg: 16px;
+  --pa-radius-xl: 20px;
+  --pa-radius-full: 100px;
+
+  --primary: 200 79 255;
+  --secondary: 147 51 234;
   
   /* Touch-friendly sizes - WCAG 2.1 recommends 44px minimum */
   --touch-target-min: 44px;
@@ -378,14 +444,14 @@ html {
   --spacing-xl: clamp(1.5rem, 5vw, 2rem);
   
   /* Responsive font sizes - fluid typography */
-  --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
-  --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
-  --text-base: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);
-  --text-lg: clamp(1.125rem, 1rem + 0.6vw, 1.25rem);
-  --text-xl: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem);
-  --text-2xl: clamp(1.5rem, 1.25rem + 1.25vw, 2rem);
-  --text-3xl: clamp(1.875rem, 1.5rem + 1.875vw, 2.5rem);
-  --text-4xl: clamp(2.25rem, 1.75rem + 2.5vw, 3rem);
+  --text-xs: clamp(0.75rem, 0.7rem + 0.15vw, 0.75rem);
+  --text-sm: clamp(0.8125rem, 0.75rem + 0.2vw, 0.875rem);
+  --text-base: clamp(0.875rem, 0.8rem + 0.2vw, 0.875rem);
+  --text-lg: clamp(1rem, 0.9rem + 0.3vw, 1.125rem);
+  --text-xl: clamp(1.125rem, 1rem + 0.4vw, 1.25rem);
+  --text-2xl: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+  --text-3xl: clamp(1.5rem, 1.2rem + 0.8vw, 1.875rem);
+  --text-4xl: clamp(1.625rem, 1.3rem + 1vw, 2.25rem);
   
   /* Breakpoint values for reference */
   --breakpoint-sm: 640px;
@@ -476,14 +542,18 @@ textarea:not([rows]) {
    ============================================ */
 
 body {
-  color: rgb(255 255 255);
-  background: rgb(3 7 18);
+  color: var(--pa-text-primary);
+  background:
+    radial-gradient(ellipse at 15% 5%, rgba(200, 79, 255, 0.08) 0%, transparent 45%),
+    radial-gradient(ellipse at 85% 90%, rgba(96, 165, 250, 0.07) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 40%, rgba(167, 139, 250, 0.05) 0%, transparent 50%),
+    linear-gradient(180deg, #06061a 0%, #0a0a35 30%, #0d0d40 55%, #0a0a35 80%, #06061a 100%);
+  background-attachment: fixed;
   min-height: 100vh;
-  min-height: 100dvh; /* Dynamic viewport height for mobile */
+  min-height: 100dvh;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Prevent horizontal scroll on mobile */
   overflow-x: hidden;
 }
 
@@ -529,44 +599,6 @@ body {
   }
 }
 
-/* ============================================
-   DECK SHUFFLE & CARD DRAW ANIMATIONS
-   ============================================ */
-
-@keyframes deck-card-in {
-  from { transform: translateY(64px); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
-}
-
-@keyframes deck-shuffle {
-  0%   { transform: rotate(0deg)  translateX(0);     }
-  20%  { transform: rotate(-5deg) translateX(-22px); }
-  45%  { transform: rotate(5deg)  translateX(22px);  }
-  65%  { transform: rotate(-3deg) translateX(-12px); }
-  82%  { transform: rotate(2deg)  translateX(8px);   }
-  100% { transform: rotate(0deg)  translateX(0);     }
-}
-
-@keyframes deck-draw-lift {
-  0%   { transform: translateY(0)     scale(1)    rotate(0deg);  }
-  100% { transform: translateY(-220px) scale(1.1) rotate(-4deg); }
-}
-
-@keyframes deck-flip-full {
-  0%   { transform: rotateY(0deg); }
-  100% { transform: rotateY(180deg); }
-}
-
-@keyframes deck-info-reveal {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.deck-card-in     { animation: deck-card-in    0.36s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
-.deck-shuffle     { animation: deck-shuffle    0.72s ease-in-out both; }
-.deck-draw-lift   { animation: deck-draw-lift  0.5s  cubic-bezier(0.4, 0, 0.2, 1) forwards; }
-.deck-flip-full   { animation: deck-flip-full  0.65s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
-.deck-info-reveal { animation: deck-info-reveal 0.4s ease 0.6s both; }
 
 /* ============================================
    RARITY GLOW EFFECTS
@@ -702,22 +734,22 @@ button,
 }
 
 ::-webkit-scrollbar-track {
-  background: rgb(17 24 39);
+  background: var(--pa-bg-base);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgb(75 85 99);
+  background: rgba(255, 255, 255, 0.12);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgb(107 114 128);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 /* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgb(75 85 99) rgb(17 24 39);
+  scrollbar-color: rgba(255, 255, 255, 0.12) var(--pa-bg-base);
 }
 
 /* ============================================
@@ -731,13 +763,13 @@ button,
 
 /* Custom focus-visible style */
 :focus-visible {
-  outline: 2px solid rgb(var(--primary));
+  outline: 2px solid var(--pa-neon);
   outline-offset: 2px;
 }
 
 /* Focus ring utility */
 .focus-ring:focus-visible {
-  outline: 2px solid rgb(var(--primary));
+  outline: 2px solid var(--pa-neon);
   outline-offset: 2px;
   border-radius: 0.375rem;
 }
@@ -811,8 +843,8 @@ textarea:-webkit-autofill:focus,
 select:-webkit-autofill,
 select:-webkit-autofill:hover,
 select:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0 1000px rgb(17 24 39) inset;
-  -webkit-text-fill-color: rgb(255 255 255);
+  -webkit-box-shadow: 0 0 0 1000px var(--pa-bg-surface) inset;
+  -webkit-text-fill-color: var(--pa-text-primary);
   transition: background-color 5000s ease-in-out 0s;
 }
 
@@ -884,10 +916,10 @@ img {
 
 @media (prefers-contrast: high) {
   :root {
-    --primary: 96 165 250;
+    --primary: 200 79 255;
   }
   
-  .border-gray-800 {
+  .border-\[rgba\(255\,255\,255\,0\.06\)\] {
     border-color: rgb(156 163 175) !important;
   }
 }
@@ -1724,9 +1756,43 @@ body.modal-open {
     animation: none !important;
     transition: none !important;
   }
-  
+
   img,
   video {
     content-visibility: auto;
   }
+}
+
+@media (hover: none) {
+  .rarity-card-hover[data-rarity]:hover {
+    transform: none;
+    box-shadow: none;
+  }
+  .rarity-card-hover[data-rarity]:active {
+    transform: translateY(-2px);
+    transition-duration: 0.1s;
+  }
+}
+
+@media (max-width: 767px) {
+  .animate-glow-uncommon,
+  .animate-glow-rare,
+  .animate-glow-epic,
+  .animate-glow-legendary {
+    animation: none;
+  }
+}
+
+@keyframes particle-burst {
+  0% { opacity: 1; transform: scale(0.5); }
+  100% { opacity: 0; transform: scale(2); }
+}
+
+.particle-burst::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle, rgba(255,107,107,0.2) 0%, transparent 70%);
+  animation: particle-burst 1s ease-out forwards;
+  pointer-events: none;
 }

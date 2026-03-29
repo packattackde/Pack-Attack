@@ -84,8 +84,8 @@ const coinPackages: CoinPackage[] = [
     amount: 1250, 
     price: 250, 
     icon: Rocket,
-    gradient: 'from-emerald-500 to-teal-500',
-    shadowColor: 'shadow-emerald-500/20',
+    gradient: 'from-[#9333EA] to-[#9333EA]',
+    shadowColor: 'shadow-[#C84FFF]/20',
     label: 'Ultimate',
   },
 ];
@@ -216,7 +216,7 @@ function PurchaseCoinsContent() {
           transition: 'opacity 0.6s ease, transform 0.6s ease'
         }}
       >
-        <div className="inline-flex items-center gap-2 px-5 py-2.5 mb-8 rounded-full glass border border-amber-500/20">
+        <div className="inline-flex items-center gap-2 px-5 py-2.5 mb-8 rounded-full bg-[#1a1a4a] shadow-md border border-amber-500/20">
           <Sparkles className="w-5 h-5 text-amber-400" />
           <span className="text-amber-400 font-semibold">Power Up Your Collection</span>
         </div>
@@ -224,7 +224,7 @@ function PurchaseCoinsContent() {
           <span className="text-white">Get </span>
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-400 to-orange-400">Coins</span>
         </h1>
-        <p className="text-gray-400 text-xl leading-relaxed" style={{ maxWidth: '42rem', margin: '0 auto' }}>
+        <p className="text-[#8888aa] text-xl leading-relaxed" style={{ maxWidth: '42rem', margin: '0 auto' }}>
           Unlock packs, join epic battles, and build your ultimate trading card collection
         </p>
       </div>
@@ -240,19 +240,19 @@ function PurchaseCoinsContent() {
             transition: 'opacity 0.6s ease 150ms, transform 0.6s ease 150ms'
           }}
         >
-          <div className="glass-strong rounded-3xl p-6 flex items-center justify-between border border-white/10">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-3xl p-6 flex items-center justify-between border border-white/10">
             <div className="flex items-center gap-4">
               <div className="p-4 rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-500/20">
                 <Coins className="w-7 h-7 text-amber-400" />
               </div>
               <div>
-                <p className="text-sm text-gray-500 font-medium">Current Balance</p>
+                <p className="text-sm text-[#8888aa] font-medium">Current Balance</p>
                 <p className="text-3xl font-bold text-white">{userCoins.toLocaleString()}</p>
               </div>
             </div>
             <Link 
               href="/dashboard" 
-              className="hidden sm:flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 hover:text-white transition-all text-sm font-medium"
+              className="hidden sm:flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-[#f0f0f5] hover:text-white transition-all text-sm font-medium"
             >
               Dashboard <ArrowRight className="w-4 h-4" />
             </Link>
@@ -261,7 +261,7 @@ function PurchaseCoinsContent() {
       )}
 
       {/* Section Title */}
-      <h2 className="text-center text-gray-400 text-sm font-semibold uppercase tracking-wider mb-8">
+      <h2 className="text-center text-[#8888aa] text-sm font-semibold uppercase tracking-wider mb-8">
         Choose Your Package
       </h2>
 
@@ -293,7 +293,7 @@ function PurchaseCoinsContent() {
             >
               <div className={`relative rounded-2xl overflow-hidden transition-all duration-300 ${
                 isSelected 
-                  ? `ring-2 ring-offset-2 ring-offset-gray-950 ${pkg.gradient.includes('amber') ? 'ring-amber-500' : pkg.gradient.includes('purple') ? 'ring-purple-500' : pkg.gradient.includes('blue') ? 'ring-blue-500' : pkg.gradient.includes('orange') ? 'ring-orange-500' : pkg.gradient.includes('emerald') ? 'ring-emerald-500' : 'ring-slate-500'}` 
+                  ? `ring-2 ring-offset-2 ring-offset-[#06061a] ${pkg.gradient.includes('amber') ? 'ring-amber-500' : pkg.gradient.includes('purple') ? 'ring-purple-500' : pkg.gradient.includes('blue') ? 'ring-blue-500' : pkg.gradient.includes('orange') ? 'ring-orange-500' : pkg.gradient.includes('emerald') ? 'ring-[#C84FFF]' : 'ring-slate-500'}` 
                   : ''
               }`}>
                 
@@ -311,7 +311,7 @@ function PurchaseCoinsContent() {
 
                 {/* Card Background */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${pkg.gradient} opacity-[0.08] group-hover:opacity-[0.12] transition-opacity`} />
-                <div className="absolute inset-0 bg-gray-900/90" />
+                <div className="absolute inset-0 bg-[#0B0B2B]/90" />
 
                 {/* Card Content */}
                 <div className="relative p-5">
@@ -321,14 +321,14 @@ function PurchaseCoinsContent() {
                     </div>
                     <div>
                       <p className="text-white font-bold text-sm">{pkg.label}</p>
-                      <p className="text-gray-500 text-xs">Package</p>
+                      <p className="text-[#8888aa] text-xs">Package</p>
                     </div>
                   </div>
 
                   <div className="mb-4">
                     <div className="flex items-baseline gap-1.5">
                       <span className="text-2xl font-bold text-white">{pkg.amount.toLocaleString()}</span>
-                      <span className="text-gray-500 text-sm">coins</span>
+                      <span className="text-[#8888aa] text-sm">coins</span>
                     </div>
                   </div>
 
@@ -343,7 +343,7 @@ function PurchaseCoinsContent() {
                     <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
                       isSelected 
                         ? `bg-gradient-to-br ${pkg.gradient} border-transparent` 
-                        : 'border-gray-600 group-hover:border-gray-500'
+                        : 'border-[rgba(255,255,255,0.06)] group-hover:border-[rgba(255,255,255,0.1)]'
                     }`}>
                       {isSelected && <CheckCircle2 className="w-3 h-3 text-white" />}
                     </div>
@@ -376,19 +376,19 @@ function PurchaseCoinsContent() {
         }}
       >
         <div style={{ width: '100%', maxWidth: '28rem' }}>
-        <div className={`relative rounded-3xl bg-gray-900/80 backdrop-blur-xl border border-white/10 p-8 shadow-2xl`}>
+        <div className={`relative rounded-3xl bg-[#0B0B2B]/80 backdrop-blur-xl border border-white/10 p-8 shadow-2xl`}>
           {/* Glow Effect */}
           <div className={`absolute -inset-0.5 bg-gradient-to-r ${selectedPackage.gradient} rounded-3xl blur opacity-20 -z-10`} />
           
           <div className="text-center mb-6">
-            <p className="text-gray-500 text-sm font-medium uppercase tracking-wider mb-3">Your Purchase</p>
+            <p className="text-[#8888aa] text-sm font-medium uppercase tracking-wider mb-3">Your Purchase</p>
             <div className="flex items-center justify-center gap-3">
               <div className={`p-2.5 rounded-xl bg-gradient-to-br ${selectedPackage.gradient}`}>
                 <Coins className="w-6 h-6 text-white" />
               </div>
               <div className="text-left">
                 <span className="text-3xl font-bold text-white">{selectedPackage.amount.toLocaleString()}</span>
-                <p className="text-gray-400 text-sm">coins</p>
+                <p className="text-[#8888aa] text-sm">coins</p>
               </div>
             </div>
           </div>
@@ -396,7 +396,7 @@ function PurchaseCoinsContent() {
           <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent mb-6" />
 
           <div className="flex items-center justify-between mb-6">
-            <span className="text-gray-400">Total</span>
+            <span className="text-[#8888aa]">Total</span>
             <div className="flex items-baseline gap-0.5">
               <Euro className="w-5 h-5 text-white" />
               <span className="text-2xl font-bold text-white">{selectedPackage.price}</span>
@@ -436,7 +436,7 @@ function PurchaseCoinsContent() {
             </button>
           )}
 
-          <div className="flex items-center justify-center gap-6 mt-6 text-gray-500 text-xs">
+          <div className="flex items-center justify-center gap-6 mt-6 text-[#8888aa] text-xs">
             <div className="flex items-center gap-1.5">
               <Shield className="w-3.5 h-3.5" />
               <span>Secure</span>
@@ -467,7 +467,7 @@ function PurchaseCoinsContent() {
         <h2 className="text-center text-2xl md:text-3xl font-bold text-white mb-4">
           What can you do with coins?
         </h2>
-        <p className="text-center text-gray-500 mb-10 max-w-xl mx-auto">
+        <p className="text-center text-[#8888aa] mb-10 max-w-xl mx-auto">
           Use your coins to unlock amazing features and build your collection
         </p>
         
@@ -489,20 +489,20 @@ function PurchaseCoinsContent() {
               icon: TrendingUp, 
               title: 'Win Real Cards', 
               description: 'Checkout your winnings and receive physical cards delivered to you',
-              gradient: 'from-emerald-500 to-teal-500'
+              gradient: 'from-[#9333EA] to-[#9333EA]'
             },
           ].map((item) => {
             const Icon = item.icon;
             return (
               <div 
                 key={item.title}
-                className="glass rounded-2xl p-6 text-center hover:bg-white/[0.03] transition-colors"
+                className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-2xl p-6 text-center hover:bg-[#1a1a4a] transition-colors"
               >
                 <div className={`inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br ${item.gradient} mb-5 shadow-lg`}>
                   <Icon className="w-7 h-7 text-white" />
                 </div>
                 <h3 className="text-white font-bold text-lg mb-2">{item.title}</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">{item.description}</p>
+                <p className="text-[#8888aa] text-sm leading-relaxed">{item.description}</p>
               </div>
             );
           })}
@@ -511,7 +511,7 @@ function PurchaseCoinsContent() {
 
       {/* Stripe Note */}
       <div className="text-center mt-16">
-        <div className="inline-flex items-center gap-2 text-gray-600 text-sm">
+        <div className="inline-flex items-center gap-2 text-[#8888aa] text-sm">
           <Shield className="w-4 h-4" />
           <span>Secure payments processed via Stripe</span>
         </div>
@@ -525,14 +525,14 @@ function LoadingFallback() {
   return (
     <div className="text-center py-20">
       <Loader2 className="w-10 h-10 text-amber-400 animate-spin mx-auto mb-4" />
-      <p className="text-gray-400">Loading...</p>
+      <p className="text-[#8888aa]">Loading...</p>
     </div>
   );
 }
 
 export default function PurchaseCoinsPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display">
+    <div className="min-h-screen font-display">
       {/* Background Effects */}
       <div className="fixed inset-0 bg-grid opacity-20 pointer-events-none" />
       <div className="fixed inset-0 radial-gradient pointer-events-none" />

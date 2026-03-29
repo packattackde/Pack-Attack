@@ -147,9 +147,9 @@ export default function ProductPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 flex items-center justify-center font-display">
+      <div className="min-h-screen flex items-center justify-center font-display">
         <div className="text-white flex items-center gap-3">
-          <div className="w-6 h-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+          <div className="w-6 h-6 border-2 border-[rgba(200,79,255,0.3)] border-t-transparent rounded-full animate-spin" />
           Loading product...
         </div>
       </div>
@@ -158,11 +158,11 @@ export default function ProductPage() {
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 flex items-center justify-center font-display">
+      <div className="min-h-screen flex items-center justify-center font-display">
         <div className="text-center">
           <Package className="w-16 h-16 text-gray-600 mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-white mb-2">Product Not Found</h1>
-          <Link href="/shop" className="text-emerald-400 hover:underline">
+          <Link href="/shop" className="text-[#C84FFF] hover:underline">
             Back to Shop
           </Link>
         </div>
@@ -175,14 +175,14 @@ export default function ProductPage() {
     : null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display">
+    <div className="min-h-screen font-display">
       {/* Background Effects */}
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
 
       <div className="relative container py-12">
         {/* Breadcrumb */}
-        <Link href="/shop" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-8">
+        <Link href="/shop" className="inline-flex items-center gap-2 text-[#8888aa] hover:text-white transition-colors mb-8">
           <ArrowLeft className="w-4 h-4" />
           Back to Shop
         </Link>
@@ -191,7 +191,7 @@ export default function ProductPage() {
           {/* Images */}
           <div className="space-y-4">
             {/* Main Image */}
-            <div className="relative aspect-square rounded-2xl overflow-hidden glass-strong">
+            <div className="relative aspect-square rounded-2xl overflow-hidden bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg">
               {product.images[currentImageIndex] ? (
                 <Image
                   src={product.images[currentImageIndex]}
@@ -246,7 +246,7 @@ export default function ProductPage() {
                     key={index}
                     onClick={() => setCurrentImageIndex(index)}
                     className={`relative w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 border-2 transition-colors ${
-                      currentImageIndex === index ? 'border-emerald-500' : 'border-transparent'
+                      currentImageIndex === index ? 'border-[rgba(200,79,255,0.3)]' : 'border-transparent'
                     }`}
                   >
                     <Image
@@ -266,10 +266,10 @@ export default function ProductPage() {
             {/* Shop Info */}
             <Link 
               href={`/shop?shopId=${product.shop.id}`}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl glass hover:bg-white/5 transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md hover:bg-white/5 transition-colors"
             >
-              <Store className="w-4 h-4 text-emerald-400" />
-              <span className="text-gray-300">{product.shop.name}</span>
+              <Store className="w-4 h-4 text-[#C84FFF]" />
+              <span className="text-[#f0f0f5]">{product.shop.name}</span>
             </Link>
 
             {/* Title */}
@@ -277,12 +277,12 @@ export default function ProductPage() {
 
             {/* Tags */}
             <div className="flex flex-wrap gap-2">
-              <span className="px-3 py-1 rounded-lg bg-gray-700/50 text-gray-300 text-sm flex items-center gap-1">
+              <span className="px-3 py-1 rounded-lg bg-[#12123a] text-[#f0f0f5] text-sm flex items-center gap-1">
                 <Tag className="w-3 h-3" />
                 {categoryDisplayNames[product.category] || product.category}
               </span>
               {product.game && (
-                <span className="px-3 py-1 rounded-lg bg-blue-500/20 text-blue-400 text-sm">
+                <span className="px-3 py-1 rounded-lg bg-[rgba(200,79,255,0.15)] text-[#C84FFF] text-sm">
                   {gameDisplayNames[product.game] || product.game}
                 </span>
               )}
@@ -293,15 +293,15 @@ export default function ProductPage() {
             </div>
 
             {/* Price */}
-            <div className="glass-strong rounded-xl p-6">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl p-6">
               <div className="flex items-baseline gap-3 mb-2">
-                <span className="text-4xl font-bold text-emerald-400">€{product.price.toFixed(2)}</span>
+                <span className="text-4xl font-bold text-[#C84FFF]">€{product.price.toFixed(2)}</span>
                 {product.comparePrice && (
                   <span className="text-xl text-gray-500 line-through">€{product.comparePrice.toFixed(2)}</span>
                 )}
               </div>
               {discount && discount > 0 && (
-                <p className="text-emerald-400 text-sm">You save €{(product.comparePrice! - product.price).toFixed(2)} ({discount}%)</p>
+                <p className="text-[#C84FFF] text-sm">You save €{(product.comparePrice! - product.price).toFixed(2)} ({discount}%)</p>
               )}
             </div>
 
@@ -309,8 +309,8 @@ export default function ProductPage() {
             <div className="flex items-center gap-2">
               {product.stock > 0 ? (
                 <>
-                  <div className="w-2 h-2 rounded-full bg-green-500" />
-                  <span className="text-green-400">In Stock</span>
+                  <div className="w-2 h-2 rounded-full bg-[#C84FFF]" />
+                  <span className="text-[#E879F9]">In Stock</span>
                   {product.stock <= 5 && (
                     <span className="text-orange-400 text-sm">- Only {product.stock} left!</span>
                   )}
@@ -328,18 +328,18 @@ export default function ProductPage() {
               <div className="space-y-4">
                 {/* Quantity Selector */}
                 <div className="flex items-center gap-4">
-                  <span className="text-gray-400">Quantity:</span>
+                  <span className="text-[#8888aa]">Quantity:</span>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                      className="p-2 rounded-lg glass hover:bg-white/10 transition-colors"
+                      className="p-2 rounded-lg bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md hover:bg-white/10 transition-colors"
                     >
                       <Minus className="w-4 h-4 text-white" />
                     </button>
                     <span className="w-12 text-center text-white font-semibold">{quantity}</span>
                     <button
                       onClick={() => setQuantity((q) => Math.min(product.stock, q + 1))}
-                      className="p-2 rounded-lg glass hover:bg-white/10 transition-colors"
+                      className="p-2 rounded-lg bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md hover:bg-white/10 transition-colors"
                     >
                       <Plus className="w-4 h-4 text-white" />
                     </button>
@@ -350,7 +350,7 @@ export default function ProductPage() {
                 <button
                   onClick={handleAddToCart}
                   disabled={addingToCart}
-                  className="w-full py-4 bg-gradient-to-r from-emerald-600 to-cyan-600 text-white font-semibold rounded-xl hover:from-emerald-500 hover:to-cyan-500 transition-all hover:scale-[1.02] disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="w-full py-4 bg-[#C84FFF] text-white font-semibold rounded-xl hover:brightness-110 transition-all hover:scale-[1.02] disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   {addingToCart ? (
                     <>
@@ -369,9 +369,9 @@ export default function ProductPage() {
 
             {/* Description */}
             {product.description && (
-              <div className="glass-strong rounded-xl p-6">
+              <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl p-6">
                 <h2 className="text-lg font-semibold text-white mb-3">Description</h2>
-                <p className="text-gray-400 whitespace-pre-wrap">{product.description}</p>
+                <p className="text-[#8888aa] whitespace-pre-wrap">{product.description}</p>
               </div>
             )}
           </div>

@@ -1,67 +1,86 @@
 name: Deploy to Production
 
+# Production (pack-attack.de) tracks `beta/beta` only — pushes to `main` do not deploy.
 on:
   push:
-    branches: [main]
+    branches: ['beta/beta']
   workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to server
+      # Stray `next start` / next-server as root (or duplicate listeners) causes EADDRINUSE on :3000
+      # and PM2 (packattack user) cannot bind. Free the port before deploy.
+      - name: Free port 3000 (root)
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            fuser -k 3000/tcp 2>/dev/null || true
+            sleep 1
+            pkill -f 'sh -c next start' 2>/dev/null || true
+            pkill -u root -f 'next-server' 2>/dev/null || true
+            sleep 1
+            ss -tlnp | grep ':3000 ' && echo 'WARN: 3000 still in use' || echo 'Port 3000 free'
+
+      - name: Deploy application (packattack)
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SERVER_IP }}
           username: packattack
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          command_timeout: 45m
           script: |
             cd /var/www/packattack/app
+
+            # Server was pointed at a fork (belgarathe/...); CI pushes packattackde — align origin every deploy
+            git remote set-url origin https://github.com/packattackde/Pack-Attack.git
+
+            # Stop PM2 apps before git/build so nothing holds the app directory or port
+            pm2 stop packattack 2>/dev/null || true
+            pm2 stop battle-auto-start-scheduler 2>/dev/null || true
+            sleep 2
+            set -e
 
             # Clean stale build artifacts before git operations
             sudo rm -rf .next.old.* 2>/dev/null || true
 
-            # Pull latest code
-            git fetch origin main
-            git reset --hard origin/main
+            # Pull latest code (beta line)
+            git fetch origin beta/beta
+            git reset --hard origin/beta/beta
             git clean -fd
             npm ci
             npx prisma generate
-            npx prisma db push --accept-data-loss
+            npx prisma db push --accept-data-loss || echo "WARN: prisma db push failed — DB may need a manual migration; continuing build"
 
             # Add CRON_SECRET if not exists
             if ! grep -q "CRON_SECRET" .env; then
               echo "CRON_SECRET=\"$(openssl rand -base64 32)\"" >> .env
             fi
 
-            # Build into a fresh directory to avoid root-owned file conflicts
+            # Build (prefer fresh dir swap; fall back to in-place if Turbopack tmp races)
             rm -rf .next-fresh
-            NEXT_DIST_DIR=.next-fresh npm run build
-
-            # Swap the fresh build into place
-            mv .next ".next.old.$(date +%s)" 2>/dev/null || true
-            mv .next-fresh .next
-
-            # Reload PM2
-            if pm2 reload ecosystem.config.cjs --update-env 2>/dev/null; then
-              echo "PM2 reloaded successfully"
+            if NEXT_DIST_DIR=.next-fresh npm run build; then
+              mv .next ".next.old.$(date +%s)" 2>/dev/null || true
+              mv .next-fresh .next
             else
-              echo "PM2 reload failed, doing fresh start..."
-              pm2 delete packattack 2>/dev/null || true
-              fuser -k 3000/tcp 2>/dev/null || true
-              sleep 3
-              pm2 start ecosystem.config.cjs
+              echo "WARN: NEXT_DIST_DIR build failed, retrying in-place build"
+              rm -rf .next .next-fresh
+              npm run build
             fi
 
-            if pm2 describe battle-scheduler > /dev/null 2>&1; then
-              pm2 reload ecosystem.battle-scheduler.config.cjs --update-env
-            else
-              pm2 start ecosystem.battle-scheduler.config.cjs
-            fi
+            # Clean PM2 entries and start fresh (avoids EADDRINUSE from reload + orphan listeners)
+            pm2 delete packattack 2>/dev/null || true
+            pm2 delete battle-auto-start-scheduler 2>/dev/null || true
+            sleep 2
+            pm2 start ecosystem.config.cjs
+            pm2 start ecosystem.battle-scheduler.config.cjs
 
             pm2 save
 
-            # Show status
             sleep 5
             pm2 status
             echo "✓ Deployment complete"

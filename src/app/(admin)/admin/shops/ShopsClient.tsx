@@ -108,69 +108,69 @@ export function ShopsClient() {
     <div className="space-y-6">
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="glass rounded-xl p-4 text-center">
+        <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
           <Store className="w-5 h-5 text-orange-400 mx-auto mb-2" />
           <div className="text-2xl font-bold text-white">{totals.shops}</div>
-          <div className="text-xs text-gray-400">Total Shops</div>
+          <div className="text-xs text-[#8888aa]">Total Shops</div>
         </div>
-        <div className="glass rounded-xl p-4 text-center">
-          <ShoppingCart className="w-5 h-5 text-blue-400 mx-auto mb-2" />
+        <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
+          <ShoppingCart className="w-5 h-5 text-[#C84FFF] mx-auto mb-2" />
           <div className="text-2xl font-bold text-white">{totals.orders.toLocaleString()}</div>
-          <div className="text-xs text-gray-400">Total Orders</div>
+          <div className="text-xs text-[#8888aa]">Total Orders</div>
         </div>
-        <div className="glass rounded-xl p-4 text-center">
+        <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
           <AlertCircle className="w-5 h-5 text-yellow-400 mx-auto mb-2" />
           <div className="text-2xl font-bold text-white">{totals.pendingOrders.toLocaleString()}</div>
           <div className="text-xs text-yellow-400">Pending Orders</div>
         </div>
-        <div className="glass rounded-xl p-4 text-center">
-          <Coins className="w-5 h-5 text-emerald-400 mx-auto mb-2" />
+        <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
+          <Coins className="w-5 h-5 text-[#E879F9] mx-auto mb-2" />
           <div className="text-2xl font-bold text-white">{totals.revenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-          <div className="text-xs text-gray-400">Total Revenue</div>
+          <div className="text-xs text-[#8888aa]">Total Revenue</div>
         </div>
       </div>
 
       {/* Search */}
       <div className="relative">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8888aa]" />
         <input
           type="text"
           placeholder="Search shops by name or owner..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-12 pr-4 py-3 rounded-xl glass-strong text-white placeholder-gray-500 border border-gray-700 focus:border-orange-500 focus:outline-none transition-colors"
+          className="w-full pl-12 pr-4 py-3 rounded-xl bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none transition-colors"
         />
       </div>
 
       {/* Shops Table */}
       {filtered.length === 0 ? (
-        <div className="glass-strong rounded-2xl p-12 text-center">
+        <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
           <Store className="w-16 h-16 text-gray-600 mx-auto mb-4" />
           <h2 className="text-xl font-semibold text-white mb-2">
             {searchQuery ? 'No Shops Found' : 'No Shops Yet'}
           </h2>
-          <p className="text-gray-400">
+          <p className="text-[#8888aa]">
             {searchQuery ? 'Try a different search term' : 'No shops have been created'}
           </p>
         </div>
       ) : (
-        <div className="glass-strong rounded-2xl overflow-hidden">
+        <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-gray-700/50">
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-400">Shop</th>
-                  <th className="px-4 py-4 text-left text-sm font-semibold text-gray-400">Owner</th>
-                  <th className="px-4 py-4 text-center text-sm font-semibold text-gray-400">Products</th>
-                  <th className="px-4 py-4 text-center text-sm font-semibold text-gray-400">Stock</th>
-                  <th className="px-4 py-4 text-center text-sm font-semibold text-gray-400">Orders</th>
-                  <th className="px-4 py-4 text-center text-sm font-semibold text-gray-400">Pending</th>
-                  <th className="px-4 py-4 text-right text-sm font-semibold text-gray-400">Revenue</th>
-                  <th className="px-4 py-4 text-center text-sm font-semibold text-gray-400">Status</th>
-                  <th className="px-4 py-4 text-right text-sm font-semibold text-gray-400">Actions</th>
+                <tr className="border-b border-[rgba(255,255,255,0.06)]">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#8888aa]">Shop</th>
+                  <th className="px-4 py-4 text-left text-sm font-semibold text-[#8888aa]">Owner</th>
+                  <th className="px-4 py-4 text-center text-sm font-semibold text-[#8888aa]">Products</th>
+                  <th className="px-4 py-4 text-center text-sm font-semibold text-[#8888aa]">Stock</th>
+                  <th className="px-4 py-4 text-center text-sm font-semibold text-[#8888aa]">Orders</th>
+                  <th className="px-4 py-4 text-center text-sm font-semibold text-[#8888aa]">Pending</th>
+                  <th className="px-4 py-4 text-right text-sm font-semibold text-[#8888aa]">Revenue</th>
+                  <th className="px-4 py-4 text-center text-sm font-semibold text-[#8888aa]">Status</th>
+                  <th className="px-4 py-4 text-right text-sm font-semibold text-[#8888aa]">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-700/50">
+              <tbody className="divide-y divide-[rgba(255,255,255,0.06)]">
                 {filtered.map((shop) => (
                   <tr key={shop.id} className="hover:bg-white/5 transition-colors group">
                     <td className="px-6 py-4">
@@ -185,23 +185,23 @@ export function ShopsClient() {
                       </Link>
                     </td>
                     <td className="px-4 py-4">
-                      <p className="text-sm text-gray-300">{shop.owner.name || 'Unnamed'}</p>
+                      <p className="text-sm text-[#f0f0f5]">{shop.owner.name || 'Unnamed'}</p>
                       <p className="text-xs text-gray-500">{shop.owner.email}</p>
                     </td>
                     <td className="px-4 py-4 text-center">
                       <div className="flex items-center justify-center gap-1">
                         <Package className="w-3.5 h-3.5 text-gray-500" />
-                        <span className="text-sm text-gray-300">{shop.productCount}</span>
+                        <span className="text-sm text-[#f0f0f5]">{shop.productCount}</span>
                       </div>
                     </td>
                     <td className="px-4 py-4 text-center">
                       <div className="flex items-center justify-center gap-1">
                         <Database className="w-3.5 h-3.5 text-gray-500" />
-                        <span className="text-sm text-gray-300">{shop.totalStock.toLocaleString()}</span>
+                        <span className="text-sm text-[#f0f0f5]">{shop.totalStock.toLocaleString()}</span>
                       </div>
                     </td>
                     <td className="px-4 py-4 text-center">
-                      <span className="text-sm text-gray-300">{shop.orderCount.toLocaleString()}</span>
+                      <span className="text-sm text-[#f0f0f5]">{shop.orderCount.toLocaleString()}</span>
                     </td>
                     <td className="px-4 py-4 text-center">
                       {shop.pendingOrders > 0 ? (
@@ -213,13 +213,13 @@ export function ShopsClient() {
                       )}
                     </td>
                     <td className="px-4 py-4 text-right">
-                      <span className="text-sm font-semibold text-emerald-400">
+                      <span className="text-sm font-semibold text-[#E879F9]">
                         {shop.totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </span>
                     </td>
                     <td className="px-4 py-4 text-center">
                       <span className={`px-2 py-1 rounded-lg text-xs font-medium ${
-                        shop.isActive ? 'bg-green-500/20 text-green-400' : 'bg-gray-500/20 text-gray-400'
+                        shop.isActive ? 'bg-[#C84FFF]/20 text-[#E879F9]' : 'bg-gray-500/20 text-[#8888aa]'
                       }`}>
                         {shop.isActive ? 'Active' : 'Inactive'}
                       </span>
@@ -229,7 +229,7 @@ export function ShopsClient() {
                         <button
                           onClick={() => toggleActive(shop)}
                           disabled={toggling === shop.id}
-                          className={`p-2 rounded-lg transition-colors ${shop.isActive ? 'text-green-400 hover:bg-green-500/20' : 'text-gray-400 hover:bg-gray-700/50'}`}
+                          className={`p-2 rounded-lg transition-colors ${shop.isActive ? 'text-[#E879F9] hover:bg-[#C84FFF]/20' : 'text-[#8888aa] hover:bg-[#12123a]/50'}`}
                           title={shop.isActive ? 'Deactivate' : 'Activate'}
                         >
                           {shop.isActive ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}

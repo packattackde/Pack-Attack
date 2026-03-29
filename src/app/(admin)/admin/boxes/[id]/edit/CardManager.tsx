@@ -724,7 +724,7 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
   return (
     <div className="space-y-6">
       {/* Search for new cards */}
-      <Card className="border-gray-800 bg-gray-900/50">
+      <Card className="border-[rgba(255,255,255,0.06)] bg-[#12123a]">
         <CardHeader>
           <CardTitle className="text-white">Add New Cards</CardTitle>
         </CardHeader>
@@ -739,7 +739,7 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
                 setApiSource('default');
                 setSearchResults([]);
               }}
-              className="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:border-primary focus:outline-none"
+              className="px-4 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-primary focus:outline-none"
             >
               {gameOptions.map(opt => (
                 <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -754,7 +754,7 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
                   setApiSource(e.target.value as 'default' | 'justtcg');
                   setSearchResults([]);
                 }}
-                className="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:border-primary focus:outline-none"
+                className="px-4 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-primary focus:outline-none"
                 title="Select card data source"
               >
                 <option value="default">
@@ -766,7 +766,7 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
             
             {/* Show JustTCG badge for JustTCG-only games */}
             {justTCGOnlyGames.includes(selectedGame) && (
-              <span className="px-3 py-2 rounded-lg bg-blue-900/50 border border-blue-700 text-blue-300 text-sm">
+              <span className="px-3 py-2 rounded-lg bg-[rgba(200,79,255,0.1)] border border-[rgba(200,79,255,0.3)] text-[#C84FFF] text-sm">
                 📊 JustTCG
               </span>
             )}
@@ -777,7 +777,7 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && searchCards()}
               placeholder="Search for cards..."
-              className="flex-1 min-w-[200px] px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:border-primary focus:outline-none"
+              className="flex-1 min-w-[200px] px-4 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-primary focus:outline-none"
             />
             <Button onClick={searchCards} disabled={searching}>
               <Search className="h-4 w-4 mr-2" />
@@ -789,13 +789,13 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
           {searchResults.length > 0 && (
             <div>
               <div className="flex items-center justify-between mb-2">
-                <p className="text-sm text-gray-400">Search Results ({searchResults.length} found) - Click to add:</p>
+                <p className="text-sm text-[#8888aa]">Search Results ({searchResults.length} found) - Click to add:</p>
                 <Button variant="ghost" size="sm" onClick={clearSearch}>
                   <X className="h-4 w-4 mr-1" />
                   Clear Results
                 </Button>
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2 max-h-[500px] overflow-y-auto p-2 bg-gray-800/50 rounded-lg">
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2 max-h-[500px] overflow-y-auto p-2 bg-[#12123a] rounded-lg">
                 {searchResults.map((card, idx) => {
                   const collectorNum = card.collectorNumber || card.collector_number || card.number || '';
                   const setCode = card.setCode || card.set || card.set_code || '';
@@ -807,9 +807,9 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
                     <div key={idx} className="relative group">
                       <div 
                         className={`relative aspect-[63/88] rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${
-                          isSelected ? 'border-green-500 ring-2 ring-green-500/50' : 
+                          isSelected ? 'border-[#C84FFF] ring-2 ring-[#C84FFF]/50' : 
                           isInBox ? 'border-yellow-500 opacity-50' : 
-                          'border-gray-700 hover:border-primary'
+                          'border-[rgba(255,255,255,0.06)] hover:border-primary'
                         }`}
                         onClick={() => !isInBox && addCardToBox(card)}
                       >
@@ -821,13 +821,13 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
                             className="object-cover"
                           />
                         ) : (
-                          <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                          <div className="w-full h-full bg-[#12123a] flex items-center justify-center">
                             <span className="text-gray-600 text-xs">No Image</span>
                           </div>
                         )}
                         {isSelected && (
-                          <div className="absolute inset-0 bg-green-500/30 flex items-center justify-center">
-                            <div className="bg-green-500 rounded-full p-1">
+                          <div className="absolute inset-0 bg-[#C84FFF]/30 flex items-center justify-center">
+                            <div className="bg-[#C84FFF] rounded-full p-1">
                               <Check className="h-4 w-4 text-white" />
                             </div>
                           </div>
@@ -855,14 +855,14 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
           {newCards.length > 0 && (
             <div>
               <div className="flex items-center justify-between mb-2">
-                <p className="text-sm text-gray-400">Cards to Add:</p>
+                <p className="text-sm text-[#8888aa]">Cards to Add:</p>
                 {shops.length > 0 && (
                   <div className="flex items-center gap-2">
                     <Store className="h-3.5 w-3.5 text-orange-400" />
                     <select
                       value={bulkShopId}
                       onChange={(e) => setBulkShopId(e.target.value)}
-                      className="px-2 py-1 rounded bg-gray-800 border border-gray-700 text-white text-xs focus:border-orange-500 focus:outline-none"
+                      className="px-2 py-1 rounded bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white text-xs focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                     >
                       <option value="">No Shop</option>
                       {shops.map((s) => (
@@ -880,7 +880,7 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
               </div>
               <div className="space-y-2">
                 {newCards.map((card, index) => (
-                  <div key={index} className="flex items-center gap-4 p-3 bg-gray-800 rounded-lg">
+                  <div key={index} className="flex items-center gap-4 p-3 bg-[#12123a] rounded-lg">
                     <div className="relative w-16 h-24 rounded overflow-hidden flex-shrink-0">
                       {card.imageUrl ? (
                         <Image
@@ -890,14 +890,14 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
                           className="object-cover"
                         />
                       ) : (
-                        <div className="w-full h-full bg-gray-700" />
+                        <div className="w-full h-full bg-[#12123a]" />
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-white truncate">{card.name}</p>
                       <div className="flex gap-4 mt-2">
                         <div className="flex-1">
-                          <label className="text-xs text-gray-400">Pull Rate %</label>
+                          <label className="text-xs text-[#8888aa]">Pull Rate %</label>
                           <input
                             type="number"
                             step="0.001"
@@ -905,27 +905,27 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
                             max="100"
                             value={card.pullRate}
                             onChange={(e) => updateNewCard(index, 'pullRate', parseFloat(e.target.value) || 0)}
-                            className="w-full px-2 py-1 rounded bg-gray-900 border border-gray-700 text-white text-sm"
+                            className="w-full px-2 py-1 rounded bg-[#0B0B2B] border border-[rgba(255,255,255,0.06)] text-white text-sm"
                           />
                         </div>
                         <div className="flex-1">
-                          <label className="text-xs text-gray-400">Coin Value</label>
+                          <label className="text-xs text-[#8888aa]">Coin Value</label>
                           <input
                             type="number"
                             step="0.01"
                             min="0.01"
                             value={card.coinValue}
                             onChange={(e) => updateNewCard(index, 'coinValue', parseFloat(e.target.value) || 0.01)}
-                            className="w-full px-2 py-1 rounded bg-gray-900 border border-gray-700 text-white text-sm"
+                            className="w-full px-2 py-1 rounded bg-[#0B0B2B] border border-[rgba(255,255,255,0.06)] text-white text-sm"
                           />
                         </div>
                         {shops.length > 0 && (
                           <div className="flex-1">
-                            <label className="text-xs text-gray-400">Shop</label>
+                            <label className="text-xs text-[#8888aa]">Shop</label>
                             <select
                               value={card.shopId || ''}
                               onChange={(e) => updateNewCard(index, 'shopId', e.target.value || undefined)}
-                              className="w-full px-2 py-1 rounded bg-gray-900 border border-gray-700 text-white text-sm focus:border-orange-500 focus:outline-none"
+                              className="w-full px-2 py-1 rounded bg-[#0B0B2B] border border-[rgba(255,255,255,0.06)] text-white text-sm focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                             >
                               <option value="">None</option>
                               {shops.map((s) => (
@@ -948,7 +948,7 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
                 ))}
               </div>
               <div className="mt-4 flex items-center justify-between">
-                <div className="text-sm text-gray-400">
+                <div className="text-sm text-[#8888aa]">
                   <p>
                     New Cards Pull Rate: <span className={totalRate === 0 ? 'text-gray-500' : 'text-white'}>{totalRate.toFixed(3)}%</span>
                   </p>
@@ -975,14 +975,14 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
       </Card>
 
       {/* Existing Cards */}
-      <Card className="border-gray-800 bg-gray-900/50">
+      <Card className="border-[rgba(255,255,255,0.06)] bg-[#12123a]">
         <CardHeader>
           <div className="flex items-center justify-between flex-wrap gap-4">
             <CardTitle className="text-white">Existing Cards ({existingCards.length})</CardTitle>
             {existingCards.length > 0 && (
               <div className="flex items-center gap-4 flex-wrap">
-                <p className="text-sm text-gray-400">
-                  Total Pull Rate: <span className={Math.abs((bulkEditMode ? getBulkEditTotal() : existingCards.reduce((sum, c) => sum + c.pullRate, 0)) - 100) < 0.001 ? 'text-green-500 font-bold' : 'text-yellow-500 font-bold'}>
+                <p className="text-sm text-[#8888aa]">
+                  Total Pull Rate: <span className={Math.abs((bulkEditMode ? getBulkEditTotal() : existingCards.reduce((sum, c) => sum + c.pullRate, 0)) - 100) < 0.001 ? 'text-[#E879F9] font-bold' : 'text-yellow-500 font-bold'}>
                     {(bulkEditMode ? getBulkEditTotal() : existingCards.reduce((sum, c) => sum + c.pullRate, 0)).toFixed(3)}%
                   </span>
                 </p>
@@ -999,7 +999,7 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
                       size="sm" 
                       onClick={saveBulkChanges}
                       disabled={savingBulk}
-                      className="bg-green-600 hover:bg-green-700"
+                      className="bg-[#9333EA] hover:bg-[#7c3aed]"
                     >
                       <Save className="h-4 w-4 mr-2" />
                       {savingBulk ? 'Saving...' : 'Save All Changes'}
@@ -1018,7 +1018,7 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
                     <Button 
                       size="sm" 
                       onClick={enterBulkEditMode}
-                      className="bg-blue-600 hover:bg-blue-700"
+                      className="bg-[#C84FFF] text-white hover:bg-[#E879F9]"
                     >
                       <Edit2 className="h-4 w-4 mr-2" />
                       Edit Rates
@@ -1039,11 +1039,11 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
         </CardHeader>
         <CardContent>
           {existingCards.length === 0 ? (
-            <p className="text-gray-400 text-center py-8">No cards in this box yet.</p>
+            <p className="text-[#8888aa] text-center py-8">No cards in this box yet.</p>
           ) : bulkEditMode ? (
             /* BULK EDIT MODE - Show all cards with editable inputs */
             <div className="space-y-2">
-              <div className="grid grid-cols-12 gap-2 px-2 py-1 bg-gray-800 rounded text-xs text-gray-400 font-semibold">
+              <div className="grid grid-cols-12 gap-2 px-2 py-1 bg-[#12123a] rounded text-xs text-[#8888aa] font-semibold">
                 <div className="col-span-1">Image</div>
                 <div className="col-span-4">Card Name</div>
                 <div className="col-span-3">Pull Rate %</div>
@@ -1051,13 +1051,13 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
                 <div className="col-span-1"></div>
               </div>
               {existingCards.map((card) => (
-                <div key={card.id} className="grid grid-cols-12 gap-2 items-center px-2 py-2 bg-gray-800/50 rounded hover:bg-gray-800">
+                <div key={card.id} className="grid grid-cols-12 gap-2 items-center px-2 py-2 bg-[#12123a] rounded hover:bg-[#12123a]">
                   <div className="col-span-1">
                     <div className="relative w-10 h-14 rounded overflow-hidden">
                       {card.imageUrlGatherer ? (
                         <Image src={card.imageUrlGatherer} alt={card.name} fill className="object-cover"  />
                       ) : (
-                        <div className="w-full h-full bg-gray-700" />
+                        <div className="w-full h-full bg-[#12123a]" />
                       )}
                     </div>
                   </div>
@@ -1073,7 +1073,7 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
                       max="100"
                       value={bulkEditValues[card.id]?.pullRate ?? card.pullRate}
                       onChange={(e) => updateBulkValue(card.id, 'pullRate', parseFloat(e.target.value) || 0.001)}
-                      className="w-full px-3 py-2 rounded bg-gray-900 border border-gray-600 text-white text-sm focus:border-blue-500 focus:outline-none"
+                      className="w-full px-3 py-2 rounded bg-[#0B0B2B] border border-gray-600 text-white text-sm focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                     />
                   </div>
                   <div className="col-span-3">
@@ -1083,7 +1083,7 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
                       min="0.01"
                       value={bulkEditValues[card.id]?.coinValue ?? card.coinValue}
                       onChange={(e) => updateBulkValue(card.id, 'coinValue', parseFloat(e.target.value) || 0.01)}
-                      className="w-full px-3 py-2 rounded bg-gray-900 border border-gray-600 text-white text-sm focus:border-blue-500 focus:outline-none"
+                      className="w-full px-3 py-2 rounded bg-[#0B0B2B] border border-gray-600 text-white text-sm focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                     />
                   </div>
                   <div className="col-span-1">
@@ -1099,10 +1099,10 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
                   </div>
                 </div>
               ))}
-              <div className="flex justify-between items-center pt-4 border-t border-gray-700">
+              <div className="flex justify-between items-center pt-4 border-t border-[rgba(255,255,255,0.06)]">
                 <div className="text-sm">
-                  <span className="text-gray-400">Total: </span>
-                  <span className={Math.abs(getBulkEditTotal() - 100) < 0.001 ? 'text-green-500 font-bold text-lg' : 'text-yellow-500 font-bold text-lg'}>
+                  <span className="text-[#8888aa]">Total: </span>
+                  <span className={Math.abs(getBulkEditTotal() - 100) < 0.001 ? 'text-[#E879F9] font-bold text-lg' : 'text-yellow-500 font-bold text-lg'}>
                     {getBulkEditTotal().toFixed(3)}%
                   </span>
                   {Math.abs(getBulkEditTotal() - 100) >= 0.001 && (
@@ -1115,7 +1115,7 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
                   <Button variant="outline" onClick={distributeBulkEvenly}>
                     Auto-Distribute 100%
                   </Button>
-                  <Button onClick={saveBulkChanges} disabled={savingBulk} className="bg-green-600 hover:bg-green-700">
+                  <Button onClick={saveBulkChanges} disabled={savingBulk} className="bg-[#9333EA] hover:bg-[#7c3aed]">
                     <Save className="h-4 w-4 mr-2" />
                     {savingBulk ? 'Saving...' : 'Save All Changes'}
                   </Button>
@@ -1127,7 +1127,7 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {existingCards.map((card) => (
                 <div key={card.id} className="relative group">
-                  <div className="relative aspect-[63/88] rounded-lg overflow-hidden border-2 border-gray-700 hover:border-primary transition-all">
+                  <div className="relative aspect-[63/88] rounded-lg overflow-hidden border-2 border-[rgba(255,255,255,0.06)] hover:border-primary transition-all">
                     {card.imageUrlGatherer ? (
                       <Image
                         src={card.imageUrlGatherer}
@@ -1136,7 +1136,7 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
                         className="object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                      <div className="w-full h-full bg-[#12123a] flex items-center justify-center">
                         <span className="text-gray-600 text-xs">No Image</span>
                       </div>
                     )}
@@ -1145,7 +1145,7 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
                     {editingCardId === card.id ? (
                       <div className="absolute inset-0 bg-black/90 flex flex-col justify-center p-2 gap-2">
                         <div>
-                          <label className="text-xs text-gray-300">Pull Rate %</label>
+                          <label className="text-xs text-[#f0f0f5]">Pull Rate %</label>
                           <input
                             type="number"
                             step="0.001"
@@ -1153,18 +1153,18 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
                             max="100"
                             value={editValues.pullRate}
                             onChange={(e) => setEditValues({ ...editValues, pullRate: parseFloat(e.target.value) || 0 })}
-                            className="w-full px-2 py-1 rounded bg-gray-700 border border-gray-600 text-white text-sm"
+                            className="w-full px-2 py-1 rounded bg-[#12123a] border border-gray-600 text-white text-sm"
                           />
                         </div>
                         <div>
-                          <label className="text-xs text-gray-300">Coin Value</label>
+                          <label className="text-xs text-[#f0f0f5]">Coin Value</label>
                           <input
                             type="number"
                             step="0.01"
                             min="0.01"
                             value={editValues.coinValue}
                             onChange={(e) => setEditValues({ ...editValues, coinValue: parseFloat(e.target.value) || 0.01 })}
-                            className="w-full px-2 py-1 rounded bg-gray-700 border border-gray-600 text-white text-sm"
+                            className="w-full px-2 py-1 rounded bg-[#12123a] border border-gray-600 text-white text-sm"
                           />
                         </div>
                         <div className="flex gap-1 mt-2">
@@ -1209,7 +1209,7 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
                             variant="secondary"
                             size="sm"
                             onClick={() => handleEditCard(card)}
-                            className="flex-1 h-8 bg-blue-600 hover:bg-blue-700 text-white"
+                            className="flex-1 h-8 bg-[#C84FFF] text-white hover:bg-[#E879F9]"
                           >
                             <Edit2 className="h-3 w-3 mr-1" />
                             Edit
@@ -1233,13 +1233,13 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
                       {card.name}
                     </p>
                     {/* Always show current values with quick edit */}
-                    <div className="bg-gray-800 rounded p-2 space-y-1 text-xs">
+                    <div className="bg-[#12123a] rounded p-2 space-y-1 text-xs">
                       <div className="flex justify-between items-center">
-                        <span className="text-gray-400">Coin Value:</span>
+                        <span className="text-[#8888aa]">Coin Value:</span>
                         <span className="text-yellow-500 font-bold">{card.coinValue}</span>
                       </div>
                       <div className="flex justify-between items-center">
-                        <span className="text-gray-400">Pull Rate:</span>
+                        <span className="text-[#8888aa]">Pull Rate:</span>
                         <span className="text-white font-bold">{card.pullRate.toFixed(3)}%</span>
                       </div>
                     </div>

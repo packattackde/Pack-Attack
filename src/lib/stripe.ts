@@ -1,5 +1,5 @@
 /**
- * Stripe Integration for Pack Attack
+ * Stripe Integration for PullForge
  * 
  * Environment Variables Required:
  * - STRIPE_SECRET_KEY: Your Stripe secret key (sk_test_... or sk_live_...)
@@ -73,7 +73,7 @@ export async function createCheckoutSession(
         price_data: {
           currency: 'eur',
           product_data: {
-            name: `${coins.toLocaleString()} Pack Attack Coins`,
+            name: `${coins.toLocaleString()} PullForge Coins`,
             description: 'Virtual currency for opening packs and joining battles',
             images: ['https://pack-attack.de/coin-icon.png'],
           },

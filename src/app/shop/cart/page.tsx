@@ -174,9 +174,9 @@ export default function ShopCartPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 flex items-center justify-center font-display">
+      <div className="min-h-screen flex items-center justify-center font-display">
         <div className="text-white flex items-center gap-3">
-          <div className="w-6 h-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+          <div className="w-6 h-6 border-2 border-[rgba(200,79,255,0.3)] border-t-transparent rounded-full animate-spin" />
           Loading cart...
         </div>
       </div>
@@ -186,36 +186,36 @@ export default function ShopCartPage() {
   const isEmpty = !cart || cart.items.length === 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display">
+    <div className="min-h-screen font-display">
       {/* Background Effects */}
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
 
       <div className="relative container py-12">
         {/* Breadcrumb */}
-        <Link href="/shop" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-8">
+        <Link href="/shop" className="inline-flex items-center gap-2 text-[#8888aa] hover:text-white transition-colors mb-8">
           <ArrowLeft className="w-4 h-4" />
           Continue Shopping
         </Link>
 
         <div className="flex items-center gap-3 mb-8">
-          <ShoppingCart className="w-8 h-8 text-emerald-400" />
+          <ShoppingCart className="w-8 h-8 text-[#C84FFF]" />
           <h1 className="text-3xl font-bold text-white">Shopping Cart</h1>
           {cart && cart.itemCount > 0 && (
-            <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-sm">
+            <span className="px-3 py-1 rounded-full bg-[rgba(200,79,255,0.15)] text-[#C84FFF] text-sm">
               {cart.itemCount} item{cart.itemCount !== 1 ? 's' : ''}
             </span>
           )}
         </div>
 
         {isEmpty ? (
-          <div className="glass-strong rounded-2xl p-12 text-center max-w-md mx-auto">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center max-w-md mx-auto">
             <ShoppingCart className="w-16 h-16 text-gray-600 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-white mb-2">Your Cart is Empty</h2>
-            <p className="text-gray-400 mb-6">Browse our shop and add some products!</p>
+            <p className="text-[#8888aa] mb-6">Browse our shop and add some products!</p>
             <Link
               href="/shop"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-600 to-cyan-600 text-white font-semibold rounded-xl hover:from-emerald-500 hover:to-cyan-500 transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl hover:brightness-110 transition-all"
             >
               <Package className="w-5 h-5" />
               Browse Products
@@ -231,20 +231,20 @@ export default function ShopCartPage() {
                 const shopName = shopItems[0]?.product.shop.name;
                 
                 return (
-                  <div key={shopId} className="glass-strong rounded-2xl overflow-hidden">
+                  <div key={shopId} className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl overflow-hidden">
                     {/* Shop Header */}
-                    <div className="px-6 py-4 border-b border-gray-700/50 flex items-center gap-2">
-                      <Store className="w-4 h-4 text-emerald-400" />
+                    <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.06)]/50 flex items-center gap-2">
+                      <Store className="w-4 h-4 text-[#C84FFF]" />
                       <span className="font-semibold text-white">{shopName}</span>
                     </div>
 
                     {/* Items */}
-                    <div className="divide-y divide-gray-700/50">
+                    <div className="divide-y divide-[rgba(255,255,255,0.06)]">
                       {shopItems.map((item) => (
                         <div key={item.id} className="p-6 flex gap-4">
                           {/* Image */}
                           <Link href={`/shop/product/${item.product.id}`} className="flex-shrink-0">
-                            <div className="relative w-24 h-24 rounded-lg overflow-hidden bg-gray-800">
+                            <div className="relative w-24 h-24 rounded-lg overflow-hidden bg-[#12123a]">
                               {item.product.images[0] ? (
                                 <Image
                                   src={item.product.images[0]}
@@ -263,11 +263,11 @@ export default function ShopCartPage() {
                           {/* Info */}
                           <div className="flex-1 min-w-0">
                             <Link href={`/shop/product/${item.product.id}`}>
-                              <h3 className="font-semibold text-white hover:text-emerald-400 transition-colors truncate">
+                              <h3 className="font-semibold text-white hover:text-[#C84FFF] transition-colors truncate">
                                 {item.product.name}
                               </h3>
                             </Link>
-                            <p className="text-emerald-400 font-semibold mt-1">
+                            <p className="text-[#C84FFF] font-semibold mt-1">
                               €{item.product.price.toFixed(2)}
                             </p>
 
@@ -277,7 +277,7 @@ export default function ShopCartPage() {
                                 <button
                                   onClick={() => updateQuantity(item.id, item.quantity - 1)}
                                   disabled={updating === item.id || item.quantity <= 1}
-                                  className="p-1.5 rounded-lg glass hover:bg-white/10 transition-colors disabled:opacity-50"
+                                  className="p-1.5 rounded-lg bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md hover:bg-white/10 transition-colors disabled:opacity-50"
                                 >
                                   <Minus className="w-4 h-4 text-white" />
                                 </button>
@@ -287,7 +287,7 @@ export default function ShopCartPage() {
                                 <button
                                   onClick={() => updateQuantity(item.id, item.quantity + 1)}
                                   disabled={updating === item.id || item.quantity >= item.product.stock}
-                                  className="p-1.5 rounded-lg glass hover:bg-white/10 transition-colors disabled:opacity-50"
+                                  className="p-1.5 rounded-lg bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md hover:bg-white/10 transition-colors disabled:opacity-50"
                                 >
                                   <Plus className="w-4 h-4 text-white" />
                                 </button>
@@ -328,30 +328,30 @@ export default function ShopCartPage() {
 
             {/* Order Summary */}
             <div>
-              <div className="glass-strong rounded-2xl p-6 sticky top-24">
+              <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 sticky top-24">
                 <h2 className="text-xl font-bold text-white mb-6">Order Summary</h2>
 
                 <div className="space-y-3 mb-6">
-                  <div className="flex justify-between text-gray-400">
+                  <div className="flex justify-between text-[#8888aa]">
                     <span>Subtotal ({cart.itemCount} items)</span>
                     <span className="text-white">€{cart.total.toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between text-gray-400">
+                  <div className="flex justify-between text-[#8888aa]">
                     <span>Shipping</span>
                     <span className="text-white">Calculated at checkout</span>
                   </div>
                 </div>
 
-                <div className="border-t border-gray-700 pt-4 mb-6">
+                <div className="border-t border-[rgba(255,255,255,0.06)] pt-4 mb-6">
                   <div className="flex justify-between">
                     <span className="text-lg font-semibold text-white">Total</span>
-                    <span className="text-2xl font-bold text-emerald-400">€{cart.total.toFixed(2)}</span>
+                    <span className="text-2xl font-bold text-[#C84FFF]">€{cart.total.toFixed(2)}</span>
                   </div>
                 </div>
 
                 <Link
                   href="/shop/checkout"
-                  className="w-full py-4 bg-gradient-to-r from-emerald-600 to-cyan-600 text-white font-semibold rounded-xl hover:from-emerald-500 hover:to-cyan-500 transition-all flex items-center justify-center gap-2"
+                  className="w-full py-4 bg-[#C84FFF] text-white font-semibold rounded-xl hover:brightness-110 transition-all flex items-center justify-center gap-2"
                 >
                   <CreditCard className="w-5 h-5" />
                   Proceed to Checkout
@@ -359,7 +359,7 @@ export default function ShopCartPage() {
 
                 <Link
                   href="/shop"
-                  className="w-full mt-3 py-3 glass text-gray-300 font-medium rounded-xl hover:bg-white/10 transition-colors flex items-center justify-center gap-2"
+                  className="w-full mt-3 py-3 bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#f0f0f5] font-medium rounded-xl hover:bg-white/10 transition-colors flex items-center justify-center gap-2"
                 >
                   Continue Shopping
                 </Link>

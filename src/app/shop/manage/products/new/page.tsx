@@ -144,62 +144,62 @@ export default function NewProductPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display">
+    <div className="min-h-screen font-display">
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
 
       <div className="relative container py-12">
         {/* Breadcrumb */}
-        <Link href="/shop/manage/products" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-8">
+        <Link href="/shop/manage/products" className="inline-flex items-center gap-2 text-[#8888aa] hover:text-white transition-colors mb-8">
           <ArrowLeft className="w-4 h-4" />
           Back to Products
         </Link>
 
         <div className="max-w-2xl mx-auto">
           <div className="flex items-center gap-3 mb-8">
-            <Package className="w-8 h-8 text-emerald-400" />
+            <Package className="w-8 h-8 text-[#C84FFF]" />
             <h1 className="text-3xl font-bold text-white">Add New Product</h1>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Basic Info */}
-            <div className="glass-strong rounded-2xl p-6 space-y-4">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 space-y-4">
               <h2 className="text-lg font-semibold text-white mb-4">Basic Information</h2>
               
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Product Name *</label>
+                <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Product Name *</label>
                 <input
                   type="text"
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl glass text-white placeholder-gray-500 border border-gray-700 focus:border-emerald-500 focus:outline-none"
+                  className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                   placeholder="e.g., Charizard VMAX - Rainbow Rare"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Description</label>
+                <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Description</label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={4}
-                  className="w-full px-4 py-3 rounded-xl glass text-white placeholder-gray-500 border border-gray-700 focus:border-emerald-500 focus:outline-none resize-none"
+                  className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none resize-none"
                   placeholder="Describe your product..."
                 />
               </div>
 
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Category *</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Category *</label>
                   <select
                     required
                     value={formData.category}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl glass text-white border border-gray-700 focus:border-emerald-500 focus:outline-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                   >
                     {categories.map((cat) => (
-                      <option key={cat.value} value={cat.value} className="bg-gray-900">
+                      <option key={cat.value} value={cat.value} className="bg-[#0B0B2B]">
                         {cat.label}
                       </option>
                     ))}
@@ -207,14 +207,14 @@ export default function NewProductPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Game</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Game</label>
                   <select
                     value={formData.game}
                     onChange={(e) => setFormData({ ...formData, game: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl glass text-white border border-gray-700 focus:border-emerald-500 focus:outline-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                   >
                     {games.map((game) => (
-                      <option key={game.value} value={game.value} className="bg-gray-900">
+                      <option key={game.value} value={game.value} className="bg-[#0B0B2B]">
                         {game.label}
                       </option>
                     ))}
@@ -223,14 +223,14 @@ export default function NewProductPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Condition</label>
+                <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Condition</label>
                 <select
                   value={formData.condition}
                   onChange={(e) => setFormData({ ...formData, condition: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl glass text-white border border-gray-700 focus:border-emerald-500 focus:outline-none"
+                  className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                 >
                   {conditions.map((cond) => (
-                    <option key={cond.value} value={cond.value} className="bg-gray-900">
+                    <option key={cond.value} value={cond.value} className="bg-[#0B0B2B]">
                       {cond.label}
                     </option>
                   ))}
@@ -239,12 +239,12 @@ export default function NewProductPage() {
             </div>
 
             {/* Pricing */}
-            <div className="glass-strong rounded-2xl p-6 space-y-4">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 space-y-4">
               <h2 className="text-lg font-semibold text-white mb-4">Pricing & Inventory</h2>
               
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Price (€) *</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Price (€) *</label>
                   <input
                     type="number"
                     required
@@ -252,20 +252,20 @@ export default function NewProductPage() {
                     step="0.01"
                     value={formData.price}
                     onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl glass text-white placeholder-gray-500 border border-gray-700 focus:border-emerald-500 focus:outline-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                     placeholder="0.00"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Compare Price (€)</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Compare Price (€)</label>
                   <input
                     type="number"
                     min="0.01"
                     step="0.01"
                     value={formData.comparePrice}
                     onChange={(e) => setFormData({ ...formData, comparePrice: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl glass text-white placeholder-gray-500 border border-gray-700 focus:border-emerald-500 focus:outline-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                     placeholder="Original price for discount display"
                   />
                 </div>
@@ -273,25 +273,25 @@ export default function NewProductPage() {
 
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Stock Quantity *</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Stock Quantity *</label>
                   <input
                     type="number"
                     required
                     min="0"
                     value={formData.stock}
                     onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl glass text-white placeholder-gray-500 border border-gray-700 focus:border-emerald-500 focus:outline-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                     placeholder="1"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">SKU (Optional)</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">SKU (Optional)</label>
                   <input
                     type="text"
                     value={formData.sku}
                     onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl glass text-white placeholder-gray-500 border border-gray-700 focus:border-emerald-500 focus:outline-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                     placeholder="Product SKU"
                   />
                 </div>
@@ -303,14 +303,14 @@ export default function NewProductPage() {
                   id="featured"
                   checked={formData.featured}
                   onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                  className="w-5 h-5 rounded bg-gray-800 border-gray-600 text-emerald-500 focus:ring-emerald-500"
+                  className="w-5 h-5 rounded bg-[#12123a] border-[rgba(255,255,255,0.06)] text-[#C84FFF] focus:ring-[rgba(200,79,255,0.3)]"
                 />
-                <label htmlFor="featured" className="text-gray-300">Feature this product (shown in featured section)</label>
+                <label htmlFor="featured" className="text-[#f0f0f5]">Feature this product (shown in featured section)</label>
               </div>
             </div>
 
             {/* Images */}
-            <div className="glass-strong rounded-2xl p-6 space-y-4">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 space-y-4">
               <h2 className="text-lg font-semibold text-white mb-4">Images</h2>
               
               <div className="flex gap-2">
@@ -318,13 +318,13 @@ export default function NewProductPage() {
                   type="url"
                   value={imageUrl}
                   onChange={(e) => setImageUrl(e.target.value)}
-                  className="flex-1 px-4 py-3 rounded-xl glass text-white placeholder-gray-500 border border-gray-700 focus:border-emerald-500 focus:outline-none"
+                  className="flex-1 px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                   placeholder="Enter image URL"
                 />
                 <button
                   type="button"
                   onClick={addImage}
-                  className="px-4 py-3 rounded-xl bg-emerald-600 text-white font-semibold hover:bg-emerald-500 transition-colors"
+                  className="px-4 py-3 rounded-xl bg-[#C84FFF] text-white font-semibold hover:brightness-110 transition-colors"
                 >
                   <Plus className="w-5 h-5" />
                 </button>
@@ -333,7 +333,7 @@ export default function NewProductPage() {
               {formData.images.length > 0 ? (
                 <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
                   {formData.images.map((image, index) => (
-                    <div key={index} className="relative aspect-square rounded-lg overflow-hidden bg-gray-800">
+                    <div key={index} className="relative aspect-square rounded-lg overflow-hidden bg-[#12123a]">
                       <img
                         src={image}
                         alt={`Product ${index + 1}`}
@@ -355,9 +355,9 @@ export default function NewProductPage() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-8 border-2 border-dashed border-gray-700 rounded-xl">
+                <div className="text-center py-8 border-2 border-dashed border-[rgba(255,255,255,0.06)] rounded-xl">
                   <ImageIcon className="w-12 h-12 text-gray-600 mx-auto mb-3" />
-                  <p className="text-gray-400">No images added yet</p>
+                  <p className="text-[#8888aa]">No images added yet</p>
                   <p className="text-gray-500 text-sm">Add image URLs above</p>
                 </div>
               )}
@@ -367,14 +367,14 @@ export default function NewProductPage() {
             <div className="flex gap-4">
               <Link
                 href="/shop/manage/products"
-                className="flex-1 py-4 glass text-gray-300 font-semibold rounded-xl hover:bg-white/10 transition-colors text-center"
+                className="flex-1 py-4 bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#f0f0f5] font-semibold rounded-xl hover:bg-white/10 transition-colors text-center"
               >
                 Cancel
               </Link>
               <button
                 type="submit"
                 disabled={submitting}
-                className="flex-1 py-4 bg-gradient-to-r from-emerald-600 to-cyan-600 text-white font-semibold rounded-xl hover:from-emerald-500 hover:to-cyan-500 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                className="flex-1 py-4 bg-[#C84FFF] text-white font-semibold rounded-xl hover:brightness-110 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {submitting ? (
                   <>

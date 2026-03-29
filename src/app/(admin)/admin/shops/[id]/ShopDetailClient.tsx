@@ -84,10 +84,10 @@ type Tab = 'orders' | 'stock' | 'boxes' | 'details';
 
 const statusConfig: Record<string, { color: string; bgColor: string; icon: React.ElementType; label: string }> = {
   PENDING: { color: 'text-yellow-400', bgColor: 'bg-yellow-400/10', icon: Clock, label: 'Pending' },
-  CONFIRMED: { color: 'text-blue-400', bgColor: 'bg-blue-400/10', icon: Check, label: 'Confirmed' },
+  CONFIRMED: { color: 'text-[#C84FFF]', bgColor: 'bg-[rgba(200,79,255,0.1)]', icon: Check, label: 'Confirmed' },
   PROCESSING: { color: 'text-purple-400', bgColor: 'bg-purple-400/10', icon: Package, label: 'Processing' },
   SHIPPED: { color: 'text-indigo-400', bgColor: 'bg-indigo-400/10', icon: Truck, label: 'Shipped' },
-  DELIVERED: { color: 'text-green-400', bgColor: 'bg-green-400/10', icon: CheckCircle, label: 'Delivered' },
+  DELIVERED: { color: 'text-[#E879F9]', bgColor: 'bg-[#C84FFF]/10', icon: CheckCircle, label: 'Delivered' },
   CANCELLED: { color: 'text-red-400', bgColor: 'bg-red-400/10', icon: XCircle, label: 'Cancelled' },
 };
 
@@ -187,14 +187,14 @@ export function ShopDetailClient({
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all ${
                 activeTab === tab.id
                   ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/25'
-                  : 'glass text-gray-400 hover:text-white'
+                  : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white'
               }`}
             >
               <Icon className="w-4 h-4" />
               {tab.label}
               {tab.count !== undefined && (
                 <span className={`ml-1 px-1.5 py-0.5 rounded-full text-xs ${
-                  activeTab === tab.id ? 'bg-white/20' : 'bg-gray-700'
+                  activeTab === tab.id ? 'bg-white/20' : 'bg-[#12123a]'
                 }`}>
                   {tab.count}
                 </span>
@@ -215,7 +215,7 @@ export function ShopDetailClient({
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                   filterStatus === status
                     ? 'bg-orange-500/20 text-orange-400 ring-1 ring-orange-500/30'
-                    : 'glass text-gray-400 hover:text-white'
+                    : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white'
                 }`}
               >
                 {status === 'ALL' ? 'All' : statusConfig[status]?.label || status}
@@ -225,9 +225,9 @@ export function ShopDetailClient({
           </div>
 
           {filteredOrders.length === 0 ? (
-            <div className="glass-strong rounded-2xl p-12 text-center">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
               <ShoppingCart className="w-12 h-12 text-gray-600 mx-auto mb-3" />
-              <p className="text-gray-400">No orders found</p>
+              <p className="text-[#8888aa]">No orders found</p>
             </div>
           ) : (
             <div className="space-y-3">
@@ -239,12 +239,12 @@ export function ShopDetailClient({
                 const nextStatus = currentIdx >= 0 && currentIdx < STATUS_FLOW.length - 1 ? STATUS_FLOW[currentIdx + 1] : null;
 
                 return (
-                  <div key={order.id} className="glass-strong rounded-xl overflow-hidden">
+                  <div key={order.id} className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl overflow-hidden">
                     <div
                       className="flex items-center gap-4 px-5 py-4 cursor-pointer hover:bg-white/5 transition-colors"
                       onClick={() => setExpandedOrder(isExpanded ? null : order.id)}
                     >
-                      <div className="w-12 h-12 rounded-lg bg-gray-800 overflow-hidden flex-shrink-0 relative">
+                      <div className="w-12 h-12 rounded-lg bg-[#12123a] overflow-hidden flex-shrink-0 relative">
                         {order.cardImage ? (
                           <Image src={order.cardImage} alt={order.cardName} fill className="object-cover" />
                         ) : (
@@ -261,32 +261,32 @@ export function ShopDetailClient({
                         <StatusIcon className={`w-3.5 h-3.5 ${config.color}`} />
                         <span className={`text-xs font-medium ${config.color}`}>{config.label}</span>
                       </div>
-                      <span className="text-sm font-semibold text-emerald-400">{order.cardValue.toFixed(2)}</span>
-                      {isExpanded ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
+                      <span className="text-sm font-semibold text-[#E879F9]">{order.cardValue.toFixed(2)}</span>
+                      {isExpanded ? <ChevronUp className="w-4 h-4 text-[#8888aa]" /> : <ChevronDown className="w-4 h-4 text-[#8888aa]" />}
                     </div>
 
                     {isExpanded && (
-                      <div className="px-5 pb-5 space-y-4 border-t border-gray-700/50 pt-4">
+                      <div className="px-5 pb-5 space-y-4 border-t border-[rgba(255,255,255,0.06)] pt-4">
                         <div className="grid md:grid-cols-2 gap-4">
                           <div className="space-y-2">
-                            <h4 className="text-sm font-medium text-gray-400 flex items-center gap-2"><MapPin className="w-3.5 h-3.5" /> Shipping</h4>
-                            <div className="glass rounded-lg p-3 text-sm space-y-1">
+                            <h4 className="text-sm font-medium text-[#8888aa] flex items-center gap-2"><MapPin className="w-3.5 h-3.5" /> Shipping</h4>
+                            <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-lg p-3 text-sm space-y-1">
                               <p className="text-white font-medium">{order.shippingName}</p>
-                              <p className="text-gray-400">{order.shippingAddress}</p>
-                              <p className="text-gray-400">{order.shippingZip} {order.shippingCity}</p>
-                              <p className="text-gray-400">{order.shippingCountry}</p>
+                              <p className="text-[#8888aa]">{order.shippingAddress}</p>
+                              <p className="text-[#8888aa]">{order.shippingZip} {order.shippingCity}</p>
+                              <p className="text-[#8888aa]">{order.shippingCountry}</p>
                               {order.shippingPhone && <p className="text-gray-500">{order.shippingPhone}</p>}
                             </div>
                           </div>
                           <div className="space-y-2">
-                            <h4 className="text-sm font-medium text-gray-400 flex items-center gap-2"><Mail className="w-3.5 h-3.5" /> Customer</h4>
-                            <div className="glass rounded-lg p-3 text-sm space-y-1">
+                            <h4 className="text-sm font-medium text-[#8888aa] flex items-center gap-2"><Mail className="w-3.5 h-3.5" /> Customer</h4>
+                            <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-lg p-3 text-sm space-y-1">
                               <p className="text-white">{order.user.name || 'Unknown'}</p>
-                              <p className="text-gray-400">{order.user.email}</p>
-                              <p className="text-gray-400">{order.shippingEmail}</p>
+                              <p className="text-[#8888aa]">{order.user.email}</p>
+                              <p className="text-[#8888aa]">{order.shippingEmail}</p>
                               <div className="flex items-center gap-1 mt-1">
-                                {order.shippingMethod === 'COINS' ? <Coins className="w-3.5 h-3.5 text-amber-400" /> : <Euro className="w-3.5 h-3.5 text-green-400" />}
-                                <span className="text-gray-400">Shipping: {order.shippingCost.toFixed(2)}</span>
+                                {order.shippingMethod === 'COINS' ? <Coins className="w-3.5 h-3.5 text-amber-400" /> : <Euro className="w-3.5 h-3.5 text-[#E879F9]" />}
+                                <span className="text-[#8888aa]">Shipping: {order.shippingCost.toFixed(2)}</span>
                               </div>
                             </div>
                           </div>
@@ -294,28 +294,28 @@ export function ShopDetailClient({
 
                         {/* Tracking */}
                         <div className="space-y-2">
-                          <h4 className="text-sm font-medium text-gray-400 flex items-center gap-2"><Truck className="w-3.5 h-3.5" /> Tracking</h4>
+                          <h4 className="text-sm font-medium text-[#8888aa] flex items-center gap-2"><Truck className="w-3.5 h-3.5" /> Tracking</h4>
                           {editingTracking === order.id ? (
-                            <div className="glass rounded-lg p-3 space-y-2">
+                            <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-lg p-3 space-y-2">
                               <input
                                 value={trackingData.number}
                                 onChange={(e) => setTrackingData({ ...trackingData, number: e.target.value })}
                                 placeholder="Tracking number"
-                                className="w-full px-3 py-2 rounded-lg bg-gray-800 text-white text-sm border border-gray-700 focus:border-orange-500 focus:outline-none"
+                                className="w-full px-3 py-2 rounded-lg bg-[#12123a] text-white text-sm border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                               />
                               <input
                                 value={trackingData.url}
                                 onChange={(e) => setTrackingData({ ...trackingData, url: e.target.value })}
                                 placeholder="Tracking URL"
-                                className="w-full px-3 py-2 rounded-lg bg-gray-800 text-white text-sm border border-gray-700 focus:border-orange-500 focus:outline-none"
+                                className="w-full px-3 py-2 rounded-lg bg-[#12123a] text-white text-sm border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                               />
                               <div className="flex gap-2">
                                 <button onClick={() => handleTrackingSave(order.id)} className="px-3 py-1.5 rounded-lg bg-orange-600 text-white text-xs font-medium hover:bg-orange-500">Save</button>
-                                <button onClick={() => setEditingTracking(null)} className="px-3 py-1.5 rounded-lg glass text-gray-400 text-xs hover:text-white">Cancel</button>
+                                <button onClick={() => setEditingTracking(null)} className="px-3 py-1.5 rounded-lg bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] text-xs hover:text-white">Cancel</button>
                               </div>
                             </div>
                           ) : (
-                            <div className="glass rounded-lg p-3 text-sm flex items-center justify-between">
+                            <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-lg p-3 text-sm flex items-center justify-between">
                               <div>
                                 {order.trackingNumber ? (
                                   <div className="flex items-center gap-2">
@@ -332,7 +332,7 @@ export function ShopDetailClient({
                               </div>
                               <button
                                 onClick={() => { setEditingTracking(order.id); setTrackingData({ number: order.trackingNumber || '', url: order.trackingUrl || '' }); }}
-                                className="px-3 py-1 rounded-lg glass text-xs text-orange-400 hover:text-white"
+                                className="px-3 py-1 rounded-lg bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-xs text-orange-400 hover:text-white"
                               >
                                 Edit
                               </button>
@@ -354,7 +354,7 @@ export function ShopDetailClient({
                               <button
                                 onClick={() => handleStatusUpdate(order.id, 'CANCELLED')}
                                 disabled={updatingOrder === order.id}
-                                className="px-4 py-2 rounded-lg glass text-red-400 text-sm font-medium hover:bg-red-500/20"
+                                className="px-4 py-2 rounded-lg bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-red-400 text-sm font-medium hover:bg-red-500/20"
                               >
                                 Cancel
                               </button>
@@ -375,31 +375,31 @@ export function ShopDetailClient({
       {activeTab === 'stock' && (
         <div>
           {initialProducts.length === 0 ? (
-            <div className="glass-strong rounded-2xl p-12 text-center">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
               <Database className="w-12 h-12 text-gray-600 mx-auto mb-3" />
-              <p className="text-gray-400">No products in stock</p>
+              <p className="text-[#8888aa]">No products in stock</p>
             </div>
           ) : (
-            <div className="glass-strong rounded-2xl overflow-hidden">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-gray-700/50">
-                      <th className="px-5 py-3 text-left text-sm font-semibold text-gray-400">Product</th>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-400">Category</th>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-400">Game</th>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-400">Condition</th>
-                      <th className="px-4 py-3 text-right text-sm font-semibold text-gray-400">Price</th>
-                      <th className="px-4 py-3 text-center text-sm font-semibold text-gray-400">Stock</th>
-                      <th className="px-4 py-3 text-center text-sm font-semibold text-gray-400">Status</th>
+                    <tr className="border-b border-[rgba(255,255,255,0.06)]">
+                      <th className="px-5 py-3 text-left text-sm font-semibold text-[#8888aa]">Product</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-[#8888aa]">Category</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-[#8888aa]">Game</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-[#8888aa]">Condition</th>
+                      <th className="px-4 py-3 text-right text-sm font-semibold text-[#8888aa]">Price</th>
+                      <th className="px-4 py-3 text-center text-sm font-semibold text-[#8888aa]">Stock</th>
+                      <th className="px-4 py-3 text-center text-sm font-semibold text-[#8888aa]">Status</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-700/50">
+                  <tbody className="divide-y divide-[rgba(255,255,255,0.06)]">
                     {initialProducts.map((product) => (
                       <tr key={product.id} className="hover:bg-white/5 transition-colors">
                         <td className="px-5 py-3">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg bg-gray-800 overflow-hidden flex-shrink-0 relative">
+                            <div className="w-10 h-10 rounded-lg bg-[#12123a] overflow-hidden flex-shrink-0 relative">
                               {product.images[0] ? (
                                 <Image src={product.images[0]} alt={product.name} fill className="object-cover" />
                               ) : (
@@ -412,18 +412,18 @@ export function ShopDetailClient({
                             </div>
                           </div>
                         </td>
-                        <td className="px-4 py-3 text-sm text-gray-300">{categoryLabels[product.category] || product.category}</td>
-                        <td className="px-4 py-3 text-sm text-gray-300">{product.game ? gameLabels[product.game] || product.game : '-'}</td>
-                        <td className="px-4 py-3 text-sm text-gray-300">{conditionLabels[product.condition] || product.condition}</td>
-                        <td className="px-4 py-3 text-sm text-right font-semibold text-emerald-400">{product.price.toFixed(2)}</td>
+                        <td className="px-4 py-3 text-sm text-[#f0f0f5]">{categoryLabels[product.category] || product.category}</td>
+                        <td className="px-4 py-3 text-sm text-[#f0f0f5]">{product.game ? gameLabels[product.game] || product.game : '-'}</td>
+                        <td className="px-4 py-3 text-sm text-[#f0f0f5]">{conditionLabels[product.condition] || product.condition}</td>
+                        <td className="px-4 py-3 text-sm text-right font-semibold text-[#E879F9]">{product.price.toFixed(2)}</td>
                         <td className="px-4 py-3 text-center">
-                          <span className={`text-sm font-medium ${product.stock > 0 ? 'text-green-400' : 'text-red-400'}`}>
+                          <span className={`text-sm font-medium ${product.stock > 0 ? 'text-[#E879F9]' : 'text-red-400'}`}>
                             {product.stock}
                           </span>
                         </td>
                         <td className="px-4 py-3 text-center">
                           <span className={`px-2 py-0.5 rounded-lg text-xs font-medium ${
-                            product.isActive ? 'bg-green-500/20 text-green-400' : 'bg-gray-500/20 text-gray-400'
+                            product.isActive ? 'bg-[#C84FFF]/20 text-[#E879F9]' : 'bg-gray-500/20 text-[#8888aa]'
                           }`}>
                             {product.isActive ? 'Active' : 'Hidden'}
                           </span>
@@ -442,15 +442,15 @@ export function ShopDetailClient({
       {activeTab === 'boxes' && (
         <div>
           {boxes.length === 0 ? (
-            <div className="glass-strong rounded-2xl p-12 text-center">
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
               <Package className="w-12 h-12 text-gray-600 mx-auto mb-3" />
-              <p className="text-gray-400">No boxes linked to this shop yet</p>
+              <p className="text-[#8888aa]">No boxes linked to this shop yet</p>
             </div>
           ) : (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {boxes.map((box) => (
-                <div key={box.id} className="glass-strong rounded-xl overflow-hidden">
-                  <div className="relative h-36 bg-gray-800">
+                <div key={box.id} className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl overflow-hidden">
+                  <div className="relative h-36 bg-[#12123a]">
                     {box.imageUrl ? (
                       <Image src={box.imageUrl} alt={box.name} fill className="object-cover" />
                     ) : (
@@ -460,7 +460,7 @@ export function ShopDetailClient({
                     )}
                     <div className="absolute top-2 right-2">
                       <span className={`px-2 py-0.5 rounded-lg text-xs font-medium ${
-                        box.isActive ? 'bg-green-500/80 text-white' : 'bg-gray-700/80 text-gray-300'
+                        box.isActive ? 'bg-[#C84FFF]/80 text-white' : 'bg-gray-700/80 text-[#f0f0f5]'
                       }`}>
                         {box.isActive ? 'Active' : 'Inactive'}
                       </span>
@@ -469,8 +469,8 @@ export function ShopDetailClient({
                   <div className="p-4">
                     <h3 className="font-semibold text-white mb-1">{box.name}</h3>
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-400">{box.cardCount} cards</span>
-                      <span className="font-semibold text-emerald-400">{box.price.toFixed(2)} coins</span>
+                      <span className="text-[#8888aa]">{box.cardCount} cards</span>
+                      <span className="font-semibold text-[#E879F9]">{box.price.toFixed(2)} coins</span>
                     </div>
                     <p className="text-xs text-gray-500 mt-1">Created {new Date(box.createdAt).toLocaleDateString()}</p>
                   </div>
@@ -484,7 +484,7 @@ export function ShopDetailClient({
       {/* Details Tab */}
       {activeTab === 'details' && (
         <div className="grid gap-6 md:grid-cols-2">
-          <div className="glass-strong rounded-2xl p-6 space-y-4">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 space-y-4">
             <h3 className="text-lg font-semibold text-white flex items-center gap-2">
               <Store className="w-5 h-5 text-orange-400" /> Shop Information
             </h3>
@@ -495,30 +495,30 @@ export function ShopDetailClient({
               </div>
               <div>
                 <label className="text-xs text-gray-500 block mb-1">Description</label>
-                <p className="text-gray-300">{shop.description || 'No description'}</p>
+                <p className="text-[#f0f0f5]">{shop.description || 'No description'}</p>
               </div>
               <div>
                 <label className="text-xs text-gray-500 block mb-1">Tax ID</label>
-                <p className="text-gray-300">{shop.taxId || 'Not provided'}</p>
+                <p className="text-[#f0f0f5]">{shop.taxId || 'Not provided'}</p>
               </div>
               <div>
                 <label className="text-xs text-gray-500 block mb-1">Status</label>
                 <span className={`px-2 py-1 rounded-lg text-xs font-medium ${
-                  shop.isActive ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+                  shop.isActive ? 'bg-[#C84FFF]/20 text-[#E879F9]' : 'bg-red-500/20 text-red-400'
                 }`}>
                   {shop.isActive ? 'Active' : 'Inactive'}
                 </span>
               </div>
               <div>
                 <label className="text-xs text-gray-500 block mb-1">Created</label>
-                <p className="text-gray-300">{new Date(shop.createdAt).toLocaleDateString()} at {new Date(shop.createdAt).toLocaleTimeString()}</p>
+                <p className="text-[#f0f0f5]">{new Date(shop.createdAt).toLocaleDateString()} at {new Date(shop.createdAt).toLocaleTimeString()}</p>
               </div>
             </div>
           </div>
 
-          <div className="glass-strong rounded-2xl p-6 space-y-4">
+          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 space-y-4">
             <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-              <User className="w-5 h-5 text-blue-400" /> Owner Information
+              <User className="w-5 h-5 text-[#C84FFF]" /> Owner Information
             </h3>
             <div className="space-y-3">
               <div>
@@ -527,11 +527,11 @@ export function ShopDetailClient({
               </div>
               <div>
                 <label className="text-xs text-gray-500 block mb-1">Email</label>
-                <p className="text-gray-300">{shop.owner.email}</p>
+                <p className="text-[#f0f0f5]">{shop.owner.email}</p>
               </div>
               <div>
                 <label className="text-xs text-gray-500 block mb-1">Account Created</label>
-                <p className="text-gray-300">{new Date(shop.owner.createdAt).toLocaleDateString()}</p>
+                <p className="text-[#f0f0f5]">{new Date(shop.owner.createdAt).toLocaleDateString()}</p>
               </div>
             </div>
           </div>

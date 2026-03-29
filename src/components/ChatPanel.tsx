@@ -528,15 +528,15 @@ export function ChatPanel() {
 
       {/* Chat Panel */}
       {isOpen && (
-        <div className="fixed right-0 top-16 bottom-0 z-40 w-full sm:w-[360px] flex flex-col bg-gray-950 border-l border-white/[0.08] shadow-2xl shadow-black/50">
+        <div className="fixed right-0 top-16 bottom-0 z-40 w-full sm:w-[360px] flex flex-col bg-[#06061a] border-l border-white/[0.08] shadow-2xl shadow-black/50">
           {/* Header */}
-          <div className="flex items-center justify-between h-12 px-4 border-b border-white/[0.08] bg-gray-950/95 shrink-0">
+          <div className="flex items-center justify-between h-12 px-4 border-b border-white/[0.08] bg-[#06061a]/95 shrink-0">
             <div className="flex items-center gap-2">
               <MessageCircle className="w-4 h-4 text-purple-400" />
               <span className="text-sm font-semibold text-white">Chat</span>
               {connected && (
-                <span className="flex items-center gap-1 text-[10px] text-green-400">
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                <span className="flex items-center gap-1 text-[10px] text-[#E879F9]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#C84FFF] animate-pulse" />
                   live
                 </span>
               )}
@@ -623,7 +623,7 @@ export function ChatPanel() {
                           ? 'text-red-400'
                           : msg.user.isTwitch
                             ? 'text-purple-400'
-                            : 'text-blue-400'
+                            : 'text-[#C84FFF]'
                       }`}
                     >
                       {msg.user.name}

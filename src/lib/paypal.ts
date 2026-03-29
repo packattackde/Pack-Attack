@@ -1,5 +1,5 @@
 /**
- * PayPal Integration for Pack Attack
+ * PayPal Integration for PullForge
  * 
  * This module handles all PayPal API interactions including:
  * - Creating orders
@@ -97,7 +97,7 @@ async function getAccessToken(): Promise<string> {
 export async function createPayPalOrder(
   amount: number, 
   coins: number,
-  description: string = 'Pack Attack Coins'
+  description: string = 'PullForge Coins'
 ): Promise<PayPalOrderResponse> {
   const accessToken = await getAccessToken();
   
@@ -120,7 +120,7 @@ export async function createPayPalOrder(
         },
       ],
       application_context: {
-        brand_name: 'Pack Attack',
+        brand_name: 'PullForge',
         landing_page: 'NO_PREFERENCE',
         user_action: 'PAY_NOW',
         return_url: `${process.env.NEXTAUTH_URL}/purchase-coins?success=true`,

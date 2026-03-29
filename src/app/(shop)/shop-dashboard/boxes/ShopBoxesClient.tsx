@@ -95,15 +95,15 @@ export function ShopBoxesClient({ boxes: initialBoxes, isAdmin }: { boxes: Box[]
 
   if (boxes.length === 0) {
     return (
-      <div className="glass-strong rounded-2xl p-12 text-center">
+      <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
         <Package className="w-16 h-16 text-gray-700 mx-auto mb-4" />
         <h3 className="text-xl font-bold text-white mb-2">No Boxes Yet</h3>
-        <p className="text-gray-400 mb-6 max-w-md mx-auto">
+        <p className="text-[#8888aa] mb-6 max-w-md mx-auto">
           Create your first card box to start selling to users. Add cards, set prices, and watch the orders come in!
         </p>
         <Link
           href="/shop-dashboard/boxes/create"
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white font-medium transition-all"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#C84FFF] to-cyan-500 hover:from-[#9333EA] hover:to-[#7c3aed] text-white font-medium transition-all"
         >
           <Package className="w-5 h-5" />
           <span>Create Your First Box</span>
@@ -117,12 +117,12 @@ export function ShopBoxesClient({ boxes: initialBoxes, isAdmin }: { boxes: Box[]
       {boxes.map((box) => (
         <div 
           key={box.id} 
-          className={`glass-strong rounded-2xl overflow-hidden transition-all hover:ring-2 ${
+          className={`bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl overflow-hidden transition-all hover:ring-2 ${
             box.isActive ? 'hover:ring-cyan-500/50' : 'hover:ring-gray-500/50 opacity-75'
           }`}
         >
           {/* Box Image */}
-          <div className="relative aspect-[4/3] bg-gray-800">
+          <div className="relative aspect-[4/3] bg-[#12123a]">
             {box.imageUrl ? (
               <Image
                 src={box.imageUrl}
@@ -139,7 +139,7 @@ export function ShopBoxesClient({ boxes: initialBoxes, isAdmin }: { boxes: Box[]
             {/* Status Badge */}
             <div className={`absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium ${
               box.isActive 
-                ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
+                ? 'bg-[#C84FFF]/20 text-[#E879F9] border border-[#C84FFF]/30' 
                 : 'bg-red-500/20 text-red-400 border border-red-500/30'
             }`}>
               {box.isActive ? 'Active' : 'Inactive'}
@@ -156,26 +156,26 @@ export function ShopBoxesClient({ boxes: initialBoxes, isAdmin }: { boxes: Box[]
           {/* Box Info */}
           <div className="p-5">
             <h3 className="text-lg font-bold text-white mb-1 truncate">{box.name}</h3>
-            <p className="text-sm text-gray-400 line-clamp-2 mb-4">{box.description}</p>
+            <p className="text-sm text-[#8888aa] line-clamp-2 mb-4">{box.description}</p>
 
             {/* Stats */}
             <div className="grid grid-cols-3 gap-3 mb-4">
-              <div className="text-center p-2 rounded-lg bg-gray-800/50">
+              <div className="text-center p-2 rounded-lg bg-[#12123a]">
                 <div className="flex items-center justify-center gap-1 text-amber-400 mb-1">
                   <Coins className="w-3 h-3" />
                   <span className="text-sm font-bold">{box.price}</span>
                 </div>
                 <span className="text-[10px] text-gray-500">Price</span>
               </div>
-              <div className="text-center p-2 rounded-lg bg-gray-800/50">
+              <div className="text-center p-2 rounded-lg bg-[#12123a]">
                 <div className="flex items-center justify-center gap-1 text-cyan-400 mb-1">
                   <Users className="w-3 h-3" />
                   <span className="text-sm font-bold">{box._count.pulls}</span>
                 </div>
                 <span className="text-[10px] text-gray-500">Opens</span>
               </div>
-              <div className="text-center p-2 rounded-lg bg-gray-800/50">
-                <div className="flex items-center justify-center gap-1 text-green-400 mb-1">
+              <div className="text-center p-2 rounded-lg bg-[#12123a]">
+                <div className="flex items-center justify-center gap-1 text-[#E879F9] mb-1">
                   <ShoppingCart className="w-3 h-3" />
                   <span className="text-sm font-bold">{box._count.shopBoxOrders}</span>
                 </div>
@@ -197,7 +197,7 @@ export function ShopBoxesClient({ boxes: initialBoxes, isAdmin }: { boxes: Box[]
                 className={`flex-1 ${
                   box.isActive 
                     ? 'border-red-500/50 text-red-400 hover:bg-red-500/10' 
-                    : 'border-green-500/50 text-green-400 hover:bg-green-500/10'
+                    : 'border-[#C84FFF]/50 text-[#E879F9] hover:bg-[#C84FFF]/10'
                 }`}
               >
                 {box.isActive ? (

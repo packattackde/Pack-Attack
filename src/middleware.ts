@@ -71,6 +71,7 @@ export const config = {
   matcher: [
     '/admin/:path*',
     '/shop-dashboard/:path*',
-    '/((?!_next/static|_next/image|favicon.ico|api/health).*)',
+    // Exclude all /api/* (NextAuth uses /api/auth/session — must not run through middleware or the client gets HTML instead of JSON).
+    '/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)',
   ],
 };

@@ -53,9 +53,9 @@ type Stats = {
 
 const statusConfig: Record<string, { color: string; icon: React.ElementType; label: string }> = {
   PENDING: { color: 'text-yellow-400 bg-yellow-400/10', icon: Clock, label: 'Pending' },
-  PROCESSING: { color: 'text-blue-400 bg-blue-400/10', icon: Package, label: 'Processing' },
+  PROCESSING: { color: 'text-[#C84FFF] bg-[rgba(200,79,255,0.1)]', icon: Package, label: 'Processing' },
   SHIPPED: { color: 'text-purple-400 bg-purple-400/10', icon: Truck, label: 'Shipped' },
-  DELIVERED: { color: 'text-green-400 bg-green-400/10', icon: CheckCircle, label: 'Delivered' },
+  DELIVERED: { color: 'text-[#E879F9] bg-[#C84FFF]/10', icon: CheckCircle, label: 'Delivered' },
   CANCELLED: { color: 'text-red-400 bg-red-400/10', icon: XCircle, label: 'Cancelled' },
 };
 
@@ -159,34 +159,34 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
     <div className="space-y-6">
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <div className="glass rounded-xl p-4">
-          <p className="text-sm text-gray-400">Total Assigned</p>
+        <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
+          <p className="text-sm text-[#8888aa]">Total Assigned</p>
           <p className="text-2xl font-bold text-white">{stats.total}</p>
         </div>
-        <div className="glass rounded-xl p-4">
+        <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
           <p className="text-sm text-yellow-400">Pending</p>
           <p className="text-2xl font-bold text-white">{stats.pending}</p>
         </div>
-        <div className="glass rounded-xl p-4">
-          <p className="text-sm text-blue-400">Processing</p>
+        <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
+          <p className="text-sm text-[#C84FFF]">Processing</p>
           <p className="text-2xl font-bold text-white">{stats.processing}</p>
         </div>
-        <div className="glass rounded-xl p-4">
+        <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
           <p className="text-sm text-purple-400">Shipped</p>
           <p className="text-2xl font-bold text-white">{stats.shipped}</p>
         </div>
-        <div className="glass rounded-xl p-4">
-          <p className="text-sm text-green-400">Delivered</p>
+        <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
+          <p className="text-sm text-[#E879F9]">Delivered</p>
           <p className="text-2xl font-bold text-white">{stats.delivered}</p>
         </div>
       </div>
 
       {/* Info Banner */}
-      <div className="glass rounded-xl p-4 border border-purple-500/30 flex items-start gap-3">
+      <div className="bg-[#1a1a4a] shadow-md rounded-xl p-4 border border-purple-500/30 flex items-start gap-3">
         <AlertCircle className="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5" />
         <div>
           <p className="text-white font-medium">These orders have been assigned to you by an admin</p>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="text-sm text-[#8888aa] mt-1">
             You are responsible for processing and shipping these orders. Update the status and add tracking information as you fulfill each order.
           </p>
         </div>
@@ -201,7 +201,7 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               filterStatus === status
                 ? 'bg-purple-500 text-white'
-                : 'glass text-gray-400 hover:text-white'
+                : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white'
             }`}
           >
             {status === 'ALL' ? 'All Orders' : statusConfig[status]?.label || status}
@@ -211,9 +211,9 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
 
       {/* Orders List */}
       {filteredOrders.length === 0 ? (
-        <div className="glass-strong rounded-2xl p-12 text-center">
+        <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
           <Package className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-          <p className="text-gray-400">No assigned orders found</p>
+          <p className="text-[#8888aa]">No assigned orders found</p>
           <p className="text-sm text-gray-500 mt-2">Orders assigned to you by admins will appear here</p>
         </div>
       ) : (
@@ -224,7 +224,7 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
             const isExpanded = expandedOrder === order.id;
 
             return (
-              <div key={order.id} className="glass-strong rounded-xl overflow-hidden">
+              <div key={order.id} className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl overflow-hidden">
                 {/* Order Header */}
                 <div
                   className="p-4 cursor-pointer hover:bg-white/5 transition-colors"
@@ -237,7 +237,7 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
                       </div>
                       <div>
                         <p className="font-semibold text-white">Order #{order.id.slice(-8).toUpperCase()}</p>
-                        <p className="text-sm text-gray-400">
+                        <p className="text-sm text-[#8888aa]">
                           {new Date(order.createdAt).toLocaleDateString('de-DE', {
                             year: 'numeric',
                             month: 'short',
@@ -250,7 +250,7 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
                     </div>
                     <div className="flex items-center gap-4">
                       <div className="text-right">
-                        <p className="text-sm text-gray-400">{order.items.length} items</p>
+                        <p className="text-sm text-[#8888aa]">{order.items.length} items</p>
                         <p className="font-semibold text-white">{order.shippingName}</p>
                       </div>
                       {order.assignedShop && (
@@ -263,9 +263,9 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
                         {status.label}
                       </div>
                       {isExpanded ? (
-                        <ChevronUp className="w-5 h-5 text-gray-400" />
+                        <ChevronUp className="w-5 h-5 text-[#8888aa]" />
                       ) : (
-                        <ChevronDown className="w-5 h-5 text-gray-400" />
+                        <ChevronDown className="w-5 h-5 text-[#8888aa]" />
                       )}
                     </div>
                   </div>
@@ -273,20 +273,20 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
 
                 {/* Expanded Details */}
                 {isExpanded && (
-                  <div className="border-t border-gray-800 p-4 space-y-4">
+                  <div className="border-t border-[rgba(255,255,255,0.06)] p-4 space-y-4">
                     <div className="grid md:grid-cols-2 gap-4">
                       {/* Customer Info */}
-                      <div className="glass rounded-xl p-4">
+                      <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                         <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
-                          <User className="w-4 h-4 text-blue-400" />
+                          <User className="w-4 h-4 text-[#C84FFF]" />
                           Customer
                         </h4>
                         <div className="space-y-2 text-sm">
-                          <p className="text-gray-400">
+                          <p className="text-[#8888aa]">
                             <span className="text-gray-500">Account:</span> {order.user.email}
                           </p>
                           {order.user.name && (
-                            <p className="text-gray-400">
+                            <p className="text-[#8888aa]">
                               <span className="text-gray-500">Name:</span> {order.user.name}
                             </p>
                           )}
@@ -294,12 +294,12 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
                       </div>
 
                       {/* Shipping Info */}
-                      <div className="glass rounded-xl p-4">
+                      <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                         <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
-                          <MapPin className="w-4 h-4 text-blue-400" />
+                          <MapPin className="w-4 h-4 text-[#C84FFF]" />
                           Shipping Address
                         </h4>
-                        <div className="space-y-1 text-sm text-gray-400">
+                        <div className="space-y-1 text-sm text-[#8888aa]">
                           <p className="font-medium text-white">{order.shippingName}</p>
                           <p>{order.shippingAddress}</p>
                           <p>{order.shippingZip} {order.shippingCity}</p>
@@ -309,8 +309,8 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
                             {order.shippingEmail}
                           </p>
                           {/* Shipping Payment */}
-                          <div className={`flex items-center gap-2 mt-3 pt-3 border-t border-gray-700 ${
-                            order.shippingMethod === 'COINS' ? 'text-amber-400' : 'text-green-400'
+                          <div className={`flex items-center gap-2 mt-3 pt-3 border-t border-[rgba(255,255,255,0.06)] ${
+                            order.shippingMethod === 'COINS' ? 'text-amber-400' : 'text-[#E879F9]'
                           }`}>
                             {order.shippingMethod === 'COINS' ? (
                               <>
@@ -329,14 +329,14 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
                     </div>
 
                     {/* Tracking Information */}
-                    <div className="glass rounded-xl p-4">
+                    <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                       <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
-                        <Link2 className="w-4 h-4 text-green-400" />
+                        <Link2 className="w-4 h-4 text-[#E879F9]" />
                         Tracking & Notes
                       </h4>
                       <div className="grid sm:grid-cols-2 gap-3">
                         <div>
-                          <label className="text-xs text-gray-400 mb-1 block">Tracking Number</label>
+                          <label className="text-xs text-[#8888aa] mb-1 block">Tracking Number</label>
                           <input
                             type="text"
                             placeholder="e.g. 1Z999AA10123456784"
@@ -349,11 +349,11 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
                                 notes: prev[order.id]?.notes ?? order.shopNotes ?? ''
                               }
                             }))}
-                            className="bg-gray-800 border border-gray-700 text-white rounded-lg px-3 py-2 text-sm w-full focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                            className="bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white rounded-lg px-3 py-2 text-sm w-full focus:ring-2 focus:ring-[#C84FFF] focus:border-transparent"
                           />
                         </div>
                         <div>
-                          <label className="text-xs text-gray-400 mb-1 block">Tracking URL</label>
+                          <label className="text-xs text-[#8888aa] mb-1 block">Tracking URL</label>
                           <input
                             type="url"
                             placeholder="e.g. https://tracking.dhl.de/..."
@@ -366,12 +366,12 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
                                 notes: prev[order.id]?.notes ?? order.shopNotes ?? ''
                               }
                             }))}
-                            className="bg-gray-800 border border-gray-700 text-white rounded-lg px-3 py-2 text-sm w-full focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                            className="bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white rounded-lg px-3 py-2 text-sm w-full focus:ring-2 focus:ring-[#C84FFF] focus:border-transparent"
                           />
                         </div>
                       </div>
                       <div className="mt-3">
-                        <label className="text-xs text-gray-400 mb-1 block">Shop Notes (internal)</label>
+                        <label className="text-xs text-[#8888aa] mb-1 block">Shop Notes (internal)</label>
                         <textarea
                           placeholder="Add notes about this order..."
                           rows={2}
@@ -384,13 +384,13 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
                               notes: e.target.value
                             }
                           }))}
-                          className="bg-gray-800 border border-gray-700 text-white rounded-lg px-3 py-2 text-sm w-full focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                          className="bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white rounded-lg px-3 py-2 text-sm w-full focus:ring-2 focus:ring-[#C84FFF] focus:border-transparent resize-none"
                         />
                       </div>
                       <button
                         onClick={() => handleTrackingUpdate(order.id)}
                         disabled={updatingOrder === order.id}
-                        className="mt-3 px-4 py-2 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white rounded-lg text-sm font-medium flex items-center gap-2 transition-colors"
+                        className="mt-3 px-4 py-2 bg-[#9333EA] hover:bg-[#7c3aed] disabled:opacity-50 text-white rounded-lg text-sm font-medium flex items-center gap-2 transition-colors"
                       >
                         <Save className="w-4 h-4" />
                         Save Changes
@@ -399,19 +399,19 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
 
                     {/* Customer Notes */}
                     {order.notes && (
-                      <div className="glass rounded-xl p-4">
+                      <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                         <h4 className="font-semibold text-white mb-2">Customer Notes</h4>
-                        <p className="text-sm text-gray-400">{order.notes}</p>
+                        <p className="text-sm text-[#8888aa]">{order.notes}</p>
                       </div>
                     )}
 
                     {/* Order Items */}
-                    <div className="glass rounded-xl p-4">
+                    <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                       <h4 className="font-semibold text-white mb-3">Order Items ({order.items.length})</h4>
                       <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2">
                         {order.items.map((item) => (
                           <div key={item.id} className="relative group">
-                            <div className="relative aspect-[63/88] rounded-lg overflow-hidden border border-gray-700">
+                            <div className="relative aspect-[63/88] rounded-lg overflow-hidden border border-[rgba(255,255,255,0.06)]">
                               {item.cardImage ? (
                                 <Image
                                   src={item.cardImage}
@@ -420,12 +420,12 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
                                   className="object-cover"
                                 />
                               ) : (
-                                <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                                <div className="w-full h-full bg-[#12123a] flex items-center justify-center">
                                   <span className="text-[8px] text-gray-600">?</span>
                                 </div>
                               )}
                             </div>
-                            <p className="text-[10px] text-gray-400 truncate mt-1" title={item.cardName}>
+                            <p className="text-[10px] text-[#8888aa] truncate mt-1" title={item.cardName}>
                               {item.cardName}
                             </p>
                           </div>
@@ -434,8 +434,8 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
                     </div>
 
                     {/* Status Update */}
-                    <div className="flex items-center justify-between pt-4 border-t border-gray-800">
-                      <p className="text-sm text-gray-400">Update Status:</p>
+                    <div className="flex items-center justify-between pt-4 border-t border-[rgba(255,255,255,0.06)]">
+                      <p className="text-sm text-[#8888aa]">Update Status:</p>
                       <div className="flex gap-2 flex-wrap">
                         {['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'].map((s) => {
                           const cfg = statusConfig[s];
@@ -447,7 +447,7 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
                               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all disabled:opacity-50 ${
                                 order.status === s
                                   ? cfg.color + ' ring-2 ring-offset-2 ring-offset-gray-900'
-                                  : 'glass hover:bg-white/10 text-gray-400'
+                                  : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md hover:bg-white/10 text-[#8888aa]'
                               }`}
                             >
                               {cfg.label}

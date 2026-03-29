@@ -37,8 +37,8 @@ export const viewport: Viewport = {
   userScalable: true,
   // Theme color for browser chrome - matches dark theme
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#030712" },
-    { media: "(prefers-color-scheme: dark)", color: "#030712" },
+    { media: "(prefers-color-scheme: light)", color: "#0B0B2B" },
+    { media: "(prefers-color-scheme: dark)", color: "#0B0B2B" },
   ],
   // Support notched devices (iPhone X+, Android with cutouts)
   viewportFit: "cover",
@@ -53,11 +53,11 @@ export const viewport: Viewport = {
  */
 export const metadata: Metadata = {
   title: {
-    default: "Pack Attack - Trading Card Box Battles",
-    template: "%s | Pack Attack",
+    default: "PullForge - Trading Card Box Battles",
+    template: "%s | PullForge",
   },
   description: "Experience the thrill of opening trading card boxes and competing in battles. Support for Magic: The Gathering, Pokemon, One Piece, and Lorcana.",
-  applicationName: "Pack Attack",
+  applicationName: "PullForge",
   // Keywords for SEO
   keywords: [
     "trading cards",
@@ -69,9 +69,9 @@ export const metadata: Metadata = {
     "pack opening",
   ],
   // Author information
-  authors: [{ name: "Pack Attack Team" }],
-  creator: "Pack Attack",
-  publisher: "Pack Attack",
+  authors: [{ name: "PullForge Team" }],
+  creator: "PullForge",
+  publisher: "PullForge",
   // Robots directive
   robots: {
     index: true,
@@ -88,7 +88,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Pack Attack",
+    title: "PullForge",
     // Startup images for iOS (optional, improves perceived load time)
     startupImage: [
       {
@@ -130,15 +130,15 @@ export const metadata: Metadata = {
   // Open Graph for social sharing
   openGraph: {
     type: "website",
-    siteName: "Pack Attack",
-    title: "Pack Attack - Trading Card Box Battles",
+    siteName: "PullForge",
+    title: "PullForge - Trading Card Box Battles",
     description: "Experience the thrill of opening trading card boxes and competing in battles.",
     locale: "en_US",
   },
   // Twitter/X card
   twitter: {
     card: "summary_large_image",
-    title: "Pack Attack - Trading Card Box Battles",
+    title: "PullForge - Trading Card Box Battles",
     description: "Experience the thrill of opening trading card boxes and competing in battles.",
   },
   // Additional browser/platform-specific settings
@@ -241,7 +241,7 @@ export default function RootLayout({
           {/* Skip to main content link for accessibility */}
           <a 
             href="#main-content" 
-            className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:rounded-lg"
+            className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#C84FFF] focus:text-white focus:rounded-lg"
           >
             Skip to main content
           </a>

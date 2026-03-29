@@ -28,7 +28,7 @@ export default async function AdminChatPage() {
   ]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 font-display">
+    <div className="min-h-screen font-display">
       {/* Background Effects */}
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
@@ -36,9 +36,9 @@ export default async function AdminChatPage() {
       <div className="relative container py-12">
         {/* Header */}
         <div className="mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full glass text-sm">
+          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
             <ShieldCheck className="w-4 h-4 text-purple-400" />
-            <span className="text-gray-300">Admin Panel</span>
+            <span className="text-[#f0f0f5]">Admin Panel</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-3">
             <span className="text-white">Chat </span>
@@ -46,19 +46,19 @@ export default async function AdminChatPage() {
               Moderation
             </span>
           </h1>
-          <p className="text-gray-400 text-lg">
+          <p className="text-[#8888aa] text-lg">
             View chat history, manage bans and timeouts
           </p>
         </div>
 
         {/* Stats */}
         <div className="grid grid-cols-3 gap-4 mb-8">
-          <div className="glass rounded-xl p-4 text-center">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
             <MessageSquare className="w-6 h-6 text-purple-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{totalMessages}</div>
-            <div className="text-xs text-gray-400">Total Messages</div>
+            <div className="text-xs text-[#8888aa]">Total Messages</div>
           </div>
-          <div className="glass rounded-xl p-4 text-center">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
             <div className="w-6 h-6 text-red-400 mx-auto mb-2 flex items-center justify-center">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-6 h-6">
                 <circle cx="12" cy="12" r="10" />
@@ -66,9 +66,9 @@ export default async function AdminChatPage() {
               </svg>
             </div>
             <div className="text-2xl font-bold text-white">{activeBans}</div>
-            <div className="text-xs text-gray-400">Active Bans</div>
+            <div className="text-xs text-[#8888aa]">Active Bans</div>
           </div>
-          <div className="glass rounded-xl p-4 text-center">
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
             <div className="w-6 h-6 text-yellow-400 mx-auto mb-2 flex items-center justify-center">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-6 h-6">
                 <circle cx="12" cy="12" r="10" />
@@ -76,7 +76,7 @@ export default async function AdminChatPage() {
               </svg>
             </div>
             <div className="text-2xl font-bold text-white">{activeTimeouts}</div>
-            <div className="text-xs text-gray-400">Active Timeouts</div>
+            <div className="text-xs text-[#8888aa]">Active Timeouts</div>
           </div>
         </div>
 
