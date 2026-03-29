@@ -7,6 +7,10 @@ import { ArrowLeft, Swords, Coins, Users, Clock, Play, Check, Shield, Trophy, Sp
 import { useToast } from '@/components/ui/use-toast';
 import { AddBotsControl } from '../components/AddBotsControl';
 import { motion, AnimatePresence } from 'framer-motion';
+import {
+  BattlePointsBreakdownDialog,
+  type BreakdownMeta,
+} from '@/components/battles/BattlePointsBreakdownDialog';
 
 const MODE_LABELS: Record<string, string> = {
   LOWEST_CARD: 'Niedrigste Karte',
@@ -92,6 +96,9 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
   const [revealedRounds, setRevealedRounds] = useState<Set<number>>(new Set());
   const [battleComplete, setBattleComplete] = useState(false);
   const [showWinnerReveal, setShowWinnerReveal] = useState(false);
+  const [pointsDialogOpen, setPointsDialogOpen] = useState(false);
+  const [pointsBreakdown, setPointsBreakdown] = useState<BreakdownMeta | null>(null);
+  const [pointsRank, setPointsRank] = useState<number | null>(null);
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
   const animationPlayedRef = useRef(false);
 
@@ -130,6 +137,22 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
     pollingRef.current = setInterval(poll, 3000);
     return () => { if (pollingRef.current) clearInterval(pollingRef.current); };
   }, [battle.id, battle.status]);
+
+  useEffect(() => {
+    if (!showWinnerReveal || !currentUserId) return;
+    let cancelled = false;
+    (async () => {
+      const res = await fetch(`/api/battles/${battle.id}/leaderboard-result`);
+      const data = await res.json();
+      if (cancelled || !data.success) return;
+      if (data.breakdown) {
+        setPointsBreakdown(data.breakdown as BreakdownMeta);
+        setPointsRank(data.rank ?? null);
+        setPointsDialogOpen(true);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [showWinnerReveal, battle.id, currentUserId]);
 
   useEffect(() => {
     if (battle.status !== 'OPEN' || !battle.lobbyExpiresAt) return;
@@ -277,6 +300,13 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
   const winnerParticipant = battle.winnerId
     ? battle.participants.find(p => p.userId === battle.winnerId)
     : null;
+
+  const pointsOutcome: 'win' | 'loss' | 'draw' =
+    battle.status === 'FINISHED_DRAW'
+      ? 'draw'
+      : battle.winnerId === currentUserId
+        ? 'win'
+        : 'loss';
 
   return (
     <div className="min-h-screen font-display">
@@ -768,6 +798,14 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
           </div>
         )}
       </div>
+
+      <BattlePointsBreakdownDialog
+        open={pointsDialogOpen}
+        onOpenChange={setPointsDialogOpen}
+        outcomeLabel={pointsOutcome}
+        breakdown={pointsBreakdown}
+        rank={pointsRank}
+      />
     </div>
   );
 }

@@ -2,7 +2,10 @@ import { redirect } from 'next/navigation';
 import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { titleForLevel, xpProgressInCurrentLevel } from '@/lib/level';
-import { getLeaderboard } from '@/lib/leaderboard';
+import {
+  getLeaderboardStandingsPage,
+  getUserStandingRank,
+} from '@/lib/leaderboard/standings';
 import { loadHomeDashboardQueries } from '@/lib/home-dashboard-data';
 import LiveTicker from '@/components/dashboard/LiveTicker';
 import WelcomeWidget from '@/components/dashboard/WelcomeWidget';
@@ -41,6 +44,8 @@ export default async function DashboardPage() {
     collectionValueAgg,
   } = await loadHomeDashboardQueries(userEmail);
 
+  if (!user) redirect('/login');
+
   let battlesWon = 0;
   try {
     battlesWon = await prisma.battle.count({
@@ -50,14 +55,27 @@ export default async function DashboardPage() {
     console.error('[home] battlesWon count failed', e);
   }
 
-  let leaderboardData: Awaited<ReturnType<typeof getLeaderboard>> = [];
+  let leaderboardRows: Awaited<
+    ReturnType<typeof getLeaderboardStandingsPage>
+  >['rows'] = [];
+  let userWeeklyRank: number | null = null;
+  let userWeeklyPoints = -1;
   try {
-    leaderboardData = await getLeaderboard(new Date().getMonth() + 1, new Date().getFullYear(), 10);
+    const { rows } = await getLeaderboardStandingsPage(prisma, {
+      scope: 'weekly',
+      page: 1,
+      pageSize: 10,
+    });
+    leaderboardRows = rows;
+    userWeeklyRank = await getUserStandingRank(prisma, user.id, 'weekly');
+    const lbEntry = await prisma.leaderboardEntry.findUnique({
+      where: { userId: user.id },
+      select: { weeklyPoints: true },
+    });
+    userWeeklyPoints = lbEntry?.weeklyPoints ?? -1;
   } catch (e) {
-    console.error('[home] getLeaderboard failed', e);
+    console.error('[home] leaderboard standings failed', e);
   }
-
-  if (!user) redirect('/login');
 
   // Derived data
   const xpProgress = xpProgressInCurrentLevel(user.xp, user.level);
@@ -95,23 +113,7 @@ export default async function DashboardPage() {
   else if (activeBattles.length > 0)
     dynamicSubtitle = `${activeBattles.length} Battle${activeBattles.length > 1 ? 's' : ''} waiting for you`;
 
-  // Month name for leaderboard
-  const monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
-  const currentMonth =
-    monthNames[new Date().getMonth()] + ' ' + new Date().getFullYear();
+  const leaderboardSubtitle = 'This week · battle points';
 
   // Serialize data for client components
   const serializedHits = recentHits.map((p) => ({
@@ -139,13 +141,11 @@ export default async function DashboardPage() {
   }));
 
 
-  // Leaderboard — top 3 for widget, find user's entry
-  const serializedLeaderboard = leaderboardData.slice(0, 10).map(e => ({
+  const serializedLeaderboard = leaderboardRows.map(e => ({
     rank: e.rank,
-    name: e.userName,
+    name: e.userName ?? 'Player',
     points: e.points,
   }));
-  const userLbEntry = leaderboardData.find(e => e.userId === user.id);
 
   return (
     <div className="min-h-screen font-display flex flex-col bg-[#06061a]">
@@ -229,9 +229,9 @@ export default async function DashboardPage() {
           <LeaderboardWidget
             className="sm:col-span-3 lg:col-span-3"
             entries={serializedLeaderboard}
-            userRank={userLbEntry?.rank ?? -1}
-            userPoints={userLbEntry?.points ?? -1}
-            month={currentMonth}
+            userRank={userWeeklyRank ?? -1}
+            userPoints={userWeeklyPoints}
+            month={leaderboardSubtitle}
           />
         </div>
       </div>

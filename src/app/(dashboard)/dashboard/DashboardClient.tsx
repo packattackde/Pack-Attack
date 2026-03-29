@@ -213,6 +213,25 @@ export const DashboardClient = memo(function DashboardClient({
 
     const [orderStatusFilter, setOrderStatusFilter] = useState('');
 
+    const [decayUi, setDecayUi] = useState<{
+        showWarning: boolean;
+        decayActive: boolean;
+        daysSinceBattle: number | null;
+        daysUntilDecayStarts: number | null;
+    } | null>(null);
+
+    const [lbMe, setLbMe] = useState<{
+        entry: {
+            totalPoints: number;
+            currentStreak: number;
+            battlesThisWeek: number;
+            totalWins: number;
+            totalLosses: number;
+        } | null;
+        ranks: { allTime: number | null; weekly: number | null };
+        volumeMultiplier: number;
+    } | null>(null);
+
     // Profile form
     const [profileForm, setProfileForm] = useState({
         name: user.name || '',
@@ -251,6 +270,16 @@ export const DashboardClient = memo(function DashboardClient({
         }
     }, [activeTab, achievements]);
 
+    useEffect(() => {
+        if (activeTab !== 'overview') return;
+        fetch('/api/leaderboard/me')
+            .then((r) => r.json())
+            .then((d) => {
+                if (d.success && d.decay) setDecayUi(d.decay);
+            })
+            .catch(() => {});
+    }, [activeTab]);
+
     const fetchStats = async () => {
         setLoading(true);
         try {
@@ -258,6 +287,15 @@ export const DashboardClient = memo(function DashboardClient({
             const data = await res.json();
             if (res.ok) {
                 setStats(data.stats);
+            }
+            const lbRes = await fetch('/api/leaderboard/me');
+            const lbJson = await lbRes.json();
+            if (lbJson.success) {
+                setLbMe({
+                    entry: lbJson.entry ?? null,
+                    ranks: lbJson.ranks ?? { allTime: null, weekly: null },
+                    volumeMultiplier: lbJson.volumeMultiplier ?? 1,
+                });
             }
         } catch (error) {
             console.error('Failed to fetch stats:', error);
@@ -687,6 +725,21 @@ export const DashboardClient = memo(function DashboardClient({
             {/* Overview Tab */}
             {activeTab === 'overview' && (
                 <div className="space-y-8">
+                    {decayUi?.decayActive && (
+                        <div
+                            className="rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">
+                            Deine Punkte sinken! Du verlierst täglich 0.5%. Spiel ein Battle, um den Verfall zu
+                            stoppen.
+                        </div>
+                    )}
+                    {decayUi?.showWarning && !decayUi.decayActive && decayUi.daysSinceBattle != null && (
+                        <div
+                            className="rounded-2xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
+                            Du hast seit {decayUi.daysSinceBattle} Tag
+                            {decayUi.daysSinceBattle === 1 ? '' : 'en'} kein Battle gespielt. Ab Tag 7 verlierst du
+                            0.5% deiner Punkte pro Tag!
+                        </div>
+                    )}
                     {/* Hero Balance Card */}
                     <div
                         className="relative overflow-hidden rounded-3xl"
@@ -1597,6 +1650,58 @@ export const DashboardClient = memo(function DashboardClient({
                                     );
                                 })}
                             </div>
+
+                            {lbMe?.entry && (
+                                <div
+                                    className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 mb-6">
+                                    <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+                                        <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                                            <Medal className="w-5 h-5 text-amber-400"/>
+                                            Battle Leaderboard
+                                        </h3>
+                                        <Link href="/leaderboard"
+                                              className="text-sm font-semibold text-[#C84FFF] hover:underline">
+                                            Zur Rangliste
+                                        </Link>
+                                    </div>
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                        <div className="text-center">
+                                            <p className="text-2xl font-bold text-white">
+                                                #{lbMe.ranks.allTime ?? '—'}
+                                            </p>
+                                            <p className="text-xs text-[#7777a0]">All-Time</p>
+                                        </div>
+                                        <div className="text-center">
+                                            <p className="text-2xl font-bold text-white">
+                                                #{lbMe.ranks.weekly ?? '—'}
+                                            </p>
+                                            <p className="text-xs text-[#7777a0]">Woche</p>
+                                        </div>
+                                        <div className="text-center">
+                                            <p className="text-2xl font-bold text-[#C84FFF]">
+                                                {lbMe.entry.totalPoints.toLocaleString()}
+                                            </p>
+                                            <p className="text-xs text-[#7777a0]">Punkte</p>
+                                        </div>
+                                        <div className="text-center">
+                                            <p className="text-2xl font-bold text-orange-400 flex items-center justify-center gap-1">
+                                                {lbMe.entry.currentStreak >= 3 && (
+                                                    <Flame className="w-5 h-5"/>
+                                                )}
+                                                {lbMe.entry.currentStreak}
+                                            </p>
+                                            <p className="text-xs text-[#7777a0]">Streak</p>
+                                        </div>
+                                    </div>
+                                    <div className="mt-4 flex flex-wrap gap-4 text-sm text-[#8888aa]">
+                                        <span>Battles diese Woche: {lbMe.entry.battlesThisWeek}</span>
+                                        <span>Volumen-Bonus: ×{lbMe.volumeMultiplier.toFixed(2)}</span>
+                                        <span>
+                                            W/L: {lbMe.entry.totalWins}/{lbMe.entry.totalLosses}
+                                        </span>
+                                    </div>
+                                </div>
+                            )}
 
                             {/* Economy & Orders */}
                             <div className="grid gap-6 lg:grid-cols-2">

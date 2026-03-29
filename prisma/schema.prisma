@@ -44,6 +44,8 @@ model User {
   orders              Order[]
   emailsSent          EmailLog[]
   leaderboardEntries  BattleLeaderboard[]
+  /// Battle-weighted leaderboard (points, streaks, decay) — one row per user
+  leaderboardStanding LeaderboardEntry?
   // Shop relations
   shop                Shop?
   shopOrders          ShopOrder[]
@@ -505,6 +507,58 @@ model BattleLeaderboard {
   @@unique([userId, month, year])
   @@index([month, year])
   @@index([points])
+}
+
+// Battle-weighted leaderboard aggregate + audit trail (see lib/leaderboard/*)
+model LeaderboardEntry {
+  id                String             @id @default(cuid())
+  userId            String             @unique
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  totalPoints       Int                @default(0)
+  weeklyPoints      Int                @default(0)
+  monthlyPoints     Int                @default(0)
+  allTimePoints     Int                @default(0)
+  currentStreak     Int                @default(0)
+  bestStreak        Int                @default(0)
+  battlesThisWeek   Int                @default(0)
+  totalBattles      Int                @default(0)
+  totalWins         Int                @default(0)
+  totalLosses       Int                @default(0)
+  lastBattleAt      DateTime?
+  lastDecayAt       DateTime?
+  rank              Int?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  pointTransactions PointTransaction[]
+
+  @@index([totalPoints])
+  @@index([weeklyPoints])
+  @@index([monthlyPoints])
+}
+
+model PointTransaction {
+  id                 String               @id @default(cuid())
+  leaderboardEntryId String
+  leaderboardEntry   LeaderboardEntry     @relation(fields: [leaderboardEntryId], references: [id], onDelete: Cascade)
+  battleId           String?
+  type               PointTransactionType
+  points             Int
+  description        String?
+  metadata           Json?
+  createdAt          DateTime             @default(now())
+
+  @@index([leaderboardEntryId, createdAt])
+  @@index([battleId])
+}
+
+enum PointTransactionType {
+  BATTLE_WIN
+  BATTLE_LOSS
+  BATTLE_DRAW
+  CARD_HIT_BONUS
+  VOLUME_BONUS
+  DECAY
+  ADMIN_ADJUSTMENT
 }
 
 // ============================================

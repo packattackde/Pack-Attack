@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentSession } from '@/lib/auth';
 import { prisma, withRetry } from '@/lib/prisma';
 import { awardXp } from '@/lib/level';
+import { awardBattleLeaderboardForFinishedBattle } from '@/lib/leaderboard/award';
 
 function shuffleArray<T>(array: T[]): T[] {
   const shuffled = [...array];
@@ -295,6 +296,12 @@ export async function POST(
       } catch (err) {
         console.error(`Failed to award XP to ${participant.userId}:`, err);
       }
+    }
+
+    try {
+      await awardBattleLeaderboardForFinishedBattle(prisma, battleId);
+    } catch (err) {
+      console.error(`Leaderboard award failed for battle ${battleId}:`, err);
     }
 
     // Fetch final battle state

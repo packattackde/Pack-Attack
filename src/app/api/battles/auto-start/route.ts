@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { awardXp } from '@/lib/level';
+import { awardBattleLeaderboardForFinishedBattle } from '@/lib/leaderboard/award';
 
 const CRON_SECRET = process.env.CRON_SECRET || 'your-secret-key';
 
@@ -89,6 +90,12 @@ async function startBattle(battleId: string): Promise<{ status: string; message:
 
   if (isDraw) {
     await prisma.battle.update({ where: { id: battleId }, data: { status: 'FINISHED_DRAW', finishedAt: new Date() } });
+    for (const p of battle.participants) {
+      try { await awardXp(p.userId, 20, prisma as any); } catch {}
+    }
+    try {
+      await awardBattleLeaderboardForFinishedBattle(prisma, battleId);
+    } catch {}
     return { status: 'draw', message: 'Unentschieden' };
   }
 
@@ -123,6 +130,10 @@ async function startBattle(battleId: string): Promise<{ status: string; message:
   for (const p of battle.participants) {
     try { await awardXp(p.userId, p.userId === winnerId ? 50 : 20, prisma as any); } catch {}
   }
+
+  try {
+    await awardBattleLeaderboardForFinishedBattle(prisma, battleId);
+  } catch {}
 
   return { status: 'finished', message: `Gewinner: ${winnerId}` };
 }

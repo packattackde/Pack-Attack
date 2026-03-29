@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 
-export interface LeaderboardEntry {
+/** Legacy monthly coin-based leaderboard row (prizes) */
+export interface MonthlyLeaderboardRow {
   rank: number;
   points: number;
   userId: string;
@@ -30,7 +31,7 @@ export const PRIZE_CONFIG = [
  * Fetch leaderboard data for a given month/year.
  * Aggregates battle wins and participation from the database.
  */
-export async function getLeaderboard(month: number, year: number, limit = 100): Promise<LeaderboardEntry[]> {
+export async function getLeaderboard(month: number, year: number, limit = 100): Promise<MonthlyLeaderboardRow[]> {
   const startDate = new Date(year, month - 1, 1);
   const endDate = new Date(year, month, 0, 23, 59, 59, 999);
 

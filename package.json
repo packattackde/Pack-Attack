@@ -14,6 +14,7 @@
     "db:studio": "prisma studio",
     "create-admin": "tsx scripts/create-admin.ts",
     "create-bots": "tsx scripts/create-bots.ts",
+    "test:leaderboard": "tsx tests/leaderboard/leaderboard.test.ts",
     "check-auto-start": "tsx scripts/check-battle-auto-start.ts",
     "build:prod": "npm ci && prisma generate && prisma migrate deploy && next build",
     "typecheck": "tsc --noEmit",
@@ -74,5 +75,8 @@
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
     "typescript": "^5"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   }
 }

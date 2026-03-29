@@ -48,6 +48,7 @@ export default function LeaderboardWidget({
       </div>
 
       <p className="text-[10px] text-[#7777a0] mb-3">{month}</p>
+      <p className="text-[9px] text-[#555577] mb-2">Battle-Punkte (Woche)</p>
 
       {topEntries.length === 0 ? (
         <div className="text-center py-6">
@@ -89,7 +90,7 @@ export default function LeaderboardWidget({
               You
             </span>
             <span className="text-[10px] text-[#C84FFF] font-semibold flex-shrink-0">
-              {formatCoins(userPoints)} pts
+              {userPoints < 0 ? '—' : `${formatCoins(userPoints)} pts`}
             </span>
           </div>
         </>
