@@ -1,5 +1,17 @@
 name: Deploy to Production
 
+# --- Database / .env policy (read before changing this file) ---
+# Production DATABASE_URL and DIRECT_DATABASE_URL live in
+# /var/www/packattack/app/.env on the server. Do NOT add CI steps that
+# overwrite them from GitHub Secrets unless you have verified those secrets
+# match production and escaping cannot corrupt passwords/URLs.
+# A previous approach merged secrets into .env on every deploy and replaced
+# a working DSN, causing Prisma P1001 site-wide. d73d262 and earlier never
+# touched DB URLs from CI — keep it that way unless you opt in deliberately.
+# GitHub Secrets can still store copies for other workflows; they must not
+# silently replace the server file during deploy.
+# ---------------------------------------------------------------
+
 on:
   push:
     branches: [main]
