@@ -95,12 +95,35 @@ pm2 monit                           # Monitor
 
 ## Database
 
+Production uses **self-hosted PostgreSQL 17 (Docker)** on a **separate machine** from the Strato app server — **not** Neon.
+
+### Production (pack-attack.de → this database)
+
 | Property | Value |
 |----------|-------|
-| **Provider** | Neon PostgreSQL |
-| **Host** | `ep-patient-resonance-ahmtm2jq-pooler.c-3.us-east-1.aws.neon.tech` |
-| **Database** | `neondb` |
-| **SSL** | Required |
+| **Provider** | Self-hosted PostgreSQL 17 (Docker) |
+| **DB server IP** | `85.215.156.153` |
+| **Port** | `5432` |
+| **Database name** | `packattackproddb` |
+| **Role** | `packattack` |
+| **Typical `DATABASE_URL`** | `postgresql://packattack:<password>@85.215.156.153:5432/packattackproddb` |
+
+### Development (local / optional)
+
+| Property | Value |
+|----------|-------|
+| **Same host** | `85.215.156.153` |
+| **Port** | `5433` |
+| **Database name** | `packattackdevdb` |
+
+### Network (required for the app to connect)
+
+| From | To | Notes |
+|------|-----|--------|
+| App server **82.165.66.236** (Strato) | DB server **85.215.156.153** TCP **5432** (prod) | Firewall / security group must **allow** this path. `connection refused` = nothing listening or firewall blocking. |
+| Same | Port **5433** (dev DB) | Same rule if you use dev from a remote client. |
+
+On the **database VM**: ensure Postgres/Docker binds **0.0.0.0** (or the WAN interface) for the published port, `pg_hba.conf` allows the app host, and `ufw`/provider firewall allows **82.165.66.236 → 5432**.
 
 ---
 
@@ -121,7 +144,7 @@ pm2 monit                           # Monitor
 ### ABSOLUTE RULE: NEVER hardcode API keys, secrets, passwords, or tokens in code or config files that get committed to git.
 
 ALL secrets must be stored in:
-1. **GitHub Secrets** (for CI/CD workflows) -- `https://github.com/belgarathe/Pack-Attack/settings/secrets/actions`
+1. **GitHub Secrets** (for CI/CD workflows) — e.g. `https://github.com/packattackde/Pack-Attack/settings/secrets/actions`
 2. **Server `.env` file** (`/var/www/packattack/app/.env`) -- set directly on server, never committed
 3. **Local `.env.local`** -- gitignored, never committed
 
@@ -132,7 +155,8 @@ ALL secrets must be stored in:
 | `JUSTTCG_API_KEY` | Card search API | Server .env + GitHub Secret |
 | `RESEND_API_KEY` | Email sending | Server .env |
 | `NEXTAUTH_SECRET` | Session encryption | Server .env |
-| `DATABASE_URL` | Neon PostgreSQL | Server .env |
+| `DATABASE_URL` | Self-hosted PostgreSQL (`85.215.156.153`) | Server .env + GitHub Secret |
+| `DIRECT_DATABASE_URL` | Same host (direct port for migrations) | Server .env |
 | `TWITCH_CLIENT_ID` | Twitch OAuth for chat | Server .env + GitHub Secret |
 | `TWITCH_CLIENT_SECRET` | Twitch OAuth for chat | Server .env + GitHub Secret |
 | `SERVER_IP` | Deployment target | GitHub Secret |
