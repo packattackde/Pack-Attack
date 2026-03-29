@@ -15,7 +15,7 @@ export async function deleteUserWithRelations(userId: string, userEmail: string 
     // BattlePull rows pointing at this user's Pulls (Pull FK blocks delete)
     await tx.battlePull.deleteMany({ where: { pull: { userId } } });
 
-    // Moderation rows where this user was the moderator
+    // Moderation rows where this user was the moderator (no cascade from User)
     await tx.chatBan.deleteMany({ where: { createdById: userId } });
 
     // Remove user from battles; cascades BattlePull for those participants
@@ -29,15 +29,33 @@ export async function deleteUserWithRelations(userId: string, userEmail: string 
       data: { winnerId: null },
     });
 
+    await tx.emailLog.deleteMany({ where: { userId } });
+    await tx.chatLog.deleteMany({ where: { userId } });
+    await tx.battleLeaderboard.deleteMany({ where: { userId } });
+
     await tx.transaction.deleteMany({ where: { userId } });
     await tx.saleHistory.deleteMany({ where: { userId } });
     await tx.order.deleteMany({ where: { userId } });
+
     await tx.shopOrder.deleteMany({ where: { userId } });
+
+    await tx.shopBoxOrder.updateMany({
+      where: { userId },
+      data: { payoutId: null },
+    });
     await tx.shopBoxOrder.deleteMany({ where: { userId } });
 
     // Shop owner: clear shop-scoped data before Shop (otherwise FK blocks)
     const shop = await tx.shop.findUnique({ where: { ownerId: userId } });
     if (shop) {
+      await tx.order.updateMany({
+        where: { assignedShopId: shop.id },
+        data: { assignedShopId: null },
+      });
+      await tx.shopBoxOrder.updateMany({
+        where: { shopId: shop.id },
+        data: { payoutId: null },
+      });
       await tx.shopBoxOrder.deleteMany({ where: { shopId: shop.id } });
       await tx.shopPayout.deleteMany({ where: { shopId: shop.id } });
       await tx.shopOrder.deleteMany({ where: { shopId: shop.id } });
