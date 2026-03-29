@@ -34,6 +34,7 @@ export async function getLeaderboard(month: number, year: number, limit = 100): 
   const startDate = new Date(year, month - 1, 1);
   const endDate = new Date(year, month, 0, 23, 59, 59, 999);
 
+  try {
   const data = await prisma.$queryRaw<Array<{
     userId: string;
     userName: string | null;
@@ -85,4 +86,8 @@ export async function getLeaderboard(month: number, year: number, limit = 100): 
       title: prizeInfo?.title ?? null,
     };
   });
+  } catch (e) {
+    console.error('[getLeaderboard] query failed', e);
+    return [];
+  }
 }

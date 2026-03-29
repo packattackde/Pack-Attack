@@ -33,10 +33,8 @@ export default async function DashboardPage() {
     recentPulls,
     totalPulls,
     totalBattles,
-    battlesWon,
     bestPullToday,
     activeBattles,
-    leaderboardData,
     cheapestBox,
     collectionValueAgg,
   ] = await Promise.all([
@@ -82,10 +80,6 @@ export default async function DashboardPage() {
     prisma.pull.count({ where: { user: { email: userEmail } } }),
     // Total battles
     prisma.battleParticipant.count({ where: { user: { email: userEmail } } }),
-    // Battles won
-    prisma.battle.count({
-      where: { winner: { email: userEmail }, status: { in: ['FINISHED_WIN', 'FINISHED_DRAW'] } },
-    }),
     // Best pull today
     prisma.pull.findFirst({
       where: {
@@ -117,8 +111,6 @@ export default async function DashboardPage() {
         _count: { select: { participants: true } },
       },
     }),
-    // Leaderboard — shared utility
-    getLeaderboard(new Date().getMonth() + 1, new Date().getFullYear(), 10),
     // Cheapest active box
     prisma.box.findFirst({
       where: { isActive: true },
@@ -131,6 +123,22 @@ export default async function DashboardPage() {
       _sum: { cardValue: true },
     }),
   ]);
+
+  let battlesWon = 0;
+  try {
+    battlesWon = await prisma.battle.count({
+      where: { winner: { email: userEmail }, status: { in: ['FINISHED_WIN', 'FINISHED_DRAW'] } },
+    });
+  } catch (e) {
+    console.error('[home] battlesWon count failed', e);
+  }
+
+  let leaderboardData: Awaited<ReturnType<typeof getLeaderboard>> = [];
+  try {
+    leaderboardData = await getLeaderboard(new Date().getMonth() + 1, new Date().getFullYear(), 10);
+  } catch (e) {
+    console.error('[home] getLeaderboard failed', e);
+  }
 
   if (!user) redirect('/login');
 
