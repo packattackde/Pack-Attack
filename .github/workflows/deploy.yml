@@ -36,6 +36,9 @@ jobs:
           script: |
             cd /var/www/packattack/app
 
+            # Server was pointed at a fork (belgarathe/...); CI pushes packattackde — align origin every deploy
+            git remote set-url origin https://github.com/packattackde/Pack-Attack.git
+
             # Stop PM2 apps before git/build so nothing holds the app directory or port
             pm2 stop packattack 2>/dev/null || true
             pm2 stop battle-auto-start-scheduler 2>/dev/null || true
