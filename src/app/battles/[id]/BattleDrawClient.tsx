@@ -70,7 +70,7 @@ function getRarityColor(rarity: string | null): string {
   if (r.includes('rare') || r.includes('holo'))
     return 'border-blue-400/40';
   if (r.includes('uncommon'))
-    return 'border-green-400/30';
+    return 'border-[#C84FFF]/30';
   return 'border-[rgba(255,255,255,0.08)]';
 }
 
@@ -294,7 +294,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <Swords className="w-5 h-5 text-[#BFFF00]" />
+                <Swords className="w-5 h-5 text-[#C84FFF]" />
                 <h1 className="text-2xl font-bold text-white">Battle #{battle.id.slice(-6)}</h1>
               </div>
               <p className="text-[#8888aa]">{battle.box?.name || 'Unbekannte Box'}</p>
@@ -358,14 +358,14 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                 return (
                   <div key={p.id} className="flex items-center gap-3">
                     <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
-                      i === 0 ? 'bg-[#BFFF00] text-black' : 'bg-[#12123a] text-[#8888aa]'
+                      i === 0 ? 'bg-[#C84FFF] text-white' : 'bg-[#12123a] text-[#8888aa]'
                     }`}>
                       {i + 1}
                     </div>
                     <span className="text-white text-sm font-medium w-28 truncate">{p.user.name || p.user.email}</span>
                     <div className="flex-1 h-6 bg-[#12123a] rounded-full overflow-hidden relative">
                       <motion.div
-                        className={`h-full rounded-full ${i === 0 ? 'bg-gradient-to-r from-[#BFFF00]/80 to-[#BFFF00]' : 'bg-gradient-to-r from-[#8888aa]/40 to-[#8888aa]/60'}`}
+                        className={`h-full rounded-full ${i === 0 ? 'bg-gradient-to-r from-[#C84FFF]/80 to-[#C84FFF]' : 'bg-gradient-to-r from-[#8888aa]/40 to-[#8888aa]/60'}`}
                         initial={{ width: 0 }}
                         animate={{ width: `${Math.max(barWidth, 2)}%` }}
                         transition={{ duration: 0.8, ease: 'easeOut' }}
@@ -374,7 +374,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                     <motion.span
                       key={p.runningTotal}
                       className="text-amber-400 font-bold text-sm w-20 text-right tabular-nums"
-                      initial={{ scale: 1.3, color: '#BFFF00' }}
+                      initial={{ scale: 1.3, color: '#C84FFF' }}
                       animate={{ scale: 1, color: '#fbbf24' }}
                       transition={{ duration: 0.4 }}
                     >
@@ -391,7 +391,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
         {!isDrawing && !battleComplete && (
           <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] rounded-2xl p-6 mb-8">
             <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-              <Users className="w-5 h-5 text-[#BFFF00]" />
+              <Users className="w-5 h-5 text-[#C84FFF]" />
               Teilnehmer
             </h2>
             <div className="grid gap-3 sm:grid-cols-2">
@@ -399,10 +399,10 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                 <div
                   key={p.id}
                   className={`flex items-center gap-3 p-4 rounded-xl border ${
-                    p.isReady ? 'border-green-500/30 bg-green-500/5' : 'border-[rgba(255,255,255,0.08)] bg-[#12123a]'
+                    p.isReady ? 'border-[#C84FFF]/30 bg-[#C84FFF]/5' : 'border-[rgba(255,255,255,0.08)] bg-[#12123a]'
                   }`}
                 >
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#BFFF00] to-[#a0d600] flex items-center justify-center text-sm font-bold text-black">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#C84FFF] to-[#9333EA] flex items-center justify-center text-sm font-bold text-black">
                     {p.user.name?.[0] || '?'}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -419,7 +419,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                     </div>
                     <div className="text-xs text-[#8888aa]">
                       {p.isReady ? (
-                        <span className="text-green-400 flex items-center gap-1"><Check className="w-3 h-3" /> Bereit</span>
+                        <span className="text-[#E879F9] flex items-center gap-1"><Check className="w-3 h-3" /> Bereit</span>
                       ) : (
                         'Wartet...'
                       )}
@@ -443,7 +443,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
         {(isDrawing || battleComplete) && !showWinnerReveal && Object.keys(pullsByRound).length > 0 && (
           <div className="space-y-5 mb-8">
             <h2 className="text-lg font-bold text-white flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-[#BFFF00]" />
+              <Sparkles className="w-5 h-5 text-[#C84FFF]" />
               Rundenergebnisse
             </h2>
             {Array.from({ length: battle.rounds }, (_, i) => i + 1).map((round) => {
@@ -468,14 +468,14 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     transition={{ duration: 0.5, ease: 'easeOut' }}
                     className={`bg-[#1a1a4a] border rounded-2xl overflow-hidden ${
-                      isCurrent ? 'border-[#BFFF00]/50 shadow-[0_0_30px_rgba(191,255,0,0.12)]' : 'border-[rgba(255,255,255,0.08)]'
+                      isCurrent ? 'border-[#C84FFF]/50 shadow-[0_0_30px_rgba(200,79,255,0.12)]' : 'border-[rgba(255,255,255,0.08)]'
                     }`}
                   >
                     <div className={`px-5 py-3 flex items-center justify-between ${
-                      isCurrent ? 'bg-[#BFFF00]/5' : 'bg-[#12123a]/50'
+                      isCurrent ? 'bg-[#C84FFF]/5' : 'bg-[#12123a]/50'
                     }`}>
                       <div className="flex items-center gap-2">
-                        {isCurrent && <div className="w-2 h-2 rounded-full bg-[#BFFF00] pulse-live" />}
+                        {isCurrent && <div className="w-2 h-2 rounded-full bg-[#C84FFF] pulse-live" />}
                         <span className="text-sm font-bold text-white">Runde {round}</span>
                       </div>
                       <span className="text-xs text-[#8888aa]">{round} / {battle.rounds}</span>
@@ -498,7 +498,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                               }`}
                             >
                               {isRoundBest && (
-                                <div className="absolute -top-2 -right-2 w-6 h-6 bg-[#BFFF00] rounded-full flex items-center justify-center">
+                                <div className="absolute -top-2 -right-2 w-6 h-6 bg-[#C84FFF] rounded-full flex items-center justify-center">
                                   <Star className="w-3.5 h-3.5 text-black" />
                                 </div>
                               )}
@@ -584,12 +584,12 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                   className="relative overflow-hidden"
                 >
                   {/* Background glow */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-[#BFFF00]/8 via-transparent to-transparent rounded-3xl" />
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#BFFF00]/5 rounded-full blur-[100px]" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-[#C84FFF]/8 via-transparent to-transparent rounded-3xl" />
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#C84FFF]/5 rounded-full blur-[100px]" />
 
                   <div className={`relative border rounded-3xl p-10 ${
                     battle.winnerId === currentUserId
-                      ? 'border-[#BFFF00]/40 bg-[#BFFF00]/5'
+                      ? 'border-[#C84FFF]/40 bg-[#C84FFF]/5'
                       : 'border-[rgba(255,255,255,0.12)] bg-[#1a1a4a]/80'
                   }`}>
                     {/* Trophy animation */}
@@ -607,7 +607,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                           initial={{ scale: 0 }}
                           animate={{ scale: [0, 1.5, 1] }}
                           transition={{ delay: 0.6, duration: 0.5 }}
-                          className="absolute -top-1 -right-1 w-8 h-8 bg-[#BFFF00] rounded-full flex items-center justify-center"
+                          className="absolute -top-1 -right-1 w-8 h-8 bg-[#C84FFF] rounded-full flex items-center justify-center"
                         >
                           <Crown className="w-4 h-4 text-black" />
                         </motion.div>
@@ -623,7 +623,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                     >
                       {battle.winnerId === currentUserId ? (
                         <>
-                          <h2 className="text-4xl font-bold text-[#BFFF00] mb-2">Du hast gewonnen!</h2>
+                          <h2 className="text-4xl font-bold text-[#C84FFF] mb-2">Du hast gewonnen!</h2>
                           <p className="text-[#8888aa] text-lg">Glückwunsch zum Sieg!</p>
                         </>
                       ) : (
@@ -653,19 +653,19 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                             transition={{ delay: 0.8 + i * 0.15 }}
                             className={`flex-1 rounded-2xl p-5 text-center border ${
                               isWinner
-                                ? 'bg-[#BFFF00]/10 border-[#BFFF00]/30'
+                                ? 'bg-[#C84FFF]/10 border-[#C84FFF]/30'
                                 : 'bg-[#12123a] border-[rgba(255,255,255,0.08)]'
                             }`}
                           >
                             <div className={`w-12 h-12 rounded-full mx-auto mb-3 flex items-center justify-center text-lg font-bold ${
                               isWinner
-                                ? 'bg-gradient-to-br from-[#BFFF00] to-[#a0d600] text-black'
+                                ? 'bg-gradient-to-br from-[#C84FFF] to-[#9333EA] text-white'
                                 : 'bg-[#1a1a4a] text-[#8888aa]'
                             }`}>
                               {p.user.name?.[0] || '?'}
                             </div>
                             <div className="text-white font-semibold mb-1 truncate">{p.user.name || p.user.email}</div>
-                            <div className={`text-2xl font-bold mb-1 ${isWinner ? 'text-[#BFFF00]' : 'text-amber-400'}`}>
+                            <div className={`text-2xl font-bold mb-1 ${isWinner ? 'text-[#C84FFF]' : 'text-amber-400'}`}>
                               {p.runningTotal.toFixed(2)}
                             </div>
                             <div className="text-xs text-[#8888aa]">
@@ -673,7 +673,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                             </div>
                             {isWinner && (
                               <div className="mt-2">
-                                <Crown className="w-5 h-5 text-[#BFFF00] mx-auto" />
+                                <Crown className="w-5 h-5 text-[#C84FFF] mx-auto" />
                               </div>
                             )}
                           </motion.div>
@@ -689,7 +689,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                       className="text-center"
                     >
                       <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#12123a] rounded-full text-sm">
-                        <Zap className="w-4 h-4 text-[#BFFF00]" />
+                        <Zap className="w-4 h-4 text-[#C84FFF]" />
                         <span className="text-[#8888aa]">
                           {battle.battleMode === 'LOWEST_CARD' && 'Die niedrigste Karte des Verlierers wurde übertragen'}
                           {battle.battleMode === 'HIGHEST_CARD' && 'Die höchste Karte des Verlierers wurde übertragen'}
@@ -710,7 +710,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
             <button
               onClick={handleJoin}
               disabled={joining}
-              className="px-6 py-3 bg-[#BFFF00] text-black font-semibold rounded-xl hover:bg-[#d4ff4d] transition-all disabled:opacity-50 flex items-center gap-2"
+              className="px-6 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl hover:bg-[#E879F9] transition-all disabled:opacity-50 flex items-center gap-2"
             >
               {joining ? 'Trete bei...' : 'Battle beitreten'}
               <Swords className="w-4 h-4" />
@@ -723,8 +723,8 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
               disabled={readyLoading}
               className={`px-6 py-3 font-semibold rounded-xl transition-all disabled:opacity-50 flex items-center gap-2 ${
                 myParticipant?.isReady
-                  ? 'bg-green-500/20 text-green-400 border border-green-500/30'
-                  : 'bg-[#BFFF00] text-black hover:bg-[#d4ff4d]'
+                  ? 'bg-[#C84FFF]/20 text-[#E879F9] border border-[#C84FFF]/30'
+                  : 'bg-[#C84FFF] text-white hover:bg-[#E879F9]'
               }`}
             >
               {readyLoading ? 'Lade...' : myParticipant?.isReady ? (
@@ -739,7 +739,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
             <button
               onClick={handleStart}
               disabled={starting}
-              className="px-6 py-3 bg-[#BFFF00] text-black font-semibold rounded-xl hover:bg-[#d4ff4d] transition-all disabled:opacity-50 flex items-center gap-2"
+              className="px-6 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl hover:bg-[#E879F9] transition-all disabled:opacity-50 flex items-center gap-2"
             >
               {starting ? (
                 <><div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> Startet...</>
@@ -754,7 +754,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
               <Link href="/battles" className="px-6 py-3 bg-[#12123a] text-white font-semibold rounded-xl hover:bg-[#1a1a4a] transition-all border border-[rgba(255,255,255,0.12)]">
                 Zurück zur Lobby
               </Link>
-              <Link href="/battles/create" className="px-6 py-3 bg-[#BFFF00] text-black font-semibold rounded-xl hover:bg-[#d4ff4d] transition-all">
+              <Link href="/battles/create" className="px-6 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl hover:bg-[#E879F9] transition-all">
                 Neues Battle
               </Link>
             </div>

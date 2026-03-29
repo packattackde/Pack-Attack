@@ -155,18 +155,18 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
       {/* Background Effects */}
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
-      <div className="fixed top-20 left-10 w-72 h-72 bg-[rgba(191,255,0,0.08)] rounded-full blur-3xl hidden lg:block" />
-      <div className="fixed bottom-20 right-10 w-96 h-96 bg-[rgba(191,255,0,0.05)] rounded-full blur-3xl hidden lg:block" />
+      <div className="fixed top-20 left-10 w-72 h-72 bg-[rgba(200,79,255,0.08)] rounded-full blur-3xl hidden lg:block" />
+      <div className="fixed bottom-20 right-10 w-96 h-96 bg-[rgba(200,79,255,0.05)] rounded-full blur-3xl hidden lg:block" />
 
       <div className="relative container py-12">
         {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-2 mb-4 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
-            <Store className="w-4 h-4 text-[#BFFF00]" />
+            <Store className="w-4 h-4 text-[#C84FFF]" />
             <span className="text-[#f0f0f5]">TCG Marketplace</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Shop <span className="text-[#BFFF00]">Cards & Products</span>
+            Shop <span className="text-[#C84FFF]">Cards & Products</span>
           </h1>
           <p className="text-[#8888aa] max-w-2xl mx-auto">
             Browse products from verified sellers. Find singles, sealed products, and accessories.
@@ -184,7 +184,7 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
                 placeholder="Search products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 rounded-xl bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none transition-colors"
+                className="w-full pl-12 pr-4 py-3 rounded-xl bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none transition-colors"
               />
             </div>
 
@@ -193,7 +193,7 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="appearance-none pl-4 pr-10 py-3 rounded-xl bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none transition-colors cursor-pointer min-w-[180px]"
+                className="appearance-none pl-4 pr-10 py-3 rounded-xl bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none transition-colors cursor-pointer min-w-[180px]"
               >
                 <option value="all" className="bg-[#0B0B2B]">All Categories</option>
                 {categories.map((cat) => (
@@ -210,7 +210,7 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
               <select
                 value={selectedGame}
                 onChange={(e) => setSelectedGame(e.target.value)}
-                className="appearance-none pl-4 pr-10 py-3 rounded-xl bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none transition-colors cursor-pointer min-w-[180px]"
+                className="appearance-none pl-4 pr-10 py-3 rounded-xl bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none transition-colors cursor-pointer min-w-[180px]"
               >
                 <option value="all" className="bg-[#0B0B2B]">All Games</option>
                 {games.filter(g => g.game).map((g) => (
@@ -225,7 +225,7 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
             {/* Cart Link */}
             <Link
               href="/shop/cart"
-              className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#BFFF00] text-black font-semibold hover:brightness-110 transition-all"
+              className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#C84FFF] text-white font-semibold hover:brightness-110 transition-all"
             >
               <ShoppingCart className="w-5 h-5" />
               <span>Cart</span>
@@ -236,7 +236,7 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
           {(selectedCategory !== 'all' || selectedGame !== 'all' || searchQuery) && (
             <div className="flex flex-wrap gap-2 mt-4">
               {searchQuery && (
-                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[rgba(191,255,0,0.15)] text-[#BFFF00] text-sm">
+                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[rgba(200,79,255,0.15)] text-[#C84FFF] text-sm">
                   Search: "{searchQuery}"
                   <button onClick={() => setSearchQuery('')} className="ml-1 hover:text-white">×</button>
                 </span>
@@ -248,7 +248,7 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
                 </span>
               )}
               {selectedGame !== 'all' && (
-                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[rgba(191,255,0,0.15)] text-[#BFFF00] text-sm">
+                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[rgba(200,79,255,0.15)] text-[#C84FFF] text-sm">
                   {gameDisplayNames[selectedGame] || selectedGame}
                   <button onClick={() => setSelectedGame('all')} className="ml-1 hover:text-white">×</button>
                 </span>
@@ -292,7 +292,7 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
         <div>
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-              <Package className="w-6 h-6 text-[#BFFF00]" />
+              <Package className="w-6 h-6 text-[#C84FFF]" />
               {selectedCategory !== 'all' || selectedGame !== 'all' ? 'Filtered Results' : 'All Products'}
             </h2>
             <span className="text-[#8888aa]">
@@ -406,7 +406,7 @@ const ProductCard = memo(function ProductCard({
 
         {/* Product Name */}
         <Link href={`/shop/product/${product.id}`}>
-          <h3 className="font-semibold text-white mb-1 line-clamp-2 hover:text-[#BFFF00] transition-colors">
+          <h3 className="font-semibold text-white mb-1 line-clamp-2 hover:text-[#C84FFF] transition-colors">
             {product.name}
           </h3>
         </Link>
@@ -423,7 +423,7 @@ const ProductCard = memo(function ProductCard({
 
         {/* Price */}
         <div className="flex items-center gap-2 mb-4">
-          <span className="text-xl font-bold text-[#BFFF00]">€{product.price.toFixed(2)}</span>
+          <span className="text-xl font-bold text-[#C84FFF]">€{product.price.toFixed(2)}</span>
           {product.comparePrice && (
             <span className="text-sm text-gray-500 line-through">€{product.comparePrice.toFixed(2)}</span>
           )}
@@ -433,7 +433,7 @@ const ProductCard = memo(function ProductCard({
         <button
           onClick={() => onAddToCart(product.id)}
           disabled={isAdding}
-          className="w-full py-2.5 bg-[#BFFF00] text-black font-semibold rounded-xl hover:brightness-110 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+          className="w-full py-2.5 bg-[#C84FFF] text-white font-semibold rounded-xl hover:brightness-110 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
         >
           {isAdding ? (
             <>

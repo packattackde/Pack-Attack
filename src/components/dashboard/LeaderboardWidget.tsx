@@ -44,7 +44,7 @@ export default function LeaderboardWidget({
   return (
     <div className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl h-full p-4 sm:p-6 ${className}`}>
       <div className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-2 flex items-center gap-1.5">
-        <GiLaurelCrown className="w-3.5 h-3.5 text-[#BFFF00]" /> Leaderboard
+        <GiLaurelCrown className="w-3.5 h-3.5 text-[#C84FFF]" /> Leaderboard
       </div>
 
       <p className="text-[10px] text-[#7777a0] mb-3">{month}</p>
@@ -81,14 +81,14 @@ export default function LeaderboardWidget({
       {!userInTop10 && userRank > 0 && (
         <>
           <div className="my-2 border-t border-dashed border-[rgba(255,255,255,0.08)]" />
-          <div className="flex items-center gap-2 py-1.5 px-2 rounded-lg border border-[rgba(191,255,0,0.15)] bg-[rgba(191,255,0,0.03)]">
-            <span className="w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold flex-shrink-0 bg-[rgba(191,255,0,0.12)] text-[#BFFF00]">
+          <div className="flex items-center gap-2 py-1.5 px-2 rounded-lg border border-[rgba(200,79,255,0.15)] bg-[rgba(200,79,255,0.03)]">
+            <span className="w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold flex-shrink-0 bg-[rgba(200,79,255,0.12)] text-[#C84FFF]">
               {userRank || '—'}
             </span>
-            <span className="text-[12px] text-[#BFFF00] font-semibold flex-1">
+            <span className="text-[12px] text-[#C84FFF] font-semibold flex-1">
               You
             </span>
-            <span className="text-[10px] text-[#BFFF00] font-semibold flex-shrink-0">
+            <span className="text-[10px] text-[#C84FFF] font-semibold flex-shrink-0">
               {formatCoins(userPoints)} pts
             </span>
           </div>
@@ -97,7 +97,7 @@ export default function LeaderboardWidget({
 
       <Link
         href="/leaderboard"
-        className="text-[#BFFF00] text-[11px] font-semibold mt-3 inline-block hover:underline"
+        className="text-[#C84FFF] text-[11px] font-semibold mt-3 inline-block hover:underline"
       >
         Full leaderboard →
       </Link>

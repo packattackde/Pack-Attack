@@ -56,19 +56,19 @@ export default async function BattlesPage() {
     <div className="min-h-screen font-display">
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
-      <div className="fixed top-20 right-10 w-96 h-96 bg-[rgba(191,255,0,0.08)] rounded-full blur-3xl hidden lg:block" />
+      <div className="fixed top-20 right-10 w-96 h-96 bg-[rgba(200,79,255,0.08)] rounded-full blur-3xl hidden lg:block" />
 
       <div className="relative container py-14 sm:py-16">
         {/* Header */}
         <div className="mb-12 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <div>
             <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 rounded-full text-sm bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md">
-              <Swords className="w-4 h-4 text-[#BFFF00]" />
+              <Swords className="w-4 h-4 text-[#C84FFF]" />
               <span className="text-[#f0f0f5]">PvP Arena</span>
             </div>
             <h1 className="text-4xl md:text-5xl font-bold mb-3">
               <span className="text-white">Box </span>
-              <span className="text-[#BFFF00]">Battles</span>
+              <span className="text-[#C84FFF]">Battles</span>
             </h1>
             <p className="text-[#8888aa] text-lg">
               Tritt gegen andere Spieler an. Der höchste Kartenwert gewinnt!
@@ -77,7 +77,7 @@ export default async function BattlesPage() {
           {session ? (
             <Link
               href="/battles/create"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#BFFF00] hover:bg-[#d4ff4d] text-black font-semibold rounded-xl transition-all hover:scale-105 shimmer"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[#C84FFF] hover:bg-[#E879F9] text-white font-semibold rounded-xl transition-all hover:scale-105 shimmer"
             >
               <Plus className="w-5 h-5" />
               Battle erstellen
@@ -94,15 +94,15 @@ export default async function BattlesPage() {
 
         {battles.length === 0 ? (
           <div className="rounded-2xl p-12 text-center bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg">
-            <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-[rgba(191,255,0,0.08)]">
-              <Swords className="w-10 h-10 text-[#BFFF00]" />
+            <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-[rgba(200,79,255,0.08)]">
+              <Swords className="w-10 h-10 text-[#C84FFF]" />
             </div>
             <h2 className="text-2xl font-bold text-white mb-3">Keine Battles gefunden</h2>
             <p className="text-[#8888aa] mb-6">Sei der Erste und erstelle ein Battle!</p>
             {session ? (
               <Link
                 href="/battles/create"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#BFFF00] text-black font-semibold rounded-xl transition-all hover:scale-105"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl transition-all hover:scale-105"
               >
                 <Plus className="w-5 h-5" />
                 Battle erstellen
@@ -110,7 +110,7 @@ export default async function BattlesPage() {
             ) : (
               <Link
                 href="/login"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#BFFF00] text-black font-semibold rounded-xl transition-all hover:scale-105"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl transition-all hover:scale-105"
               >
                 Anmelden zum Erstellen
               </Link>
@@ -122,7 +122,7 @@ export default async function BattlesPage() {
             {activeBattles.length > 0 && (
               <section>
                 <div className="flex items-center gap-3 mb-8">
-                  <div className="w-2 h-2 rounded-full bg-green-500 pulse-live" />
+                  <div className="w-2 h-2 rounded-full bg-[#C84FFF] pulse-live" />
                   <h2 className="text-2xl font-bold text-white">Aktive Battles</h2>
                   <span className="text-sm text-[#8888aa]">({activeBattles.length})</span>
                 </div>
@@ -138,14 +138,14 @@ export default async function BattlesPage() {
                     const statusColor = battle.status === 'OPEN'
                       ? 'bg-yellow-500/20 text-yellow-400'
                       : battle.status === 'ACTIVE'
-                      ? 'bg-green-500/20 text-green-400'
+                      ? 'bg-[#C84FFF]/20 text-[#E879F9]'
                       : 'bg-blue-500/20 text-blue-400';
 
                     return (
                       <Link
                         key={battle.id}
                         href={`/battles/${battle.id}`}
-                        className="group bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-lg rounded-2xl p-7 hover:-translate-y-1.5 hover:border-[rgba(191,255,0,0.3)] hover:shadow-[0_8px_30px_rgba(191,255,0,0.1)] transition-all duration-300"
+                        className="group bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-lg rounded-2xl p-7 hover:-translate-y-1.5 hover:border-[rgba(200,79,255,0.3)] hover:shadow-[0_8px_30px_rgba(200,79,255,0.1)] transition-all duration-300"
                       >
                         <div className="flex items-center justify-between mb-5">
                           <span className="text-sm font-medium text-[#f0f0f5]">
@@ -155,14 +155,14 @@ export default async function BattlesPage() {
                             {battle.status === 'OPEN' ? (
                               <><Clock className="w-3 h-3" />{statusLabel}</>
                             ) : battle.status === 'ACTIVE' ? (
-                              <><div className="w-2 h-2 rounded-full bg-green-500 pulse-live" />{statusLabel}</>
+                              <><div className="w-2 h-2 rounded-full bg-[#C84FFF] pulse-live" />{statusLabel}</>
                             ) : (
                               <><Users className="w-3 h-3" />{statusLabel}</>
                             )}
                           </span>
                         </div>
 
-                        <h3 className="text-lg font-semibold text-white mb-1 group-hover:text-[#BFFF00] transition-colors line-clamp-1">
+                        <h3 className="text-lg font-semibold text-white mb-1 group-hover:text-[#C84FFF] transition-colors line-clamp-1">
                           {battle.box.name}
                         </h3>
                         <p className="text-sm text-[#8888aa] mb-4">
@@ -173,7 +173,7 @@ export default async function BattlesPage() {
                           {getVisibleParticipants(battle).slice(0, 4).map((p: any, i: number) => (
                             <div
                               key={p.id}
-                              className="w-9 h-9 rounded-full bg-gradient-to-br from-[#BFFF00] to-[#a0d600] flex items-center justify-center text-xs font-bold text-white"
+                              className="w-9 h-9 rounded-full bg-gradient-to-br from-[#C84FFF] to-[#9333EA] flex items-center justify-center text-xs font-bold text-white"
                               style={{ marginLeft: i > 0 ? '-8px' : '0' }}
                             >
                               {p.user.name?.[0] || '?'}
@@ -182,7 +182,7 @@ export default async function BattlesPage() {
                           <span className="text-sm text-[#8888aa] ml-2">
                             {battle.participants.length}/{battle.maxParticipants}
                             {battle.status === 'OPEN' && battle.participants.length < battle.maxParticipants && (
-                              <span className="ml-1 text-green-400">• Offen</span>
+                              <span className="ml-1 text-[#E879F9]">• Offen</span>
                             )}
                           </span>
                         </div>
@@ -192,7 +192,7 @@ export default async function BattlesPage() {
                             <Coins className="w-4 h-4" />
                             <span className="font-semibold">{entryFee.toFixed(0)}</span>
                           </div>
-                          <span className="text-[#BFFF00] text-sm font-medium group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+                          <span className="text-[#C84FFF] text-sm font-medium group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
                             Ansehen <ChevronRight className="w-4 h-4" />
                           </span>
                         </div>

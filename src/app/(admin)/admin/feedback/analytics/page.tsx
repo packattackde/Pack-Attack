@@ -71,10 +71,10 @@ const categoryConfig: Record<string, { icon: typeof Bug; label: string; color: s
 };
 
 const statusColors: Record<string, string> = {
-  OPEN: 'bg-[#BFFF00]',
+  OPEN: 'bg-[#C84FFF]',
   CLAIMED: 'bg-indigo-500',
   IN_PROGRESS: 'bg-amber-500',
-  RESOLVED: 'bg-green-500',
+  RESOLVED: 'bg-[#C84FFF]',
   CLOSED: 'bg-gray-500',
 };
 
@@ -88,7 +88,7 @@ const statusLabels: Record<string, string> = {
 
 const priorityColors: Record<string, string> = {
   LOW: 'bg-gray-500',
-  MEDIUM: 'bg-[#BFFF00]',
+  MEDIUM: 'bg-[#C84FFF]',
   HIGH: 'bg-amber-500',
   URGENT: 'bg-red-500',
 };
@@ -109,7 +109,7 @@ function formatDuration(seconds: number | null): string {
 
 function getRatingColor(avg: number | null): string {
   if (avg === null) return 'bg-gray-600';
-  if (avg >= 4) return 'bg-green-500';
+  if (avg >= 4) return 'bg-[#C84FFF]';
   if (avg >= 3) return 'bg-amber-500';
   if (avg >= 2) return 'bg-orange-500';
   return 'bg-red-500';
@@ -117,7 +117,7 @@ function getRatingColor(avg: number | null): string {
 
 function getRatingTextColor(avg: number | null): string {
   if (avg === null) return 'text-gray-500';
-  if (avg >= 4) return 'text-green-400';
+  if (avg >= 4) return 'text-[#E879F9]';
   if (avg >= 3) return 'text-amber-400';
   if (avg >= 2) return 'text-orange-400';
   return 'text-red-400';
@@ -140,7 +140,7 @@ export default function FeedbackAnalyticsPage() {
   if (loading) {
     return (
       <div className="min-h-screen font-display flex items-center justify-center">
-        <div className="w-6 h-6 border-2 border-white/20 border-t-teal-400 rounded-full animate-spin" />
+        <div className="w-6 h-6 border-2 border-white/20 border-t-[#C84FFF] rounded-full animate-spin" />
       </div>
     );
   }
@@ -175,7 +175,7 @@ export default function FeedbackAnalyticsPage() {
 
         <div className="mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#BFFF00] to-[#d4ff4d]">Feedback</span> Analytics
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C84FFF] to-[#E879F9]">Feedback</span> Analytics
           </h1>
           <p className="text-gray-500">Insights and trends across all feedback</p>
         </div>
@@ -184,7 +184,7 @@ export default function FeedbackAnalyticsPage() {
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
           <div className="rounded-xl border border-white/[0.06] bg-[#1e1e55] p-4">
             <div className="flex items-center gap-2 mb-2">
-              <MessageSquare className="w-4 h-4 text-[#BFFF00]" />
+              <MessageSquare className="w-4 h-4 text-[#C84FFF]" />
               <span className="text-xs text-gray-500 font-medium">Total</span>
             </div>
             <p className="text-2xl font-bold text-white">{summary.totalCount}</p>
@@ -207,14 +207,14 @@ export default function FeedbackAnalyticsPage() {
           </div>
           <div className="rounded-xl border border-white/[0.06] bg-[#1e1e55] p-4">
             <div className="flex items-center gap-2 mb-2">
-              <Clock className="w-4 h-4 text-teal-400" />
+              <Clock className="w-4 h-4 text-[#E879F9]" />
               <span className="text-xs text-gray-500 font-medium">Avg Response</span>
             </div>
             <p className="text-2xl font-bold text-white">{formatDuration(summary.avgResponseSeconds)}</p>
           </div>
           <div className="rounded-xl border border-white/[0.06] bg-[#1e1e55] p-4">
             <div className="flex items-center gap-2 mb-2">
-              <CheckCircle2 className="w-4 h-4 text-green-400" />
+              <CheckCircle2 className="w-4 h-4 text-[#E879F9]" />
               <span className="text-xs text-gray-500 font-medium">Avg Resolution</span>
             </div>
             <p className="text-2xl font-bold text-white">{formatDuration(summary.avgResolutionSeconds)}</p>
@@ -248,7 +248,7 @@ export default function FeedbackAnalyticsPage() {
           {/* Category Health Table */}
           <div className="rounded-xl border border-white/[0.06] bg-[#1e1e55] p-5">
             <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-              <BarChart3 className="w-4 h-4 text-teal-400" />
+              <BarChart3 className="w-4 h-4 text-[#E879F9]" />
               Category Health
             </h3>
             <div className="space-y-3">
@@ -291,7 +291,7 @@ export default function FeedbackAnalyticsPage() {
           {/* Status Distribution */}
           <div className="rounded-xl border border-white/[0.06] bg-[#1e1e55] p-5">
             <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-teal-400" />
+              <TrendingUp className="w-4 h-4 text-[#E879F9]" />
               Status Distribution
             </h3>
 
@@ -338,7 +338,7 @@ export default function FeedbackAnalyticsPage() {
           {/* Daily Volume */}
           <div className="rounded-xl border border-white/[0.06] bg-[#1e1e55] p-5">
             <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-teal-400" />
+              <TrendingUp className="w-4 h-4 text-[#E879F9]" />
               Daily Volume (30 days)
             </h3>
             {volumeOverTime.length > 0 ? (
@@ -353,7 +353,7 @@ export default function FeedbackAnalyticsPage() {
                       title={`${dateStr}: ${entry.count}`}
                     >
                       <div
-                        className="w-full rounded-t bg-teal-500/60 hover:bg-teal-400/80 transition-colors cursor-default"
+                        className="w-full rounded-t bg-[#C84FFF]/60 hover:bg-[#C84FFF]/80 transition-colors cursor-default"
                         style={{ height: `${Math.max(height, 2)}%` }}
                       />
                       <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 rounded bg-[#12123a] text-[10px] text-white whitespace-nowrap z-10 border border-white/10">
@@ -371,7 +371,7 @@ export default function FeedbackAnalyticsPage() {
           {/* Response Time by Category */}
           <div className="rounded-xl border border-white/[0.06] bg-[#1e1e55] p-5">
             <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-              <Clock className="w-4 h-4 text-teal-400" />
+              <Clock className="w-4 h-4 text-[#E879F9]" />
               Avg Response Time by Category
             </h3>
             {responseTimeByCategory.length > 0 ? (
@@ -397,7 +397,7 @@ export default function FeedbackAnalyticsPage() {
                         </div>
                         <div className="h-2 rounded-full bg-white/[0.04] overflow-hidden">
                           <div
-                            className={`h-full rounded-full transition-all ${isWarning ? 'bg-red-500' : 'bg-teal-500'}`}
+                            className={`h-full rounded-full transition-all ${isWarning ? 'bg-red-500' : 'bg-[#C84FFF]'}`}
                             style={{ width: `${width}%` }}
                           />
                         </div>
@@ -416,7 +416,7 @@ export default function FeedbackAnalyticsPage() {
           {/* Top Claimers */}
           <div className="rounded-xl border border-white/[0.06] bg-[#1e1e55] p-5">
             <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-              <Users className="w-4 h-4 text-teal-400" />
+              <Users className="w-4 h-4 text-[#E879F9]" />
               Top Claimers
             </h3>
             {topClaimers.length > 0 ? (
@@ -427,7 +427,7 @@ export default function FeedbackAnalyticsPage() {
                       <span className="text-xs font-bold text-gray-500 w-5">{i + 1}.</span>
                       <span className="text-sm text-[#f0f0f5]">{entry.user?.name || entry.user?.email || 'Unknown'}</span>
                     </div>
-                    <span className="text-sm font-semibold text-teal-400">{entry.count}</span>
+                    <span className="text-sm font-semibold text-[#E879F9]">{entry.count}</span>
                   </div>
                 ))}
               </div>
@@ -439,7 +439,7 @@ export default function FeedbackAnalyticsPage() {
           {/* Top Resolvers */}
           <div className="rounded-xl border border-white/[0.06] bg-[#1e1e55] p-5">
             <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-green-400" />
+              <CheckCircle2 className="w-4 h-4 text-[#E879F9]" />
               Most Active (Status Changes)
             </h3>
             {topResolvers.length > 0 ? (
@@ -450,7 +450,7 @@ export default function FeedbackAnalyticsPage() {
                       <span className="text-xs font-bold text-gray-500 w-5">{i + 1}.</span>
                       <span className="text-sm text-[#f0f0f5]">{entry.user?.name || entry.user?.email || 'Unknown'}</span>
                     </div>
-                    <span className="text-sm font-semibold text-green-400">{entry.count}</span>
+                    <span className="text-sm font-semibold text-[#E879F9]">{entry.count}</span>
                   </div>
                 ))}
               </div>

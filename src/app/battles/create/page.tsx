@@ -133,7 +133,7 @@ export default function CreateBattlePage() {
           <div className="flex flex-col gap-3">
             <Link
               href={`/battles/${createdBattleId}`}
-              className="px-6 py-3 bg-[#BFFF00] text-black font-semibold rounded-xl hover:bg-[#d4ff4d] transition-all"
+              className="px-6 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl hover:bg-[#E879F9] transition-all"
             >
               Zum Battle
             </Link>
@@ -163,7 +163,7 @@ export default function CreateBattlePage() {
           </Link>
           <h1 className="text-3xl md:text-4xl font-bold">
             <span className="text-white">Neues </span>
-            <span className="text-[#BFFF00]">Battle</span>
+            <span className="text-[#C84FFF]">Battle</span>
           </h1>
           <p className="text-[#8888aa] mt-2">Wähle Box, Spieleranzahl, Runden, Belohnungsmodus und Gewinnlogik</p>
         </div>
@@ -175,14 +175,14 @@ export default function CreateBattlePage() {
               <button
                 onClick={() => { if (s < step) setStep(s); }}
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
-                  s === step ? 'bg-[#BFFF00] text-black' :
-                  s < step ? 'bg-[#BFFF00]/30 text-[#BFFF00] cursor-pointer' :
+                  s === step ? 'bg-[#C84FFF] text-white' :
+                  s < step ? 'bg-[#C84FFF]/30 text-[#C84FFF] cursor-pointer' :
                   'bg-[#1a1a4a] text-[#8888aa]'
                 }`}
               >
                 {s < step ? <Check className="w-4 h-4" /> : s}
               </button>
-              {s < TOTAL_STEPS && <div className={`w-8 h-0.5 ${s < step ? 'bg-[#BFFF00]/30' : 'bg-[#1a1a4a]'}`} />}
+              {s < TOTAL_STEPS && <div className={`w-8 h-0.5 ${s < step ? 'bg-[#C84FFF]/30' : 'bg-[#1a1a4a]'}`} />}
             </div>
           ))}
         </div>
@@ -201,7 +201,7 @@ export default function CreateBattlePage() {
                     onClick={() => { setSelectedBox(box); setStep(2); }}
                     className={`relative text-left p-5 rounded-2xl border transition-all ${
                       selectedBox?.id === box.id
-                        ? 'border-[#BFFF00] bg-[#BFFF00]/10 shadow-[0_0_20px_rgba(191,255,0,0.15)]'
+                        ? 'border-[#C84FFF] bg-[#C84FFF]/10 shadow-[0_0_20px_rgba(200,79,255,0.15)]'
                         : 'border-[rgba(255,255,255,0.12)] bg-[#1a1a4a] hover:border-[rgba(255,255,255,0.25)]'
                     }`}
                   >
@@ -211,7 +211,7 @@ export default function CreateBattlePage() {
                       </div>
                     )}
                     {selectedBox?.id === box.id && (
-                      <div className="absolute top-3 right-3 w-6 h-6 bg-[#BFFF00] rounded-full flex items-center justify-center">
+                      <div className="absolute top-3 right-3 w-6 h-6 bg-[#C84FFF] rounded-full flex items-center justify-center">
                         <Check className="w-4 h-4 text-black" />
                       </div>
                     )}
@@ -242,11 +242,11 @@ export default function CreateBattlePage() {
                   onClick={() => setMaxParticipants(count)}
                   className={`p-6 rounded-2xl border text-center transition-all ${
                     maxParticipants === count
-                      ? 'border-[#BFFF00] bg-[#BFFF00]/10 shadow-[0_0_20px_rgba(191,255,0,0.15)]'
+                      ? 'border-[#C84FFF] bg-[#C84FFF]/10 shadow-[0_0_20px_rgba(200,79,255,0.15)]'
                       : 'border-[rgba(255,255,255,0.12)] bg-[#1a1a4a] hover:border-[rgba(255,255,255,0.25)]'
                   }`}
                 >
-                  <Users className={`w-8 h-8 mx-auto mb-3 ${maxParticipants === count ? 'text-[#BFFF00]' : 'text-[#8888aa]'}`} />
+                  <Users className={`w-8 h-8 mx-auto mb-3 ${maxParticipants === count ? 'text-[#C84FFF]' : 'text-[#8888aa]'}`} />
                   <div className="text-2xl font-bold text-white">{count}</div>
                   <div className="text-sm text-[#8888aa]">Spieler</div>
                 </button>
@@ -256,7 +256,7 @@ export default function CreateBattlePage() {
               <button onClick={() => setStep(1)} className="px-5 py-2.5 text-[#8888aa] hover:text-white transition-colors">
                 <ArrowLeft className="w-4 h-4 inline mr-1" /> Zurück
               </button>
-              <button onClick={() => setStep(3)} className="px-6 py-2.5 bg-[#BFFF00] text-black font-semibold rounded-xl hover:bg-[#d4ff4d] transition-all">
+              <button onClick={() => setStep(3)} className="px-6 py-2.5 bg-[#C84FFF] text-white font-semibold rounded-xl hover:bg-[#E879F9] transition-all">
                 Weiter <ArrowRight className="w-4 h-4 inline ml-1" />
               </button>
             </div>
@@ -274,11 +274,11 @@ export default function CreateBattlePage() {
                   onClick={() => setRounds(r)}
                   className={`p-6 rounded-2xl border text-center transition-all ${
                     rounds === r
-                      ? 'border-[#BFFF00] bg-[#BFFF00]/10 shadow-[0_0_20px_rgba(191,255,0,0.15)]'
+                      ? 'border-[#C84FFF] bg-[#C84FFF]/10 shadow-[0_0_20px_rgba(200,79,255,0.15)]'
                       : 'border-[rgba(255,255,255,0.12)] bg-[#1a1a4a] hover:border-[rgba(255,255,255,0.25)]'
                   }`}
                 >
-                  <RotateCcw className={`w-8 h-8 mx-auto mb-3 ${rounds === r ? 'text-[#BFFF00]' : 'text-[#8888aa]'}`} />
+                  <RotateCcw className={`w-8 h-8 mx-auto mb-3 ${rounds === r ? 'text-[#C84FFF]' : 'text-[#8888aa]'}`} />
                   <div className="text-2xl font-bold text-white">{r}</div>
                   <div className="text-sm text-[#8888aa]">Runden</div>
                 </button>
@@ -288,7 +288,7 @@ export default function CreateBattlePage() {
               <button onClick={() => setStep(2)} className="px-5 py-2.5 text-[#8888aa] hover:text-white transition-colors">
                 <ArrowLeft className="w-4 h-4 inline mr-1" /> Zurück
               </button>
-              <button onClick={() => setStep(4)} className="px-6 py-2.5 bg-[#BFFF00] text-black font-semibold rounded-xl hover:bg-[#d4ff4d] transition-all">
+              <button onClick={() => setStep(4)} className="px-6 py-2.5 bg-[#C84FFF] text-white font-semibold rounded-xl hover:bg-[#E879F9] transition-all">
                 Weiter <ArrowRight className="w-4 h-4 inline ml-1" />
               </button>
             </div>
@@ -309,7 +309,7 @@ export default function CreateBattlePage() {
                   onClick={() => setBattleMode(mode.value)}
                   className={`w-full text-left p-5 rounded-2xl border transition-all ${
                     battleMode === mode.value
-                      ? 'border-[#BFFF00] bg-[#BFFF00]/10 shadow-[0_0_20px_rgba(191,255,0,0.15)]'
+                      ? 'border-[#C84FFF] bg-[#C84FFF]/10 shadow-[0_0_20px_rgba(200,79,255,0.15)]'
                       : 'border-[rgba(255,255,255,0.12)] bg-[#1a1a4a] hover:border-[rgba(255,255,255,0.25)]'
                   }`}
                 >
@@ -320,7 +320,7 @@ export default function CreateBattlePage() {
                       <div className="text-sm text-[#8888aa]">{mode.description}</div>
                     </div>
                     {battleMode === mode.value && (
-                      <div className="ml-auto w-6 h-6 bg-[#BFFF00] rounded-full flex items-center justify-center">
+                      <div className="ml-auto w-6 h-6 bg-[#C84FFF] rounded-full flex items-center justify-center">
                         <Check className="w-4 h-4 text-black" />
                       </div>
                     )}
@@ -332,7 +332,7 @@ export default function CreateBattlePage() {
               <button onClick={() => setStep(3)} className="px-5 py-2.5 text-[#8888aa] hover:text-white transition-colors">
                 <ArrowLeft className="w-4 h-4 inline mr-1" /> Zurück
               </button>
-              <button onClick={() => setStep(5)} className="px-6 py-2.5 bg-[#BFFF00] text-black font-semibold rounded-xl hover:bg-[#d4ff4d] transition-all">
+              <button onClick={() => setStep(5)} className="px-6 py-2.5 bg-[#C84FFF] text-white font-semibold rounded-xl hover:bg-[#E879F9] transition-all">
                 Weiter <ArrowRight className="w-4 h-4 inline ml-1" />
               </button>
             </div>
@@ -353,7 +353,7 @@ export default function CreateBattlePage() {
                   onClick={() => setWinCondition(option.value)}
                   className={`w-full text-left p-5 rounded-2xl border transition-all ${
                     winCondition === option.value
-                      ? 'border-[#BFFF00] bg-[#BFFF00]/10 shadow-[0_0_20px_rgba(191,255,0,0.15)]'
+                      ? 'border-[#C84FFF] bg-[#C84FFF]/10 shadow-[0_0_20px_rgba(200,79,255,0.15)]'
                       : 'border-[rgba(255,255,255,0.12)] bg-[#1a1a4a] hover:border-[rgba(255,255,255,0.25)]'
                   }`}
                 >
@@ -364,7 +364,7 @@ export default function CreateBattlePage() {
                       <div className="text-sm text-[#8888aa]">{option.description}</div>
                     </div>
                     {winCondition === option.value && (
-                      <div className="ml-auto shrink-0 w-6 h-6 bg-[#BFFF00] rounded-full flex items-center justify-center">
+                      <div className="ml-auto shrink-0 w-6 h-6 bg-[#C84FFF] rounded-full flex items-center justify-center">
                         <Check className="w-4 h-4 text-black" />
                       </div>
                     )}
@@ -376,7 +376,7 @@ export default function CreateBattlePage() {
               <button onClick={() => setStep(4)} className="px-5 py-2.5 text-[#8888aa] hover:text-white transition-colors">
                 <ArrowLeft className="w-4 h-4 inline mr-1" /> Zurück
               </button>
-              <button onClick={() => setStep(6)} className="px-6 py-2.5 bg-[#BFFF00] text-black font-semibold rounded-xl hover:bg-[#d4ff4d] transition-all">
+              <button onClick={() => setStep(6)} className="px-6 py-2.5 bg-[#C84FFF] text-white font-semibold rounded-xl hover:bg-[#E879F9] transition-all">
                 Weiter <ArrowRight className="w-4 h-4 inline ml-1" />
               </button>
             </div>
@@ -432,7 +432,7 @@ export default function CreateBattlePage() {
                     type="checkbox"
                     checked={confirmed}
                     onChange={(e) => setConfirmed(e.target.checked)}
-                    className="mt-1 w-4 h-4 rounded accent-[#BFFF00]"
+                    className="mt-1 w-4 h-4 rounded accent-[#C84FFF]"
                   />
                   <span className="text-sm text-[#f0f0f5]">
                     Ich bestätige die Einstellungen und die Teilnahmegebühr von {entryFee.toFixed(0)} Coins.
@@ -447,7 +447,7 @@ export default function CreateBattlePage() {
               <button
                 onClick={handleSubmit}
                 disabled={loading || !confirmed}
-                className="px-8 py-3 bg-[#BFFF00] text-black font-semibold rounded-xl hover:bg-[#d4ff4d] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="px-8 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl hover:bg-[#E879F9] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
                 {loading ? (
                   <><div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> Erstelle...</>

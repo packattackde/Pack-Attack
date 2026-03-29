@@ -87,7 +87,7 @@ export function DealerDetailsClient({ shopId, initialTaxId }: Props) {
             {saving ? 'Speichern...' : 'Speichern'}
           </button>
           {saved && (
-            <span className="inline-flex items-center gap-1.5 text-sm text-green-400">
+            <span className="inline-flex items-center gap-1.5 text-sm text-[#E879F9]">
               <CheckCircle className="w-4 h-4" />
               Gespeichert
             </span>

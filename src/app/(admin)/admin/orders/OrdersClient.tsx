@@ -53,9 +53,9 @@ type Order = {
 
 const statusConfig: Record<string, { color: string; icon: React.ElementType; label: string }> = {
   PENDING: { color: 'text-yellow-400 bg-yellow-400/10', icon: Clock, label: 'Pending' },
-  PROCESSING: { color: 'text-[#BFFF00] bg-[rgba(191,255,0,0.1)]', icon: Package, label: 'Processing' },
+  PROCESSING: { color: 'text-[#C84FFF] bg-[rgba(200,79,255,0.1)]', icon: Package, label: 'Processing' },
   SHIPPED: { color: 'text-purple-400 bg-purple-400/10', icon: Truck, label: 'Shipped' },
-  DELIVERED: { color: 'text-green-400 bg-green-400/10', icon: CheckCircle, label: 'Delivered' },
+  DELIVERED: { color: 'text-[#E879F9] bg-[#C84FFF]/10', icon: CheckCircle, label: 'Delivered' },
   CANCELLED: { color: 'text-red-400 bg-red-400/10', icon: XCircle, label: 'Cancelled' },
 };
 
@@ -213,7 +213,7 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
           <p className="text-2xl font-bold text-white">{orderStats.pending}</p>
         </div>
         <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
-          <p className="text-sm text-[#BFFF00]">Processing</p>
+          <p className="text-sm text-[#C84FFF]">Processing</p>
           <p className="text-2xl font-bold text-white">{orderStats.processing}</p>
         </div>
         <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
@@ -221,7 +221,7 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
           <p className="text-2xl font-bold text-white">{orderStats.shipped}</p>
         </div>
         <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
-          <p className="text-sm text-green-400">Delivered</p>
+          <p className="text-sm text-[#E879F9]">Delivered</p>
           <p className="text-2xl font-bold text-white">{orderStats.delivered}</p>
         </div>
       </div>
@@ -234,7 +234,7 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
             onClick={() => setFilterStatus(status)}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               filterStatus === status
-                ? 'bg-[#BFFF00] text-black'
+                ? 'bg-[#C84FFF] text-white'
                 : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white'
             }`}
           >
@@ -311,7 +311,7 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
                       {/* Customer Info */}
                       <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                         <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
-                          <User className="w-4 h-4 text-[#BFFF00]" />
+                          <User className="w-4 h-4 text-[#C84FFF]" />
                           Customer
                         </h4>
                         <div className="space-y-2 text-sm">
@@ -329,7 +329,7 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
                       {/* Shipping Info */}
                       <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                         <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
-                          <MapPin className="w-4 h-4 text-[#BFFF00]" />
+                          <MapPin className="w-4 h-4 text-[#C84FFF]" />
                           Shipping Address
                         </h4>
                         <div className="space-y-1 text-sm text-[#8888aa]">
@@ -343,7 +343,7 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
                           </p>
                           {/* Shipping Payment */}
                           <div className={`flex items-center gap-2 mt-3 pt-3 border-t border-[rgba(255,255,255,0.06)] ${
-                            order.shippingMethod === 'COINS' ? 'text-amber-400' : 'text-green-400'
+                            order.shippingMethod === 'COINS' ? 'text-amber-400' : 'text-[#E879F9]'
                           }`}>
                             {order.shippingMethod === 'COINS' ? (
                               <>
@@ -398,7 +398,7 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
                     {/* Tracking Information */}
                     <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                       <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
-                        <Link2 className="w-4 h-4 text-green-400" />
+                        <Link2 className="w-4 h-4 text-[#E879F9]" />
                         Tracking Information
                       </h4>
                       <div className="grid sm:grid-cols-2 gap-3">
@@ -415,7 +415,7 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
                                 url: prev[order.id]?.url ?? order.trackingUrl ?? '' 
                               }
                             }))}
-                            className="bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white rounded-lg px-3 py-2 text-sm w-full focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                            className="bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white rounded-lg px-3 py-2 text-sm w-full focus:ring-2 focus:ring-[#C84FFF] focus:border-transparent"
                           />
                         </div>
                         <div>
@@ -431,14 +431,14 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
                                 url: e.target.value 
                               }
                             }))}
-                            className="bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white rounded-lg px-3 py-2 text-sm w-full focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                            className="bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white rounded-lg px-3 py-2 text-sm w-full focus:ring-2 focus:ring-[#C84FFF] focus:border-transparent"
                           />
                         </div>
                       </div>
                       <button
                         onClick={() => handleTrackingUpdate(order.id)}
                         disabled={updatingOrder === order.id}
-                        className="mt-3 px-4 py-2 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white rounded-lg text-sm font-medium flex items-center gap-2 transition-colors"
+                        className="mt-3 px-4 py-2 bg-[#9333EA] hover:bg-[#7c3aed] disabled:opacity-50 text-white rounded-lg text-sm font-medium flex items-center gap-2 transition-colors"
                       >
                         <Save className="w-4 h-4" />
                         Save Tracking Info
@@ -448,7 +448,7 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
                           href={order.trackingUrl} 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="mt-2 text-sm text-green-400 hover:text-green-300 inline-flex items-center gap-1"
+                          className="mt-2 text-sm text-[#E879F9] hover:text-[#f0abfc] inline-flex items-center gap-1"
                         >
                           <Link2 className="w-3 h-3" />
                           View Tracking

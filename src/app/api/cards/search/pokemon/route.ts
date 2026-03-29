@@ -38,7 +38,7 @@ export async function GET(request: Request) {
     const response = await fetch(apiUrl, {
       headers: {
         'Accept': 'application/json',
-        'User-Agent': 'Pack-Attack/1.0',
+        'User-Agent': 'PullForge/1.0',
       },
       cache: 'no-store',
       signal: controller.signal,

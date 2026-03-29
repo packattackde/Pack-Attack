@@ -232,8 +232,8 @@ export default function LiveTicker({ className }: LiveTickerProps) {
         }
         @keyframes ticker-new-item {
           0% { opacity: 0; transform: scale(0.7) translateX(-20px); filter: brightness(2.5); }
-          20% { opacity: 1; transform: scale(1.1) translateX(0); filter: brightness(2); box-shadow: 0 0 25px rgba(191,255,0,0.5); }
-          50% { transform: scale(1.02); filter: brightness(1.3); box-shadow: 0 0 15px rgba(191,255,0,0.3); }
+          20% { opacity: 1; transform: scale(1.1) translateX(0); filter: brightness(2); box-shadow: 0 0 25px rgba(200,79,255,0.5); }
+          50% { transform: scale(1.02); filter: brightness(1.3); box-shadow: 0 0 15px rgba(200,79,255,0.3); }
           100% { transform: scale(1); filter: brightness(1); box-shadow: none; }
         }
         .ticker-item-new {
@@ -375,7 +375,7 @@ export default function LiveTicker({ className }: LiveTickerProps) {
                     </div>
 
                     {/* Open CTA */}
-                    <span className="text-[8px] text-[#BFFF00] font-semibold shrink-0 ml-1">
+                    <span className="text-[8px] text-[#C84FFF] font-semibold shrink-0 ml-1">
                       Open →
                     </span>
                   </Link>

@@ -210,7 +210,7 @@ export function UpsaleItemsClient({ initialItems }: { initialItems: UpsellItem[]
                     value={formData.name}
                     onChange={e => setFormData({ ...formData, name: e.target.value })}
                     placeholder="e.g. Acrylic Display Case"
-                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-[rgba(191,255,0,0.3)] focus:ring-1 focus:ring-[rgba(191,255,0,0.2)] focus:outline-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.2)] focus:outline-none"
                   />
                 </div>
                 <div>
@@ -220,7 +220,7 @@ export function UpsaleItemsClient({ initialItems }: { initialItems: UpsellItem[]
                     onChange={e => setFormData({ ...formData, description: e.target.value })}
                     placeholder="Short description..."
                     rows={2}
-                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-[rgba(191,255,0,0.3)] focus:ring-1 focus:ring-[rgba(191,255,0,0.2)] focus:outline-none resize-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.2)] focus:outline-none resize-none"
                   />
                 </div>
                 <div>
@@ -230,7 +230,7 @@ export function UpsaleItemsClient({ initialItems }: { initialItems: UpsellItem[]
                     value={formData.imageUrl}
                     onChange={e => setFormData({ ...formData, imageUrl: e.target.value })}
                     placeholder="https://..."
-                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-[rgba(191,255,0,0.3)] focus:ring-1 focus:ring-[rgba(191,255,0,0.2)] focus:outline-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.2)] focus:outline-none"
                   />
                 </div>
                 <div className="grid grid-cols-3 gap-4">
@@ -243,7 +243,7 @@ export function UpsaleItemsClient({ initialItems }: { initialItems: UpsellItem[]
                       value={formData.price}
                       onChange={e => setFormData({ ...formData, price: e.target.value })}
                       placeholder="24.99"
-                      className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-[rgba(191,255,0,0.3)] focus:ring-1 focus:ring-[rgba(191,255,0,0.2)] focus:outline-none"
+                      className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.2)] focus:outline-none"
                     />
                   </div>
                   <div>
@@ -255,7 +255,7 @@ export function UpsaleItemsClient({ initialItems }: { initialItems: UpsellItem[]
                       value={formData.coinPrice}
                       onChange={e => setFormData({ ...formData, coinPrice: e.target.value })}
                       placeholder="50"
-                      className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-[rgba(191,255,0,0.3)] focus:ring-1 focus:ring-[rgba(191,255,0,0.2)] focus:outline-none"
+                      className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.2)] focus:outline-none"
                     />
                   </div>
                   <div>
@@ -264,7 +264,7 @@ export function UpsaleItemsClient({ initialItems }: { initialItems: UpsellItem[]
                       type="number"
                       value={formData.sortOrder}
                       onChange={e => setFormData({ ...formData, sortOrder: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-[rgba(191,255,0,0.3)] focus:ring-1 focus:ring-[rgba(191,255,0,0.2)] focus:outline-none"
+                      className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.2)] focus:outline-none"
                     />
                   </div>
                 </div>
@@ -275,7 +275,7 @@ export function UpsaleItemsClient({ initialItems }: { initialItems: UpsellItem[]
                     value={formData.externalUrl}
                     onChange={e => setFormData({ ...formData, externalUrl: e.target.value })}
                     placeholder="https://shop.example.com/product"
-                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-[rgba(191,255,0,0.3)] focus:ring-1 focus:ring-[rgba(191,255,0,0.2)] focus:outline-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.2)] focus:outline-none"
                   />
                 </div>
                 <label className="flex items-center gap-3 cursor-pointer">
@@ -283,7 +283,7 @@ export function UpsaleItemsClient({ initialItems }: { initialItems: UpsellItem[]
                     type="checkbox"
                     checked={formData.isActive}
                     onChange={e => setFormData({ ...formData, isActive: e.target.checked })}
-                    className="w-5 h-5 rounded border-gray-600 bg-[#12123a] text-amber-500 focus:ring-[rgba(191,255,0,0.2)]"
+                    className="w-5 h-5 rounded border-gray-600 bg-[#12123a] text-amber-500 focus:ring-[rgba(200,79,255,0.2)]"
                   />
                   <span className="text-[#f0f0f5]">Active (visible in cart)</span>
                 </label>
@@ -331,7 +331,7 @@ export function UpsaleItemsClient({ initialItems }: { initialItems: UpsellItem[]
                   <div className="absolute top-3 right-3 flex gap-2">
                     <button
                       onClick={() => toggleActive(item)}
-                      className={`p-2 rounded-lg ${item.isActive ? 'bg-green-500/20 text-green-400' : 'bg-gray-700/50 text-[#8888aa]'} hover:scale-110 transition-all`}
+                      className={`p-2 rounded-lg ${item.isActive ? 'bg-[#C84FFF]/20 text-[#E879F9]' : 'bg-gray-700/50 text-[#8888aa]'} hover:scale-110 transition-all`}
                       title={item.isActive ? 'Active - click to deactivate' : 'Inactive - click to activate'}
                     >
                       {item.isActive ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
@@ -352,7 +352,7 @@ export function UpsaleItemsClient({ initialItems }: { initialItems: UpsellItem[]
                   <h3 className="font-bold text-white mb-1 truncate">{item.name}</h3>
                   {item.description && <p className="text-[#8888aa] text-sm mb-3 line-clamp-2">{item.description}</p>}
                   {item.externalUrl && (
-                    <a href={item.externalUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-[#BFFF00] hover:text-[#BFFF00] mb-3">
+                    <a href={item.externalUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-[#C84FFF] hover:text-[#C84FFF] mb-3">
                       <ExternalLink className="w-3 h-3" />
                       External Link
                     </a>

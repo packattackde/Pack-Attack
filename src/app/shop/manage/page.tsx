@@ -122,7 +122,7 @@ export default function ShopManagePage() {
     return (
       <div className="min-h-screen flex items-center justify-center font-display">
         <div className="text-white flex items-center gap-3">
-          <div className="w-6 h-6 border-2 border-[rgba(191,255,0,0.3)] border-t-transparent rounded-full animate-spin" />
+          <div className="w-6 h-6 border-2 border-[rgba(200,79,255,0.3)] border-t-transparent rounded-full animate-spin" />
           Loading...
         </div>
       </div>
@@ -139,7 +139,7 @@ export default function ShopManagePage() {
         <div className="relative container py-12">
           <div className="max-w-xl mx-auto">
             <div className="text-center mb-8">
-              <div className="w-20 h-20 rounded-full bg-gradient-to-r from-[#BFFF00] to-[#BFFF00] flex items-center justify-center mx-auto mb-6">
+              <div className="w-20 h-20 rounded-full bg-gradient-to-r from-[#C84FFF] to-[#C84FFF] flex items-center justify-center mx-auto mb-6">
                 <Store className="w-10 h-10 text-white" />
               </div>
               <h1 className="text-3xl font-bold text-white mb-3">Create Your Shop</h1>
@@ -154,7 +154,7 @@ export default function ShopManagePage() {
                   required
                   value={shopName}
                   onChange={(e) => setShopName(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
+                  className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                   placeholder="My Awesome Card Shop"
                 />
               </div>
@@ -165,7 +165,7 @@ export default function ShopManagePage() {
                   value={shopDescription}
                   onChange={(e) => setShopDescription(e.target.value)}
                   rows={4}
-                  className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none resize-none"
+                  className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none resize-none"
                   placeholder="Tell customers about your shop..."
                 />
               </div>
@@ -173,7 +173,7 @@ export default function ShopManagePage() {
               <button
                 type="submit"
                 disabled={creating}
-                className="w-full py-4 bg-[#BFFF00] text-black font-semibold rounded-xl hover:brightness-110 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full py-4 bg-[#C84FFF] text-white font-semibold rounded-xl hover:brightness-110 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {creating ? (
                   <>
@@ -205,10 +205,10 @@ export default function ShopManagePage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <Store className="w-8 h-8 text-[#BFFF00]" />
+              <Store className="w-8 h-8 text-[#C84FFF]" />
               <h1 className="text-3xl font-bold text-white">{shop?.name}</h1>
               {shop?.isActive ? (
-                <span className="px-2 py-1 rounded-lg bg-green-500/20 text-green-400 text-xs font-medium">Active</span>
+                <span className="px-2 py-1 rounded-lg bg-[#C84FFF]/20 text-[#E879F9] text-xs font-medium">Active</span>
               ) : (
                 <span className="px-2 py-1 rounded-lg bg-red-500/20 text-red-400 text-xs font-medium">Inactive</span>
               )}
@@ -217,7 +217,7 @@ export default function ShopManagePage() {
           </div>
           <Link
             href="/shop/manage/products/new"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-[#BFFF00] text-black font-semibold rounded-xl hover:brightness-110 transition-all"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl hover:brightness-110 transition-all"
           >
             <Plus className="w-5 h-5" />
             Add Product
@@ -228,8 +228,8 @@ export default function ShopManagePage() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl p-6">
             <div className="flex items-center gap-4">
-              <div className="p-3 rounded-xl bg-[rgba(191,255,0,0.15)]">
-                <Package className="w-6 h-6 text-[#BFFF00]" />
+              <div className="p-3 rounded-xl bg-[rgba(200,79,255,0.15)]">
+                <Package className="w-6 h-6 text-[#C84FFF]" />
               </div>
               <div>
                 <p className="text-[#8888aa] text-sm">Products</p>
@@ -240,8 +240,8 @@ export default function ShopManagePage() {
 
           <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl p-6">
             <div className="flex items-center gap-4">
-              <div className="p-3 rounded-xl bg-[rgba(191,255,0,0.1)]">
-                <ShoppingBag className="w-6 h-6 text-[#BFFF00]" />
+              <div className="p-3 rounded-xl bg-[rgba(200,79,255,0.1)]">
+                <ShoppingBag className="w-6 h-6 text-[#C84FFF]" />
               </div>
               <div>
                 <p className="text-[#8888aa] text-sm">Orders</p>
@@ -252,8 +252,8 @@ export default function ShopManagePage() {
 
           <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl p-6">
             <div className="flex items-center gap-4">
-              <div className="p-3 rounded-xl bg-[rgba(191,255,0,0.1)]">
-                <BarChart3 className="w-6 h-6 text-[#BFFF00]" />
+              <div className="p-3 rounded-xl bg-[rgba(200,79,255,0.1)]">
+                <BarChart3 className="w-6 h-6 text-[#C84FFF]" />
               </div>
               <div>
                 <p className="text-[#8888aa] text-sm">Active Products</p>
@@ -283,8 +283,8 @@ export default function ShopManagePage() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <Link href="/shop/manage/products" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:bg-white/5 transition-colors group">
             <div className="flex items-center gap-4 mb-4">
-              <div className="p-3 rounded-xl bg-[rgba(191,255,0,0.15)] group-hover:bg-[rgba(191,255,0,0.2)] transition-colors">
-                <Package className="w-6 h-6 text-[#BFFF00]" />
+              <div className="p-3 rounded-xl bg-[rgba(200,79,255,0.15)] group-hover:bg-[rgba(200,79,255,0.2)] transition-colors">
+                <Package className="w-6 h-6 text-[#C84FFF]" />
               </div>
               <h2 className="text-xl font-bold text-white">Products</h2>
             </div>
@@ -293,8 +293,8 @@ export default function ShopManagePage() {
 
           <Link href="/shop/manage/orders" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:bg-white/5 transition-colors group">
             <div className="flex items-center gap-4 mb-4">
-              <div className="p-3 rounded-xl bg-[rgba(191,255,0,0.1)] group-hover:bg-[rgba(191,255,0,0.15)] transition-colors">
-                <ShoppingBag className="w-6 h-6 text-[#BFFF00]" />
+              <div className="p-3 rounded-xl bg-[rgba(200,79,255,0.1)] group-hover:bg-[rgba(200,79,255,0.15)] transition-colors">
+                <ShoppingBag className="w-6 h-6 text-[#C84FFF]" />
               </div>
               <h2 className="text-xl font-bold text-white">Orders</h2>
             </div>
@@ -303,8 +303,8 @@ export default function ShopManagePage() {
 
           <Link href="/shop/manage/settings" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:bg-white/5 transition-colors group">
             <div className="flex items-center gap-4 mb-4">
-              <div className="p-3 rounded-xl bg-[rgba(191,255,0,0.1)] group-hover:bg-[rgba(191,255,0,0.2)] transition-colors">
-                <Settings className="w-6 h-6 text-[#BFFF00]" />
+              <div className="p-3 rounded-xl bg-[rgba(200,79,255,0.1)] group-hover:bg-[rgba(200,79,255,0.2)] transition-colors">
+                <Settings className="w-6 h-6 text-[#C84FFF]" />
               </div>
               <h2 className="text-xl font-bold text-white">Settings</h2>
             </div>

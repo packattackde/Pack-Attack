@@ -480,7 +480,7 @@ export default function ChatManagementClient() {
                               Deleted
                             </span>
                           ) : (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-green-500/10 text-[10px] font-medium text-green-400">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-[#C84FFF]/10 text-[10px] font-medium text-[#E879F9]">
                               Active
                             </span>
                           )}

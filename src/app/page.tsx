@@ -17,7 +17,7 @@ import AchievementsWidget from '@/components/dashboard/AchievementsWidget';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Dashboard | Pack Attack',
+  title: 'Dashboard | PullForge',
   description: 'Your personalized TCG pack opening dashboard',
 };
 
@@ -84,7 +84,7 @@ export default async function DashboardPage() {
     prisma.battleParticipant.count({ where: { user: { email: userEmail } } }),
     // Battles won
     prisma.battle.count({
-      where: { winner: { email: userEmail }, status: 'FINISHED' },
+      where: { winner: { email: userEmail }, status: { in: ['FINISHED_WIN', 'FINISHED_DRAW'] } },
     }),
     // Best pull today
     prisma.pull.findFirst({

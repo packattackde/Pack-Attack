@@ -73,7 +73,7 @@ export default function ScrollableRow({ children, className }: ScrollableRowProp
             bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg
             opacity-0 group-hover:opacity-100
             transition-opacity duration-200
-            hover:border-[rgba(191,255,0,0.3)]
+            hover:border-[rgba(200,79,255,0.3)]
           "
         >
           <ChevronLeft className="w-5 h-5 text-white" />
@@ -103,7 +103,7 @@ export default function ScrollableRow({ children, className }: ScrollableRowProp
             bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg
             opacity-0 group-hover:opacity-100
             transition-opacity duration-200
-            hover:border-[rgba(191,255,0,0.3)]
+            hover:border-[rgba(200,79,255,0.3)]
           "
         >
           <ChevronRight className="w-5 h-5 text-white" />

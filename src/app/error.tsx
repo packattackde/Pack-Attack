@@ -42,7 +42,7 @@ export default function Error({
         <div className="flex gap-3">
           <button
             onClick={() => reset()}
-            className="flex-1 px-4 py-3 bg-gradient-to-r from-[#BFFF00] to-[#d4ff4d] text-black font-semibold rounded-xl transition-all hover:scale-105 flex items-center justify-center gap-2"
+            className="flex-1 px-4 py-3 bg-gradient-to-r from-[#C84FFF] to-[#E879F9] text-white font-semibold rounded-xl transition-all hover:scale-105 flex items-center justify-center gap-2"
           >
             <RefreshCw className="w-4 h-4" />
             Try Again

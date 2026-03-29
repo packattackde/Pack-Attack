@@ -194,7 +194,7 @@ export default function EditProductPage() {
     return (
       <div className="min-h-screen flex items-center justify-center font-display">
         <div className="text-white flex items-center gap-3">
-          <Loader2 className="w-6 h-6 animate-spin text-[#BFFF00]" />
+          <Loader2 className="w-6 h-6 animate-spin text-[#C84FFF]" />
           Loading product...
         </div>
       </div>
@@ -210,7 +210,7 @@ export default function EditProductPage() {
           <p className="text-[#8888aa] mb-6">This product doesn&apos;t exist or you don&apos;t have access.</p>
           <Link
             href="/shop/manage/products"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-[#BFFF00] text-white font-semibold rounded-xl"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Products
@@ -233,7 +233,7 @@ export default function EditProductPage() {
 
         <div className="max-w-2xl mx-auto">
           <div className="flex items-center gap-3 mb-8">
-            <Package className="w-8 h-8 text-[#BFFF00]" />
+            <Package className="w-8 h-8 text-[#C84FFF]" />
             <h1 className="text-3xl font-bold text-white">Edit Product</h1>
           </div>
 
@@ -249,7 +249,7 @@ export default function EditProductPage() {
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
+                  className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                   placeholder="e.g., Charizard VMAX - Rainbow Rare"
                 />
               </div>
@@ -260,7 +260,7 @@ export default function EditProductPage() {
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={4}
-                  className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none resize-none"
+                  className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none resize-none"
                   placeholder="Describe your product..."
                 />
               </div>
@@ -272,7 +272,7 @@ export default function EditProductPage() {
                     required
                     value={formData.category}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                   >
                     {categories.map((cat) => (
                       <option key={cat.value} value={cat.value} className="bg-[#0B0B2B]">
@@ -287,7 +287,7 @@ export default function EditProductPage() {
                   <select
                     value={formData.game}
                     onChange={(e) => setFormData({ ...formData, game: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                   >
                     {games.map((game) => (
                       <option key={game.value} value={game.value} className="bg-[#0B0B2B]">
@@ -303,7 +303,7 @@ export default function EditProductPage() {
                 <select
                   value={formData.condition}
                   onChange={(e) => setFormData({ ...formData, condition: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
+                  className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                 >
                   {conditions.map((cond) => (
                     <option key={cond.value} value={cond.value} className="bg-[#0B0B2B]">
@@ -328,7 +328,7 @@ export default function EditProductPage() {
                     step="0.01"
                     value={formData.price}
                     onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                     placeholder="0.00"
                   />
                 </div>
@@ -341,7 +341,7 @@ export default function EditProductPage() {
                     step="0.01"
                     value={formData.comparePrice}
                     onChange={(e) => setFormData({ ...formData, comparePrice: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                     placeholder="Original price for discount display"
                   />
                 </div>
@@ -356,7 +356,7 @@ export default function EditProductPage() {
                     min="0"
                     value={formData.stock}
                     onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                     placeholder="0"
                   />
                 </div>
@@ -367,7 +367,7 @@ export default function EditProductPage() {
                     type="text"
                     value={formData.sku}
                     onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                     placeholder="Product SKU"
                   />
                 </div>
@@ -380,7 +380,7 @@ export default function EditProductPage() {
                     id="featured"
                     checked={formData.featured}
                     onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                    className="w-5 h-5 rounded bg-[#12123a] border-[rgba(255,255,255,0.06)] text-[#BFFF00] focus:ring-[rgba(191,255,0,0.3)]"
+                    className="w-5 h-5 rounded bg-[#12123a] border-[rgba(255,255,255,0.06)] text-[#C84FFF] focus:ring-[rgba(200,79,255,0.3)]"
                   />
                   <label htmlFor="featured" className="text-[#f0f0f5]">Featured</label>
                 </div>
@@ -391,7 +391,7 @@ export default function EditProductPage() {
                     id="isActive"
                     checked={formData.isActive}
                     onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                    className="w-5 h-5 rounded bg-[#12123a] border-[rgba(255,255,255,0.06)] text-[#BFFF00] focus:ring-[rgba(191,255,0,0.3)]"
+                    className="w-5 h-5 rounded bg-[#12123a] border-[rgba(255,255,255,0.06)] text-[#C84FFF] focus:ring-[rgba(200,79,255,0.3)]"
                   />
                   <label htmlFor="isActive" className="text-[#f0f0f5]">Active (visible in shop)</label>
                 </div>
@@ -408,13 +408,13 @@ export default function EditProductPage() {
                   value={imageUrl}
                   onChange={(e) => setImageUrl(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addImage(); } }}
-                  className="flex-1 px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
+                  className="flex-1 px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                   placeholder="Enter image URL"
                 />
                 <button
                   type="button"
                   onClick={addImage}
-                  className="px-4 py-3 rounded-xl bg-[#BFFF00] text-black font-semibold hover:brightness-110 transition-colors"
+                  className="px-4 py-3 rounded-xl bg-[#C84FFF] text-white font-semibold hover:brightness-110 transition-colors"
                 >
                   <Plus className="w-5 h-5" />
                 </button>
@@ -464,7 +464,7 @@ export default function EditProductPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="flex-1 py-4 bg-gradient-to-r from-[#BFFF00] to-[#BFFF00] text-black font-semibold rounded-xl hover:brightness-110 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                className="flex-1 py-4 bg-gradient-to-r from-[#C84FFF] to-[#C84FFF] text-white font-semibold rounded-xl hover:brightness-110 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {submitting ? (
                   <>

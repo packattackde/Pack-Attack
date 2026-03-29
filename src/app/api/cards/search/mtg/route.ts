@@ -36,7 +36,7 @@ export async function GET(request: Request) {
       `https://api.scryfall.com/cards/search?q=${encodeURIComponent(query)}`,
       {
         headers: {
-          'User-Agent': 'PackAttack/1.0',
+          'User-Agent': 'PullForge/1.0',
           'Accept': 'application/json',
         },
         signal: controller.signal,

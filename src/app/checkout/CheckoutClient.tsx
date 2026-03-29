@@ -151,8 +151,8 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
     return (
       <div className="max-w-2xl mx-auto">
         <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-8 text-center">
-          <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-full bg-green-500/20">
-            <CheckCircle className="w-10 h-10 text-green-400" />
+          <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-full bg-[#C84FFF]/20">
+            <CheckCircle className="w-10 h-10 text-[#E879F9]" />
           </div>
           <h1 className="text-3xl font-bold text-white mb-3">Order Placed!</h1>
           <p className="text-[#8888aa] mb-2">Thank you for your order.</p>
@@ -160,7 +160,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
           
           <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 mb-6 text-left">
             <div className="flex items-center gap-2 mb-3">
-              <Truck className="w-5 h-5 text-[#BFFF00]" />
+              <Truck className="w-5 h-5 text-[#C84FFF]" />
               <span className="font-semibold text-white">Shipping Information</span>
             </div>
             <div className="text-sm text-[#8888aa] space-y-1">
@@ -174,7 +174,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               href="/collection"
-              className="px-6 py-3 bg-[#BFFF00] text-black font-semibold rounded-xl transition-all hover:scale-105"
+              className="px-6 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl transition-all hover:scale-105"
             >
               Back to Collection
             </Link>
@@ -199,12 +199,12 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
           Back to Cart
         </Link>
         <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm ml-4">
-          <Package className="w-4 h-4 text-[#BFFF00]" />
+          <Package className="w-4 h-4 text-[#C84FFF]" />
           <span className="text-[#f0f0f5]">Checkout</span>
         </div>
         <h1 className="text-4xl md:text-5xl font-bold mb-3">
           <span className="text-white">Complete </span>
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#BFFF00] to-[#BFFF00]">Order</span>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C84FFF] to-[#C84FFF]">Order</span>
         </h1>
         <p className="text-[#8888aa] text-lg">Enter your shipping details to receive your cards</p>
       </div>
@@ -215,7 +215,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6">
               <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-[#BFFF00]" />
+                <MapPin className="w-5 h-5 text-[#C84FFF]" />
                 Shipping Address
               </h2>
 
@@ -228,7 +228,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                     value={formData.shippingName}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[rgba(191,255,0,0.3)] focus:ring-1 focus:ring-[rgba(191,255,0,0.3)] transition-colors"
+                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.3)] transition-colors"
                     placeholder="John Doe"
                   />
                 </div>
@@ -241,7 +241,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                     value={formData.shippingEmail}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[rgba(191,255,0,0.3)] focus:ring-1 focus:ring-[rgba(191,255,0,0.3)] transition-colors"
+                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.3)] transition-colors"
                     placeholder="john@example.com"
                   />
                 </div>
@@ -254,7 +254,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                     value={formData.shippingAddress}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[rgba(191,255,0,0.3)] focus:ring-1 focus:ring-[rgba(191,255,0,0.3)] transition-colors"
+                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.3)] transition-colors"
                     placeholder="123 Main Street, Apt 4"
                   />
                 </div>
@@ -267,7 +267,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                     value={formData.shippingCity}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[rgba(191,255,0,0.3)] focus:ring-1 focus:ring-[rgba(191,255,0,0.3)] transition-colors"
+                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.3)] transition-colors"
                     placeholder="New York"
                   />
                 </div>
@@ -280,7 +280,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                     value={formData.shippingZip}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[rgba(191,255,0,0.3)] focus:ring-1 focus:ring-[rgba(191,255,0,0.3)] transition-colors"
+                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.3)] transition-colors"
                     placeholder="10001"
                   />
                 </div>
@@ -292,7 +292,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                     value={formData.shippingCountry}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-[rgba(191,255,0,0.3)] focus:ring-1 focus:ring-[rgba(191,255,0,0.3)] transition-colors"
+                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.3)] transition-colors"
                   >
                     <option value="">Select Country</option>
                     <option value="Germany">Germany</option>
@@ -317,7 +317,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                     value={formData.notes}
                     onChange={handleInputChange}
                     rows={3}
-                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[rgba(191,255,0,0.3)] focus:ring-1 focus:ring-[rgba(191,255,0,0.3)] transition-colors resize-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.3)] transition-colors resize-none"
                     placeholder="Any special instructions for your order..."
                   />
                 </div>
@@ -327,7 +327,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
             {/* Shipping Payment Method */}
             <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6">
               <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                <Truck className="w-5 h-5 text-green-400" />
+                <Truck className="w-5 h-5 text-[#E879F9]" />
                 Shipping Payment
               </h2>
               <p className="text-[#8888aa] text-sm mb-4">Choose how you want to pay for shipping</p>
@@ -371,22 +371,22 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                   onClick={() => setShippingMethod('EUROS')}
                   className={`relative p-4 rounded-xl border-2 transition-all text-left ${
                     shippingMethod === 'EUROS'
-                      ? 'border-green-500 bg-green-500/10'
+                      ? 'border-[#C84FFF] bg-[#C84FFF]/10'
                       : 'border-[rgba(255,255,255,0.06)] bg-[#12123a]/60 hover:border-[rgba(255,255,255,0.1)]'
                   }`}
                 >
                   {shippingMethod === 'EUROS' && (
                     <div className="absolute top-2 right-2">
-                      <CheckCircle className="w-5 h-5 text-green-400" />
+                      <CheckCircle className="w-5 h-5 text-[#E879F9]" />
                     </div>
                   )}
                   <div className="flex items-center gap-3 mb-2">
-                    <div className={`p-2 rounded-lg ${shippingMethod === 'EUROS' ? 'bg-green-500/20' : 'bg-[#12123a]'}`}>
-                      <Euro className={`w-6 h-6 ${shippingMethod === 'EUROS' ? 'text-green-400' : 'text-[#8888aa]'}`} />
+                    <div className={`p-2 rounded-lg ${shippingMethod === 'EUROS' ? 'bg-[#C84FFF]/20' : 'bg-[#12123a]'}`}>
+                      <Euro className={`w-6 h-6 ${shippingMethod === 'EUROS' ? 'text-[#E879F9]' : 'text-[#8888aa]'}`} />
                     </div>
                     <div>
                       <p className="font-semibold text-white">Pay with Euros</p>
-                      <p className="text-2xl font-bold text-green-400">{SHIPPING_COST_EUROS.toFixed(2)} <span className="text-sm font-normal">€</span></p>
+                      <p className="text-2xl font-bold text-[#E879F9]">{SHIPPING_COST_EUROS.toFixed(2)} <span className="text-sm font-normal">€</span></p>
                     </div>
                   </div>
                   <p className="text-sm text-[#8888aa]">Pay via PayPal or Credit Card</p>
@@ -476,8 +476,8 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                       </>
                     ) : (
                       <>
-                        <Euro className="h-4 w-4 text-green-400" />
-                        <span className="text-green-400 font-medium">{SHIPPING_COST_EUROS.toFixed(2)} €</span>
+                        <Euro className="h-4 w-4 text-[#E879F9]" />
+                        <span className="text-[#E879F9] font-medium">{SHIPPING_COST_EUROS.toFixed(2)} €</span>
                       </>
                     )}
                   </div>
@@ -519,7 +519,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                 className={`w-full py-4 text-white font-semibold rounded-xl transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2 ${
                   shippingMethod === 'COINS'
                     ? 'bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500'
-                    : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500'
+                    : 'bg-gradient-to-r from-[#9333EA] to-[#7c3aed] hover:from-[#C84FFF] hover:to-[#9333EA]'
                 }`}
               >
                 {loading ? (

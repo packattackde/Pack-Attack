@@ -57,7 +57,7 @@ export default function RecentPullsWidget({ hits, pulls, className = '' }: Recen
       {hits.length > 0 && (
         <div className="mb-5">
           <div className="text-[10px] font-semibold uppercase tracking-wider text-[#fbbf24] mb-3 flex items-center gap-1.5">
-<GiFireGem className="w-3.5 h-3.5 text-[#BFFF00]" /> My Last Hits
+<GiFireGem className="w-3.5 h-3.5 text-[#C84FFF]" /> My Last Hits
           </div>
           <div className="flex gap-2 sm:gap-3 justify-center">
             {hits.map((hit, idx) => (
@@ -84,7 +84,7 @@ export default function RecentPullsWidget({ hits, pulls, className = '' }: Recen
                 <p className="text-[9px] text-[#f0f0f5] font-semibold truncate mt-1.5 text-center w-full max-w-[100px] sm:max-w-[120px]">
                   {hit.cardName}
                 </p>
-                <p className="text-[8px] text-[#BFFF00] font-bold flex items-center justify-center gap-1">
+                <p className="text-[8px] text-[#C84FFF] font-bold flex items-center justify-center gap-1">
                   <GiTwoCoins className="w-3 h-3" /> {formatCoins(hit.coinValue)}
                 </p>
               </div>
@@ -96,7 +96,7 @@ export default function RecentPullsWidget({ hits, pulls, className = '' }: Recen
       {/* Row 2: Last Pulls (any rarity) */}
       <div>
         <div className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-3 flex items-center gap-1.5">
-<GiCardPlay className="w-3.5 h-3.5 text-[#BFFF00]" /> My Last Pulls
+<GiCardPlay className="w-3.5 h-3.5 text-[#C84FFF]" /> My Last Pulls
         </div>
         <div className="flex gap-2">
           {pulls.map((pull, idx) => (
@@ -130,7 +130,7 @@ export default function RecentPullsWidget({ hits, pulls, className = '' }: Recen
 
       <Link
         href="/collection"
-        className="text-[#BFFF00] text-[11px] font-semibold mt-4 inline-block hover:underline"
+        className="text-[#C84FFF] text-[11px] font-semibold mt-4 inline-block hover:underline"
       >
         View collection →
       </Link>

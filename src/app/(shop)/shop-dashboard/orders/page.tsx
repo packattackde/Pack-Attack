@@ -94,7 +94,7 @@ export default async function ShopOrdersPage({
       {/* Background Effects */}
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
-      <div className="fixed bottom-20 left-20 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl animate-float" />
+      <div className="fixed bottom-20 left-20 w-80 h-80 bg-[#C84FFF]/10 rounded-full blur-3xl animate-float" />
 
       <div className="relative container py-8 md:py-12">
         {/* Header */}
@@ -108,13 +108,13 @@ export default async function ShopOrdersPage({
           </Link>
           
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm mb-3">
-            <Store className="w-4 h-4 text-emerald-400" />
+            <Store className="w-4 h-4 text-[#E879F9]" />
             <span className="text-[#f0f0f5]">{viewingSpecificShop ? `Admin → ${shop?.name}` : isAdmin ? 'Admin View' : shop?.name || 'Shop Dashboard'}</span>
           </div>
           
           <h1 className="text-3xl md:text-4xl font-bold mb-2 font-heading">
             <span className="text-white">Order </span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">Management</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C84FFF] to-[#9333EA]">Management</span>
           </h1>
           <p className="text-[#8888aa]">View and process orders from your card boxes.</p>
         </div>
@@ -132,9 +132,9 @@ export default async function ShopOrdersPage({
             <div className="text-xs text-yellow-400">Pending</div>
           </div>
           <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
-            <CheckCircle className="w-5 h-5 text-[#BFFF00] mx-auto mb-2" />
+            <CheckCircle className="w-5 h-5 text-[#C84FFF] mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{stats.confirmed}</div>
-            <div className="text-xs text-[#BFFF00]">Confirmed</div>
+            <div className="text-xs text-[#C84FFF]">Confirmed</div>
           </div>
           <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
             <Package className="w-5 h-5 text-purple-400 mx-auto mb-2" />
@@ -147,9 +147,9 @@ export default async function ShopOrdersPage({
             <div className="text-xs text-indigo-400">Shipped</div>
           </div>
           <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
-            <CheckCircle className="w-5 h-5 text-green-400 mx-auto mb-2" />
+            <CheckCircle className="w-5 h-5 text-[#E879F9] mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{stats.delivered}</div>
-            <div className="text-xs text-green-400">Delivered</div>
+            <div className="text-xs text-[#E879F9]">Delivered</div>
           </div>
         </div>
 

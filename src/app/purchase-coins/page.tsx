@@ -84,8 +84,8 @@ const coinPackages: CoinPackage[] = [
     amount: 1250, 
     price: 250, 
     icon: Rocket,
-    gradient: 'from-emerald-500 to-teal-500',
-    shadowColor: 'shadow-emerald-500/20',
+    gradient: 'from-[#9333EA] to-[#9333EA]',
+    shadowColor: 'shadow-[#C84FFF]/20',
     label: 'Ultimate',
   },
 ];
@@ -293,7 +293,7 @@ function PurchaseCoinsContent() {
             >
               <div className={`relative rounded-2xl overflow-hidden transition-all duration-300 ${
                 isSelected 
-                  ? `ring-2 ring-offset-2 ring-offset-[#06061a] ${pkg.gradient.includes('amber') ? 'ring-amber-500' : pkg.gradient.includes('purple') ? 'ring-purple-500' : pkg.gradient.includes('blue') ? 'ring-blue-500' : pkg.gradient.includes('orange') ? 'ring-orange-500' : pkg.gradient.includes('emerald') ? 'ring-emerald-500' : 'ring-slate-500'}` 
+                  ? `ring-2 ring-offset-2 ring-offset-[#06061a] ${pkg.gradient.includes('amber') ? 'ring-amber-500' : pkg.gradient.includes('purple') ? 'ring-purple-500' : pkg.gradient.includes('blue') ? 'ring-blue-500' : pkg.gradient.includes('orange') ? 'ring-orange-500' : pkg.gradient.includes('emerald') ? 'ring-[#C84FFF]' : 'ring-slate-500'}` 
                   : ''
               }`}>
                 
@@ -489,7 +489,7 @@ function PurchaseCoinsContent() {
               icon: TrendingUp, 
               title: 'Win Real Cards', 
               description: 'Checkout your winnings and receive physical cards delivered to you',
-              gradient: 'from-emerald-500 to-teal-500'
+              gradient: 'from-[#9333EA] to-[#9333EA]'
             },
           ].map((item) => {
             const Icon = item.icon;

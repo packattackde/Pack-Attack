@@ -83,8 +83,8 @@ export default function AchievementsWidget({ className = '' }: AchievementsWidge
     <div className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl h-full p-4 sm:p-6 ${className}`}>
       <style>{`
         @keyframes bar-pulse {
-          0%, 100% { box-shadow: 0 0 0 rgba(191,255,0,0); }
-          50% { box-shadow: 0 0 8px rgba(191,255,0,0.4); }
+          0%, 100% { box-shadow: 0 0 0 rgba(200,79,255,0); }
+          50% { box-shadow: 0 0 8px rgba(200,79,255,0.4); }
         }
         .bar-pulse { animation: bar-pulse 1.5s ease-in-out infinite; }
       `}</style>
@@ -115,7 +115,7 @@ export default function AchievementsWidget({ className = '' }: AchievementsWidge
           {recentUnlocks.length > 0 && (
             <div className="mb-5">
               <div className="text-[10px] font-semibold uppercase tracking-wider text-[#fbbf24] mb-3 flex items-center gap-1.5">
-<GiMedal className="w-3.5 h-3.5 text-[#BFFF00]" /> Recently Unlocked
+<GiMedal className="w-3.5 h-3.5 text-[#C84FFF]" /> Recently Unlocked
               </div>
               <div className="flex gap-2">
                 {recentUnlocks.map((ach) => (
@@ -137,7 +137,7 @@ export default function AchievementsWidget({ className = '' }: AchievementsWidge
           {/* Next Up */}
           <div>
             <div className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-3 flex items-center gap-1.5">
-<GiArcheryTarget className="w-3.5 h-3.5 text-[#BFFF00]" /> Next Up
+<GiArcheryTarget className="w-3.5 h-3.5 text-[#C84FFF]" /> Next Up
             </div>
             {nextUp.length === 0 ? (
               <p className="text-[11px] text-[#8888aa] text-center py-3">All achievements unlocked! 🎉</p>
@@ -148,7 +148,7 @@ export default function AchievementsWidget({ className = '' }: AchievementsWidge
                   const almostThere = pct >= 90;
                   return (
                     <div key={ach.id} className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-lg bg-[rgba(191,255,0,0.08)] border border-[rgba(191,255,0,0.15)] flex items-center justify-center text-base flex-shrink-0">
+                      <div className="w-8 h-8 rounded-lg bg-[rgba(200,79,255,0.08)] border border-[rgba(200,79,255,0.15)] flex items-center justify-center text-base flex-shrink-0">
                         {ach.icon}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -157,14 +157,14 @@ export default function AchievementsWidget({ className = '' }: AchievementsWidge
                         </div>
                         <div className="h-[5px] bg-[rgba(255,255,255,0.06)] rounded-full overflow-hidden">
                           <div
-                            className={`h-full rounded-full bg-[#BFFF00] ${almostThere ? 'bar-pulse' : ''}`}
+                            className={`h-full rounded-full bg-[#C84FFF] ${almostThere ? 'bar-pulse' : ''}`}
                             style={{ width: `${pct}%` }}
                           />
                         </div>
                         <div className="flex justify-between mt-1">
                           <span className="text-[9px] text-[#7777a0]">{ach.progress} / {ach.target}</span>
                           {almostThere && (
-                            <span className="text-[9px] text-[#BFFF00] font-semibold">Almost there!</span>
+                            <span className="text-[9px] text-[#C84FFF] font-semibold">Almost there!</span>
                           )}
                         </div>
                       </div>
@@ -179,7 +179,7 @@ export default function AchievementsWidget({ className = '' }: AchievementsWidge
 
       <Link
         href="/dashboard"
-        className="text-[#BFFF00] text-[11px] font-semibold mt-4 inline-block hover:underline"
+        className="text-[#C84FFF] text-[11px] font-semibold mt-4 inline-block hover:underline"
       >
         All achievements →
       </Link>

@@ -1,6 +1,6 @@
 {
-  "name": "Pack Attack - Trading Card Box Battles",
-  "short_name": "Pack Attack",
+  "name": "PullForge - Trading Card Box Battles",
+  "short_name": "PullForge",
   "description": "Experience the thrill of opening trading card boxes and competing in battles. Support for MTG, Pokemon, One Piece, and Lorcana.",
   "start_url": "/",
   "scope": "/",
@@ -8,7 +8,7 @@
   "display": "standalone",
   "display_override": ["standalone", "minimal-ui", "browser"],
   "background_color": "#030712",
-  "theme_color": "#3b82f6",
+  "theme_color": "#C84FFF",
   "orientation": "any",
   "dir": "ltr",
   "lang": "en-US",

@@ -20,7 +20,7 @@ async function fetchAllOnePieceCards(): Promise<any[]> {
     const response = await fetch('https://optcgapi.com/api/allSetCards/?format=json', {
       headers: {
         'Accept': 'application/json',
-        'User-Agent': 'Pack-Attack/1.0',
+        'User-Agent': 'PullForge/1.0',
       },
       cache: 'no-store',
       signal: controller.signal,

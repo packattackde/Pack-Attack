@@ -40,7 +40,7 @@ const getRarityDisplay = (rarity: string) => isSealed(rarity) ? 'Sealed' : rarit
 const getRarityConfig = (rarity: string) => {
     switch (rarity?.toLowerCase()) {
         case 'none':
-            return { color: 'text-teal-300', bg: 'bg-gradient-to-r from-teal-500/20 to-emerald-500/20', border: 'border-teal-500/40', icon: BoxIcon };
+            return { color: 'text-[#f0abfc]', bg: 'bg-gradient-to-r from-[#7c3aed]/20 to-[#9333EA]/20', border: 'border-[#C84FFF]/40', icon: BoxIcon };
         case 'mythic':
             return { color: 'text-orange-400', bg: 'bg-gradient-to-r from-orange-500/20 to-red-500/20', border: 'border-orange-500/40', icon: Crown };
         case 'legendary':
@@ -296,20 +296,20 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                 <div className="flex flex-wrap gap-4">
                     <div className="flex-1 min-w-[250px]">
                         <div className="relative group">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8888aa] group-focus-within:text-[#BFFF00] transition-colors" />
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8888aa] group-focus-within:text-[#C84FFF] transition-colors" />
                             <input
                                 type="text"
                                 placeholder="Search your collection..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full pl-12 pr-4 py-3 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-xl text-white placeholder-[#8888aa] focus:border-[#BFFF00]/50 focus:ring-2 focus:ring-[#BFFF00]/20 transition-all"
+                                className="w-full pl-12 pr-4 py-3 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-xl text-white placeholder-[#8888aa] focus:border-[#C84FFF]/50 focus:ring-2 focus:ring-[#C84FFF]/20 transition-all"
                             />
                         </div>
                     </div>
                     <select
                         value={rarityFilter}
                         onChange={(e) => setRarityFilter(e.target.value)}
-                        className="px-4 py-3 bg-[#16164a] border border-[rgba(255,255,255,0.06)] rounded-xl text-white focus:border-[#BFFF00]/50 min-w-[140px]"
+                        className="px-4 py-3 bg-[#16164a] border border-[rgba(255,255,255,0.06)] rounded-xl text-white focus:border-[#C84FFF]/50 min-w-[140px]"
                     >
                         <option value="">All Rarities</option>
                         {availableRarities.map(rarity => (
@@ -319,7 +319,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                     <select
                         value={gameFilter}
                         onChange={(e) => setGameFilter(e.target.value)}
-                        className="px-4 py-3 bg-[#16164a] border border-[rgba(255,255,255,0.06)] rounded-xl text-white focus:border-[#BFFF00]/50 min-w-[180px]"
+                        className="px-4 py-3 bg-[#16164a] border border-[rgba(255,255,255,0.06)] rounded-xl text-white focus:border-[#C84FFF]/50 min-w-[180px]"
                     >
                         <option value="">All Games</option>
                         {availableGames.map(game => (
@@ -331,7 +331,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                         <select
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value)}
-                            className="pl-10 pr-4 py-3 bg-[#16164a] border border-[rgba(255,255,255,0.06)] rounded-xl text-white focus:border-[#BFFF00]/50 min-w-[180px]"
+                            className="pl-10 pr-4 py-3 bg-[#16164a] border border-[rgba(255,255,255,0.06)] rounded-xl text-white focus:border-[#C84FFF]/50 min-w-[180px]"
                         >
                             <option value="rarity-desc">Rarity (High → Low)</option>
                             <option value="rarity-asc">Rarity (Low → High)</option>
@@ -350,7 +350,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                     { label: 'Unique Cards', value: groupedCards.length, color: 'text-white', icon: undefined as typeof Coins | undefined },
                     { label: 'Total Value', value: filteredPulls.reduce((sum, p) => sum + (p.card?.coinValue || 0), 0).toLocaleString(), color: 'text-amber-400', icon: Coins },
                     { label: 'Rare+', value: filteredPulls.filter(p => ['rare', 'mythic', 'legendary'].includes(p.card?.rarity.toLowerCase() || '')).length, color: 'text-purple-400', icon: Gem },
-                    { label: 'In Cart', value: filteredPulls.filter(p => p.cartItem).length, color: 'text-[#BFFF00]', icon: ShoppingCart },
+                    { label: 'In Cart', value: filteredPulls.filter(p => p.cartItem).length, color: 'text-[#C84FFF]', icon: ShoppingCart },
                 ].map((stat) => {
                     const Icon = stat.icon;
                     return (
@@ -406,12 +406,12 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                                         {/* Top-right badges: count + cart */}
                                         <div className="absolute top-2 right-2 flex flex-col items-end gap-1">
                                             {group.count > 1 && (
-                                                <div className="rounded-full bg-[#BFFF00]/90 px-2 py-0.5 text-xs font-bold text-black shadow-lg backdrop-blur-sm">
+                                                <div className="rounded-full bg-[#C84FFF]/90 px-2 py-0.5 text-xs font-bold text-white shadow-lg backdrop-blur-sm">
                                                     ×{group.count}
                                                 </div>
                                             )}
                                             {group.cartCount > 0 && (
-                                                <div className="rounded-full bg-emerald-500/80 px-1.5 py-0.5 text-xs font-bold text-white flex items-center gap-0.5 backdrop-blur-sm">
+                                                <div className="rounded-full bg-[#C84FFF]/80 px-1.5 py-0.5 text-xs font-bold text-white flex items-center gap-0.5 backdrop-blur-sm">
                                                     <ShoppingCart className="w-2.5 h-2.5" />
                                                     {group.count === 1 ? 'Cart' : group.cartCount}
                                                 </div>
@@ -420,7 +420,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
 
                                         {/* Rarity badge — sealed products show neutral "Sealed" label */}
                                         {isSealed(group.card.rarity) ? (
-                                            <div className="absolute top-2 left-2 inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold bg-teal-500/20 text-teal-300 border border-teal-500/40">
+                                            <div className="absolute top-2 left-2 inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold bg-[#C84FFF]/20 text-[#f0abfc] border border-[#C84FFF]/40">
                                                 <BoxIcon className="w-3 h-3" />
                                                 Sealed
                                             </div>
@@ -463,7 +463,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                     </p>
                     <Link
                         href="/boxes"
-                        className="inline-flex items-center gap-2 px-8 py-4 bg-[#BFFF00] text-black font-bold rounded-xl transition-all hover:scale-105 hover:shadow-[0_0_24px_rgba(191,255,0,0.3)]"
+                        className="inline-flex items-center gap-2 px-8 py-4 bg-[#C84FFF] text-white font-bold rounded-xl transition-all hover:scale-105 hover:shadow-[0_0_24px_rgba(200,79,255,0.3)]"
                     >
                         <Package className="w-5 h-5" />
                         Browse Boxes
@@ -497,7 +497,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                                 unoptimized
                             />
                             {zoomedCard.count > 1 && (
-                                <div className="absolute top-3 right-3 rounded-full bg-[#BFFF00]/90 px-3 py-1 text-sm font-bold text-black shadow-lg backdrop-blur-sm">
+                                <div className="absolute top-3 right-3 rounded-full bg-[#C84FFF]/90 px-3 py-1 text-sm font-bold text-white shadow-lg backdrop-blur-sm">
                                     ×{zoomedCard.count} owned
                                 </div>
                             )}
@@ -531,7 +531,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                             </div>
 
                             {zoomedCard.availablePullIds.length === 0 ? (
-                                <div className="flex items-center justify-center gap-2 px-6 py-4 bg-emerald-500/10 text-emerald-400 rounded-xl font-bold border border-emerald-500/30">
+                                <div className="flex items-center justify-center gap-2 px-6 py-4 bg-[#C84FFF]/10 text-[#E879F9] rounded-xl font-bold border border-[#C84FFF]/30">
                                     <ShoppingCart className="h-5 w-5" />
                                     {zoomedCard.count > 1 ? `All ${zoomedCard.count} in Cart` : 'Already in Cart'}
                                 </div>

@@ -156,7 +156,7 @@ export function StockImportClient() {
           onClick={() => setActiveTab('text')}
           className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all ${
             activeTab === 'text'
-              ? 'bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg shadow-teal-500/25'
+              ? 'bg-gradient-to-r from-[#C84FFF] to-cyan-500 text-white shadow-lg shadow-[#C84FFF]/25'
               : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white'
           }`}
         >
@@ -167,7 +167,7 @@ export function StockImportClient() {
           onClick={() => setActiveTab('file')}
           className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all ${
             activeTab === 'file'
-              ? 'bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg shadow-teal-500/25'
+              ? 'bg-gradient-to-r from-[#C84FFF] to-cyan-500 text-white shadow-lg shadow-[#C84FFF]/25'
               : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white'
           }`}
         >
@@ -179,7 +179,7 @@ export function StockImportClient() {
       {/* Help Toggle */}
       <button
         onClick={() => setShowHelp(!showHelp)}
-        className="flex items-center gap-2 text-sm text-teal-400 hover:text-teal-300 transition-colors"
+        className="flex items-center gap-2 text-sm text-[#E879F9] hover:text-[#f0abfc] transition-colors"
       >
         <Info className="w-4 h-4" />
         {showHelp ? 'Hide format guide' : 'Show format guide'}
@@ -191,13 +191,13 @@ export function StockImportClient() {
           <div className="text-sm text-[#8888aa] space-y-2">
             <p>One item per line. Supported formats:</p>
             <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-lg p-3 font-mono text-xs text-[#f0f0f5] space-y-1">
-              <p className="text-teal-400"># Simple (name only, qty defaults to 1)</p>
+              <p className="text-[#E879F9]"># Simple (name only, qty defaults to 1)</p>
               <p>Charizard VMAX</p>
-              <p className="text-teal-400 mt-2"># With quantity</p>
+              <p className="text-[#E879F9] mt-2"># With quantity</p>
               <p>4x Lightning Energy</p>
-              <p className="text-teal-400 mt-2"># With price</p>
+              <p className="text-[#E879F9] mt-2"># With price</p>
               <p>2x Pikachu V | 12.50</p>
-              <p className="text-teal-400 mt-2"># Full format: qty x name | price | category | game | condition | sku</p>
+              <p className="text-[#E879F9] mt-2"># Full format: qty x name | price | category | game | condition | sku</p>
               <p>3x Booster Box Scarlet &amp; Violet | 129.99 | BOOSTER_BOX | POKEMON | MINT | SKU123</p>
             </div>
           </div>
@@ -206,7 +206,7 @@ export function StockImportClient() {
           <div className="text-sm text-[#8888aa] space-y-2">
             <p>First row must be headers. Supported column names:</p>
             <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-lg p-3 font-mono text-xs text-[#f0f0f5]">
-              <p><span className="text-teal-400">Required:</span> name (or card, product, article)</p>
+              <p><span className="text-[#E879F9]">Required:</span> name (or card, product, article)</p>
               <p><span className="text-cyan-400">Optional:</span> quantity, price, category, game, condition, sku</p>
             </div>
             <p className="text-xs text-gray-500">Supports .csv, .tsv files. Separators: comma, semicolon, or tab.</p>
@@ -231,7 +231,7 @@ export function StockImportClient() {
               <select
                 value={defaultGame}
                 onChange={(e) => setDefaultGame(e.target.value)}
-                className="w-full bg-gray-800/80 border border-[rgba(255,255,255,0.06)] text-white rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                className="w-full bg-gray-800/80 border border-[rgba(255,255,255,0.06)] text-white rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-[#C84FFF] focus:border-transparent"
               >
                 {GAMES.map(g => <option key={g.value} value={g.value}>{g.label}</option>)}
               </select>
@@ -241,7 +241,7 @@ export function StockImportClient() {
               <select
                 value={defaultCategory}
                 onChange={(e) => setDefaultCategory(e.target.value)}
-                className="w-full bg-gray-800/80 border border-[rgba(255,255,255,0.06)] text-white rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                className="w-full bg-gray-800/80 border border-[rgba(255,255,255,0.06)] text-white rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-[#C84FFF] focus:border-transparent"
               >
                 {CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
               </select>
@@ -251,7 +251,7 @@ export function StockImportClient() {
               <select
                 value={defaultCondition}
                 onChange={(e) => setDefaultCondition(e.target.value)}
-                className="w-full bg-gray-800/80 border border-[rgba(255,255,255,0.06)] text-white rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                className="w-full bg-gray-800/80 border border-[rgba(255,255,255,0.06)] text-white rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-[#C84FFF] focus:border-transparent"
               >
                 {CONDITIONS.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
               </select>
@@ -269,7 +269,7 @@ export function StockImportClient() {
             onChange={(e) => setTextInput(e.target.value)}
             placeholder={`4x Charizard VMAX | 45.00\n2x Pikachu V | 12.50\n10x Lightning Energy\nBooster Box Scarlet & Violet | 129.99 | BOOSTER_BOX | POKEMON`}
             rows={12}
-            className="w-full bg-gray-800/80 border border-[rgba(255,255,255,0.06)] text-white rounded-xl px-4 py-3 text-sm font-mono focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-y placeholder:text-gray-600"
+            className="w-full bg-gray-800/80 border border-[rgba(255,255,255,0.06)] text-white rounded-xl px-4 py-3 text-sm font-mono focus:ring-2 focus:ring-[#C84FFF] focus:border-transparent resize-y placeholder:text-gray-600"
           />
           <div className="flex items-center justify-between mt-3">
             <p className="text-xs text-gray-500">
@@ -289,8 +289,8 @@ export function StockImportClient() {
           {selectedFile ? (
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="p-3 rounded-lg bg-teal-500/10">
-                  <FileSpreadsheet className="w-6 h-6 text-teal-400" />
+                <div className="p-3 rounded-lg bg-[#C84FFF]/10">
+                  <FileSpreadsheet className="w-6 h-6 text-[#E879F9]" />
                 </div>
                 <div>
                   <p className="font-medium text-white">{selectedFile.name}</p>
@@ -309,8 +309,8 @@ export function StockImportClient() {
             </div>
           ) : (
             <div className="text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 mb-4 rounded-2xl bg-gradient-to-br from-teal-500/20 to-cyan-500/20 ring-1 ring-teal-500/30">
-                <Upload className="w-8 h-8 text-teal-400" />
+              <div className="inline-flex items-center justify-center w-16 h-16 mb-4 rounded-2xl bg-gradient-to-br from-[#7c3aed]/20 to-cyan-500/20 ring-1 ring-[#C84FFF]/30">
+                <Upload className="w-8 h-8 text-[#E879F9]" />
               </div>
               <p className="text-white font-medium mb-1">Drop your file here or click to browse</p>
               <p className="text-sm text-gray-500 mb-4">Supports CSV, TSV, and text files</p>
@@ -324,7 +324,7 @@ export function StockImportClient() {
               />
               <label
                 htmlFor="file-upload"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-teal-400 hover:text-white cursor-pointer transition-colors"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#E879F9] hover:text-white cursor-pointer transition-colors"
               >
                 <Plus className="w-4 h-4" />
                 Choose File
@@ -340,7 +340,7 @@ export function StockImportClient() {
         disabled={!canImport || importing}
         className={`w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-sm font-semibold transition-all ${
           canImport && !importing
-            ? 'bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg shadow-teal-500/25 hover:shadow-teal-500/40'
+            ? 'bg-gradient-to-r from-[#C84FFF] to-cyan-500 text-white shadow-lg shadow-[#C84FFF]/25 hover:shadow-[#C84FFF]/40'
             : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-gray-600 cursor-not-allowed'
         }`}
       >
@@ -360,11 +360,11 @@ export function StockImportClient() {
       {/* Results */}
       {result && (
         <div className={`bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 space-y-4 ${
-          result.success ? 'ring-1 ring-teal-500/30' : 'ring-1 ring-red-500/30'
+          result.success ? 'ring-1 ring-[#C84FFF]/30' : 'ring-1 ring-red-500/30'
         }`}>
           <div className="flex items-center gap-3">
             {result.success ? (
-              <CheckCircle className="w-6 h-6 text-teal-400" />
+              <CheckCircle className="w-6 h-6 text-[#E879F9]" />
             ) : (
               <AlertCircle className="w-6 h-6 text-red-400" />
             )}
@@ -380,7 +380,7 @@ export function StockImportClient() {
                 <p className="text-xs text-[#8888aa]">Total Items</p>
               </div>
               <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-3 text-center">
-                <p className="text-2xl font-bold text-teal-400">{result.summary.created}</p>
+                <p className="text-2xl font-bold text-[#E879F9]">{result.summary.created}</p>
                 <p className="text-xs text-[#8888aa]">New Products</p>
               </div>
               <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-3 text-center">
@@ -396,16 +396,16 @@ export function StockImportClient() {
 
           {result.created.length > 0 && (
             <div>
-              <h4 className="text-sm font-medium text-teal-400 mb-2">New Products Created</h4>
+              <h4 className="text-sm font-medium text-[#E879F9] mb-2">New Products Created</h4>
               <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-3 max-h-48 overflow-y-auto space-y-1">
                 {result.created.map((item, i) => (
                   <div key={i} className="flex items-center justify-between gap-2 py-0.5">
                     <p className="text-sm text-[#f0f0f5] truncate">
-                      <span className="text-teal-400">+{item.quantity}x</span> {item.name}
+                      <span className="text-[#E879F9]">+{item.quantity}x</span> {item.name}
                     </p>
                     <Link
                       href={`/shop/manage/products/${item.id}/edit`}
-                      className="flex-shrink-0 inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium text-[#BFFF00] hover:bg-[rgba(191,255,0,0.08)] transition-colors"
+                      className="flex-shrink-0 inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium text-[#C84FFF] hover:bg-[rgba(200,79,255,0.08)] transition-colors"
                     >
                       <Pencil className="w-3 h-3" />
                       Edit
@@ -428,7 +428,7 @@ export function StockImportClient() {
                     </p>
                     <Link
                       href={`/shop/manage/products/${item.id}/edit`}
-                      className="flex-shrink-0 inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium text-[#BFFF00] hover:bg-[rgba(191,255,0,0.08)] transition-colors"
+                      className="flex-shrink-0 inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium text-[#C84FFF] hover:bg-[rgba(200,79,255,0.08)] transition-colors"
                     >
                       <Pencil className="w-3 h-3" />
                       Edit

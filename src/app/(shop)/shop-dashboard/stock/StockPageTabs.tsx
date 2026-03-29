@@ -15,7 +15,7 @@ export function StockPageTabs({ shopId }: { shopId: string }) {
           onClick={() => setTab('manage')}
           className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all ${
             tab === 'manage'
-              ? 'bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg shadow-teal-500/25'
+              ? 'bg-gradient-to-r from-[#C84FFF] to-cyan-500 text-white shadow-lg shadow-[#C84FFF]/25'
               : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white'
           }`}
         >
@@ -26,7 +26,7 @@ export function StockPageTabs({ shopId }: { shopId: string }) {
           onClick={() => setTab('import')}
           className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all ${
             tab === 'import'
-              ? 'bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg shadow-teal-500/25'
+              ? 'bg-gradient-to-r from-[#C84FFF] to-cyan-500 text-white shadow-lg shadow-[#C84FFF]/25'
               : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white'
           }`}
         >

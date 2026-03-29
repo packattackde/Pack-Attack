@@ -49,7 +49,7 @@ export default async function ShopStockPage({
     <div className="min-h-screen font-display">
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
-      <div className="fixed top-20 left-10 w-72 h-72 bg-teal-500/20 rounded-full blur-3xl animate-float" />
+      <div className="fixed top-20 left-10 w-72 h-72 bg-[#C84FFF]/20 rounded-full blur-3xl animate-float" />
       <div className="fixed bottom-20 right-10 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '3s' }} />
 
       <div className="relative container py-8 md:py-12">
@@ -63,12 +63,12 @@ export default async function ShopStockPage({
           </Link>
           
           <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
-            <Database className="w-4 h-4 text-teal-400" />
+            <Database className="w-4 h-4 text-[#E879F9]" />
             <span className="text-[#f0f0f5]">{isAdmin && targetShop ? `Admin → ${shop.name}` : shop.name || 'My Stock'}</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-3 font-heading">
             <span className="text-white">My </span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-cyan-400 to-blue-400">Stock</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C84FFF] via-[#E879F9] to-[#9333EA]">Stock</span>
           </h1>
           <p className="text-[#8888aa] text-lg max-w-2xl">
             View, manage, and import your card inventory.
@@ -79,8 +79,8 @@ export default async function ShopStockPage({
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-8">
           <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-teal-500/10">
-                <Package className="w-5 h-5 text-teal-400" />
+              <div className="p-2 rounded-lg bg-[#C84FFF]/10">
+                <Package className="w-5 h-5 text-[#E879F9]" />
               </div>
               <div>
                 <p className="text-2xl font-bold text-white">{productCount}</p>
@@ -90,11 +90,11 @@ export default async function ShopStockPage({
           </div>
           <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-green-500/10">
-                <Package className="w-5 h-5 text-green-400" />
+              <div className="p-2 rounded-lg bg-[#C84FFF]/10">
+                <Package className="w-5 h-5 text-[#E879F9]" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-green-400">{activeCount}</p>
+                <p className="text-2xl font-bold text-[#E879F9]">{activeCount}</p>
                 <p className="text-xs text-[#8888aa]">Active</p>
               </div>
             </div>

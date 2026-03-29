@@ -34,15 +34,15 @@ export function SalesHistoryClient({ sales }: { sales: Sale[] }) {
                 <span className="text-gray-600 text-xs">No Image</span>
               </div>
             )}
-            <div className="absolute top-2 right-2 rounded-full bg-green-500 p-1">
+            <div className="absolute top-2 right-2 rounded-full bg-[#C84FFF] p-1">
               <CheckCircle2 className="h-3 w-3 text-white" />
             </div>
           </div>
           <div className="p-3">
             <h3 className="font-semibold text-white text-sm truncate mb-2">{sale.cardName}</h3>
             <div className="flex items-center gap-1 mb-2">
-              <Coins className="h-3 w-3 text-green-400" />
-              <span className="text-sm font-semibold text-green-400">+{sale.coinsReceived} coins</span>
+              <Coins className="h-3 w-3 text-[#E879F9]" />
+              <span className="text-sm font-semibold text-[#E879F9]">+{sale.coinsReceived} coins</span>
             </div>
             <div className="flex items-center gap-1 text-xs text-gray-500">
               <Calendar className="h-3 w-3" />

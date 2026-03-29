@@ -214,7 +214,7 @@ export default function FeedbackHistoryPage() {
   if (sessionStatus === 'loading') {
     return (
       <div className="min-h-screen font-display flex items-center justify-center">
-        <div className="w-6 h-6 border-2 border-white/20 border-t-[#BFFF00] rounded-full animate-spin" />
+        <div className="w-6 h-6 border-2 border-white/20 border-t-[#C84FFF] rounded-full animate-spin" />
       </div>
     );
   }
@@ -230,7 +230,7 @@ export default function FeedbackHistoryPage() {
           <p className="text-gray-500 mb-6">You need to be signed in to view your feedback history.</p>
           <Link
             href="/login"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r bg-[#BFFF00] text-black font-semibold text-sm rounded-xl transition-all hover:shadow-lg hover:shadow-[0_0_24px_rgba(191,255,0,0.3)]"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r bg-[#C84FFF] text-white font-semibold text-sm rounded-xl transition-all hover:shadow-lg hover:shadow-[0_0_24px_rgba(200,79,255,0.3)]"
           >
             Sign In
           </Link>
@@ -258,7 +258,7 @@ export default function FeedbackHistoryPage() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
           <div>
             <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
-              My <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#BFFF00] to-[#d4ff4d]">Feedback</span>
+              My <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C84FFF] to-[#E879F9]">Feedback</span>
             </h1>
             <p className="text-gray-500">
               {feedbacks.length} submission{feedbacks.length !== 1 ? 's' : ''}
@@ -281,7 +281,7 @@ export default function FeedbackHistoryPage() {
             {/* New Feedback */}
             <Link
               href="/feedback"
-              className="inline-flex items-center gap-1.5 h-9 px-3 rounded-lg bg-[rgba(191,255,0,0.1)] text-[#BFFF00] border border-[rgba(191,255,0,0.3)]/20 hover:bg-[rgba(191,255,0,0.15)] text-sm font-medium transition-all"
+              className="inline-flex items-center gap-1.5 h-9 px-3 rounded-lg bg-[rgba(200,79,255,0.1)] text-[#C84FFF] border border-[rgba(200,79,255,0.3)]/20 hover:bg-[rgba(200,79,255,0.15)] text-sm font-medium transition-all"
             >
               <Plus className="w-3.5 h-3.5" />
               New
@@ -292,7 +292,7 @@ export default function FeedbackHistoryPage() {
         {/* Feedback List */}
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <div className="w-6 h-6 border-2 border-white/20 border-t-[#BFFF00] rounded-full animate-spin" />
+            <div className="w-6 h-6 border-2 border-white/20 border-t-[#C84FFF] rounded-full animate-spin" />
           </div>
         ) : feedbacks.length === 0 ? (
           <div className="text-center py-20">
@@ -301,7 +301,7 @@ export default function FeedbackHistoryPage() {
             <p className="text-gray-600 text-sm mb-6">You haven&apos;t submitted any feedback.</p>
             <Link
               href="/feedback"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r bg-[#BFFF00] text-black font-semibold text-sm rounded-xl transition-all hover:shadow-lg hover:shadow-[0_0_24px_rgba(191,255,0,0.3)]"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r bg-[#C84FFF] text-white font-semibold text-sm rounded-xl transition-all hover:shadow-lg hover:shadow-[0_0_24px_rgba(200,79,255,0.3)]"
             >
               <Plus className="w-4 h-4" />
               Send Feedback
@@ -353,7 +353,7 @@ export default function FeedbackHistoryPage() {
                         {fb._count.messages > 0 && (
                           <>
                             <span>&middot;</span>
-                            <span className="inline-flex items-center gap-1 text-teal-400">
+                            <span className="inline-flex items-center gap-1 text-[#E879F9]">
                               <MessageCircle className="w-3 h-3" />
                               {fb._count.messages}
                             </span>
@@ -390,7 +390,7 @@ export default function FeedbackHistoryPage() {
                               <button
                                 type="button"
                                 onClick={() => { setEditingId(fb.id); setEditMessage(fb.message); }}
-                                className="inline-flex items-center gap-1 text-[10px] text-gray-500 hover:text-[#BFFF00] transition-colors"
+                                className="inline-flex items-center gap-1 text-[10px] text-gray-500 hover:text-[#C84FFF] transition-colors"
                               >
                                 <Pencil className="w-3 h-3" />
                                 Edit
@@ -410,7 +410,7 @@ export default function FeedbackHistoryPage() {
                               value={editMessage}
                               onChange={(e) => setEditMessage(e.target.value.slice(0, 5000))}
                               rows={5}
-                              className="w-full px-3 py-2 rounded-lg bg-white/4 border border-[rgba(191,255,0,0.3)]/30 text-sm text-white placeholder-gray-600 focus:border-[rgba(191,255,0,0.3)] focus:ring-1 focus:ring-[rgba(191,255,0,0.2)] outline-none transition-all resize-y min-h-[100px]"
+                              className="w-full px-3 py-2 rounded-lg bg-white/4 border border-[rgba(200,79,255,0.3)]/30 text-sm text-white placeholder-gray-600 focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.2)] outline-none transition-all resize-y min-h-[100px]"
                             />
                             <div className="flex items-center justify-end gap-2 mt-2">
                               <button
@@ -425,10 +425,10 @@ export default function FeedbackHistoryPage() {
                                 type="button"
                                 onClick={() => saveEdit(fb.id)}
                                 disabled={!editMessage.trim() || savingEdit || editMessage.trim() === fb.message}
-                                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium text-[#BFFF00] bg-[rgba(191,255,0,0.1)] border border-[rgba(191,255,0,0.3)]/20 hover:bg-[rgba(191,255,0,0.15)] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium text-[#C84FFF] bg-[rgba(200,79,255,0.1)] border border-[rgba(200,79,255,0.3)]/20 hover:bg-[rgba(200,79,255,0.15)] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                               >
                                 {savingEdit ? (
-                                  <div className="w-3 h-3 border-2 border-[#BFFF00]/30 border-t-[#BFFF00] rounded-full animate-spin" />
+                                  <div className="w-3 h-3 border-2 border-[#C84FFF]/30 border-t-[#C84FFF] rounded-full animate-spin" />
                                 ) : (
                                   <Save className="w-3 h-3" />
                                 )}
@@ -449,13 +449,13 @@ export default function FeedbackHistoryPage() {
                       {/* Messages / Chat section */}
                       <div className="mt-4 pt-4 border-t border-white/[0.06]">
                         <h4 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-                          <MessageCircle className="w-4 h-4 text-teal-400" />
+                          <MessageCircle className="w-4 h-4 text-[#E879F9]" />
                           Conversation ({fb._count.messages})
                         </h4>
 
                         {loadingMessages === fb.id ? (
                           <div className="flex items-center justify-center py-6">
-                            <div className="w-4 h-4 border-2 border-white/20 border-t-teal-400 rounded-full animate-spin" />
+                            <div className="w-4 h-4 border-2 border-white/20 border-t-[#C84FFF] rounded-full animate-spin" />
                           </div>
                         ) : fb.messages && fb.messages.length > 0 ? (
                           <div className="space-y-3 mb-4 max-h-80 overflow-y-auto pr-1">
@@ -497,16 +497,16 @@ export default function FeedbackHistoryPage() {
                                 }
                               }}
                               placeholder="Type a message..."
-                              className="flex-1 h-10 px-3 rounded-lg bg-white/4 border border-white/8 text-sm text-white placeholder-gray-600 focus:border-teal-500/40 focus:ring-1 focus:ring-teal-500/20 outline-none transition-all"
+                              className="flex-1 h-10 px-3 rounded-lg bg-white/4 border border-white/8 text-sm text-white placeholder-gray-600 focus:border-[#C84FFF]/40 focus:ring-1 focus:ring-[#C84FFF]/20 outline-none transition-all"
                               maxLength={2000}
                             />
                             <button
                               onClick={() => sendMessage(fb.id)}
                               disabled={!newMessage.trim() || sendingMessage}
-                              className="flex items-center justify-center w-10 h-10 rounded-lg bg-teal-500/15 text-teal-400 border border-teal-500/20 hover:bg-teal-500/25 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                              className="flex items-center justify-center w-10 h-10 rounded-lg bg-[#C84FFF]/15 text-[#E879F9] border border-[#C84FFF]/20 hover:bg-[#C84FFF]/25 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                             >
                               {sendingMessage ? (
-                                <div className="w-4 h-4 border-2 border-teal-400/30 border-t-teal-400 rounded-full animate-spin" />
+                                <div className="w-4 h-4 border-2 border-[#C84FFF]/30 border-t-[#C84FFF] rounded-full animate-spin" />
                               ) : (
                                 <Send className="w-4 h-4" />
                               )}

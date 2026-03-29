@@ -84,10 +84,10 @@ type Tab = 'orders' | 'stock' | 'boxes' | 'details';
 
 const statusConfig: Record<string, { color: string; bgColor: string; icon: React.ElementType; label: string }> = {
   PENDING: { color: 'text-yellow-400', bgColor: 'bg-yellow-400/10', icon: Clock, label: 'Pending' },
-  CONFIRMED: { color: 'text-[#BFFF00]', bgColor: 'bg-[rgba(191,255,0,0.1)]', icon: Check, label: 'Confirmed' },
+  CONFIRMED: { color: 'text-[#C84FFF]', bgColor: 'bg-[rgba(200,79,255,0.1)]', icon: Check, label: 'Confirmed' },
   PROCESSING: { color: 'text-purple-400', bgColor: 'bg-purple-400/10', icon: Package, label: 'Processing' },
   SHIPPED: { color: 'text-indigo-400', bgColor: 'bg-indigo-400/10', icon: Truck, label: 'Shipped' },
-  DELIVERED: { color: 'text-green-400', bgColor: 'bg-green-400/10', icon: CheckCircle, label: 'Delivered' },
+  DELIVERED: { color: 'text-[#E879F9]', bgColor: 'bg-[#C84FFF]/10', icon: CheckCircle, label: 'Delivered' },
   CANCELLED: { color: 'text-red-400', bgColor: 'bg-red-400/10', icon: XCircle, label: 'Cancelled' },
 };
 
@@ -261,7 +261,7 @@ export function ShopDetailClient({
                         <StatusIcon className={`w-3.5 h-3.5 ${config.color}`} />
                         <span className={`text-xs font-medium ${config.color}`}>{config.label}</span>
                       </div>
-                      <span className="text-sm font-semibold text-emerald-400">{order.cardValue.toFixed(2)}</span>
+                      <span className="text-sm font-semibold text-[#E879F9]">{order.cardValue.toFixed(2)}</span>
                       {isExpanded ? <ChevronUp className="w-4 h-4 text-[#8888aa]" /> : <ChevronDown className="w-4 h-4 text-[#8888aa]" />}
                     </div>
 
@@ -285,7 +285,7 @@ export function ShopDetailClient({
                               <p className="text-[#8888aa]">{order.user.email}</p>
                               <p className="text-[#8888aa]">{order.shippingEmail}</p>
                               <div className="flex items-center gap-1 mt-1">
-                                {order.shippingMethod === 'COINS' ? <Coins className="w-3.5 h-3.5 text-amber-400" /> : <Euro className="w-3.5 h-3.5 text-green-400" />}
+                                {order.shippingMethod === 'COINS' ? <Coins className="w-3.5 h-3.5 text-amber-400" /> : <Euro className="w-3.5 h-3.5 text-[#E879F9]" />}
                                 <span className="text-[#8888aa]">Shipping: {order.shippingCost.toFixed(2)}</span>
                               </div>
                             </div>
@@ -301,13 +301,13 @@ export function ShopDetailClient({
                                 value={trackingData.number}
                                 onChange={(e) => setTrackingData({ ...trackingData, number: e.target.value })}
                                 placeholder="Tracking number"
-                                className="w-full px-3 py-2 rounded-lg bg-[#12123a] text-white text-sm border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
+                                className="w-full px-3 py-2 rounded-lg bg-[#12123a] text-white text-sm border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                               />
                               <input
                                 value={trackingData.url}
                                 onChange={(e) => setTrackingData({ ...trackingData, url: e.target.value })}
                                 placeholder="Tracking URL"
-                                className="w-full px-3 py-2 rounded-lg bg-[#12123a] text-white text-sm border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
+                                className="w-full px-3 py-2 rounded-lg bg-[#12123a] text-white text-sm border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                               />
                               <div className="flex gap-2">
                                 <button onClick={() => handleTrackingSave(order.id)} className="px-3 py-1.5 rounded-lg bg-orange-600 text-white text-xs font-medium hover:bg-orange-500">Save</button>
@@ -415,15 +415,15 @@ export function ShopDetailClient({
                         <td className="px-4 py-3 text-sm text-[#f0f0f5]">{categoryLabels[product.category] || product.category}</td>
                         <td className="px-4 py-3 text-sm text-[#f0f0f5]">{product.game ? gameLabels[product.game] || product.game : '-'}</td>
                         <td className="px-4 py-3 text-sm text-[#f0f0f5]">{conditionLabels[product.condition] || product.condition}</td>
-                        <td className="px-4 py-3 text-sm text-right font-semibold text-emerald-400">{product.price.toFixed(2)}</td>
+                        <td className="px-4 py-3 text-sm text-right font-semibold text-[#E879F9]">{product.price.toFixed(2)}</td>
                         <td className="px-4 py-3 text-center">
-                          <span className={`text-sm font-medium ${product.stock > 0 ? 'text-green-400' : 'text-red-400'}`}>
+                          <span className={`text-sm font-medium ${product.stock > 0 ? 'text-[#E879F9]' : 'text-red-400'}`}>
                             {product.stock}
                           </span>
                         </td>
                         <td className="px-4 py-3 text-center">
                           <span className={`px-2 py-0.5 rounded-lg text-xs font-medium ${
-                            product.isActive ? 'bg-green-500/20 text-green-400' : 'bg-gray-500/20 text-[#8888aa]'
+                            product.isActive ? 'bg-[#C84FFF]/20 text-[#E879F9]' : 'bg-gray-500/20 text-[#8888aa]'
                           }`}>
                             {product.isActive ? 'Active' : 'Hidden'}
                           </span>
@@ -460,7 +460,7 @@ export function ShopDetailClient({
                     )}
                     <div className="absolute top-2 right-2">
                       <span className={`px-2 py-0.5 rounded-lg text-xs font-medium ${
-                        box.isActive ? 'bg-green-500/80 text-white' : 'bg-gray-700/80 text-[#f0f0f5]'
+                        box.isActive ? 'bg-[#C84FFF]/80 text-white' : 'bg-gray-700/80 text-[#f0f0f5]'
                       }`}>
                         {box.isActive ? 'Active' : 'Inactive'}
                       </span>
@@ -470,7 +470,7 @@ export function ShopDetailClient({
                     <h3 className="font-semibold text-white mb-1">{box.name}</h3>
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-[#8888aa]">{box.cardCount} cards</span>
-                      <span className="font-semibold text-emerald-400">{box.price.toFixed(2)} coins</span>
+                      <span className="font-semibold text-[#E879F9]">{box.price.toFixed(2)} coins</span>
                     </div>
                     <p className="text-xs text-gray-500 mt-1">Created {new Date(box.createdAt).toLocaleDateString()}</p>
                   </div>
@@ -504,7 +504,7 @@ export function ShopDetailClient({
               <div>
                 <label className="text-xs text-gray-500 block mb-1">Status</label>
                 <span className={`px-2 py-1 rounded-lg text-xs font-medium ${
-                  shop.isActive ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+                  shop.isActive ? 'bg-[#C84FFF]/20 text-[#E879F9]' : 'bg-red-500/20 text-red-400'
                 }`}>
                   {shop.isActive ? 'Active' : 'Inactive'}
                 </span>
@@ -518,7 +518,7 @@ export function ShopDetailClient({
 
           <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 space-y-4">
             <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-              <User className="w-5 h-5 text-[#BFFF00]" /> Owner Information
+              <User className="w-5 h-5 text-[#C84FFF]" /> Owner Information
             </h3>
             <div className="space-y-3">
               <div>

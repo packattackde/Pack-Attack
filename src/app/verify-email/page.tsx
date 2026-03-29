@@ -56,8 +56,8 @@ function VerifyEmailContent() {
     <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-8 text-center">
       {status === 'loading' && (
         <>
-          <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[rgba(191,255,0,0.1)] to-purple-500/20">
-            <Loader2 className="w-10 h-10 text-[#BFFF00] animate-spin" />
+          <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[rgba(200,79,255,0.1)] to-purple-500/20">
+            <Loader2 className="w-10 h-10 text-[#C84FFF] animate-spin" />
           </div>
           <h2 className="text-2xl font-bold text-white mb-2">Verifying Email</h2>
           <p className="text-[#8888aa]">Please wait while we verify your email address...</p>
@@ -66,15 +66,15 @@ function VerifyEmailContent() {
 
       {status === 'success' && (
         <>
-          <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-green-500/20 to-emerald-500/20">
-            <CheckCircle2 className="w-10 h-10 text-green-400" />
+          <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[#C84FFF]/20 to-[#9333EA]/20">
+            <CheckCircle2 className="w-10 h-10 text-[#E879F9]" />
           </div>
           <h2 className="text-2xl font-bold text-white mb-2">Email Verified!</h2>
           <p className="text-[#8888aa] mb-6">{message}</p>
           <div className="space-y-3">
             <Link
               href="/login"
-              className="block w-full py-4 bg-[#BFFF00] hover:bg-[#d4ff4d] text-black font-semibold rounded-xl transition-all hover:scale-[1.02]"
+              className="block w-full py-4 bg-[#C84FFF] hover:bg-[#E879F9] text-white font-semibold rounded-xl transition-all hover:scale-[1.02]"
             >
               Sign In to Your Account
             </Link>
@@ -90,14 +90,14 @@ function VerifyEmailContent() {
 
       {status === 'already-verified' && (
         <>
-          <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[rgba(191,255,0,0.1)] to-purple-500/20">
-            <CheckCircle2 className="w-10 h-10 text-[#BFFF00]" />
+          <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[rgba(200,79,255,0.1)] to-purple-500/20">
+            <CheckCircle2 className="w-10 h-10 text-[#C84FFF]" />
           </div>
           <h2 className="text-2xl font-bold text-white mb-2">Already Verified</h2>
           <p className="text-[#8888aa] mb-6">{message}</p>
           <Link
             href="/login"
-            className="block w-full py-4 bg-[#BFFF00] hover:bg-[#d4ff4d] text-black font-semibold rounded-xl transition-all hover:scale-[1.02]"
+            className="block w-full py-4 bg-[#C84FFF] hover:bg-[#E879F9] text-white font-semibold rounded-xl transition-all hover:scale-[1.02]"
           >
             Sign In to Your Account
           </Link>
@@ -145,8 +145,8 @@ function VerifyEmailContent() {
 function LoadingState() {
   return (
     <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-8 text-center">
-      <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[rgba(191,255,0,0.1)] to-purple-500/20">
-        <Loader2 className="w-10 h-10 text-[#BFFF00] animate-spin" />
+      <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[rgba(200,79,255,0.1)] to-purple-500/20">
+        <Loader2 className="w-10 h-10 text-[#C84FFF] animate-spin" />
       </div>
       <h2 className="text-2xl font-bold text-white mb-2">Loading</h2>
       <p className="text-[#8888aa]">Please wait...</p>
@@ -167,7 +167,7 @@ export default function VerifyEmailPage() {
           <Link href="/" className="inline-block">
             <h1 className="text-3xl font-bold">
               <span className="text-white">PACK </span>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#BFFF00] to-[#d4ff4d]">ATTACK</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C84FFF] to-[#E879F9]">ATTACK</span>
             </h1>
           </Link>
         </div>

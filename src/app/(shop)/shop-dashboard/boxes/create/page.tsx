@@ -61,7 +61,7 @@ export default function CreateShopBoxPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin text-emerald-500 mx-auto mb-4" />
+          <Loader2 className="h-8 w-8 animate-spin text-[#C84FFF] mx-auto mb-4" />
           <p className="text-[#8888aa]">Loading...</p>
         </div>
       </div>
@@ -73,7 +73,7 @@ export default function CreateShopBoxPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin text-emerald-500 mx-auto mb-4" />
+          <Loader2 className="h-8 w-8 animate-spin text-[#C84FFF] mx-auto mb-4" />
           <p className="text-[#8888aa]">Redirecting...</p>
         </div>
       </div>
@@ -330,7 +330,7 @@ export default function CreateShopBoxPage() {
       {/* Background Effects */}
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
-      <div className="fixed top-20 right-10 w-72 h-72 bg-teal-500/10 rounded-full blur-3xl animate-float" />
+      <div className="fixed top-20 right-10 w-72 h-72 bg-[#C84FFF]/10 rounded-full blur-3xl animate-float" />
 
       <div className="relative container py-8 md:py-12">
         {/* Header */}
@@ -345,14 +345,14 @@ export default function CreateShopBoxPage() {
           
           <div className="flex items-center gap-3 mb-4">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
-              <Store className="w-4 h-4 text-teal-400" />
+              <Store className="w-4 h-4 text-[#E879F9]" />
               <span className="text-[#f0f0f5]">Shop Dashboard</span>
             </div>
           </div>
           
           <h1 className="text-3xl md:text-4xl font-bold mb-2 font-heading">
             <span className="text-white">Create </span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#BFFF00] to-[#d4ff4d]">New Box</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C84FFF] to-[#E879F9]">New Box</span>
           </h1>
           <p className="text-[#8888aa]">Build a custom card box with your inventory for users to open.</p>
         </div>
@@ -360,8 +360,8 @@ export default function CreateShopBoxPage() {
         <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl overflow-hidden">
           <div className="border-b border-[rgba(255,255,255,0.06)] p-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-teal-500/10">
-                <Package className="w-5 h-5 text-teal-400" />
+              <div className="p-2 rounded-xl bg-[#C84FFF]/10">
+                <Package className="w-5 h-5 text-[#E879F9]" />
               </div>
               <div>
                 <h2 className="text-xl font-bold text-white">Box Configuration</h2>
@@ -382,7 +382,7 @@ export default function CreateShopBoxPage() {
                     placeholder="e.g., Premium MTG Collection"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:outline-none transition-colors"
+                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[#C84FFF] focus:ring-1 focus:ring-[#C84FFF] focus:outline-none transition-colors"
                   />
                 </div>
                 <div className="space-y-2">
@@ -395,7 +395,7 @@ export default function CreateShopBoxPage() {
                     placeholder="e.g., 100"
                     value={formData.price}
                     onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:outline-none transition-colors"
+                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[#C84FFF] focus:ring-1 focus:ring-[#C84FFF] focus:outline-none transition-colors"
                   />
                 </div>
               </div>
@@ -407,7 +407,7 @@ export default function CreateShopBoxPage() {
                   placeholder="Describe what makes this box special..."
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:outline-none transition-colors resize-none"
+                  className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[#C84FFF] focus:ring-1 focus:ring-[#C84FFF] focus:outline-none transition-colors resize-none"
                   rows={3}
                 />
               </div>
@@ -421,7 +421,7 @@ export default function CreateShopBoxPage() {
                     min="1"
                     value={formData.cardsPerPack}
                     onChange={(e) => setFormData({ ...formData, cardsPerPack: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:outline-none transition-colors"
+                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[#C84FFF] focus:ring-1 focus:ring-[#C84FFF] focus:outline-none transition-colors"
                   />
                 </div>
               </div>
@@ -447,7 +447,7 @@ export default function CreateShopBoxPage() {
                       setApiSource('default');
                       setSearchResults([]);
                     }}
-                    className="px-4 py-2.5 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-teal-500 focus:outline-none"
+                    className="px-4 py-2.5 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-[#C84FFF] focus:outline-none"
                   >
                     {gameOptions.map(opt => (
                       <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -461,7 +461,7 @@ export default function CreateShopBoxPage() {
                         setApiSource(e.target.value as 'default' | 'justtcg');
                         setSearchResults([]);
                       }}
-                      className="px-4 py-2.5 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-teal-500 focus:outline-none"
+                      className="px-4 py-2.5 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-[#C84FFF] focus:outline-none"
                     >
                       <option value="default">
                         {gameOptions.find(g => g.value === selectedGame)?.defaultApi || 'Default API'}
@@ -471,7 +471,7 @@ export default function CreateShopBoxPage() {
                   )}
                   
                   {justTCGOnlyGames.includes(selectedGame) && (
-                    <span className="px-3 py-2.5 rounded-xl bg-[rgba(191,255,0,0.1)] border border-[rgba(191,255,0,0.3)] text-[#BFFF00] text-sm flex items-center gap-2">
+                    <span className="px-3 py-2.5 rounded-xl bg-[rgba(200,79,255,0.1)] border border-[rgba(200,79,255,0.3)] text-[#C84FFF] text-sm flex items-center gap-2">
                       <span>📊</span> JustTCG
                     </span>
                   )}
@@ -483,13 +483,13 @@ export default function CreateShopBoxPage() {
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), searchCards())}
-                      className="flex-1 px-4 py-2.5 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-teal-500 focus:outline-none"
+                      className="flex-1 px-4 py-2.5 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[#C84FFF] focus:outline-none"
                     />
                     <Button 
                       type="button" 
                       onClick={searchCards} 
                       disabled={searching}
-                      className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white px-6"
+                      className="bg-gradient-to-r from-[#C84FFF] to-cyan-500 hover:from-[#9333EA] hover:to-[#7c3aed] text-white px-6"
                     >
                       <Search className="h-4 w-4 mr-2" />
                       {searching ? 'Searching...' : 'Search'}
@@ -516,7 +516,7 @@ export default function CreateShopBoxPage() {
                             type="button"
                             onClick={() => addCardToBox(card)}
                             className={`relative aspect-[63/88] rounded-xl overflow-hidden border-2 transition-all group ${
-                              isSelected ? 'border-teal-500 ring-2 ring-teal-500/50' : 'border-gray-600 hover:border-teal-400'
+                              isSelected ? 'border-[#C84FFF] ring-2 ring-[#C84FFF]/50' : 'border-gray-600 hover:border-[#E879F9]'
                             }`}
                           >
                             {card.imageUrl && (
@@ -528,8 +528,8 @@ export default function CreateShopBoxPage() {
                               />
                             )}
                             {isSelected ? (
-                              <div className="absolute inset-0 bg-teal-500/30 flex items-center justify-center">
-                                <div className="bg-teal-500 rounded-full p-1">
+                              <div className="absolute inset-0 bg-[#C84FFF]/30 flex items-center justify-center">
+                                <div className="bg-[#C84FFF] rounded-full p-1">
                                   <Check className="h-4 w-4 text-white" />
                                 </div>
                               </div>
@@ -554,7 +554,7 @@ export default function CreateShopBoxPage() {
                     <div className="flex items-center justify-between p-4 rounded-xl bg-[#12123a]">
                       <div className="text-sm">
                         <span className="text-[#8888aa]">Total Pull Rate: </span>
-                        <span className={`font-bold ${Math.abs(totalRate - 100) < 0.001 ? 'text-teal-400' : 'text-red-400'}`}>
+                        <span className={`font-bold ${Math.abs(totalRate - 100) < 0.001 ? 'text-[#E879F9]' : 'text-red-400'}`}>
                           {totalRate.toFixed(3)}%
                         </span>
                         {Math.abs(totalRate - 100) >= 0.001 && (
@@ -566,7 +566,7 @@ export default function CreateShopBoxPage() {
                         variant="outline" 
                         size="sm" 
                         onClick={distributeRates}
-                        className="border-teal-500/50 text-teal-400 hover:bg-teal-500/10"
+                        className="border-[#C84FFF]/50 text-[#E879F9] hover:bg-[#C84FFF]/10"
                       >
                         Distribute Evenly
                       </Button>
@@ -599,7 +599,7 @@ export default function CreateShopBoxPage() {
                                 max="100"
                                 value={card.pullRate}
                                 onChange={(e) => updateCard(index, 'pullRate', parseFloat(e.target.value) || 0)}
-                                className="w-20 px-2 py-1.5 rounded-lg bg-[#0B0B2B] border border-[rgba(255,255,255,0.06)] text-white text-sm text-center focus:border-teal-500 focus:outline-none"
+                                className="w-20 px-2 py-1.5 rounded-lg bg-[#0B0B2B] border border-[rgba(255,255,255,0.06)] text-white text-sm text-center focus:border-[#C84FFF] focus:outline-none"
                               />
                             </div>
                             <div className="text-center">
@@ -610,7 +610,7 @@ export default function CreateShopBoxPage() {
                                 min="0.01"
                                 value={card.coinValue}
                                 onChange={(e) => updateCard(index, 'coinValue', parseFloat(e.target.value) || 0.01)}
-                                className="w-20 px-2 py-1.5 rounded-lg bg-[#0B0B2B] border border-[rgba(255,255,255,0.06)] text-white text-sm text-center focus:border-teal-500 focus:outline-none"
+                                className="w-20 px-2 py-1.5 rounded-lg bg-[#0B0B2B] border border-[rgba(255,255,255,0.06)] text-white text-sm text-center focus:border-[#C84FFF] focus:outline-none"
                               />
                             </div>
                             <Button
@@ -628,10 +628,10 @@ export default function CreateShopBoxPage() {
                     </div>
 
                     {highestCard && (
-                      <div className="p-4 rounded-xl bg-gradient-to-r from-teal-500/10 to-cyan-500/10 border border-teal-500/30">
+                      <div className="p-4 rounded-xl bg-gradient-to-r from-[#7c3aed]/10 to-cyan-500/10 border border-[#C84FFF]/30">
                         <p className="text-sm text-[#8888aa] mb-3">Box Display Image (Highest Coin Value Card):</p>
                         <div className="flex items-center gap-4">
-                          <div className="relative w-20 h-28 rounded-lg overflow-hidden ring-2 ring-teal-500/50">
+                          <div className="relative w-20 h-28 rounded-lg overflow-hidden ring-2 ring-[#C84FFF]/50">
                             <Image
                               src={highestCard.imageUrl}
                               alt={highestCard.name}
@@ -641,7 +641,7 @@ export default function CreateShopBoxPage() {
                           </div>
                           <div>
                             <p className="font-semibold text-white">{highestCard.name}</p>
-                            <p className="text-sm text-teal-400">{highestCard.coinValue} coins</p>
+                            <p className="text-sm text-[#E879F9]">{highestCard.coinValue} coins</p>
                           </div>
                         </div>
                       </div>
@@ -654,7 +654,7 @@ export default function CreateShopBoxPage() {
                 <Button 
                   type="submit" 
                   disabled={loading || boxCards.length === 0 || Math.abs(totalRate - 100) > 0.001}
-                  className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white px-8"
+                  className="bg-gradient-to-r from-[#C84FFF] to-cyan-500 hover:from-[#9333EA] hover:to-[#7c3aed] text-white px-8"
                 >
                   {loading ? (
                     <>

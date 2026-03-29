@@ -120,7 +120,7 @@
     inset: 0;
     padding: 1px;
     border-radius: inherit;
-    background: linear-gradient(135deg, #BFFF00, #7fff00, #BFFF00);
+    background: linear-gradient(135deg, #C84FFF, #9333EA, #C84FFF);
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
@@ -129,8 +129,8 @@
   /* Background grid pattern */
   .bg-grid {
     background-image:
-      linear-gradient(rgba(191, 255, 0, 0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(191, 255, 0, 0.02) 1px, transparent 1px);
+      linear-gradient(rgba(200, 79, 255, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(200, 79, 255, 0.02) 1px, transparent 1px);
     background-size: 50px 50px;
   }
 
@@ -154,7 +154,7 @@
 
   .card-lift:hover {
     transform: translateY(-6px);
-    box-shadow: 0 20px 40px -12px rgba(191, 255, 0, 0.15), 0 8px 16px -8px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 20px 40px -12px rgba(200, 79, 255, 0.15), 0 8px 16px -8px rgba(0, 0, 0, 0.4);
   }
 }
 
@@ -364,7 +364,7 @@ html {
 
 /* Core root settings */
 :root {
-  /* === PACK ATTACK DESIGN SYSTEM === */
+  /* === PULLFORGE DESIGN SYSTEM === */
   /* Core Backgrounds */
   --pa-bg-deep: #06061a;
   --pa-bg-base: #0B0B2B;
@@ -372,17 +372,17 @@ html {
   --pa-bg-elevated: #16164a;
   --pa-bg-card: #1a1a4a;
 
-  /* Neon Green — Primary Brand */
-  --pa-neon: #BFFF00;
-  --pa-neon-dim: #9acc00;
-  --pa-neon-glow: rgba(191, 255, 0, 0.3);
-  --pa-neon-subtle: rgba(191, 255, 0, 0.08);
+  /* Neon Purple — Primary Brand */
+  --pa-neon: #C84FFF;
+  --pa-neon-dim: #9333EA;
+  --pa-neon-glow: rgba(200, 79, 255, 0.3);
+  --pa-neon-subtle: rgba(200, 79, 255, 0.08);
 
   /* Text */
   --pa-text-primary: #f0f0f5;
   --pa-text-secondary: #8888aa;
   --pa-text-muted: #7777a0;
-  --pa-text-on-neon: #000000;
+  --pa-text-on-neon: #ffffff;
 
   /* Borders */
   --pa-border: rgba(255, 255, 255, 0.06);
@@ -391,14 +391,14 @@ html {
 
   /* Rarity Colors */
   --rarity-common: #8b8ba0;
-  --rarity-uncommon: #4ade80;
+  --rarity-uncommon: #c084fc;
   --rarity-rare: #60a5fa;
   --rarity-epic: #a78bfa;
   --rarity-legendary: #fbbf24;
   --rarity-mythic: #ff6b6b;
 
   /* Semantic */
-  --pa-success: #4ade80;
+  --pa-success: #C84FFF;
   --pa-warning: #fbbf24;
   --pa-error: #ef4444;
   --pa-info: #60a5fa;
@@ -420,8 +420,8 @@ html {
   --pa-radius-xl: 20px;
   --pa-radius-full: 100px;
 
-  --primary: 191 255 0;
-  --secondary: 154 204 0;
+  --primary: 200 79 255;
+  --secondary: 147 51 234;
   
   /* Touch-friendly sizes - WCAG 2.1 recommends 44px minimum */
   --touch-target-min: 44px;
@@ -544,7 +544,7 @@ textarea:not([rows]) {
 body {
   color: var(--pa-text-primary);
   background:
-    radial-gradient(ellipse at 15% 5%, rgba(191, 255, 0, 0.08) 0%, transparent 45%),
+    radial-gradient(ellipse at 15% 5%, rgba(200, 79, 255, 0.08) 0%, transparent 45%),
     radial-gradient(ellipse at 85% 90%, rgba(96, 165, 250, 0.07) 0%, transparent 45%),
     radial-gradient(ellipse at 50% 40%, rgba(167, 139, 250, 0.05) 0%, transparent 50%),
     linear-gradient(180deg, #06061a 0%, #0a0a35 30%, #0d0d40 55%, #0a0a35 80%, #06061a 100%);
@@ -916,7 +916,7 @@ img {
 
 @media (prefers-contrast: high) {
   :root {
-    --primary: 191 255 0;
+    --primary: 200 79 255;
   }
   
   .border-\[rgba\(255\,255\,255\,0\.06\)\] {

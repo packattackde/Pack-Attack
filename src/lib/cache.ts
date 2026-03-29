@@ -1,5 +1,5 @@
 /**
- * Server-side caching utilities for Pack Attack
+ * Server-side caching utilities for PullForge
  * Provides in-memory caching with TTL and automatic cleanup
  */
 

@@ -237,7 +237,7 @@ export function UsersClient({ initialUsers, totalUsers }: Props) {
             <div className="text-sm text-[#8888aa]">Total Users</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-green-400">
+            <div className="text-2xl font-bold text-[#E879F9]">
               {users.filter(u => u.emailVerified).length}
             </div>
             <div className="text-sm text-[#8888aa]">Verified</div>
@@ -268,14 +268,14 @@ export function UsersClient({ initialUsers, totalUsers }: Props) {
                 placeholder="Search by email or name..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white placeholder-gray-500 focus:border-[rgba(191,255,0,0.3)] focus:ring-1 focus:ring-[rgba(191,255,0,0.2)]"
+                className="w-full pl-10 pr-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white placeholder-gray-500 focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.2)]"
               />
             </div>
           </div>
           <select
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value)}
-            className="px-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white focus:border-[rgba(191,255,0,0.3)]"
+            className="px-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white focus:border-[rgba(200,79,255,0.3)]"
           >
             <option value="">All Roles</option>
             <option value="USER">Users</option>
@@ -285,7 +285,7 @@ export function UsersClient({ initialUsers, totalUsers }: Props) {
           <select
             value={verifiedFilter}
             onChange={(e) => setVerifiedFilter(e.target.value)}
-            className="px-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white focus:border-[rgba(191,255,0,0.3)]"
+            className="px-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white focus:border-[rgba(200,79,255,0.3)]"
           >
             <option value="">All Status</option>
             <option value="true">Verified</option>
@@ -293,14 +293,14 @@ export function UsersClient({ initialUsers, totalUsers }: Props) {
           </select>
           <button
             type="submit"
-            className="px-6 py-2 bg-[#BFFF00] hover:bg-[#d4ff4d] text-black rounded-lg transition-colors"
+            className="px-6 py-2 bg-[#C84FFF] hover:bg-[#E879F9] text-white rounded-lg transition-colors"
           >
             Search
           </button>
           <button
             type="button"
             onClick={() => setCreateModalOpen(true)}
-            className="px-6 py-2 bg-gradient-to-r bg-[#BFFF00] hover:bg-[#d4ff4d] text-black rounded-lg transition-colors flex items-center gap-2"
+            className="px-6 py-2 bg-gradient-to-r bg-[#C84FFF] hover:bg-[#E879F9] text-white rounded-lg transition-colors flex items-center gap-2"
           >
             <UserPlus className="w-4 h-4" />
             Add User
@@ -338,7 +338,7 @@ export function UsersClient({ initialUsers, totalUsers }: Props) {
                         Admin
                       </span>
                     ) : user.role === 'SHOP_OWNER' ? (
-                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-medium">
+                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-[#C84FFF]/20 text-[#E879F9] text-xs font-medium">
                         <Shield className="w-3 h-3" />
                         Shop Owner
                       </span>
@@ -351,7 +351,7 @@ export function UsersClient({ initialUsers, totalUsers }: Props) {
                   </td>
                   <td className="p-4">
                     {user.emailVerified ? (
-                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-green-500/20 text-green-400 text-xs font-medium">
+                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-[#C84FFF]/20 text-[#E879F9] text-xs font-medium">
                         <CheckCircle2 className="w-3 h-3" />
                         Verified
                       </span>
@@ -373,7 +373,7 @@ export function UsersClient({ initialUsers, totalUsers }: Props) {
                       {!user.emailVerified && (
                         <button
                           onClick={() => handleResendVerification(user.id)}
-                          className="p-2 text-[#8888aa] hover:text-[#BFFF00] transition-colors"
+                          className="p-2 text-[#8888aa] hover:text-[#C84FFF] transition-colors"
                           title="Resend verification email"
                         >
                           <Mail className="w-4 h-4" />
@@ -511,7 +511,7 @@ export function UsersClient({ initialUsers, totalUsers }: Props) {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 py-3 bg-gradient-to-r bg-[#BFFF00] hover:bg-[#d4ff4d] text-black rounded-lg transition-colors disabled:opacity-50"
+                  className="flex-1 py-3 bg-gradient-to-r bg-[#C84FFF] hover:bg-[#E879F9] text-white rounded-lg transition-colors disabled:opacity-50"
                 >
                   {loading ? 'Creating...' : 'Create User'}
                 </button>
@@ -604,7 +604,7 @@ export function UsersClient({ initialUsers, totalUsers }: Props) {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 py-3 bg-gradient-to-r bg-[#BFFF00] hover:bg-[#d4ff4d] text-black rounded-lg transition-colors disabled:opacity-50"
+                  className="flex-1 py-3 bg-gradient-to-r bg-[#C84FFF] hover:bg-[#E879F9] text-white rounded-lg transition-colors disabled:opacity-50"
                 >
                   {loading ? 'Saving...' : 'Save Changes'}
                 </button>

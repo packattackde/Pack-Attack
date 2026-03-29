@@ -128,7 +128,7 @@ export default function ShopCheckoutPage() {
     return (
       <div className="min-h-screen flex items-center justify-center font-display">
         <div className="text-white flex items-center gap-3">
-          <div className="w-6 h-6 border-2 border-[rgba(191,255,0,0.3)] border-t-transparent rounded-full animate-spin" />
+          <div className="w-6 h-6 border-2 border-[rgba(200,79,255,0.3)] border-t-transparent rounded-full animate-spin" />
           Loading checkout...
         </div>
       </div>
@@ -142,7 +142,7 @@ export default function ShopCheckoutPage() {
         <div className="fixed inset-0 radial-gradient" />
         
         <div className="relative bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center max-w-md mx-4">
-          <div className="w-20 h-20 rounded-full bg-gradient-to-r from-[#BFFF00] to-[#BFFF00] flex items-center justify-center mx-auto mb-6">
+          <div className="w-20 h-20 rounded-full bg-gradient-to-r from-[#C84FFF] to-[#C84FFF] flex items-center justify-center mx-auto mb-6">
             <CheckCircle className="w-10 h-10 text-white" />
           </div>
           <h1 className="text-2xl font-bold text-white mb-3">Order Placed Successfully!</h1>
@@ -152,7 +152,7 @@ export default function ShopCheckoutPage() {
           <div className="space-y-3">
             <Link
               href="/shop/orders"
-              className="block w-full py-3 bg-[#BFFF00] text-black font-semibold rounded-xl hover:brightness-110 transition-all"
+              className="block w-full py-3 bg-[#C84FFF] text-white font-semibold rounded-xl hover:brightness-110 transition-all"
             >
               View My Orders
             </Link>
@@ -195,7 +195,7 @@ export default function ShopCheckoutPage() {
               {/* Shipping Address */}
               <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6">
                 <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                  <Truck className="w-5 h-5 text-[#BFFF00]" />
+                  <Truck className="w-5 h-5 text-[#C84FFF]" />
                   Shipping Address
                 </h2>
 
@@ -207,7 +207,7 @@ export default function ShopCheckoutPage() {
                       required
                       value={formData.shippingName}
                       onChange={(e) => setFormData({ ...formData, shippingName: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
+                      className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                       placeholder="John Doe"
                     />
                   </div>
@@ -219,7 +219,7 @@ export default function ShopCheckoutPage() {
                       required
                       value={formData.shippingEmail}
                       onChange={(e) => setFormData({ ...formData, shippingEmail: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
+                      className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                       placeholder="john@example.com"
                     />
                   </div>
@@ -231,7 +231,7 @@ export default function ShopCheckoutPage() {
                       required
                       value={formData.shippingAddress}
                       onChange={(e) => setFormData({ ...formData, shippingAddress: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
+                      className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                       placeholder="123 Main Street, Apt 4"
                     />
                   </div>
@@ -243,7 +243,7 @@ export default function ShopCheckoutPage() {
                       required
                       value={formData.shippingCity}
                       onChange={(e) => setFormData({ ...formData, shippingCity: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
+                      className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                       placeholder="Berlin"
                     />
                   </div>
@@ -255,7 +255,7 @@ export default function ShopCheckoutPage() {
                       required
                       value={formData.shippingZip}
                       onChange={(e) => setFormData({ ...formData, shippingZip: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
+                      className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                       placeholder="10115"
                     />
                   </div>
@@ -267,7 +267,7 @@ export default function ShopCheckoutPage() {
                       required
                       value={formData.shippingCountry}
                       onChange={(e) => setFormData({ ...formData, shippingCountry: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
+                      className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                       placeholder="Germany"
                     />
                   </div>
@@ -278,7 +278,7 @@ export default function ShopCheckoutPage() {
                       type="tel"
                       value={formData.shippingPhone}
                       onChange={(e) => setFormData({ ...formData, shippingPhone: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none"
+                      className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                       placeholder="+49 123 456789"
                     />
                   </div>
@@ -289,7 +289,7 @@ export default function ShopCheckoutPage() {
                       value={formData.notes}
                       onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                       rows={3}
-                      className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none resize-none"
+                      className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none resize-none"
                       placeholder="Any special instructions..."
                     />
                   </div>
@@ -299,7 +299,7 @@ export default function ShopCheckoutPage() {
               {/* Payment Info */}
               <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6">
                 <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                  <CreditCard className="w-5 h-5 text-[#BFFF00]" />
+                  <CreditCard className="w-5 h-5 text-[#C84FFF]" />
                   Payment
                 </h2>
                 <p className="text-[#8888aa]">
@@ -358,14 +358,14 @@ export default function ShopCheckoutPage() {
                   </div>
                   <div className="flex justify-between text-lg font-semibold border-t border-[rgba(255,255,255,0.06)] pt-3">
                     <span className="text-white">Total</span>
-                    <span className="text-[#BFFF00]">€{grandTotal.toFixed(2)}</span>
+                    <span className="text-[#C84FFF]">€{grandTotal.toFixed(2)}</span>
                   </div>
                 </div>
 
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full py-4 bg-[#BFFF00] text-black font-semibold rounded-xl hover:brightness-110 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="w-full py-4 bg-[#C84FFF] text-white font-semibold rounded-xl hover:brightness-110 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   {submitting ? (
                     <>

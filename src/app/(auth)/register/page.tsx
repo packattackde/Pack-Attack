@@ -23,8 +23,8 @@ function DiscordIcon({ className }: { className?: string }) {
 
 function PasswordCheck({ met, label }: { met: boolean; label: string }) {
   return (
-      <div className={`flex items-center gap-1.5 text-[11px] transition-colors ${met ? 'text-emerald-400' : 'text-gray-600'}`}>
-        <CheckCircle2 className={`w-3 h-3 ${met ? 'text-emerald-400' : 'text-gray-700'}`} />
+      <div className={`flex items-center gap-1.5 text-[11px] transition-colors ${met ? 'text-[#E879F9]' : 'text-gray-600'}`}>
+        <CheckCircle2 className={`w-3 h-3 ${met ? 'text-[#E879F9]' : 'text-gray-700'}`} />
         {label}
       </div>
   );
@@ -99,8 +99,8 @@ export default function RegisterPage() {
   if (success) {
     return (
         <div className="rounded-2xl border border-white/6 bg-white/2 p-6 sm:p-8 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 mb-5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20">
-            <CheckCircle2 className="w-8 h-8 text-emerald-400" />
+          <div className="inline-flex items-center justify-center w-16 h-16 mb-5 rounded-2xl bg-[#C84FFF]/10 border border-[#C84FFF]/20">
+            <CheckCircle2 className="w-8 h-8 text-[#E879F9]" />
           </div>
           <h2 className="text-xl font-bold text-white mb-2">Check your email</h2>
           <p className="text-sm text-gray-500 mb-4">We sent a verification link to:</p>
@@ -113,7 +113,7 @@ export default function RegisterPage() {
           </p>
           <Link
               href="/login"
-              className="block w-full h-11 bg-[#BFFF00] hover:bg-[#d4ff4d] text-black text-sm font-semibold rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-[0_0_24px_rgba(191,255,0,0.3)] items-center justify-center"
+              className="block w-full h-11 bg-[#C84FFF] hover:bg-[#E879F9] text-white text-sm font-semibold rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-[0_0_24px_rgba(200,79,255,0.3)] items-center justify-center"
           >
             Go to Login
           </Link>
@@ -204,7 +204,7 @@ export default function RegisterPage() {
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full h-11 pl-10 pr-4 rounded-xl bg-white/4 border border-white/8 text-sm text-white placeholder-gray-600 focus:border-[rgba(191,255,0,0.3)] focus:ring-1 focus:ring-[rgba(191,255,0,0.2)] focus:bg-white/6 outline-none transition-all"
+                    className="w-full h-11 pl-10 pr-4 rounded-xl bg-white/4 border border-white/8 text-sm text-white placeholder-gray-600 focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.2)] focus:bg-white/6 outline-none transition-all"
                     placeholder="Your name"
                 />
               </div>
@@ -219,7 +219,7 @@ export default function RegisterPage() {
                     required
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full h-11 pl-10 pr-4 rounded-xl bg-white/4 border border-white/8 text-sm text-white placeholder-gray-600 focus:border-[rgba(191,255,0,0.3)] focus:ring-1 focus:ring-[rgba(191,255,0,0.2)] focus:bg-white/6 outline-none transition-all"
+                    className="w-full h-11 pl-10 pr-4 rounded-xl bg-white/4 border border-white/8 text-sm text-white placeholder-gray-600 focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.2)] focus:bg-white/6 outline-none transition-all"
                     placeholder="you@example.com"
                 />
               </div>
@@ -234,7 +234,7 @@ export default function RegisterPage() {
                     required
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    className="w-full h-11 pl-10 pr-11 rounded-xl bg-white/4 border border-white/8 text-sm text-white placeholder-gray-600 focus:border-[rgba(191,255,0,0.3)] focus:ring-1 focus:ring-[rgba(191,255,0,0.2)] focus:bg-white/6 outline-none transition-all"
+                    className="w-full h-11 pl-10 pr-11 rounded-xl bg-white/4 border border-white/8 text-sm text-white placeholder-gray-600 focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.2)] focus:bg-white/6 outline-none transition-all"
                     placeholder="Create a password"
                 />
                 <button
@@ -260,7 +260,7 @@ export default function RegisterPage() {
             <button
                 type="submit"
                 disabled={loading || !passwordStrong}
-                className="w-full h-11 mt-1 bg-[#BFFF00] hover:bg-[#d4ff4d] text-black text-sm font-semibold rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-[0_0_24px_rgba(191,255,0,0.3)] disabled:opacity-40 disabled:hover:shadow-none flex items-center justify-center gap-2"
+                className="w-full h-11 mt-1 bg-[#C84FFF] hover:bg-[#E879F9] text-white text-sm font-semibold rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-[0_0_24px_rgba(200,79,255,0.3)] disabled:opacity-40 disabled:hover:shadow-none flex items-center justify-center gap-2"
             >
               {loading ? (
                   <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
@@ -276,7 +276,7 @@ export default function RegisterPage() {
           {/* Login link */}
           <p className="mt-6 text-center text-sm text-gray-500">
             Already have an account?{' '}
-            <Link href="/login" className="text-[#BFFF00] hover:text-[#d4ff4d] font-medium transition-colors">
+            <Link href="/login" className="text-[#C84FFF] hover:text-[#E879F9] font-medium transition-colors">
               Sign in
             </Link>
           </p>

@@ -22,7 +22,7 @@ export const config = {
   
   // Application
   app: {
-    name: 'Pack Attack',
+    name: 'PullForge',
     description: 'Magic: The Gathering Box Battles',
     url: process.env.NEXTAUTH_URL || 'http://localhost:3000',
   },

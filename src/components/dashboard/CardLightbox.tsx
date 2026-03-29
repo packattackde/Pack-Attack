@@ -115,7 +115,7 @@ export default function CardLightbox({ isOpen, onClose, card }: CardLightboxProp
                 {card.rarity}
               </span>
 
-              <p className="text-[#BFFF00] font-extrabold text-3xl flex items-center justify-center gap-2">
+              <p className="text-[#C84FFF] font-extrabold text-3xl flex items-center justify-center gap-2">
                 <GiTwoCoins className="w-7 h-7" /> {formatCoins(card.coinValue)}
               </p>
             </div>
@@ -125,7 +125,7 @@ export default function CardLightbox({ isOpen, onClose, card }: CardLightboxProp
               {card.boxId && (
                 <Link
                   href={`/open/${card.boxId}`}
-                  className="block w-full text-center px-4 py-3 font-bold rounded-xl text-sm text-black bg-[#BFFF00] hover:brightness-110 transition shadow-[0_0_12px_rgba(191,255,0,0.3)]"
+                  className="block w-full text-center px-4 py-3 font-bold rounded-xl text-sm text-black bg-[#C84FFF] hover:brightness-110 transition shadow-[0_0_12px_rgba(200,79,255,0.3)]"
                 >
                   <span className="flex items-center justify-center gap-2"><GiCardboardBox className="w-4 h-4" /> Open this Box →</span>
                 </Link>

@@ -294,7 +294,7 @@ export function LeaderboardClient() {
                           {entry.userAvatar ? (
                             <img src={entry.userAvatar} alt="" className="w-full h-full object-cover" />
                           ) : (
-                            <span className="text-xs font-bold text-[#BFFF00]">{getInitials(entry.userName)}</span>
+                            <span className="text-xs font-bold text-[#C84FFF]">{getInitials(entry.userName)}</span>
                           )}
                         </div>
                       </div>

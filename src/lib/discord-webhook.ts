@@ -65,7 +65,7 @@ export async function sendBattleNotificationWebhook(battle: BattleNotification) 
     };
 
     const payload = {
-        username: 'Pack-Attack Bot',
+        username: 'PullForge Bot',
         content: '<@&1471928307904807035>',
         embeds: [embed],
     };

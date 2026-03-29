@@ -149,7 +149,7 @@ export default function ProductPage() {
     return (
       <div className="min-h-screen flex items-center justify-center font-display">
         <div className="text-white flex items-center gap-3">
-          <div className="w-6 h-6 border-2 border-[rgba(191,255,0,0.3)] border-t-transparent rounded-full animate-spin" />
+          <div className="w-6 h-6 border-2 border-[rgba(200,79,255,0.3)] border-t-transparent rounded-full animate-spin" />
           Loading product...
         </div>
       </div>
@@ -162,7 +162,7 @@ export default function ProductPage() {
         <div className="text-center">
           <Package className="w-16 h-16 text-gray-600 mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-white mb-2">Product Not Found</h1>
-          <Link href="/shop" className="text-[#BFFF00] hover:underline">
+          <Link href="/shop" className="text-[#C84FFF] hover:underline">
             Back to Shop
           </Link>
         </div>
@@ -246,7 +246,7 @@ export default function ProductPage() {
                     key={index}
                     onClick={() => setCurrentImageIndex(index)}
                     className={`relative w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 border-2 transition-colors ${
-                      currentImageIndex === index ? 'border-[rgba(191,255,0,0.3)]' : 'border-transparent'
+                      currentImageIndex === index ? 'border-[rgba(200,79,255,0.3)]' : 'border-transparent'
                     }`}
                   >
                     <Image
@@ -268,7 +268,7 @@ export default function ProductPage() {
               href={`/shop?shopId=${product.shop.id}`}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md hover:bg-white/5 transition-colors"
             >
-              <Store className="w-4 h-4 text-[#BFFF00]" />
+              <Store className="w-4 h-4 text-[#C84FFF]" />
               <span className="text-[#f0f0f5]">{product.shop.name}</span>
             </Link>
 
@@ -282,7 +282,7 @@ export default function ProductPage() {
                 {categoryDisplayNames[product.category] || product.category}
               </span>
               {product.game && (
-                <span className="px-3 py-1 rounded-lg bg-[rgba(191,255,0,0.15)] text-[#BFFF00] text-sm">
+                <span className="px-3 py-1 rounded-lg bg-[rgba(200,79,255,0.15)] text-[#C84FFF] text-sm">
                   {gameDisplayNames[product.game] || product.game}
                 </span>
               )}
@@ -295,13 +295,13 @@ export default function ProductPage() {
             {/* Price */}
             <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl p-6">
               <div className="flex items-baseline gap-3 mb-2">
-                <span className="text-4xl font-bold text-[#BFFF00]">€{product.price.toFixed(2)}</span>
+                <span className="text-4xl font-bold text-[#C84FFF]">€{product.price.toFixed(2)}</span>
                 {product.comparePrice && (
                   <span className="text-xl text-gray-500 line-through">€{product.comparePrice.toFixed(2)}</span>
                 )}
               </div>
               {discount && discount > 0 && (
-                <p className="text-[#BFFF00] text-sm">You save €{(product.comparePrice! - product.price).toFixed(2)} ({discount}%)</p>
+                <p className="text-[#C84FFF] text-sm">You save €{(product.comparePrice! - product.price).toFixed(2)} ({discount}%)</p>
               )}
             </div>
 
@@ -309,8 +309,8 @@ export default function ProductPage() {
             <div className="flex items-center gap-2">
               {product.stock > 0 ? (
                 <>
-                  <div className="w-2 h-2 rounded-full bg-green-500" />
-                  <span className="text-green-400">In Stock</span>
+                  <div className="w-2 h-2 rounded-full bg-[#C84FFF]" />
+                  <span className="text-[#E879F9]">In Stock</span>
                   {product.stock <= 5 && (
                     <span className="text-orange-400 text-sm">- Only {product.stock} left!</span>
                   )}
@@ -350,7 +350,7 @@ export default function ProductPage() {
                 <button
                   onClick={handleAddToCart}
                   disabled={addingToCart}
-                  className="w-full py-4 bg-[#BFFF00] text-black font-semibold rounded-xl hover:brightness-110 transition-all hover:scale-[1.02] disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="w-full py-4 bg-[#C84FFF] text-white font-semibold rounded-xl hover:brightness-110 transition-all hover:scale-[1.02] disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   {addingToCart ? (
                     <>

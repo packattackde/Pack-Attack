@@ -289,7 +289,7 @@ test.describe('Login Page Design', () => {
   test('centered card layout', async ({ page }) => {
     await page.goto('/login');
     
-    // PACK ATTACK branding
+    // PullForge branding
     const branding = page.locator('h1:has-text("PACK")');
     await expect(branding).toBeVisible();
     
@@ -525,7 +525,7 @@ test.describe('Cross-Page Consistency', () => {
       await expect(nav).toBeVisible();
       
       // Logo/brand should be present - use first() to handle multiple matches
-      const logo = page.locator('a:has-text("Pack Attack")').first();
+      const logo = page.locator('a:has-text("PullForge")').first();
       await expect(logo).toBeVisible();
     });
 

@@ -134,7 +134,7 @@ export default async function AdminShopDetailPage({
                 <p className="text-[#8888aa] text-sm">
                   Owner: {shop.owner.name || 'Unnamed'} ({shop.owner.email})
                   <span className={`ml-3 px-2 py-0.5 rounded-lg text-xs font-medium ${
-                    shop.isActive ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+                    shop.isActive ? 'bg-[#C84FFF]/20 text-[#E879F9]' : 'bg-red-500/20 text-red-400'
                   }`}>
                     {shop.isActive ? 'Active' : 'Inactive'}
                   </span>
@@ -143,7 +143,7 @@ export default async function AdminShopDetailPage({
             </div>
             <Link
               href={`/shop-dashboard?shopId=${shop.id}`}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-medium hover:from-emerald-600 hover:to-teal-600 transition-all shadow-lg shadow-emerald-500/25"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#9333EA] to-[#7c3aed] text-white font-medium hover:from-[#9333EA] hover:to-[#7c3aed] transition-all shadow-lg shadow-[#C84FFF]/25"
             >
               <Eye className="w-4 h-4" />
               View as Shop Owner
@@ -154,7 +154,7 @@ export default async function AdminShopDetailPage({
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 mb-8">
           <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
-            <ShoppingCart className="w-5 h-5 text-[#BFFF00] mx-auto mb-2" />
+            <ShoppingCart className="w-5 h-5 text-[#C84FFF] mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{stats.totalOrders.toLocaleString()}</div>
             <div className="text-xs text-[#8888aa]">Total Orders</div>
           </div>
@@ -164,7 +164,7 @@ export default async function AdminShopDetailPage({
             <div className="text-xs text-yellow-400">Pending</div>
           </div>
           <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
-            <Coins className="w-5 h-5 text-emerald-400 mx-auto mb-2" />
+            <Coins className="w-5 h-5 text-[#E879F9] mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{stats.totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
             <div className="text-xs text-[#8888aa]">Revenue</div>
           </div>

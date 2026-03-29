@@ -90,7 +90,7 @@ export default async function ShopPayoutsPage({
     <div className="min-h-screen font-display">
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
-      <div className="fixed bottom-20 left-20 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl animate-float" />
+      <div className="fixed bottom-20 left-20 w-80 h-80 bg-[#C84FFF]/10 rounded-full blur-3xl animate-float" />
 
       <div className="relative container py-8 md:py-12">
         <div className="mb-8">
@@ -103,13 +103,13 @@ export default async function ShopPayoutsPage({
           </Link>
 
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm mb-3">
-            <Store className="w-4 h-4 text-emerald-400" />
+            <Store className="w-4 h-4 text-[#E879F9]" />
             <span className="text-[#f0f0f5]">{isAdmin && targetShop ? `Admin → ${shop.name}` : shop.name}</span>
           </div>
 
           <h1 className="text-3xl md:text-4xl font-bold mb-2 font-heading">
             <span className="text-white">Payout </span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">Management</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C84FFF] to-[#9333EA]">Management</span>
           </h1>
           <p className="text-[#8888aa]">Request payouts for delivered items. Rate: {COIN_TO_EURO_RATE} coins = 1 EUR.</p>
         </div>

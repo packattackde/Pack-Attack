@@ -183,7 +183,7 @@ const tabs = [
     {id: 'overview', label: 'Overview', icon: LayoutDashboard, gradient: 'from-blue-500 to-cyan-500'},
     {id: 'achievements', label: 'Achievements', icon: Award, gradient: 'from-amber-500 to-yellow-500'},
     {id: 'collection', label: 'Collection', icon: Package, gradient: 'from-purple-500 to-pink-500'},
-    {id: 'orders', label: 'Orders', icon: ShoppingBag, gradient: 'from-emerald-500 to-teal-500'},
+    {id: 'orders', label: 'Orders', icon: ShoppingBag, gradient: 'from-[#9333EA] to-[#9333EA]'},
     {id: 'statistics', label: 'Statistics', icon: BarChart3, gradient: 'from-orange-500 to-red-500'},
     {id: 'connections', label: 'Connections', icon: Zap, gradient: 'from-orange-500 to-red-500'},
     {id: 'settings', label: 'Settings', icon: Settings, gradient: 'from-slate-500 to-zinc-500'},
@@ -487,9 +487,9 @@ export const DashboardClient = memo(function DashboardClient({
             case 'PROCESSING':
                 return {
                     icon: Activity,
-                    color: 'text-[#BFFF00]',
-                    bg: 'bg-[rgba(191,255,0,0.1)]',
-                    border: 'border-[rgba(191,255,0,0.3)]',
+                    color: 'text-[#C84FFF]',
+                    bg: 'bg-[rgba(200,79,255,0.1)]',
+                    border: 'border-[rgba(200,79,255,0.3)]',
                     label: 'Processing'
                 };
             case 'SHIPPED':
@@ -503,9 +503,9 @@ export const DashboardClient = memo(function DashboardClient({
             case 'DELIVERED':
                 return {
                     icon: CheckCircle2,
-                    color: 'text-green-400',
-                    bg: 'bg-green-500/10',
-                    border: 'border-green-500/30',
+                    color: 'text-[#E879F9]',
+                    bg: 'bg-[#C84FFF]/10',
+                    border: 'border-[#C84FFF]/30',
                     label: 'Delivered'
                 };
             case 'CANCELLED':
@@ -558,10 +558,10 @@ export const DashboardClient = memo(function DashboardClient({
                 };
             case 'UNCOMMON':
                 return {
-                    color: 'text-green-400',
-                    bg: 'bg-green-500/10',
-                    border: 'border-green-500/30',
-                    gradient: 'from-green-500 to-emerald-500'
+                    color: 'text-[#E879F9]',
+                    bg: 'bg-[#C84FFF]/10',
+                    border: 'border-[#C84FFF]/30',
+                    gradient: 'from-[#C84FFF] to-[#9333EA]'
                 };
             case 'RARE':
                 return {
@@ -598,7 +598,7 @@ export const DashboardClient = memo(function DashboardClient({
     const getCategoryConfig = (category: string) => {
         switch (category) {
             case 'PULLS':
-                return {label: 'Pack Opening', icon: Package, color: 'text-[#BFFF00]', bg: 'bg-[rgba(191,255,0,0.1)]'};
+                return {label: 'Pack Opening', icon: Package, color: 'text-[#C84FFF]', bg: 'bg-[rgba(200,79,255,0.1)]'};
             case 'BATTLES':
                 return {label: 'Battles', icon: Swords, color: 'text-purple-400', bg: 'bg-purple-500/10'};
             case 'COLLECTION':
@@ -606,7 +606,7 @@ export const DashboardClient = memo(function DashboardClient({
             case 'ECONOMY':
                 return {label: 'Economy', icon: Coins, color: 'text-amber-400', bg: 'bg-amber-500/10'};
             case 'SOCIAL':
-                return {label: 'Community', icon: Users, color: 'text-green-400', bg: 'bg-green-500/10'};
+                return {label: 'Community', icon: Users, color: 'text-[#E879F9]', bg: 'bg-[#C84FFF]/10'};
             case 'SPECIAL':
                 return {label: 'Special', icon: Sparkles, color: 'text-orange-400', bg: 'bg-orange-500/10'};
             default:
@@ -644,7 +644,7 @@ export const DashboardClient = memo(function DashboardClient({
             {/* Premium Tab Navigation */}
             <div className="relative mb-10">
                 <div
-                    className="absolute inset-0 bg-gradient-to-r from-[rgba(191,255,0,0.05)] via-[rgba(127,255,0,0.05)] to-[rgba(191,255,0,0.05)] rounded-3xl blur-xl"/>
+                    className="absolute inset-0 bg-gradient-to-r from-[rgba(200,79,255,0.05)] via-[rgba(127,255,0,0.05)] to-[rgba(200,79,255,0.05)] rounded-3xl blur-xl"/>
                 <div className="relative bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-2 overflow-x-auto">
                     <div className="flex gap-2 min-w-max">
                         {tabs.map((tab, index) => {
@@ -752,7 +752,7 @@ export const DashboardClient = memo(function DashboardClient({
                                 label: 'Victories',
                                 value: initialStats.wins,
                                 icon: Trophy,
-                                gradient: 'from-green-500 to-emerald-500',
+                                gradient: 'from-[#C84FFF] to-[#9333EA]',
                                 delay: 200
                             },
                             {
@@ -781,7 +781,7 @@ export const DashboardClient = memo(function DashboardClient({
                                             className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br ${stat.gradient} mb-4 shadow-lg`}>
                                             <Icon className="w-6 h-6 text-white"/>
                                         </div>
-                                        <p className="text-3xl font-bold text-[#BFFF00] mb-1">{stat.value}</p>
+                                        <p className="text-3xl font-bold text-[#C84FFF] mb-1">{stat.value}</p>
                                         <p className="text-sm text-[#7777a0]">{stat.label}</p>
                                     </div>
                                 </div>
@@ -798,22 +798,22 @@ export const DashboardClient = memo(function DashboardClient({
                             transition: 'opacity 0.5s ease 280ms, transform 0.5s ease 280ms'
                         }}
                     >
-                        <div className="absolute inset-0 bg-gradient-to-br from-[rgba(191,255,0,0.1)] via-[rgba(127,255,0,0.05)] to-[rgba(191,255,0,0.1)]"/>
+                        <div className="absolute inset-0 bg-gradient-to-br from-[rgba(200,79,255,0.1)] via-[rgba(127,255,0,0.05)] to-[rgba(200,79,255,0.1)]"/>
                         <div className="absolute inset-0 bg-grid opacity-20"/>
                         <div className="relative bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg p-6 md:p-8">
                             <div className="flex flex-col md:flex-row gap-6 md:items-start">
                                 {/* Left — level & title */}
                                 <div className="flex items-center gap-4 md:w-48 shrink-0">
-                                    <div className="relative flex items-center justify-center w-20 h-20 rounded-2xl bg-[rgba(191,255,0,0.08)] border border-[rgba(191,255,0,0.2)] shadow-lg shadow-[rgba(191,255,0,0.1)]">
-                                        <Zap className="w-8 h-8 text-[#BFFF00]"/>
-                                        <span className="absolute -bottom-2 -right-2 flex items-center justify-center w-8 h-8 rounded-xl bg-gradient-to-br from-[#BFFF00] to-[#7fff00] text-black text-sm font-extrabold shadow-md">
+                                    <div className="relative flex items-center justify-center w-20 h-20 rounded-2xl bg-[rgba(200,79,255,0.08)] border border-[rgba(200,79,255,0.2)] shadow-lg shadow-[rgba(200,79,255,0.1)]">
+                                        <Zap className="w-8 h-8 text-[#C84FFF]"/>
+                                        <span className="absolute -bottom-2 -right-2 flex items-center justify-center w-8 h-8 rounded-xl bg-gradient-to-br from-[#C84FFF] to-[#9333EA] text-white text-sm font-extrabold shadow-md">
                                             {initialLevelInfo.level}
                                         </span>
                                     </div>
                                     <div>
-                                        <p className="text-xs text-[#BFFF00]/80 font-medium uppercase tracking-wider mb-0.5">Your Rank</p>
+                                        <p className="text-xs text-[#C84FFF]/80 font-medium uppercase tracking-wider mb-0.5">Your Rank</p>
                                         <p className="text-2xl font-bold text-white">{initialLevelInfo.title}</p>
-                                        <p className="text-xs text-[#7777a0] mt-0.5">Level <span className="text-[#BFFF00] font-heading font-extrabold">{initialLevelInfo.level}</span></p>
+                                        <p className="text-xs text-[#7777a0] mt-0.5">Level <span className="text-[#C84FFF] font-heading font-extrabold">{initialLevelInfo.level}</span></p>
                                     </div>
                                 </div>
 
@@ -824,12 +824,12 @@ export const DashboardClient = memo(function DashboardClient({
                                             <span className="text-sm font-semibold text-white">{initialLevelInfo.xpInCurrentLevel.toLocaleString()} XP</span>
                                             <span className="text-xs text-gray-500"> / {initialLevelInfo.xpForNextLevel.toLocaleString()} XP to next level</span>
                                         </div>
-                                        <span className="text-xs font-bold text-[#BFFF00] tabular-nums">{initialLevelInfo.percent}%</span>
+                                        <span className="text-xs font-bold text-[#C84FFF] tabular-nums">{initialLevelInfo.percent}%</span>
                                     </div>
                                     {/* XP progress bar */}
                                     <div className="h-3 w-full bg-[rgba(255,255,255,0.06)] rounded-md overflow-hidden mb-4">
                                         <div
-                                            className="h-full bg-gradient-to-r from-[#BFFF00] to-[#7fff00] rounded-md transition-all duration-700 ease-out relative overflow-hidden shadow-[0_0_12px_rgba(191,255,0,0.3)]"
+                                            className="h-full bg-gradient-to-r from-[#C84FFF] to-[#9333EA] rounded-md transition-all duration-700 ease-out relative overflow-hidden shadow-[0_0_12px_rgba(200,79,255,0.3)]"
                                             style={{ width: `${initialLevelInfo.percent}%` }}
                                         >
                                             <div className="absolute inset-0 bg-gradient-to-r from-white/30 to-transparent"/>
@@ -838,7 +838,7 @@ export const DashboardClient = memo(function DashboardClient({
                                     {/* Inline stats */}
                                     <div className="flex flex-wrap gap-3">
                                         <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.06]">
-                                            <Zap className="w-3.5 h-3.5 text-[#BFFF00]"/>
+                                            <Zap className="w-3.5 h-3.5 text-[#C84FFF]"/>
                                             <span className="text-xs text-[#7777a0]">Total XP:</span>
                                             <span className="text-xs font-semibold text-white">{initialLevelInfo.xp.toLocaleString()}</span>
                                         </div>
@@ -860,15 +860,15 @@ export const DashboardClient = memo(function DashboardClient({
                             {/* How to earn XP — transparent guide */}
                             <div className="mt-6 pt-5 border-t border-white/[0.06]">
                                 <p className="text-xs font-semibold text-[#8888aa] uppercase tracking-wider mb-3 flex items-center gap-2">
-                                    <Sparkles className="w-3.5 h-3.5 text-[#BFFF00]"/>
+                                    <Sparkles className="w-3.5 h-3.5 text-[#C84FFF]"/>
                                     How to earn XP
                                 </p>
                                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                                     {[
-                                        { icon: Package, label: 'Open packs', desc: '10 × price × qty', color: 'text-[#BFFF00]', bg: 'bg-[rgba(191,255,0,0.08)]' },
-                                        { icon: Swords, label: 'Battle', desc: '+150 XP each', color: 'text-[#BFFF00]', bg: 'bg-[rgba(191,255,0,0.08)]' },
+                                        { icon: Package, label: 'Open packs', desc: '10 × price × qty', color: 'text-[#C84FFF]', bg: 'bg-[rgba(200,79,255,0.08)]' },
+                                        { icon: Swords, label: 'Battle', desc: '+150 XP each', color: 'text-[#C84FFF]', bg: 'bg-[rgba(200,79,255,0.08)]' },
                                         { icon: Trophy, label: 'Win battle', desc: '+250 bonus', color: 'text-amber-400', bg: 'bg-amber-500/10' },
-                                        { icon: Coins, label: 'Sell cards', desc: '+5 XP per sale', color: 'text-green-400', bg: 'bg-green-500/10' },
+                                        { icon: Coins, label: 'Sell cards', desc: '+5 XP per sale', color: 'text-[#E879F9]', bg: 'bg-[#C84FFF]/10' },
                                     ].map(item => {
                                         const Icon = item.icon;
                                         return (
@@ -898,9 +898,9 @@ export const DashboardClient = memo(function DashboardClient({
                             }}
                         >
                             <div
-                                className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[rgba(191,255,0,0.05)] to-transparent rounded-bl-full"/>
+                                className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[rgba(200,79,255,0.05)] to-transparent rounded-bl-full"/>
                             <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-3">
-                                <div className="p-2 rounded-lg bg-gradient-to-br from-[#BFFF00] to-[#7fff00]">
+                                <div className="p-2 rounded-lg bg-gradient-to-br from-[#C84FFF] to-[#9333EA]">
                                     <Zap className="w-5 h-5 text-black"/>
                                 </div>
                                 Quick Actions
@@ -926,7 +926,7 @@ export const DashboardClient = memo(function DashboardClient({
                                         icon: ShoppingCart,
                                         label: 'View Cart',
                                         desc: 'Checkout cards',
-                                        gradient: 'from-emerald-500 to-teal-500'
+                                        gradient: 'from-[#9333EA] to-[#9333EA]'
                                     },
                                 ].map((action) => {
                                     const Icon = action.icon;
@@ -965,9 +965,9 @@ export const DashboardClient = memo(function DashboardClient({
                             }}
                         >
                             <div
-                                className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[rgba(191,255,0,0.05)] to-transparent rounded-bl-full"/>
+                                className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[rgba(200,79,255,0.05)] to-transparent rounded-bl-full"/>
                             <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-3">
-                                <div className="p-2 rounded-lg bg-gradient-to-br from-[#BFFF00] to-[#7fff00]">
+                                <div className="p-2 rounded-lg bg-gradient-to-br from-[#C84FFF] to-[#9333EA]">
                                     <Sparkles className="w-5 h-5 text-black"/>
                                 </div>
                                 Recent Pulls
@@ -1005,7 +1005,7 @@ export const DashboardClient = memo(function DashboardClient({
                                     {pulls.length > 4 && (
                                         <button
                                             onClick={() => setActiveTab('collection')}
-                                            className="w-full mt-4 py-3 text-sm text-[#BFFF00] hover:text-[#7fff00] bg-[#1e1e55] hover:bg-white/[0.05] rounded-xl transition-all flex items-center justify-center gap-2"
+                                            className="w-full mt-4 py-3 text-sm text-[#C84FFF] hover:text-[#9333EA] bg-[#1e1e55] hover:bg-white/[0.05] rounded-xl transition-all flex items-center justify-center gap-2"
                                         >
                                             View all {pulls.length} cards
                                             <ArrowUpRight className="w-4 h-4"/>
@@ -1020,7 +1020,7 @@ export const DashboardClient = memo(function DashboardClient({
                                     </div>
                                     <p className="text-[#8888aa] mb-2">No cards yet</p>
                                     <Link href="/boxes"
-                                          className="inline-flex items-center gap-1 text-[#BFFF00] hover:text-[#7fff00] text-sm">
+                                          className="inline-flex items-center gap-1 text-[#C84FFF] hover:text-[#9333EA] text-sm">
                                         Open some packs! <ArrowUpRight className="w-3 h-3"/>
                                     </Link>
                                 </div>
@@ -1228,7 +1228,7 @@ export const DashboardClient = memo(function DashboardClient({
                                                             className={`w-6 h-6 ${achievement.isUnlocked ? 'text-white' : 'text-gray-500'}`}/>
                                                         {achievement.isUnlocked && (
                                                             <div
-                                                                className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-green-500 flex items-center justify-center">
+                                                                className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#C84FFF] flex items-center justify-center">
                                                                 <CheckCircle2 className="w-3 h-3 text-white"/>
                                                             </div>
                                                         )}
@@ -1307,7 +1307,7 @@ export const DashboardClient = memo(function DashboardClient({
                                                         </button>
                                                     ) : achievement.rewardClaimed ? (
                                                         <span
-                                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-green-500/10 text-green-400 border border-green-500/20">
+                                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-[#C84FFF]/10 text-[#E879F9] border border-[#C84FFF]/20">
                               <CheckCircle2 className="w-3 h-3"/>
                               Claimed
                             </span>
@@ -1481,8 +1481,8 @@ export const DashboardClient = memo(function DashboardClient({
                                             {/* Shipping Info */}
                                             <div className="mt-5 pt-5 border-t border-white/[0.05]">
                                                 <div className="flex items-start gap-3 text-sm">
-                                                    <div className="p-2 rounded-lg bg-emerald-500/10">
-                                                        <MapPin className="w-4 h-4 text-emerald-400"/>
+                                                    <div className="p-2 rounded-lg bg-[#C84FFF]/10">
+                                                        <MapPin className="w-4 h-4 text-[#E879F9]"/>
                                                     </div>
                                                     <div className="text-[#8888aa]">
                                                         <p className="text-white font-medium">{order.shippingName}</p>
@@ -1507,8 +1507,8 @@ export const DashboardClient = memo(function DashboardClient({
                             }}
                         >
                             <div
-                                className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 mb-6">
-                                <ShoppingBag className="w-10 h-10 text-emerald-400"/>
+                                className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-[#9333EA]/20 to-[#9333EA]/20 mb-6">
+                                <ShoppingBag className="w-10 h-10 text-[#E879F9]"/>
                             </div>
                             <h3 className="text-2xl font-bold text-white mb-3">No orders yet</h3>
                             <p className="text-[#8888aa] mb-8 max-w-md mx-auto">
@@ -1516,7 +1516,7 @@ export const DashboardClient = memo(function DashboardClient({
                             </p>
                             <button
                                 onClick={() => setActiveTab('collection')}
-                                className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold rounded-xl transition-all hover:scale-105 shadow-lg shadow-emerald-500/25"
+                                className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#9333EA] to-[#7c3aed] hover:from-[#9333EA] hover:to-[#7c3aed] text-white font-bold rounded-xl transition-all hover:scale-105 shadow-lg shadow-[#C84FFF]/25"
                             >
                                 <Package className="w-5 h-5"/>
                                 View Collection
@@ -1561,7 +1561,7 @@ export const DashboardClient = memo(function DashboardClient({
                                         label: 'Victories',
                                         value: stats.battlesWon,
                                         icon: Trophy,
-                                        gradient: 'from-green-500 to-emerald-500',
+                                        gradient: 'from-[#C84FFF] to-[#9333EA]',
                                         delay: 100
                                     },
                                     {
@@ -1590,7 +1590,7 @@ export const DashboardClient = memo(function DashboardClient({
                                                     className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br ${stat.gradient} mb-4 shadow-lg`}>
                                                     <Icon className="w-7 h-7 text-white"/>
                                                 </div>
-                                                <p className="text-3xl font-bold text-[#BFFF00] mb-1">{stat.value}</p>
+                                                <p className="text-3xl font-bold text-[#C84FFF] mb-1">{stat.value}</p>
                                                 <p className="text-sm text-[#7777a0]">{stat.label}</p>
                                             </div>
                                         </div>
@@ -1627,13 +1627,13 @@ export const DashboardClient = memo(function DashboardClient({
                                             {
                                                 label: 'From Sales',
                                                 value: `+${stats.totalCoinsEarned.toLocaleString()}`,
-                                                color: 'text-green-400',
+                                                color: 'text-[#E879F9]',
                                                 icon: TrendingUp
                                             },
                                             {
                                                 label: 'Collection Value',
                                                 value: stats.collectionValue.toLocaleString(),
-                                                color: 'text-[#BFFF00]',
+                                                color: 'text-[#C84FFF]',
                                                 icon: Gem
                                             },
                                             {
@@ -1668,9 +1668,9 @@ export const DashboardClient = memo(function DashboardClient({
                                     }}
                                 >
                                     <div
-                                        className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-emerald-500/10 to-transparent rounded-bl-full"/>
+                                        className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-[#9333EA]/10 to-transparent rounded-bl-full"/>
                                     <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-3">
-                                        <div className="p-2 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500">
+                                        <div className="p-2 rounded-lg bg-gradient-to-br from-[#9333EA] to-[#9333EA]">
                                             <ShoppingBag className="w-5 h-5 text-white"/>
                                         </div>
                                         Orders Overview
@@ -1697,7 +1697,7 @@ export const DashboardClient = memo(function DashboardClient({
                         Completed
                       </span>
                                             <span
-                                                className="font-bold text-lg text-green-400">{stats.totalOrders - stats.pendingOrders}</span>
+                                                className="font-bold text-lg text-[#E879F9]">{stats.totalOrders - stats.pendingOrders}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -1734,7 +1734,7 @@ export const DashboardClient = memo(function DashboardClient({
                                             current: stats.battlesWon,
                                             target: 10,
                                             icon: Trophy,
-                                            gradient: 'from-green-500 to-emerald-500'
+                                            gradient: 'from-[#C84FFF] to-[#9333EA]'
                                         },
                                         {
                                             label: '50 Sales',
@@ -1813,9 +1813,9 @@ export const DashboardClient = memo(function DashboardClient({
                         }}
                     >
                         <div
-                            className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-[rgba(191,255,0,0.05)] to-transparent rounded-bl-full"/>
+                            className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-[rgba(200,79,255,0.05)] to-transparent rounded-bl-full"/>
                         <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-3">
-                            <div className="p-2 rounded-lg bg-gradient-to-br from-[#BFFF00] to-[#7fff00]">
+                            <div className="p-2 rounded-lg bg-gradient-to-br from-[#C84FFF] to-[#9333EA]">
                                 <User className="w-5 h-5 text-black"/>
                             </div>
                             Profile Information
@@ -1827,7 +1827,7 @@ export const DashboardClient = memo(function DashboardClient({
                                     type="text"
                                     value={profileForm.name}
                                     onChange={(e) => setProfileForm({...profileForm, name: e.target.value})}
-                                    className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-[rgba(191,255,0,0.3)] focus:ring-2 focus:ring-[rgba(191,255,0,0.1)] transition-all"
+                                    className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-[rgba(200,79,255,0.3)] focus:ring-2 focus:ring-[rgba(200,79,255,0.1)] transition-all"
                                     placeholder="Your name"
                                 />
                             </div>
@@ -1839,9 +1839,9 @@ export const DashboardClient = memo(function DashboardClient({
                                     <span className="text-[#8888aa] flex-1">{user.email}</span>
                                     {user.emailVerified && (
                                         <div
-                                            className="flex items-center gap-1 px-2 py-1 rounded-full bg-green-500/10 border border-green-500/30">
-                                            <CheckCircle2 className="w-3 h-3 text-green-400"/>
-                                            <span className="text-xs text-green-400 font-medium">Verified</span>
+                                            className="flex items-center gap-1 px-2 py-1 rounded-full bg-[#C84FFF]/10 border border-[#C84FFF]/30">
+                                            <CheckCircle2 className="w-3 h-3 text-[#E879F9]"/>
+                                            <span className="text-xs text-[#E879F9] font-medium">Verified</span>
                                         </div>
                                     )}
                                 </div>
@@ -1852,7 +1852,7 @@ export const DashboardClient = memo(function DashboardClient({
                                     value={profileForm.bio}
                                     onChange={(e) => setProfileForm({...profileForm, bio: e.target.value})}
                                     rows={3}
-                                    className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-[rgba(191,255,0,0.3)] focus:ring-2 focus:ring-[rgba(191,255,0,0.1)] transition-all resize-none"
+                                    className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-[rgba(200,79,255,0.3)] focus:ring-2 focus:ring-[rgba(200,79,255,0.1)] transition-all resize-none"
                                     placeholder="Tell us about yourself..."
                                 />
                             </div>
@@ -1869,9 +1869,9 @@ export const DashboardClient = memo(function DashboardClient({
                         }}
                     >
                         <div
-                            className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-emerald-500/10 to-transparent rounded-bl-full"/>
+                            className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-[#9333EA]/10 to-transparent rounded-bl-full"/>
                         <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-3">
-                            <div className="p-2 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500">
+                            <div className="p-2 rounded-lg bg-gradient-to-br from-[#9333EA] to-[#9333EA]">
                                 <MapPin className="w-5 h-5 text-white"/>
                             </div>
                             Default Shipping Address
@@ -1885,7 +1885,7 @@ export const DashboardClient = memo(function DashboardClient({
                                     type="text"
                                     value={profileForm.shippingName}
                                     onChange={(e) => setProfileForm({...profileForm, shippingName: e.target.value})}
-                                    className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                                    className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-[#C84FFF]/50 focus:ring-2 focus:ring-[#C84FFF]/20 transition-all"
                                     placeholder="John Doe"
                                 />
                             </div>
@@ -1900,7 +1900,7 @@ export const DashboardClient = memo(function DashboardClient({
                                             ...profileForm,
                                             shippingPhone: e.target.value
                                         })}
-                                        className="w-full pl-12 pr-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                                        className="w-full pl-12 pr-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-[#C84FFF]/50 focus:ring-2 focus:ring-[#C84FFF]/20 transition-all"
                                         placeholder="+1 234 567 8900"
                                     />
                                 </div>
@@ -1911,7 +1911,7 @@ export const DashboardClient = memo(function DashboardClient({
                                     type="text"
                                     value={profileForm.shippingAddress}
                                     onChange={(e) => setProfileForm({...profileForm, shippingAddress: e.target.value})}
-                                    className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                                    className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-[#C84FFF]/50 focus:ring-2 focus:ring-[#C84FFF]/20 transition-all"
                                     placeholder="123 Main Street, Apt 4"
                                 />
                             </div>
@@ -1921,7 +1921,7 @@ export const DashboardClient = memo(function DashboardClient({
                                     type="text"
                                     value={profileForm.shippingCity}
                                     onChange={(e) => setProfileForm({...profileForm, shippingCity: e.target.value})}
-                                    className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                                    className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-[#C84FFF]/50 focus:ring-2 focus:ring-[#C84FFF]/20 transition-all"
                                     placeholder="New York"
                                 />
                             </div>
@@ -1932,7 +1932,7 @@ export const DashboardClient = memo(function DashboardClient({
                                     type="text"
                                     value={profileForm.shippingZip}
                                     onChange={(e) => setProfileForm({...profileForm, shippingZip: e.target.value})}
-                                    className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                                    className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-[#C84FFF]/50 focus:ring-2 focus:ring-[#C84FFF]/20 transition-all"
                                     placeholder="10001"
                                 />
                             </div>
@@ -1942,7 +1942,7 @@ export const DashboardClient = memo(function DashboardClient({
                                     type="text"
                                     value={profileForm.shippingCountry}
                                     onChange={(e) => setProfileForm({...profileForm, shippingCountry: e.target.value})}
-                                    className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                                    className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-[#C84FFF]/50 focus:ring-2 focus:ring-[#C84FFF]/20 transition-all"
                                     placeholder="United States"
                                 />
                             </div>
@@ -1959,9 +1959,9 @@ export const DashboardClient = memo(function DashboardClient({
                         }}
                     >
                         <div
-                            className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-[rgba(191,255,0,0.05)] to-transparent rounded-bl-full"/>
+                            className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-[rgba(200,79,255,0.05)] to-transparent rounded-bl-full"/>
                         <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-3">
-                            <div className="p-2 rounded-lg bg-gradient-to-br from-[#BFFF00] to-[#7fff00]">
+                            <div className="p-2 rounded-lg bg-gradient-to-br from-[#C84FFF] to-[#9333EA]">
                                 <Calendar className="w-5 h-5 text-black"/>
                             </div>
                             Account Information
@@ -1976,8 +1976,8 @@ export const DashboardClient = memo(function DashboardClient({
                                 <div className="flex items-center gap-2">
                                     {user.emailVerified ? (
                                         <>
-                                            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"/>
-                                            <span className="text-green-400 font-semibold">Verified & Active</span>
+                                            <div className="w-2 h-2 rounded-full bg-[#C84FFF] animate-pulse"/>
+                                            <span className="text-[#E879F9] font-semibold">Verified & Active</span>
                                         </>
                                     ) : (
                                         <>
@@ -2002,7 +2002,7 @@ export const DashboardClient = memo(function DashboardClient({
                         <button
                             onClick={handleSaveProfile}
                             disabled={saving}
-                            className="group relative inline-flex items-center gap-3 px-10 py-4 bg-[#BFFF00] hover:bg-[#7fff00] text-black font-bold rounded-xl transition-all hover:scale-105 hover:shadow-xl hover:shadow-[rgba(191,255,0,0.25)] disabled:opacity-50 disabled:hover:scale-100"
+                            className="group relative inline-flex items-center gap-3 px-10 py-4 bg-[#C84FFF] hover:bg-[#9333EA] text-white font-bold rounded-xl transition-all hover:scale-105 hover:shadow-xl hover:shadow-[rgba(200,79,255,0.25)] disabled:opacity-50 disabled:hover:scale-100"
                         >
                             <div
                                 className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"/>

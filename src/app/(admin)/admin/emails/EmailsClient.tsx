@@ -136,7 +136,7 @@ export function EmailsClient({ initialEmails, totalEmails, initialStats, users }
     switch (status) {
       case 'SENT':
       case 'DELIVERED':
-        return <CheckCircle2 className="w-4 h-4 text-green-400" />;
+        return <CheckCircle2 className="w-4 h-4 text-[#E879F9]" />;
       case 'FAILED':
       case 'BOUNCED':
         return <XCircle className="w-4 h-4 text-red-400" />;
@@ -149,7 +149,7 @@ export function EmailsClient({ initialEmails, totalEmails, initialStats, users }
     switch (status) {
       case 'SENT':
       case 'DELIVERED':
-        return 'bg-green-500/20 text-green-400';
+        return 'bg-[#C84FFF]/20 text-[#E879F9]';
       case 'FAILED':
       case 'BOUNCED':
         return 'bg-red-500/20 text-red-400';
@@ -161,9 +161,9 @@ export function EmailsClient({ initialEmails, totalEmails, initialStats, users }
   const getTypeColor = (type: string) => {
     switch (type) {
       case 'VERIFICATION':
-        return 'bg-[rgba(191,255,0,0.1)] text-[#BFFF00]';
+        return 'bg-[rgba(200,79,255,0.1)] text-[#C84FFF]';
       case 'WELCOME':
-        return 'bg-green-500/20 text-green-400';
+        return 'bg-[#C84FFF]/20 text-[#E879F9]';
       case 'PASSWORD_RESET':
         return 'bg-amber-500/20 text-amber-400';
       case 'ADMIN_CUSTOM':
@@ -187,7 +187,7 @@ export function EmailsClient({ initialEmails, totalEmails, initialStats, users }
             <div className="text-sm text-[#8888aa]">Total Emails</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-green-400">{stats.byStatus?.SENT || 0}</div>
+            <div className="text-2xl font-bold text-[#E879F9]">{stats.byStatus?.SENT || 0}</div>
             <div className="text-sm text-[#8888aa]">Sent</div>
           </div>
           <div className="text-center">
@@ -195,11 +195,11 @@ export function EmailsClient({ initialEmails, totalEmails, initialStats, users }
             <div className="text-sm text-[#8888aa]">Failed</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-[#BFFF00]">{stats.byType?.VERIFICATION || 0}</div>
+            <div className="text-2xl font-bold text-[#C84FFF]">{stats.byType?.VERIFICATION || 0}</div>
             <div className="text-sm text-[#8888aa]">Verification</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-emerald-400">{stats.byType?.WELCOME || 0}</div>
+            <div className="text-2xl font-bold text-[#E879F9]">{stats.byType?.WELCOME || 0}</div>
             <div className="text-sm text-[#8888aa]">Welcome</div>
           </div>
           <div className="text-center">
@@ -220,14 +220,14 @@ export function EmailsClient({ initialEmails, totalEmails, initialStats, users }
                 placeholder="Search by email or subject..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white placeholder-gray-500 focus:border-[rgba(191,255,0,0.3)] focus:ring-1 focus:ring-[rgba(191,255,0,0.2)]"
+                className="w-full pl-10 pr-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white placeholder-gray-500 focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.2)]"
               />
             </div>
           </div>
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
-            className="px-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white focus:border-[rgba(191,255,0,0.3)]"
+            className="px-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white focus:border-[rgba(200,79,255,0.3)]"
           >
             <option value="">All Types</option>
             <option value="VERIFICATION">Verification</option>
@@ -239,7 +239,7 @@ export function EmailsClient({ initialEmails, totalEmails, initialStats, users }
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white focus:border-[rgba(191,255,0,0.3)]"
+            className="px-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white focus:border-[rgba(200,79,255,0.3)]"
           >
             <option value="">All Status</option>
             <option value="SENT">Sent</option>
@@ -249,14 +249,14 @@ export function EmailsClient({ initialEmails, totalEmails, initialStats, users }
           </select>
           <button
             type="submit"
-            className="px-6 py-2 bg-[#BFFF00] hover:bg-[#d4ff4d] text-black rounded-lg transition-colors"
+            className="px-6 py-2 bg-[#C84FFF] hover:bg-[#E879F9] text-white rounded-lg transition-colors"
           >
             Search
           </button>
           <button
             type="button"
             onClick={() => setComposeOpen(true)}
-            className="px-6 py-2 bg-gradient-to-r bg-[#BFFF00] hover:bg-[#d4ff4d] text-black rounded-lg transition-colors flex items-center gap-2"
+            className="px-6 py-2 bg-gradient-to-r bg-[#C84FFF] hover:bg-[#E879F9] text-white rounded-lg transition-colors flex items-center gap-2"
           >
             <Send className="w-4 h-4" />
             Compose
@@ -371,7 +371,7 @@ export function EmailsClient({ initialEmails, totalEmails, initialStats, users }
                 <select
                   value={composeData.to}
                   onChange={(e) => setComposeData({ ...composeData, to: e.target.value })}
-                  className="w-full px-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white focus:border-[rgba(191,255,0,0.3)]"
+                  className="w-full px-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white focus:border-[rgba(200,79,255,0.3)]"
                   required
                 >
                   <option value="">Select a recipient...</option>
@@ -387,7 +387,7 @@ export function EmailsClient({ initialEmails, totalEmails, initialStats, users }
                   placeholder="custom@example.com"
                   value={composeData.to.includes('@') && !users.some(u => u.email === composeData.to) ? composeData.to : ''}
                   onChange={(e) => setComposeData({ ...composeData, to: e.target.value })}
-                  className="w-full mt-2 px-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white focus:border-[rgba(191,255,0,0.3)]"
+                  className="w-full mt-2 px-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white focus:border-[rgba(200,79,255,0.3)]"
                 />
               </div>
               <div>
@@ -397,7 +397,7 @@ export function EmailsClient({ initialEmails, totalEmails, initialStats, users }
                   required
                   value={composeData.subject}
                   onChange={(e) => setComposeData({ ...composeData, subject: e.target.value })}
-                  className="w-full px-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white focus:border-[rgba(191,255,0,0.3)]"
+                  className="w-full px-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white focus:border-[rgba(200,79,255,0.3)]"
                   placeholder="Email subject..."
                 />
               </div>
@@ -408,7 +408,7 @@ export function EmailsClient({ initialEmails, totalEmails, initialStats, users }
                   rows={10}
                   value={composeData.html}
                   onChange={(e) => setComposeData({ ...composeData, html: e.target.value })}
-                  className="w-full px-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white focus:border-[rgba(191,255,0,0.3)] font-mono text-sm"
+                  className="w-full px-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white focus:border-[rgba(200,79,255,0.3)] font-mono text-sm"
                   placeholder="<p>Your email content here...</p>"
                 />
                 <p className="text-xs text-gray-500 mt-1">
@@ -426,7 +426,7 @@ export function EmailsClient({ initialEmails, totalEmails, initialStats, users }
                 <button
                   type="submit"
                   disabled={loading || !composeData.to || !composeData.subject || !composeData.html}
-                  className="flex-1 py-3 bg-gradient-to-r bg-[#BFFF00] hover:bg-[#d4ff4d] text-black rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="flex-1 py-3 bg-gradient-to-r bg-[#C84FFF] hover:bg-[#E879F9] text-white rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   {loading ? (
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

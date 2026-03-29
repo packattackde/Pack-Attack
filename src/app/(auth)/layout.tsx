@@ -6,16 +6,16 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#06061a] font-display p-4 relative overflow-hidden">
       {/* Background */}
       <div className="fixed inset-0 bg-grid opacity-[0.03]" />
-      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-[rgba(191,255,0,0.05)] rounded-full blur-[150px]" />
-      <div className="fixed bottom-0 right-1/4 w-[500px] h-[400px] bg-[rgba(191,255,0,0.03)] rounded-full blur-[120px]" />
-      <div className="fixed top-1/3 left-1/4 w-[300px] h-[300px] bg-[rgba(191,255,0,0.02)] rounded-full blur-[100px]" />
+      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-[rgba(200,79,255,0.05)] rounded-full blur-[150px]" />
+      <div className="fixed bottom-0 right-1/4 w-[500px] h-[400px] bg-[rgba(200,79,255,0.03)] rounded-full blur-[120px]" />
+      <div className="fixed top-1/3 left-1/4 w-[300px] h-[300px] bg-[rgba(200,79,255,0.02)] rounded-full blur-[100px]" />
 
       {/* Logo */}
       <div className="relative text-center mb-8">
         <Link href="/" className="inline-block group">
           <h1 className="text-3xl font-black tracking-tight">
-            <span className="text-white group-hover:text-gray-200 transition-colors">PACK</span>
-            <span className="text-[#BFFF00]">ATTACK</span>
+            <span className="text-white group-hover:text-gray-200 transition-colors">PULL</span>
+            <span className="text-[#C84FFF]">FORGE</span>
           </h1>
           <p className="text-[10px] text-gray-600 font-medium tracking-[0.3em] uppercase mt-1">Trading Card Battles</p>
         </Link>

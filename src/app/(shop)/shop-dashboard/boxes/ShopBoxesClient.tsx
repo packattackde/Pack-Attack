@@ -103,7 +103,7 @@ export function ShopBoxesClient({ boxes: initialBoxes, isAdmin }: { boxes: Box[]
         </p>
         <Link
           href="/shop-dashboard/boxes/create"
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white font-medium transition-all"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#C84FFF] to-cyan-500 hover:from-[#9333EA] hover:to-[#7c3aed] text-white font-medium transition-all"
         >
           <Package className="w-5 h-5" />
           <span>Create Your First Box</span>
@@ -139,7 +139,7 @@ export function ShopBoxesClient({ boxes: initialBoxes, isAdmin }: { boxes: Box[]
             {/* Status Badge */}
             <div className={`absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium ${
               box.isActive 
-                ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
+                ? 'bg-[#C84FFF]/20 text-[#E879F9] border border-[#C84FFF]/30' 
                 : 'bg-red-500/20 text-red-400 border border-red-500/30'
             }`}>
               {box.isActive ? 'Active' : 'Inactive'}
@@ -175,7 +175,7 @@ export function ShopBoxesClient({ boxes: initialBoxes, isAdmin }: { boxes: Box[]
                 <span className="text-[10px] text-gray-500">Opens</span>
               </div>
               <div className="text-center p-2 rounded-lg bg-[#12123a]">
-                <div className="flex items-center justify-center gap-1 text-green-400 mb-1">
+                <div className="flex items-center justify-center gap-1 text-[#E879F9] mb-1">
                   <ShoppingCart className="w-3 h-3" />
                   <span className="text-sm font-bold">{box._count.shopBoxOrders}</span>
                 </div>
@@ -197,7 +197,7 @@ export function ShopBoxesClient({ boxes: initialBoxes, isAdmin }: { boxes: Box[]
                 className={`flex-1 ${
                   box.isActive 
                     ? 'border-red-500/50 text-red-400 hover:bg-red-500/10' 
-                    : 'border-green-500/50 text-green-400 hover:bg-green-500/10'
+                    : 'border-[#C84FFF]/50 text-[#E879F9] hover:bg-[#C84FFF]/10'
                 }`}
               >
                 {box.isActive ? (

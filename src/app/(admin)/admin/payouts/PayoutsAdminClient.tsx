@@ -44,8 +44,8 @@ type Payout = {
 
 const statusConfig: Record<string, { color: string; bgColor: string; icon: React.ElementType; label: string }> = {
   REQUESTED: { color: 'text-yellow-400', bgColor: 'bg-yellow-400/10', icon: Clock, label: 'Pending' },
-  PROCESSING: { color: 'text-[#BFFF00]', bgColor: 'bg-[rgba(191,255,0,0.1)]', icon: Loader2, label: 'Approved' },
-  COMPLETED: { color: 'text-green-400', bgColor: 'bg-green-400/10', icon: CheckCircle, label: 'Paid' },
+  PROCESSING: { color: 'text-[#C84FFF]', bgColor: 'bg-[rgba(200,79,255,0.1)]', icon: Loader2, label: 'Approved' },
+  COMPLETED: { color: 'text-[#E879F9]', bgColor: 'bg-[#C84FFF]/10', icon: CheckCircle, label: 'Paid' },
   REJECTED: { color: 'text-red-400', bgColor: 'bg-red-400/10', icon: XCircle, label: 'Rejected' },
 };
 
@@ -116,7 +116,7 @@ export function PayoutsAdminClient({ initialPayouts }: { initialPayouts: Payout[
         .signature { margin-top: 60px; display: flex; justify-content: space-between; }
         .signature div { width: 200px; border-top: 1px solid #333; padding-top: 5px; text-align: center; font-size: 12px; }
       </style></head><body>
-      <h1>Pack-Attack Payout Slip</h1>
+      <h1>PullForge Payout Slip</h1>
       <h2>Payout #${payout.id.slice(-8).toUpperCase()}</h2>
       <div class="section">
         <h3>Shop Details</h3>
@@ -151,7 +151,7 @@ export function PayoutsAdminClient({ initialPayouts }: { initialPayouts: Payout[
         <div>Admin Signature</div>
       </div>
       <div class="footer">
-        <p>Pack-Attack GmbH &bull; Generated ${new Date().toLocaleDateString('de-DE')} &bull; This is an official payout document</p>
+        <p>PullForge GmbH &bull; Generated ${new Date().toLocaleDateString('de-DE')} &bull; This is an official payout document</p>
       </div>
       </body></html>
     `);
@@ -182,15 +182,15 @@ export function PayoutsAdminClient({ initialPayouts }: { initialPayouts: Payout[
           <div className="text-xs text-yellow-400">Pending</div>
         </div>
         <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
-          <div className="text-2xl font-bold text-[#BFFF00]">{stats.processing}</div>
-          <div className="text-xs text-[#BFFF00]">Approved</div>
+          <div className="text-2xl font-bold text-[#C84FFF]">{stats.processing}</div>
+          <div className="text-xs text-[#C84FFF]">Approved</div>
         </div>
         <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
-          <div className="text-2xl font-bold text-green-400">{stats.completed}</div>
-          <div className="text-xs text-green-400">Paid</div>
+          <div className="text-2xl font-bold text-[#E879F9]">{stats.completed}</div>
+          <div className="text-xs text-[#E879F9]">Paid</div>
         </div>
         <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
-          <div className="text-2xl font-bold text-emerald-400">{stats.totalPaidEur.toFixed(2)}</div>
+          <div className="text-2xl font-bold text-[#E879F9]">{stats.totalPaidEur.toFixed(2)}</div>
           <div className="text-xs text-[#8888aa]">Total Paid (EUR)</div>
         </div>
       </div>
@@ -253,7 +253,7 @@ export function PayoutsAdminClient({ initialPayouts }: { initialPayouts: Payout[
                         <div className="flex items-center gap-2">
                           <span className="font-semibold text-amber-400">{payout.coinAmount.toFixed(2)}</span>
                           <span className="text-gray-600">→</span>
-                          <span className="font-semibold text-green-400">{payout.euroAmount.toFixed(2)} EUR</span>
+                          <span className="font-semibold text-[#E879F9]">{payout.euroAmount.toFixed(2)} EUR</span>
                         </div>
                       </div>
                       <div className={`px-3 py-1.5 rounded-xl text-xs font-medium ${config.color} ${config.bgColor}`}>
@@ -286,7 +286,7 @@ export function PayoutsAdminClient({ initialPayouts }: { initialPayouts: Payout[
                         </h4>
                         <div className="space-y-2 text-sm">
                           <div className="flex justify-between"><span className="text-gray-500">Coins:</span><span className="text-amber-400 font-bold">{payout.coinAmount.toFixed(2)}</span></div>
-                          <div className="flex justify-between"><span className="text-gray-500">Euro Amount:</span><span className="text-green-400 font-bold">{payout.euroAmount.toFixed(2)} EUR</span></div>
+                          <div className="flex justify-between"><span className="text-gray-500">Euro Amount:</span><span className="text-[#E879F9] font-bold">{payout.euroAmount.toFixed(2)} EUR</span></div>
                           <div className="flex justify-between"><span className="text-gray-500">Items:</span><span className="text-white font-bold">{payout.items.length}</span></div>
                           <div className="flex justify-between"><span className="text-gray-500">Rate:</span><span className="text-white">5 coins = 1 EUR</span></div>
                           <div className="flex justify-between"><span className="text-gray-500">Requested:</span><span className="text-white">{new Date(payout.createdAt).toLocaleDateString('de-DE', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span></div>
@@ -350,7 +350,7 @@ export function PayoutsAdminClient({ initialPayouts }: { initialPayouts: Payout[
                         onChange={(e) => setNotesInput({ ...notesInput, [payout.id]: e.target.value })}
                         placeholder="Add notes about this payout..."
                         rows={2}
-                        className="w-full px-3 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white text-sm focus:border-[rgba(191,255,0,0.3)] focus:outline-none resize-none"
+                        className="w-full px-3 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white text-sm focus:border-[rgba(200,79,255,0.3)] focus:outline-none resize-none"
                       />
                     </div>
 
@@ -362,7 +362,7 @@ export function PayoutsAdminClient({ initialPayouts }: { initialPayouts: Payout[
                             <button
                               onClick={() => handleStatusUpdate(payout.id, 'PROCESSING')}
                               disabled={updating === payout.id}
-                              className="px-4 py-2 rounded-xl text-sm font-medium bg-[rgba(191,255,0,0.1)] text-[#BFFF00] hover:bg-[rgba(191,255,0,0.15)] transition-all disabled:opacity-50"
+                              className="px-4 py-2 rounded-xl text-sm font-medium bg-[rgba(200,79,255,0.1)] text-[#C84FFF] hover:bg-[rgba(200,79,255,0.15)] transition-all disabled:opacity-50"
                             >
                               {updating === payout.id ? <Loader2 className="w-4 h-4 animate-spin inline mr-1" /> : null}
                               Approve
@@ -370,7 +370,7 @@ export function PayoutsAdminClient({ initialPayouts }: { initialPayouts: Payout[
                             <button
                               onClick={() => handleStatusUpdate(payout.id, 'COMPLETED')}
                               disabled={updating === payout.id}
-                              className="px-4 py-2 rounded-xl text-sm font-medium bg-green-500/20 text-green-400 hover:bg-green-500/30 transition-all disabled:opacity-50"
+                              className="px-4 py-2 rounded-xl text-sm font-medium bg-[#C84FFF]/20 text-[#E879F9] hover:bg-[#C84FFF]/30 transition-all disabled:opacity-50"
                             >
                               Mark as Paid
                             </button>
@@ -388,7 +388,7 @@ export function PayoutsAdminClient({ initialPayouts }: { initialPayouts: Payout[
                             <button
                               onClick={() => handleStatusUpdate(payout.id, 'COMPLETED')}
                               disabled={updating === payout.id}
-                              className="px-4 py-2 rounded-xl text-sm font-medium bg-green-500/20 text-green-400 hover:bg-green-500/30 transition-all disabled:opacity-50"
+                              className="px-4 py-2 rounded-xl text-sm font-medium bg-[#C84FFF]/20 text-[#E879F9] hover:bg-[#C84FFF]/30 transition-all disabled:opacity-50"
                             >
                               {updating === payout.id ? <Loader2 className="w-4 h-4 animate-spin inline mr-1" /> : null}
                               Mark as Paid

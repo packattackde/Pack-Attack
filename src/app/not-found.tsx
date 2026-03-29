@@ -8,8 +8,8 @@ export default function NotFound() {
       <div className="fixed inset-0 radial-gradient" />
       
       <div className="relative bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-8 max-w-md w-full text-center">
-        <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-[rgba(191,255,0,0.1)]">
-          <Search className="w-10 h-10 text-[#BFFF00]" />
+        <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-[rgba(200,79,255,0.1)]">
+          <Search className="w-10 h-10 text-[#C84FFF]" />
         </div>
         
         <h1 className="text-6xl font-bold text-white mb-2">404</h1>
@@ -21,7 +21,7 @@ export default function NotFound() {
         <div className="flex gap-3">
           <Link
             href="/"
-            className="flex-1 px-4 py-3 bg-gradient-to-r from-[#BFFF00] to-[#d4ff4d] text-black font-semibold rounded-xl transition-all hover:scale-105 flex items-center justify-center gap-2"
+            className="flex-1 px-4 py-3 bg-gradient-to-r from-[#C84FFF] to-[#E879F9] text-white font-semibold rounded-xl transition-all hover:scale-105 flex items-center justify-center gap-2"
           >
             <Home className="w-4 h-4" />
             Home

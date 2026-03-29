@@ -72,7 +72,7 @@ export function CompletedBattleCard({ battle, isAdmin, visibleParticipants }: {
     <>
       <Link
         href={`/battles/${battle.id}`}
-        className="group relative bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-lg rounded-2xl p-7 hover:-translate-y-1.5 hover:border-[rgba(191,255,0,0.3)] hover:shadow-[0_8px_30px_rgba(191,255,0,0.1)] transition-all duration-300"
+        className="group relative bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-lg rounded-2xl p-7 hover:-translate-y-1.5 hover:border-[rgba(200,79,255,0.3)] hover:shadow-[0_8px_30px_rgba(200,79,255,0.1)] transition-all duration-300"
       >
         {isAdmin && (
           <button
@@ -90,13 +90,13 @@ export function CompletedBattleCard({ battle, isAdmin, visibleParticipants }: {
             <span className="text-[#8888aa]">{WIN_CONDITION_LABELS[battle.winCondition] || ''}</span>
           </div>
           <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-            isDraw ? 'bg-blue-500/20 text-blue-400' : 'bg-green-500/20 text-green-400'
+            isDraw ? 'bg-blue-500/20 text-blue-400' : 'bg-[#C84FFF]/20 text-[#E879F9]'
           }`}>
             {isDraw ? 'Unentschieden' : 'Abgeschlossen'}
           </span>
         </div>
 
-        <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-[#BFFF00] transition-colors line-clamp-1">
+        <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-[#C84FFF] transition-colors line-clamp-1">
           {battle.box.name}
         </h3>
 
@@ -104,8 +104,8 @@ export function CompletedBattleCard({ battle, isAdmin, visibleParticipants }: {
           <p className="text-sm text-blue-400 mb-4">Unentschieden — Alle behalten ihre Karten</p>
         ) : battle.winner ? (
           <div className="flex items-center gap-2 mb-4">
-            <Crown className="w-4 h-4 text-[#BFFF00]" />
-            <span className="text-sm text-[#BFFF00] font-medium">{battle.winner.name || 'Gewinner'}</span>
+            <Crown className="w-4 h-4 text-[#C84FFF]" />
+            <span className="text-sm text-[#C84FFF] font-medium">{battle.winner.name || 'Gewinner'}</span>
           </div>
         ) : null}
 
@@ -113,7 +113,7 @@ export function CompletedBattleCard({ battle, isAdmin, visibleParticipants }: {
           {visibleParticipants.slice(0, 4).map((p: any, i: number) => (
             <div
               key={p.id}
-              className="w-8 h-8 rounded-full bg-gradient-to-br from-[#BFFF00] to-[#a0d600] flex items-center justify-center text-xs font-bold text-white"
+              className="w-8 h-8 rounded-full bg-gradient-to-br from-[#C84FFF] to-[#9333EA] flex items-center justify-center text-xs font-bold text-white"
               style={{ marginLeft: i > 0 ? '-6px' : '0' }}
             >
               {p.user.name?.[0] || '?'}
@@ -124,7 +124,7 @@ export function CompletedBattleCard({ battle, isAdmin, visibleParticipants }: {
 
         <div className="flex items-center justify-between pt-4 border-t border-[rgba(255,255,255,0.1)]">
           <span className="text-sm text-[#8888aa]">{battle.rounds} Runden</span>
-          <span className="text-[#BFFF00] text-sm font-medium group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+          <span className="text-[#C84FFF] text-sm font-medium group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
             Ergebnisse <ChevronRight className="w-4 h-4" />
           </span>
         </div>

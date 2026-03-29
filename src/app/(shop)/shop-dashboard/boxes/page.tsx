@@ -92,7 +92,7 @@ export default async function ShopBoxesPage() {
             
             <Link
               href="/shop-dashboard/boxes/create"
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white font-medium transition-all shadow-lg shadow-teal-500/25 hover:shadow-teal-500/40"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-[#C84FFF] to-cyan-500 hover:from-[#9333EA] hover:to-[#7c3aed] text-white font-medium transition-all shadow-lg shadow-[#C84FFF]/25 hover:shadow-[#C84FFF]/40"
             >
               <Plus className="w-5 h-5" />
               <span>Create New Box</span>

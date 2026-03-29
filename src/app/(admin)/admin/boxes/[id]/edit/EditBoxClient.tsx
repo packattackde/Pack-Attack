@@ -134,7 +134,7 @@ export function EditBoxClient({ box: initialBox }: { box: Box }) {
                     <p className="text-sm text-[#8888aa] mb-1">Status</p>
                     <span className={`px-2 py-1 rounded text-xs font-semibold ${
                       box.isActive 
-                        ? 'bg-green-500/20 text-green-500' 
+                        ? 'bg-[#C84FFF]/20 text-[#E879F9]' 
                         : 'bg-red-500/20 text-red-500'
                     }`}>
                       {box.isActive ? 'Active' : 'Inactive'}

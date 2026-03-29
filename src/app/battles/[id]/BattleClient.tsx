@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Swords, Coins, Users, Trophy, Crown, RefreshCw, ArrowRightLeft, Star, Zap, Shield } from 'lucide-react';
+import { ArrowLeft, Swords, Coins, Users, Trophy, Crown, RefreshCw, ArrowRightLeft, Star, Zap, Shield, Sparkles } from 'lucide-react';
 
 const MODE_LABELS: Record<string, string> = {
   LOWEST_CARD: 'Niedrigste Karte',
@@ -17,7 +17,7 @@ const WIN_CONDITION_LABELS: Record<string, string> = {
 };
 
 const STATUS_LABELS: Record<string, { label: string; color: string }> = {
-  FINISHED_WIN: { label: 'Abgeschlossen', color: 'bg-green-500/20 text-green-400' },
+  FINISHED_WIN: { label: 'Abgeschlossen', color: 'bg-[#C84FFF]/20 text-[#E879F9]' },
   FINISHED_DRAW: { label: 'Unentschieden', color: 'bg-blue-500/20 text-blue-400' },
   CANCELLED: { label: 'Storniert', color: 'bg-red-500/20 text-red-400' },
 };
@@ -32,7 +32,7 @@ function getRarityColor(rarity: string | null): string {
   if (r.includes('rare') || r.includes('holo'))
     return 'border-blue-400/40';
   if (r.includes('uncommon'))
-    return 'border-green-400/30';
+    return 'border-[#C84FFF]/30';
   return 'border-[rgba(255,255,255,0.08)]';
 }
 
@@ -144,12 +144,12 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
         ) : battle.status === 'FINISHED_WIN' && battle.winner ? (
           <div className="relative overflow-hidden rounded-3xl mb-8">
             {/* Glow effects */}
-            <div className="absolute inset-0 bg-gradient-to-b from-[#BFFF00]/8 via-transparent to-transparent" />
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#BFFF00]/5 rounded-full blur-[100px]" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#C84FFF]/8 via-transparent to-transparent" />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#C84FFF]/5 rounded-full blur-[100px]" />
 
             <div className={`relative border p-10 rounded-3xl ${
               battle.winnerId === currentUserId
-                ? 'border-[#BFFF00]/40 bg-[#BFFF00]/5'
+                ? 'border-[#C84FFF]/40 bg-[#C84FFF]/5'
                 : 'border-[rgba(255,255,255,0.12)] bg-[#1a1a4a]/80'
             }`}>
               {/* Trophy */}
@@ -158,7 +158,7 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
                   <div className="w-24 h-24 rounded-full bg-gradient-to-br from-amber-400 via-yellow-300 to-amber-500 flex items-center justify-center shadow-[0_0_60px_rgba(251,191,36,0.4)]">
                     <Trophy className="w-12 h-12 text-black" />
                   </div>
-                  <div className="absolute -top-1 -right-1 w-8 h-8 bg-[#BFFF00] rounded-full flex items-center justify-center">
+                  <div className="absolute -top-1 -right-1 w-8 h-8 bg-[#C84FFF] rounded-full flex items-center justify-center">
                     <Crown className="w-4 h-4 text-black" />
                   </div>
                 </div>
@@ -168,7 +168,7 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
               <div className="text-center mb-8">
                 {battle.winnerId === currentUserId ? (
                   <>
-                    <h1 className="text-4xl font-bold text-[#BFFF00] mb-2">Du hast gewonnen!</h1>
+                    <h1 className="text-4xl font-bold text-[#C84FFF] mb-2">Du hast gewonnen!</h1>
                     <p className="text-[#8888aa] text-lg">Glückwunsch zum Sieg!</p>
                   </>
                 ) : (
@@ -191,13 +191,13 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
                       key={p.id}
                       className={`flex-1 rounded-2xl p-5 text-center border transition-all ${
                         isWinner
-                          ? 'bg-[#BFFF00]/10 border-[#BFFF00]/30'
+                          ? 'bg-[#C84FFF]/10 border-[#C84FFF]/30'
                           : 'bg-[#12123a] border-[rgba(255,255,255,0.08)]'
                       }`}
                     >
                       <div className={`w-14 h-14 rounded-full mx-auto mb-3 flex items-center justify-center text-xl font-bold ${
                         isWinner
-                          ? 'bg-gradient-to-br from-[#BFFF00] to-[#a0d600] text-black shadow-[0_0_20px_rgba(191,255,0,0.3)]'
+                          ? 'bg-gradient-to-br from-[#C84FFF] to-[#9333EA] text-white shadow-[0_0_20px_rgba(200,79,255,0.3)]'
                           : 'bg-[#1a1a4a] text-[#8888aa]'
                       }`}>
                         {p.user.name?.[0] || '?'}
@@ -212,19 +212,19 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
                       <div className="h-2 bg-[#1a1a4a] rounded-full overflow-hidden my-3 mx-4">
                         <div
                           className={`h-full rounded-full transition-all duration-700 ${
-                            isWinner ? 'bg-gradient-to-r from-[#BFFF00]/80 to-[#BFFF00]' : 'bg-[#8888aa]/40'
+                            isWinner ? 'bg-gradient-to-r from-[#C84FFF]/80 to-[#C84FFF]' : 'bg-[#8888aa]/40'
                           }`}
                           style={{ width: `${barWidth}%` }}
                         />
                       </div>
-                      <div className={`text-3xl font-bold mb-1 ${isWinner ? 'text-[#BFFF00]' : 'text-amber-400'}`}>
+                      <div className={`text-3xl font-bold mb-1 ${isWinner ? 'text-[#C84FFF]' : 'text-amber-400'}`}>
                         {p.totalValue.toFixed(2)}
                       </div>
                       <div className="text-xs text-[#8888aa]">Gesamtwert</div>
                       {isWinner && (
-                        <div className="mt-2 inline-flex items-center gap-1 px-2 py-1 bg-[#BFFF00]/10 rounded-full">
-                          <Crown className="w-3.5 h-3.5 text-[#BFFF00]" />
-                          <span className="text-xs text-[#BFFF00] font-semibold">Gewinner</span>
+                        <div className="mt-2 inline-flex items-center gap-1 px-2 py-1 bg-[#C84FFF]/10 rounded-full">
+                          <Crown className="w-3.5 h-3.5 text-[#C84FFF]" />
+                          <span className="text-xs text-[#C84FFF] font-semibold">Gewinner</span>
                         </div>
                       )}
                     </div>
@@ -235,7 +235,7 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
               {/* Reward info */}
               <div className="text-center">
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#12123a] rounded-full text-sm">
-                  <Zap className="w-4 h-4 text-[#BFFF00]" />
+                  <Zap className="w-4 h-4 text-[#C84FFF]" />
                   <span className="text-[#8888aa]">
                     {battle.battleMode === 'LOWEST_CARD' && 'Die niedrigste Karte des Verlierers wurde übertragen'}
                     {battle.battleMode === 'HIGHEST_CARD' && 'Die höchste Karte des Verlierers wurde übertragen'}
@@ -257,7 +257,7 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
         <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] rounded-2xl p-5 mb-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
             <div className="flex items-center gap-3">
-              <Swords className="w-5 h-5 text-[#BFFF00]" />
+              <Swords className="w-5 h-5 text-[#C84FFF]" />
               <h2 className="text-lg font-bold text-white">Battle #{battle.id.slice(-6)}</h2>
               <span className={`px-3 py-1 rounded-full text-xs font-semibold ${statusInfo.color}`}>
                 {statusInfo.label}
@@ -294,7 +294,7 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
         {Object.keys(pullsByRound).length > 0 && (
           <div className="mb-8">
             <h2 className="text-lg font-bold text-white mb-5 flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-[#BFFF00]" />
+              <Sparkles className="w-5 h-5 text-[#C84FFF]" />
               Runden-Übersicht
             </h2>
             <div className="space-y-4">
@@ -325,7 +325,7 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
                               }`}
                             >
                               {isRoundBest && (
-                                <div className="absolute -top-2 -right-2 w-6 h-6 bg-[#BFFF00] rounded-full flex items-center justify-center">
+                                <div className="absolute -top-2 -right-2 w-6 h-6 bg-[#C84FFF] rounded-full flex items-center justify-center">
                                   <Star className="w-3.5 h-3.5 text-black" />
                                 </div>
                               )}
@@ -391,7 +391,7 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
                       <div className="text-xs text-[#8888aa] flex items-center gap-1 mt-0.5">
                         <span className="text-red-400">{fromPlayer?.user?.name || '?'}</span>
                         <span>→</span>
-                        <span className="text-green-400">{toPlayer?.user?.name || '?'}</span>
+                        <span className="text-[#E879F9]">{toPlayer?.user?.name || '?'}</span>
                       </div>
                     </div>
                   </div>
@@ -406,7 +406,7 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
           <Link href="/battles" className="px-6 py-3 bg-[#12123a] text-white font-semibold rounded-xl hover:bg-[#1a1a4a] transition-all border border-[rgba(255,255,255,0.12)]">
             Zurück zur Lobby
           </Link>
-          <Link href="/battles/create" className="px-6 py-3 bg-[#BFFF00] text-black font-semibold rounded-xl hover:bg-[#d4ff4d] transition-all">
+          <Link href="/battles/create" className="px-6 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl hover:bg-[#E879F9] transition-all">
             Neues Battle
           </Link>
         </div>

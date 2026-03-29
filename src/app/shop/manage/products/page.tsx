@@ -175,7 +175,7 @@ export default function ManageProductsPage() {
     return (
       <div className="min-h-screen flex items-center justify-center font-display">
         <div className="text-white flex items-center gap-3">
-          <div className="w-6 h-6 border-2 border-[rgba(191,255,0,0.3)] border-t-transparent rounded-full animate-spin" />
+          <div className="w-6 h-6 border-2 border-[rgba(200,79,255,0.3)] border-t-transparent rounded-full animate-spin" />
           Loading products...
         </div>
       </div>
@@ -197,7 +197,7 @@ export default function ManageProductsPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div className="flex items-center gap-3">
-            <Package className="w-8 h-8 text-[#BFFF00]" />
+            <Package className="w-8 h-8 text-[#C84FFF]" />
             <h1 className="text-3xl font-bold text-white">Products</h1>
             <span className="px-3 py-1 rounded-full bg-[#12123a] text-[#f0f0f5] text-sm">
               {products.length} total
@@ -205,7 +205,7 @@ export default function ManageProductsPage() {
           </div>
           <Link
             href="/shop/manage/products/new"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-[#BFFF00] text-black font-semibold rounded-xl hover:brightness-110 transition-all"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl hover:brightness-110 transition-all"
           >
             <Plus className="w-5 h-5" />
             Add Product
@@ -220,7 +220,7 @@ export default function ManageProductsPage() {
             placeholder="Search products..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 rounded-xl bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(191,255,0,0.3)] focus:outline-none transition-colors"
+            className="w-full pl-12 pr-4 py-3 rounded-xl bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none transition-colors"
           />
         </div>
 
@@ -237,7 +237,7 @@ export default function ManageProductsPage() {
             {!searchQuery && (
               <Link
                 href="/shop/manage/products/new"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#BFFF00] text-black font-semibold rounded-xl"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl"
               >
                 <Plus className="w-5 h-5" />
                 Add Product
@@ -293,19 +293,19 @@ export default function ManageProductsPage() {
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="text-[#BFFF00] font-semibold">
+                        <span className="text-[#C84FFF] font-semibold">
                           €{product.price.toFixed(2)}
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <span className={product.stock > 0 ? 'text-green-400' : 'text-red-400'}>
+                        <span className={product.stock > 0 ? 'text-[#E879F9]' : 'text-red-400'}>
                           {product.stock}
                         </span>
                       </td>
                       <td className="px-6 py-4">
                         <span className={`px-2 py-1 rounded-lg text-xs font-medium ${
                           product.isActive 
-                            ? 'bg-green-500/20 text-green-400' 
+                            ? 'bg-[#C84FFF]/20 text-[#E879F9]' 
                             : 'bg-gray-500/20 text-[#8888aa]'
                         }`}>
                           {product.isActive ? 'Active' : 'Hidden'}
@@ -328,7 +328,7 @@ export default function ManageProductsPage() {
                             onClick={() => toggleActive(product)}
                             className={`p-2 rounded-lg transition-colors ${
                               product.isActive 
-                                ? 'text-green-400 hover:bg-green-500/20' 
+                                ? 'text-[#E879F9] hover:bg-[#C84FFF]/20' 
                                 : 'text-[#8888aa] hover:bg-[#12123a]'
                             }`}
                             title={product.isActive ? 'Hide product' : 'Show product'}
@@ -337,7 +337,7 @@ export default function ManageProductsPage() {
                           </button>
                           <Link
                             href={`/shop/manage/products/${product.id}/edit`}
-                            className="p-2 rounded-lg text-[#BFFF00] hover:bg-[rgba(191,255,0,0.15)] transition-colors"
+                            className="p-2 rounded-lg text-[#C84FFF] hover:bg-[rgba(200,79,255,0.15)] transition-colors"
                             title="Edit product"
                           >
                             <Edit className="w-4 h-4" />

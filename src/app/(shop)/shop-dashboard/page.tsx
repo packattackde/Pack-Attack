@@ -193,19 +193,19 @@ export default async function ShopDashboard({
       <div className="fixed inset-0 radial-gradient" />
       
       {/* Decorative gradient orbs */}
-      <div className="fixed top-20 left-10 w-72 h-72 bg-emerald-500/20 rounded-full blur-3xl animate-float" />
-      <div className="fixed bottom-20 right-10 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '3s' }} />
+      <div className="fixed top-20 left-10 w-72 h-72 bg-[#C84FFF]/20 rounded-full blur-3xl animate-float" />
+      <div className="fixed bottom-20 right-10 w-96 h-96 bg-[#C84FFF]/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '3s' }} />
 
       <div className="relative container py-8 md:py-12">
         {/* Header */}
         <div className="mb-10">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
-            <Store className="w-4 h-4 text-emerald-400" />
+            <Store className="w-4 h-4 text-[#E879F9]" />
             <span className="text-[#f0f0f5]">{viewingSpecificShop ? `Admin → ${shop?.name}` : isAdmin ? 'Admin View' : shop?.name || 'Shop Dashboard'}</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-3 font-heading">
             <span className="text-white">{viewingSpecificShop ? `${shop?.name} ` : 'Shop '}</span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400">Dashboard</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C84FFF] via-[#E879F9] to-[#9333EA]">Dashboard</span>
           </h1>
           <p className="text-[#8888aa] text-lg max-w-2xl">
             {viewingSpecificShop
@@ -218,19 +218,19 @@ export default async function ShopDashboard({
 
         {/* Quick Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
-          <div className="glass rounded-2xl p-5 relative overflow-hidden group hover:ring-2 hover:ring-emerald-500/30 transition-all">
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent" />
+          <div className="glass rounded-2xl p-5 relative overflow-hidden group hover:ring-2 hover:ring-[#C84FFF]/30 transition-all">
+            <div className="absolute inset-0 bg-gradient-to-br from-[#9333EA]/5 to-transparent" />
             <div className="relative">
-              <Package className="w-6 h-6 text-emerald-400 mb-3" />
+              <Package className="w-6 h-6 text-[#E879F9] mb-3" />
               <div className="text-3xl font-bold text-white mb-1">{stats.totalBoxes}</div>
               <div className="text-sm text-[#8888aa]">Total Boxes</div>
             </div>
           </div>
           
-          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-2xl p-5 relative overflow-hidden group hover:ring-2 hover:ring-teal-500/30 transition-all">
-            <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 to-transparent" />
+          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-2xl p-5 relative overflow-hidden group hover:ring-2 hover:ring-[#C84FFF]/30 transition-all">
+            <div className="absolute inset-0 bg-gradient-to-br from-[#7c3aed]/5 to-transparent" />
             <div className="relative">
-              <Sparkles className="w-6 h-6 text-teal-400 mb-3" />
+              <Sparkles className="w-6 h-6 text-[#E879F9] mb-3" />
               <div className="text-3xl font-bold text-white mb-1">{stats.activeBoxes}</div>
               <div className="text-sm text-[#8888aa]">Active Boxes</div>
             </div>
@@ -277,12 +277,12 @@ export default async function ShopDashboard({
           </div>
           
           <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-[rgba(191,255,0,0.1)]">
-              <Package className="w-5 h-5 text-[#BFFF00]" />
+            <div className="p-3 rounded-xl bg-[rgba(200,79,255,0.1)]">
+              <Package className="w-5 h-5 text-[#C84FFF]" />
             </div>
             <div>
               <div className="text-2xl font-bold text-white">{stats.processingOrders}</div>
-              <div className="text-xs text-[#BFFF00]">Processing</div>
+              <div className="text-xs text-[#C84FFF]">Processing</div>
             </div>
           </div>
           
@@ -297,12 +297,12 @@ export default async function ShopDashboard({
           </div>
           
           <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-green-500/10">
-              <CheckCircle className="w-5 h-5 text-green-400" />
+            <div className="p-3 rounded-xl bg-[#C84FFF]/10">
+              <CheckCircle className="w-5 h-5 text-[#E879F9]" />
             </div>
             <div>
               <div className="text-2xl font-bold text-white">{stats.deliveredOrders}</div>
-              <div className="text-xs text-green-400">Delivered</div>
+              <div className="text-xs text-[#E879F9]">Delivered</div>
             </div>
           </div>
         </div>
@@ -312,23 +312,23 @@ export default async function ShopDashboard({
           {/* Orders Management */}
           <Link 
             href={viewingSpecificShop ? `/shop-dashboard/orders?shopId=${shop?.id}` : '/shop-dashboard/orders'} 
-            className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-emerald-500/50 transition-all group relative overflow-hidden"
+            className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-[#C84FFF]/50 transition-all group relative overflow-hidden"
           >
             {stats.pendingOrders > 0 && (
               <div className="absolute -top-1 -right-1 w-8 h-8 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg animate-pulse">
                 {stats.pendingOrders}
               </div>
             )}
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute inset-0 bg-gradient-to-br from-[#9333EA]/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="relative">
-              <div className="inline-flex items-center justify-center w-14 h-14 mb-5 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 ring-1 ring-emerald-500/30">
-                <ShoppingCart className="w-7 h-7 text-emerald-400" />
+              <div className="inline-flex items-center justify-center w-14 h-14 mb-5 rounded-2xl bg-gradient-to-br from-[#9333EA]/20 to-[#9333EA]/20 ring-1 ring-[#C84FFF]/30">
+                <ShoppingCart className="w-7 h-7 text-[#E879F9]" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-2 group-hover:text-emerald-400 transition-colors">Box Orders</h3>
+              <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#E879F9] transition-colors">Box Orders</h3>
               <p className="text-[#8888aa] text-sm leading-relaxed">
                 Orders from your custom boxes. Process and ship cards.
               </p>
-              <div className="mt-4 flex items-center text-emerald-400 text-sm font-medium">
+              <div className="mt-4 flex items-center text-[#E879F9] text-sm font-medium">
                 <span>Manage Orders</span>
                 <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -370,18 +370,18 @@ export default async function ShopDashboard({
           {/* My Stock */}
           <Link 
             href={viewingSpecificShop ? `/shop-dashboard/stock?shopId=${shop?.id}` : '/shop-dashboard/stock'} 
-            className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-teal-500/50 transition-all group relative overflow-hidden"
+            className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-[#C84FFF]/50 transition-all group relative overflow-hidden"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute inset-0 bg-gradient-to-br from-[#7c3aed]/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="relative">
-              <div className="inline-flex items-center justify-center w-14 h-14 mb-5 rounded-2xl bg-gradient-to-br from-teal-500/20 to-cyan-500/20 ring-1 ring-teal-500/30">
-                <Database className="w-7 h-7 text-teal-400" />
+              <div className="inline-flex items-center justify-center w-14 h-14 mb-5 rounded-2xl bg-gradient-to-br from-[#7c3aed]/20 to-cyan-500/20 ring-1 ring-[#C84FFF]/30">
+                <Database className="w-7 h-7 text-[#E879F9]" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-2 group-hover:text-teal-400 transition-colors">My Stock</h3>
+              <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#E879F9] transition-colors">My Stock</h3>
               <p className="text-[#8888aa] text-sm leading-relaxed">
                 View and manage your card inventory. Connect your stock via API integration.
               </p>
-              <div className="mt-4 flex items-center text-teal-400 text-sm font-medium">
+              <div className="mt-4 flex items-center text-[#E879F9] text-sm font-medium">
                 <span>Manage Stock</span>
                 <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -425,14 +425,14 @@ export default async function ShopDashboard({
         <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-emerald-500/10">
-                <BarChart3 className="w-5 h-5 text-emerald-400" />
+              <div className="p-2 rounded-xl bg-[#C84FFF]/10">
+                <BarChart3 className="w-5 h-5 text-[#E879F9]" />
               </div>
               <h2 className="text-xl font-bold text-white">Recent Orders</h2>
             </div>
             <Link 
               href={viewingSpecificShop ? `/shop-dashboard/orders?shopId=${shop?.id}` : '/shop-dashboard/orders'} 
-              className="text-sm text-emerald-400 hover:text-emerald-300 font-medium transition-colors"
+              className="text-sm text-[#E879F9] hover:text-[#f0abfc] font-medium transition-colors"
             >
               View All →
             </Link>
@@ -475,10 +475,10 @@ export default async function ShopDashboard({
                   <div className="text-right">
                     <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${
                       order.status === 'PENDING' ? 'bg-yellow-500/10 text-yellow-400' :
-                      order.status === 'CONFIRMED' ? 'bg-[rgba(191,255,0,0.1)] text-[#BFFF00]' :
+                      order.status === 'CONFIRMED' ? 'bg-[rgba(200,79,255,0.1)] text-[#C84FFF]' :
                       order.status === 'PROCESSING' ? 'bg-purple-500/10 text-purple-400' :
                       order.status === 'SHIPPED' ? 'bg-indigo-500/10 text-indigo-400' :
-                      order.status === 'DELIVERED' ? 'bg-green-500/10 text-green-400' :
+                      order.status === 'DELIVERED' ? 'bg-[#C84FFF]/10 text-[#E879F9]' :
                       'bg-red-500/10 text-red-400'
                     }`}>
                       {order.status}

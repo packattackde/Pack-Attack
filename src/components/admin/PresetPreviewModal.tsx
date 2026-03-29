@@ -55,7 +55,7 @@ const gameLabels: Record<string, string> = {
 
 const rarityColors: Record<string, string> = {
   common: 'text-gray-400',
-  uncommon: 'text-green-400',
+  uncommon: 'text-[#E879F9]',
   rare: 'text-blue-400',
   mythic: 'text-orange-400',
   'mythic rare': 'text-orange-400',
@@ -215,7 +215,7 @@ export function PresetPreviewModal({ preset, onClose, onLoad }: PresetPreviewMod
               <Button variant="outline" onClick={onClose}>
                 Cancel
               </Button>
-              <Button onClick={onLoad} className="bg-[#BFFF00] text-black hover:bg-[#d4ff4d]">
+              <Button onClick={onLoad} className="bg-[#C84FFF] text-white hover:bg-[#E879F9]">
                 <Download className="h-4 w-4 mr-2" />
                 Load Preset
               </Button>

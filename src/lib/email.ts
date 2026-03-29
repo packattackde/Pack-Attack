@@ -17,7 +17,7 @@ function getResendClient(): Resend {
 }
 
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
-const APP_NAME = 'Pack Attack';
+const APP_NAME = 'PullForge';
 const APP_URL = process.env.NEXTAUTH_URL || 'http://localhost:3000';
 
 export interface SendEmailResult {
@@ -85,7 +85,7 @@ export async function sendVerificationEmail(
           <div style="padding: 20px 40px 40px;">
             <h2 style="color: #fff; font-size: 24px; margin: 0 0 16px;">Verify Your Email</h2>
             <p style="color: #94a3b8; font-size: 16px; line-height: 24px; margin: 0 0 24px;">
-              Welcome to Pack Attack! Please verify your email address to complete your registration and start opening packs.
+              Welcome to PullForge! Please verify your email address to complete your registration and start opening packs.
             </p>
             <div style="text-align: center; margin: 32px 0;">
               <a href="${verifyUrl}" style="display: inline-block; padding: 16px 32px; background: linear-gradient(to right, #3b82f6, #2563eb); color: #fff; text-decoration: none; font-weight: 600; font-size: 16px; border-radius: 12px;">

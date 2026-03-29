@@ -42,7 +42,7 @@ function getRarityTier(rarity: string): RarityTier {
 
 const RARITY_COLORS: Record<RarityTier, { particle: string; glow: string; border: string; text: string; label: string }> = {
   common:    { particle: '#8b8ba0', glow: 'rgba(139,139,160,0.4)',  border: '#6b7280', text: 'text-gray-300',   label: 'Common' },
-  uncommon:  { particle: '#4ade80', glow: 'rgba(74,222,128,0.5)',   border: '#4ade80', text: 'text-green-400',  label: 'Uncommon' },
+  uncommon:  { particle: '#4ade80', glow: 'rgba(74,222,128,0.5)',   border: '#4ade80', text: 'text-[#E879F9]',  label: 'Uncommon' },
   rare:      { particle: '#60a5fa', glow: 'rgba(96,165,250,0.6)',   border: '#60a5fa', text: 'text-blue-400',   label: 'Rare' },
   epic:      { particle: '#a78bfa', glow: 'rgba(167,139,250,0.6)',  border: '#a78bfa', text: 'text-purple-400', label: 'Epic' },
   legendary: { particle: '#fbbf24', glow: 'rgba(251,191,36,0.7)',   border: '#fbbf24', text: 'text-amber-400',  label: 'Legendary' },
@@ -339,7 +339,7 @@ export function PackOpeningFlow({
     ? `M ${tearPoints[0].x},${tearPoints[0].y}` + tearPoints.slice(1).map(p => ` L ${p.x},${p.y}`).join('')
     : '';
 
-  const tearLineColor = tearProgress < 35 ? 'rgba(191,255,0,0.4)' : tearProgress < 60 ? 'rgba(191,255,0,0.7)' : '#BFFF00';
+  const tearLineColor = tearProgress < 35 ? 'rgba(200,79,255,0.4)' : tearProgress < 60 ? 'rgba(200,79,255,0.7)' : '#C84FFF';
 
   // ─── Card fan angles ──────────────────────────────────────────────
 
@@ -464,14 +464,14 @@ export function PackOpeningFlow({
                   className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
                   style={{ clipPath: 'url(#boosterClipPOF)' }}
                 >
-                  <span className="text-5xl mb-2" style={{ filter: 'drop-shadow(0 0 15px rgba(191,255,0,0.3))' }}>
+                  <span className="text-5xl mb-2" style={{ filter: 'drop-shadow(0 0 15px rgba(200,79,255,0.3))' }}>
                     🏴‍☠️
                   </span>
                   <span
-                    className="text-[15px] font-extrabold text-[#BFFF00] uppercase tracking-[3px]"
-                    style={{ textShadow: '0 0 10px rgba(191,255,0,0.4)' }}
+                    className="text-[15px] font-extrabold text-[#C84FFF] uppercase tracking-[3px]"
+                    style={{ textShadow: '0 0 10px rgba(200,79,255,0.4)' }}
                   >
-                    Pack Attack
+                    PullForge
                   </span>
                   <span className="text-[9px] text-white/40 uppercase tracking-[2px] mt-1">
                     {boxName}
@@ -485,8 +485,8 @@ export function PackOpeningFlow({
                 <div
                   className="absolute top-[15%] right-[12%] w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-black text-black z-10"
                   style={{
-                    background: 'radial-gradient(circle at 35% 35%, #e0ff60, #BFFF00, #80cc00)',
-                    boxShadow: '0 2px 8px rgba(191,255,0,0.4)',
+                    background: 'radial-gradient(circle at 35% 35%, #e0ff60, #C84FFF, #80cc00)',
+                    boxShadow: '0 2px 8px rgba(200,79,255,0.4)',
                   }}
                 >
                   PA
@@ -642,7 +642,7 @@ export function PackOpeningFlow({
       {/* Hint text */}
       {phase === 'booster' && boosterPhase === 'tilt' && (
         <motion.p
-          className="absolute bottom-16 text-sm text-[#BFFF00] font-semibold"
+          className="absolute bottom-16 text-sm text-[#C84FFF] font-semibold"
           animate={{ opacity: [0.4, 1, 0.4] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
@@ -1072,11 +1072,11 @@ export function PackOpeningFlow({
           animate={{
             width: cursorPressed ? 32 : 22,
             height: cursorPressed ? 32 : 22,
-            borderColor: cursorPressed ? '#BFFF00' : 'rgba(191,255,0,0.5)',
-            backgroundColor: cursorPressed ? 'rgba(191,255,0,0.15)' : 'rgba(191,255,0,0)',
+            borderColor: cursorPressed ? '#C84FFF' : 'rgba(200,79,255,0.5)',
+            backgroundColor: cursorPressed ? 'rgba(200,79,255,0.15)' : 'rgba(200,79,255,0)',
             boxShadow: cursorPressed
-              ? '0 0 15px rgba(191,255,0,0.4), 0 0 30px rgba(191,255,0,0.2)'
-              : '0 0 8px rgba(191,255,0,0.2)',
+              ? '0 0 15px rgba(200,79,255,0.4), 0 0 30px rgba(200,79,255,0.2)'
+              : '0 0 8px rgba(200,79,255,0.2)',
           }}
           transition={{ type: 'spring', stiffness: 400, damping: 25 }}
         />

@@ -11,7 +11,7 @@ test.describe('Boxes Page', () => {
       await page.goto('/boxes');
       
       // Check page title
-      await expect(page).toHaveTitle(/Pack Attack/);
+      await expect(page).toHaveTitle(/PullForge/);
       
       // Check heading
       const heading = page.locator('h1').filter({ hasText: /Box/i });
