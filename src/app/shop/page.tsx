@@ -13,9 +13,9 @@ export const metadata: Metadata = {
   },
 };
 
-// PERFORMANCE: Use ISR instead of force-dynamic
-// Products update every 2 minutes which is frequent enough for stock changes
-export const revalidate = 120; // Revalidate every 2 minutes
+// Request-time rendering so `next build` does not require a live DB (ISR would prerender at build).
+// When the database is back, data is fresh on every request unless you reintroduce caching.
+export const dynamic = 'force-dynamic';
 
 async function getProducts() {
   const products = await prisma.shopProduct.findMany({
