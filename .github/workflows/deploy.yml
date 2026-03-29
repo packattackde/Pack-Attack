@@ -1,8 +1,9 @@
 name: Deploy to Production
 
+# Production (pack-attack.de) tracks `beta/beta` only — pushes to `main` do not deploy.
 on:
   push:
-    branches: [main]
+    branches: ['beta/beta']
   workflow_dispatch:
 
 jobs:
@@ -21,9 +22,9 @@ jobs:
             # Clean stale build artifacts before git operations
             sudo rm -rf .next.old.* 2>/dev/null || true
 
-            # Pull latest code
-            git fetch origin main
-            git reset --hard origin/main
+            # Pull latest code (beta line)
+            git fetch origin beta/beta
+            git reset --hard origin/beta/beta
             git clean -fd
             npm ci
             npx prisma generate
