@@ -1,11 +1,11 @@
 name: Deploy to Production
 
 # Production DATABASE_URL / DIRECT_DATABASE_URL: only in /var/www/packattack/app/.env on the server.
-# This workflow does not read or write those values.
+# Deploys from branch beta/beta only (not main).
 
 on:
   push:
-    branches: [main]
+    branches: [beta/beta]
   workflow_dispatch:
 
 jobs:
@@ -25,8 +25,8 @@ jobs:
             sudo rm -rf .next.old.* 2>/dev/null || true
 
             # Pull latest code
-            git fetch origin main
-            git reset --hard origin/main
+            git fetch origin beta/beta
+            git reset --hard origin/beta/beta
             git clean -fd
             npm ci
             npx prisma generate
