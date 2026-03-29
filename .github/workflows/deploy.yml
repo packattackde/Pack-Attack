@@ -1,7 +1,9 @@
 name: Deploy to Production
 
 # Production DATABASE_URL / DIRECT_DATABASE_URL: only in /var/www/packattack/app/.env on the server.
-# Deploys from branch beta/beta only (not main).
+#
+# Branch model: `beta/beta` is the primary integration branch (the "real" main for this repo).
+# Production always deploys from `beta/beta` only. `main` stays a separate branch — do not assume it matches prod.
 
 on:
   push:

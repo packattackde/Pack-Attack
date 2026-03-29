@@ -55,18 +55,29 @@ ssh -i "$env:USERPROFILE\.ssh\packattack-server" packattack@82.165.66.236
 
 ---
 
+## Git branches (read this first)
+
+| Branch | Role |
+|--------|------|
+| **`beta/beta`** | **Primary branch** — this is the integration line that **pack-attack.de** deploys from. Treat it as “main” for day-to-day work. |
+| **`main`** | **Separate branch** — not auto-deployed. Keep it only if you use it for releases, snapshots, or GitHub default; it does **not** have to match `beta/beta`. |
+
+**Do not merge `beta/beta` into `main` just to “sync” unless you explicitly want that.** Production follows **`beta/beta`** only (see `.github/workflows/deploy.yml`).
+
+---
+
 ## Deployment
 
 ### Quick Deploy (from local machine)
 ```powershell
-ssh -i "$env:USERPROFILE\.ssh\packattack-server" root@82.165.66.236 "cd /var/www/packattack/app && git pull origin main && npm ci && npx prisma generate && npm run build && npx prisma migrate deploy && pm2 reload packattack --update-env && pm2 status"
+ssh -i "$env:USERPROFILE\.ssh\packattack-server" root@82.165.66.236 "cd /var/www/packattack/app && git fetch origin beta/beta && git reset --hard origin/beta/beta && npm ci && npx prisma generate && npm run build && npx prisma migrate deploy && pm2 reload packattack --update-env && pm2 status"
 ```
 
 ### On-Server Deploy
 ```bash
 cd /var/www/packattack/app
-sudo -u packattack git fetch origin main
-sudo -u packattack git reset --hard origin/main
+sudo -u packattack git fetch origin beta/beta
+sudo -u packattack git reset --hard origin/beta/beta
 sudo -u packattack npm ci --production=false
 sudo -u packattack npx prisma generate
 sudo -u packattack npx prisma migrate deploy
