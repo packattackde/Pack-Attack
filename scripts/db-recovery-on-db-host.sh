@@ -1,58 +1,97 @@
 #!/usr/bin/env bash
-# Run as root ON the PostgreSQL machine (85.215.156.153), via SSH or provider console.
-# Fixes the usual cause of P1001 from the app server: firewall + Docker not publishing :5432.
+# Run as root ON the database machine (85.215.156.153) — SSH, serial console, or provider panel.
 #
-# App server that must reach this host:
-#   STRATO_APP_IP=82.165.66.236
+# Symptom from Strato app server: Prisma P1001 / "connection refused" to :5432 or :5433 means
+# TCP never reaches PostgreSQL. Fix is always on THIS host: Docker/systemd, bind address, firewall.
+#
+# App server that must be allowed inbound:
+#   STRATO_APP_IP=82.165.66.236  (production, pack-attack.de)
 #
 # Usage:
-#   sudo bash scripts/db-recovery-on-db-host.sh           # diagnose only
-#   sudo bash scripts/db-recovery-on-db-host.sh --apply   # add ufw rule + restart docker postgres
+#   sudo bash scripts/db-recovery-on-db-host.sh           # diagnose
+#   sudo bash scripts/db-recovery-on-db-host.sh --apply   # ufw + docker restart + compose up
 
 set -euo pipefail
 STRATO_APP_IP="${STRATO_APP_IP:-82.165.66.236}"
 APPLY="${1:-}"
 
-echo "=== Pack Attack DB host recovery (this machine) ==="
-echo "Allowing inbound from app server: ${STRATO_APP_IP} -> TCP 5432 (prod) / 5433 (dev)"
+echo "=== Pack Attack — DB host recovery (run on 85.215.156.153) ==="
+echo "Strato app IP to allow: ${STRATO_APP_IP} -> TCP 5432 (prod), 5433 (dev)"
+echo ""
 
-echo "=== docker postgres containers ==="
-docker ps -a 2>/dev/null | grep -iE 'postgres|POSTGRES' || true
-echo "=== try start common container names ==="
-for n in postgres packattack-db pg; do
-  docker start "$n" 2>/dev/null && echo "started $n" && break
-done || true
-echo "=== listen on 5432 / 5433 ==="
-ss -tlnp 2>/dev/null | grep -E '5432|5433' || echo "(no listener on 5432/5433)"
-echo "=== systemd postgresql ==="
-systemctl is-active postgresql 2>/dev/null || systemctl is-active postgresql@* 2>/dev/null || true
-
-if [[ "${APPLY}" == "--apply" ]]; then
-  echo "=== APPLY: ufw ==="
-  if command -v ufw >/dev/null 2>&1; then
-    ufw allow from "${STRATO_APP_IP}" to any port 5432 proto tcp comment 'packattack prod'
-    ufw allow from "${STRATO_APP_IP}" to any port 5433 proto tcp comment 'packattack dev'
-    ufw reload || true
-  else
-    echo "ufw not installed — open TCP 5432 and 5433 from ${STRATO_APP_IP} in your provider firewall / security group."
-  fi
-  echo "=== APPLY: restart docker postgres containers (all names) ==="
-  docker ps -a --format '{{.Names}}' 2>/dev/null | grep -iE 'postgres|packattack|pg' | while read -r n; do
-    docker restart "$n" 2>/dev/null && echo "restarted $n" || true
-  done
-  echo "=== listen again ==="
-  ss -tlnp 2>/dev/null | grep -E '5432|5433' || echo "(still no listener — check Docker -p 0.0.0.0:5432:5432)"
-fi
-
-echo "=== ufw status (if installed) ==="
-if command -v ufw >/dev/null 2>&1; then
-  ufw status verbose 2>/dev/null || true
-else
-  echo "If ufw is not used, configure your provider firewall: allow ${STRATO_APP_IP} -> TCP 5432 (and 5433 if needed)."
-fi
-
-echo ""
-echo "If still failing: inside the Postgres container, listen_addresses must include '*' or the"
-echo "public IP, and pg_hba.conf must allow hostssl or host connections from ${STRATO_APP_IP}."
-echo "Docker run must publish: -p 0.0.0.0:5432:5432 (not only 127.0.0.1)."
-
+echo "=== All Docker containers (names matter) ==="
+docker ps -a 2>/dev/null || echo "(docker not installed or not running)"
+
+echo ""
+echo "=== Listeners on 5432 / 5433 (want 0.0.0.0 or *, not only 127.0.0.1) ==="
+ss -tlnp 2>/dev/null | grep -E ':5432|:5433' || echo "(nothing listening on 5432/5433 — start Postgres/Docker)"
+
+echo ""
+echo "=== Per-container published ports (if Postgres is in Docker) ==="
+while read -r cid; do
+  [ -z "$cid" ] && continue
+  echo "--- $cid ---"
+  docker port "$cid" 2>/dev/null || true
+done < <(docker ps -aq 2>/dev/null | head -20)
+
+echo ""
+echo "=== systemd PostgreSQL (non-Docker installs) ==="
+systemctl is-active postgresql 2>/dev/null || systemctl is-active 'postgresql@*' 2>/dev/null || true
+
+echo ""
+echo "=== ufw (if installed) ==="
+if command -v ufw >/dev/null 2>&1; then
+  ufw status verbose 2>/dev/null || true
+else
+  echo "(ufw not installed — use provider firewall / iptables)"
+fi
+
+echo ""
+echo "=== iptables INPUT (first 30 lines) ==="
+iptables -L INPUT -n -v 2>/dev/null | head -30 || nft list ruleset 2>/dev/null | head -40 || true
+
+if [[ "${APPLY}" == "--apply" ]]; then
+  echo ""
+  echo "=== APPLY: firewall (ufw) ==="
+  if command -v ufw >/dev/null 2>&1; then
+    ufw allow from "${STRATO_APP_IP}" to any port 5432 proto tcp comment 'packattack prod'
+    ufw allow from "${STRATO_APP_IP}" to any port 5433 proto tcp comment 'packattack dev'
+    ufw reload || true
+  else
+    echo "Install/enable ufw or add provider rules: allow ${STRATO_APP_IP} -> TCP 5432, 5433"
+  fi
+
+  echo ""
+  echo "=== APPLY: docker compose (common paths) ==="
+  for d in /root /opt /var/www /home; do
+    for f in docker-compose.yml compose.yaml docker-compose.yaml; do
+      if [[ -f "$d/$f" ]]; then
+        echo "Trying: cd $d && docker compose -f $f up -d"
+        (cd "$d" && docker compose -f "$f" up -d) 2>/dev/null && echo "OK: $d/$f" || true
+      fi
+    done
+  done
+
+  echo ""
+  echo "=== APPLY: start/restart Postgres containers ==="
+  docker ps -a --format '{{.Names}}' 2>/dev/null | grep -iE 'postgres|packattack|pg' | while read -r n; do
+    docker start "$n" 2>/dev/null || docker restart "$n" 2>/dev/null || true
+    echo "touched: $n"
+  done
+
+  for n in postgres packattack-db pg; do
+    docker start "$n" 2>/dev/null && echo "started: $n" && break
+  done || true
+
+  echo ""
+  echo "=== Listeners again ==="
+  ss -tlnp 2>/dev/null | grep -E ':5432|:5433' || echo "(still nothing — fix -p 0.0.0.0:5432:5432 and container health)"
+fi
+
+echo ""
+echo "=== Checklist (if still failing) ==="
+echo "1. Container must publish: -p 0.0.0.0:5432:5432 (not 127.0.0.1:5432:5432)."
+echo "2. postgresql.conf: listen_addresses = '*' (or host IP) inside container/VM."
+echo "3. pg_hba.conf: host all all ${STRATO_APP_IP}/32 scram-sha-256 (or md5)."
+echo "4. Provider/cloud firewall: allow ${STRATO_APP_IP} -> 5432, 5433."
+echo "5. Optional: add Strato deploy public key to root's ~/.ssh/authorized_keys on this host for automation."

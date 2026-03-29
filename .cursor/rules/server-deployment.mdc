@@ -59,7 +59,7 @@ ssh -i "$env:USERPROFILE\.ssh\packattack-server" packattack@82.165.66.236
 
 ### Quick Deploy (from local machine)
 ```powershell
-ssh -i "$env:USERPROFILE\.ssh\packattack-server" root@82.165.66.236 "cd /var/www/packattack/app && git pull origin main && npm ci && npx prisma generate && npm run build && pm2 reload packattack --update-env && pm2 status"
+ssh -i "$env:USERPROFILE\.ssh\packattack-server" root@82.165.66.236 "cd /var/www/packattack/app && git pull origin main && npm ci && npx prisma generate && npm run build && npx prisma migrate deploy && pm2 reload packattack --update-env && pm2 status"
 ```
 
 ### On-Server Deploy
@@ -69,7 +69,7 @@ sudo -u packattack git fetch origin main
 sudo -u packattack git reset --hard origin/main
 sudo -u packattack npm ci --production=false
 sudo -u packattack npx prisma generate
-sudo -u packattack npx prisma db push --accept-data-loss
+sudo -u packattack npx prisma migrate deploy
 sudo -u packattack npm run build
 sudo -u packattack pm2 reload packattack --update-env
 ```
@@ -124,6 +124,18 @@ Production uses **self-hosted PostgreSQL 17 (Docker)** on a **separate machine**
 | Same | Port **5433** (dev DB) | Same rule if you use dev from a remote client. |
 
 On the **database VM**: ensure Postgres/Docker binds **0.0.0.0** (or the WAN interface) for the published port, `pg_hba.conf` allows the app host, and `ufw`/provider firewall allows **82.165.66.236 → 5432**.
+
+### P1001 / “connection refused” (nothing in GitHub or Strato can fix this)
+
+Deploy scripts and correct `DATABASE_URL` in `/var/www/packattack/app/.env` **do not open TCP ports** on the DB machine. If `nc` from Strato shows **connection refused** to `85.215.156.153:5432`, the failure is **only** on **85.215.156.153**:
+
+1. Log in: **SSH**, **serial console**, or **hosting panel** for that server (the Pack Attack deploy key may not be installed there — use the credentials your host gives you).
+2. Run diagnostics: clone or copy `scripts/db-recovery-on-db-host.sh` onto that host and run `sudo bash db-recovery-on-db-host.sh`.
+3. Apply common fixes: `sudo bash db-recovery-on-db-host.sh --apply`.
+4. Confirm something listens on **0.0.0.0:5432** (and **:5433** for dev): `ss -tlnp | grep 543`.
+5. From Strato, re-test: `nc -zv -w4 85.215.156.153 5432` (should say **succeeded**, not refused).
+
+Until step 5 succeeds, Prisma will keep failing — **that is a network/listener issue, not an app bug.**
 
 ---
 
