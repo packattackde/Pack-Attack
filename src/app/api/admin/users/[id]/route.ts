@@ -5,6 +5,7 @@ import { deleteUserWithRelations } from '@/lib/admin-delete-user';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
 import { resendVerificationEmail } from '@/lib/email';
+import { deleteUserWithRelations } from '@/lib/admin-delete-user';
 
 // Schema for updating a user
 const updateUserSchema = z.object({
