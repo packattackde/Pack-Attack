@@ -10,14 +10,37 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to server
+      # Stray `next start` / next-server as root (or duplicate listeners) causes EADDRINUSE on :3000
+      # and PM2 (packattack user) cannot bind. Free the port before deploy.
+      - name: Free port 3000 (root)
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            fuser -k 3000/tcp 2>/dev/null || true
+            sleep 1
+            pkill -f 'sh -c next start' 2>/dev/null || true
+            pkill -u root -f 'next-server' 2>/dev/null || true
+            sleep 1
+            ss -tlnp | grep ':3000 ' && echo 'WARN: 3000 still in use' || echo 'Port 3000 free'
+
+      - name: Deploy application (packattack)
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SERVER_IP }}
           username: packattack
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          command_timeout: 45m
           script: |
             cd /var/www/packattack/app
+
+            # Stop PM2 apps before git/build so nothing holds the app directory or port
+            pm2 stop packattack 2>/dev/null || true
+            pm2 stop battle-auto-start-scheduler 2>/dev/null || true
+            sleep 2
+            set -e
 
             # Clean stale build artifacts before git operations
             sudo rm -rf .next.old.* 2>/dev/null || true
@@ -46,26 +69,15 @@ jobs:
               npm run build
             fi
 
-            # Reload PM2
-            if pm2 reload ecosystem.config.cjs --update-env 2>/dev/null; then
-              echo "PM2 reloaded successfully"
-            else
-              echo "PM2 reload failed, doing fresh start..."
-              pm2 delete packattack 2>/dev/null || true
-              fuser -k 3000/tcp 2>/dev/null || true
-              sleep 3
-              pm2 start ecosystem.config.cjs
-            fi
-
-            if pm2 describe battle-auto-start-scheduler > /dev/null 2>&1; then
-              pm2 reload ecosystem.battle-scheduler.config.cjs --update-env
-            else
-              pm2 start ecosystem.battle-scheduler.config.cjs
-            fi
+            # Clean PM2 entries and start fresh (avoids EADDRINUSE from reload + orphan listeners)
+            pm2 delete packattack 2>/dev/null || true
+            pm2 delete battle-auto-start-scheduler 2>/dev/null || true
+            sleep 2
+            pm2 start ecosystem.config.cjs
+            pm2 start ecosystem.battle-scheduler.config.cjs
 
             pm2 save
 
-            # Show status
             sleep 5
             pm2 status
             echo "✓ Deployment complete"
