@@ -114,20 +114,20 @@ export default function AchievementsWidget({ className = '' }: AchievementsWidge
           {/* Recent Unlocks */}
           {recentUnlocks.length > 0 && (
             <div className="mb-5">
-              <div className="text-[10px] font-semibold uppercase tracking-wider text-[#fbbf24] mb-3 flex items-center gap-1.5">
+              <div className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-3 flex items-center gap-1.5">
 <GiMedal className="w-3.5 h-3.5 text-[#C84FFF]" /> Recently Unlocked
               </div>
               <div className="flex gap-2">
                 {recentUnlocks.map((ach) => (
                   <div
                     key={ach.id}
-                    className="flex-1 flex flex-col items-center gap-1.5 p-2.5 rounded-xl bg-[rgba(251,191,36,0.06)] border border-[rgba(251,191,36,0.15)]"
+                    className="flex-1 flex flex-col items-center gap-1.5 p-2.5 rounded-xl bg-[rgba(200,79,255,0.06)] border border-[rgba(200,79,255,0.15)]"
                   >
                     <span className="text-xl">{ach.icon}</span>
                     <span className="text-[9px] text-[#f0f0f5] font-semibold text-center leading-tight line-clamp-2">
                       {ach.name}
                     </span>
-                    <span className="text-[8px] text-[#fbbf24] font-bold">✓ Unlocked</span>
+                    <span className="text-[8px] text-[#C84FFF] font-bold">✓ Unlocked</span>
                   </div>
                 ))}
               </div>

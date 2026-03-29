@@ -13,11 +13,12 @@ import BattlesWidget from '@/components/dashboard/BattlesWidget';
 import RecentPullsWidget from '@/components/dashboard/RecentPullsWidget';
 import LeaderboardWidget from '@/components/dashboard/LeaderboardWidget';
 import AchievementsWidget from '@/components/dashboard/AchievementsWidget';
+import { Sparkles } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Dashboard | PullForge',
+  title: 'Home | PullForge',
   description: 'Your personalized TCG pack opening dashboard',
 };
 
@@ -223,8 +224,21 @@ export default async function DashboardPage() {
   const userLbEntry = leaderboardData.find(e => e.userId === user.id);
 
   return (
-    <div className="min-h-screen font-display flex flex-col">
-      <div className="max-w-[1360px] mx-auto px-3 sm:px-6 py-4 sm:py-6 w-full flex-1 flex flex-col">
+    <div className="min-h-screen font-display flex flex-col bg-[#06061a]">
+      <div className="fixed inset-0 bg-grid opacity-20 pointer-events-none" />
+      <div className="fixed inset-0 radial-gradient pointer-events-none" />
+
+      <div className="relative max-w-[1360px] mx-auto px-3 sm:px-6 py-4 sm:py-6 w-full flex-1 flex flex-col">
+        <div className="mb-5">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
+            <Sparkles className="w-4 h-4 text-[#C84FFF]" />
+            <span className="text-gray-300">PullForge</span>
+          </div>
+          <p className="mt-2 text-sm text-[#8888aa]">
+            Your home dashboard — open packs, battles, and track progress
+          </p>
+        </div>
+
         {/* Live Ticker */}
         <LiveTicker className="mb-5" />
 

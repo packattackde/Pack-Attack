@@ -38,7 +38,7 @@ function getRarityBorderClass(rarity: string): string {
   if (r.includes('rare') || r.includes('holo') || r.includes('promo'))
     return 'border-2 border-[#60a5fa] shadow-[0_0_8px_rgba(96,165,250,0.15)]';
   if (r.includes('uncommon'))
-    return 'border border-[#4ade80]';
+    return 'border border-[rgba(200,79,255,0.55)] shadow-[0_0_8px_rgba(200,79,255,0.12)]';
   return 'border border-[rgba(255,255,255,0.1)]';
 }
 
@@ -56,7 +56,7 @@ export default function RecentPullsWidget({ hits, pulls, className = '' }: Recen
       {/* Row 1: Last Hits (high value) */}
       {hits.length > 0 && (
         <div className="mb-5">
-          <div className="text-[10px] font-semibold uppercase tracking-wider text-[#fbbf24] mb-3 flex items-center gap-1.5">
+          <div className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-3 flex items-center gap-1.5">
 <GiFireGem className="w-3.5 h-3.5 text-[#C84FFF]" /> My Last Hits
           </div>
           <div className="flex gap-2 sm:gap-3 justify-center">
