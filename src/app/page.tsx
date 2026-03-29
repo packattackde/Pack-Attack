@@ -3,6 +3,7 @@ import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { titleForLevel, xpProgressInCurrentLevel } from '@/lib/level';
 import { getLeaderboard } from '@/lib/leaderboard';
+import { loadHomeDashboardQueries } from '@/lib/home-dashboard-data';
 import LiveTicker from '@/components/dashboard/LiveTicker';
 import WelcomeWidget from '@/components/dashboard/WelcomeWidget';
 import CoinBalanceWidget from '@/components/dashboard/CoinBalanceWidget';
@@ -13,11 +14,12 @@ import BattlesWidget from '@/components/dashboard/BattlesWidget';
 import RecentPullsWidget from '@/components/dashboard/RecentPullsWidget';
 import LeaderboardWidget from '@/components/dashboard/LeaderboardWidget';
 import AchievementsWidget from '@/components/dashboard/AchievementsWidget';
+import { Sparkles } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Dashboard | PullForge',
+  title: 'Home | PullForge',
   description: 'Your personalized TCG pack opening dashboard',
 };
 
@@ -27,7 +29,7 @@ export default async function DashboardPage() {
 
   const userEmail = session.user.email;
 
-  const [
+  const {
     user,
     recentHits,
     recentPulls,
@@ -37,92 +39,7 @@ export default async function DashboardPage() {
     activeBattles,
     cheapestBox,
     collectionValueAgg,
-  ] = await Promise.all([
-    // User profile
-    prisma.user.findUnique({
-      where: { email: userEmail },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        coins: true,
-        xp: true,
-        level: true,
-        levelCoinsEarnedThisMonth: true,
-      },
-    }),
-    // Recent hits (coinValue >= 100, last 3)
-    prisma.pull.findMany({
-      where: {
-        user: { email: userEmail },
-        cardId: { not: null },
-        cardValue: { gte: 100 },
-      },
-      orderBy: { timestamp: 'desc' },
-      take: 3,
-      include: {
-        card: { select: { name: true, imageUrlGatherer: true, rarity: true, coinValue: true } },
-      },
-    }),
-    // Recent pulls (last 5, any rarity)
-    prisma.pull.findMany({
-      where: {
-        user: { email: userEmail },
-        cardId: { not: null },
-      },
-      orderBy: { timestamp: 'desc' },
-      take: 5,
-      include: {
-        card: { select: { name: true, imageUrlGatherer: true, rarity: true, coinValue: true } },
-      },
-    }),
-    // Total pulls count
-    prisma.pull.count({ where: { user: { email: userEmail } } }),
-    // Total battles
-    prisma.battleParticipant.count({ where: { user: { email: userEmail } } }),
-    // Best pull today
-    prisma.pull.findFirst({
-      where: {
-        timestamp: { gte: new Date(new Date().setHours(0, 0, 0, 0)) },
-        cardValue: { not: null },
-        cardId: { not: null },
-      },
-      orderBy: { cardValue: 'desc' },
-      include: {
-        user: { select: { name: true } },
-        card: {
-          select: {
-            name: true,
-            imageUrlGatherer: true,
-            rarity: true,
-            coinValue: true,
-          },
-        },
-        box: { select: { id: true, name: true } },
-      },
-    }),
-    // Active battles (up to 3)
-    prisma.battle.findMany({
-      where: { status: { in: ['OPEN', 'FULL', 'READY', 'ACTIVE'] } },
-      orderBy: { createdAt: 'desc' },
-      take: 3,
-      include: {
-        box: { select: { name: true } },
-        _count: { select: { participants: true } },
-      },
-    }),
-    // Cheapest active box
-    prisma.box.findFirst({
-      where: { isActive: true },
-      orderBy: { price: 'asc' },
-      select: { price: true },
-    }),
-    // Collection value — aggregate all pull cardValues
-    prisma.pull.aggregate({
-      where: { user: { email: userEmail }, cardId: { not: null } },
-      _sum: { cardValue: true },
-    }),
-  ]);
+  } = await loadHomeDashboardQueries(userEmail);
 
   let battlesWon = 0;
   try {
@@ -231,8 +148,21 @@ export default async function DashboardPage() {
   const userLbEntry = leaderboardData.find(e => e.userId === user.id);
 
   return (
-    <div className="min-h-screen font-display flex flex-col">
-      <div className="max-w-[1360px] mx-auto px-3 sm:px-6 py-4 sm:py-6 w-full flex-1 flex flex-col">
+    <div className="min-h-screen font-display flex flex-col bg-[#06061a]">
+      <div className="fixed inset-0 bg-grid opacity-20 pointer-events-none" />
+      <div className="fixed inset-0 radial-gradient pointer-events-none" />
+
+      <div className="relative max-w-[1360px] mx-auto px-3 sm:px-6 py-4 sm:py-6 w-full flex-1 flex flex-col">
+        <div className="mb-5">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
+            <Sparkles className="w-4 h-4 text-[#C84FFF]" />
+            <span className="text-gray-300">PullForge</span>
+          </div>
+          <p className="mt-2 text-sm text-[#8888aa]">
+            Your home dashboard — open packs, battles, and track progress
+          </p>
+        </div>
+
         {/* Live Ticker */}
         <LiveTicker className="mb-5" />
 
