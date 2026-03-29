@@ -67,6 +67,7 @@ model User {
   feedbackMessages    FeedbackMessage[]   @relation("FeedbackMessageAuthor")
   assignedFeedbacks   Feedback[]          @relation("FeedbackAssignee")
   feedbackActivities  FeedbackActivityLog[] @relation("FeedbackActivityActor")
+  twitchLinkTokens    TwitchLinkToken[]
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
 
@@ -100,6 +101,7 @@ model Account {
 model TwitchLinkToken {
   id        String   @id @default(cuid())
   userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   token     String   @unique
   expiresAt DateTime
   used      Boolean  @default(false)
@@ -189,7 +191,7 @@ model Card {
 model Pull {
   id         String      @id @default(cuid())
   userId     String
-  user       User        @relation(fields: [userId], references: [id])
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   boxId      String
   box        Box         @relation(fields: [boxId], references: [id], onDelete: Cascade)
   cardId     String?
@@ -245,7 +247,7 @@ model CartItem {
 model Transaction {
   id              String        @id @default(cuid())
   userId          String
-  user            User          @relation(fields: [userId], references: [id])
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   amount          Decimal       @db.Decimal(10, 2)
   coins           Decimal       @db.Decimal(12, 2)
   paypalOrderId   String?       @unique
@@ -286,7 +288,7 @@ enum PaymentStatus {
 model Battle {
   id              String              @id @default(cuid())
   creatorId       String
-  creator         User                @relation("BattleCreator", fields: [creatorId], references: [id])
+  creator         User                @relation("BattleCreator", fields: [creatorId], references: [id], onDelete: Cascade)
   boxId           String
   box             Box                 @relation(fields: [boxId], references: [id], onDelete: Cascade)
   entryFee        Int                 @default(0)
@@ -296,7 +298,7 @@ model Battle {
   winCondition    WinCondition        @default(HIGHEST)
   status          BattleStatus        @default(OPEN)
   winnerId        String?
-  winner          User?               @relation("BattleWinner", fields: [winnerId], references: [id])
+  winner          User?               @relation("BattleWinner", fields: [winnerId], references: [id], onDelete: SetNull)
   participants    BattleParticipant[]
   pulls           BattlePull[]
   createdAt       DateTime            @default(now())
@@ -323,7 +325,7 @@ model BattleParticipant {
   battleId     String
   battle       Battle       @relation(fields: [battleId], references: [id], onDelete: Cascade)
   userId       String
-  user         User         @relation(fields: [userId], references: [id])
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   totalValue   Int          @default(0)
   roundsPulled Int          @default(0)
   isReady      Boolean      @default(false)
@@ -343,7 +345,7 @@ model BattlePull {
   participantId       String
   participant         BattleParticipant @relation(fields: [participantId], references: [id], onDelete: Cascade)
   pullId              String?           @unique
-  pull                Pull?             @relation(fields: [pullId], references: [id])
+  pull                Pull?             @relation(fields: [pullId], references: [id], onDelete: SetNull)
   roundNumber         Int
   coinValue           Decimal           @db.Decimal(10, 2)
   pulledAt            DateTime          @default(now())
@@ -381,7 +383,7 @@ enum WinCondition {
 model SaleHistory {
   id            String   @id @default(cuid())
   userId        String
-  user          User     @relation(fields: [userId], references: [id])
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   cardId        String?
   cardName      String
   cardImage     String?
@@ -428,7 +430,7 @@ enum EmailStatus {
 model Order {
   id              String                @id @default(cuid())
   userId          String
-  user            User                  @relation(fields: [userId], references: [id])
+  user            User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
   status          OrderStatus           @default(PENDING)
   totalCoins      Decimal               @db.Decimal(10, 2)
   shippingName    String
@@ -643,7 +645,7 @@ model ShopOrder {
   id              String          @id @default(cuid())
   orderNumber     String          @unique @default(cuid())
   userId          String
-  user            User            @relation(fields: [userId], references: [id])
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   shopId          String
   shop            Shop            @relation(fields: [shopId], references: [id])
   status          ShopOrderStatus @default(PENDING)
@@ -718,7 +720,7 @@ model ShopBoxOrder {
   box             Box?                  @relation(fields: [boxId], references: [id])
   // The user who placed the order
   userId          String
-  user            User                  @relation(fields: [userId], references: [id])
+  user            User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
   status          ShopBoxOrderStatus    @default(PENDING)
   // Card details (snapshot at order time)
   cardName        String
@@ -1008,7 +1010,7 @@ model ChatBan {
   reason      String?
   expiresAt   DateTime?   // null = permanent ban
   createdById String
-  createdBy   User        @relation("ChatBansIssued", fields: [createdById], references: [id])
+  createdBy   User        @relation("ChatBansIssued", fields: [createdById], references: [id], onDelete: Cascade)
   active      Boolean     @default(true)
   createdAt   DateTime    @default(now())
 

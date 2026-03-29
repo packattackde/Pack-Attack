@@ -4,6 +4,7 @@ import { getCurrentSession } from '@/lib/auth';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
 import { resendVerificationEmail } from '@/lib/email';
+import { Prisma } from '@prisma/client';
 
 // Schema for updating a user
 const updateUserSchema = z.object({
@@ -203,6 +204,17 @@ export async function DELETE(
     return NextResponse.json({ success: true, message: 'User deleted' });
   } catch (error) {
     console.error('Failed to delete user:', error);
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === 'P2003') {
+        return NextResponse.json(
+          { error: 'Cannot delete user: database still references this account. Contact support if this persists.' },
+          { status: 409 }
+        );
+      }
+      if (error.code === 'P2025') {
+        return NextResponse.json({ error: 'User not found' }, { status: 404 });
+      }
+    }
     return NextResponse.json({ error: 'Failed to delete user' }, { status: 500 });
   }
 }
