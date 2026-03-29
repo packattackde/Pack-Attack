@@ -30,16 +30,22 @@ jobs:
             git clean -fd
             npm ci
             npx prisma generate
-            npx prisma db push --accept-data-loss
+
+            # Build first (does not require a live DB for this app); migrations need DB
+            rm -rf .next-fresh
+            NEXT_DIST_DIR=.next-fresh npm run build
+
+            # Production migrations (uses DATABASE_URL from server .env only — never from GitHub)
+            if ! npx prisma migrate deploy; then
+              echo "WARNING: prisma migrate deploy failed — database unreachable or migration error."
+              echo "   Code build is already done; when PostgreSQL is reachable run on the server:"
+              echo "   cd /var/www/packattack/app && npx prisma migrate deploy && pm2 reload packattack --update-env"
+            fi
 
             # Add CRON_SECRET if not exists
             if ! grep -q "CRON_SECRET" .env; then
               echo "CRON_SECRET=\"$(openssl rand -base64 32)\"" >> .env
             fi
-
-            # Build into a fresh directory to avoid root-owned file conflicts
-            rm -rf .next-fresh
-            NEXT_DIST_DIR=.next-fresh npm run build
 
             # Swap the fresh build into place
             mv .next ".next.old.$(date +%s)" 2>/dev/null || true
