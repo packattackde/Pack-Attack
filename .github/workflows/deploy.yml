@@ -28,20 +28,23 @@ jobs:
             git clean -fd
             npm ci
             npx prisma generate
-            npx prisma db push --accept-data-loss
+            npx prisma db push --accept-data-loss || echo "WARN: prisma db push failed — DB may need a manual migration; continuing build"
 
             # Add CRON_SECRET if not exists
             if ! grep -q "CRON_SECRET" .env; then
               echo "CRON_SECRET=\"$(openssl rand -base64 32)\"" >> .env
             fi
 
-            # Build into a fresh directory to avoid root-owned file conflicts
+            # Build (prefer fresh dir swap; fall back to in-place if Turbopack tmp races)
             rm -rf .next-fresh
-            NEXT_DIST_DIR=.next-fresh npm run build
-
-            # Swap the fresh build into place
-            mv .next ".next.old.$(date +%s)" 2>/dev/null || true
-            mv .next-fresh .next
+            if NEXT_DIST_DIR=.next-fresh npm run build; then
+              mv .next ".next.old.$(date +%s)" 2>/dev/null || true
+              mv .next-fresh .next
+            else
+              echo "WARN: NEXT_DIST_DIR build failed, retrying in-place build"
+              rm -rf .next .next-fresh
+              npm run build
+            fi
 
             # Reload PM2
             if pm2 reload ecosystem.config.cjs --update-env 2>/dev/null; then
@@ -54,7 +57,7 @@ jobs:
               pm2 start ecosystem.config.cjs
             fi
 
-            if pm2 describe battle-scheduler > /dev/null 2>&1; then
+            if pm2 describe battle-auto-start-scheduler > /dev/null 2>&1; then
               pm2 reload ecosystem.battle-scheduler.config.cjs --update-env
             else
               pm2 start ecosystem.battle-scheduler.config.cjs
