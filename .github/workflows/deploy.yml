@@ -1,12 +1,11 @@
 name: Deploy to Production
 
-# The deploy job must NEVER pass DATABASE_URL / DIRECT_DATABASE_URL from GitHub Secrets
-# into SSH or rewrite those keys in .env. Production DB URLs live only in server .env.
-# To apply the same URLs as in GitHub Secrets, run workflow "Manual: sync database URLs…".
+# Production DATABASE_URL / DIRECT_DATABASE_URL: only in /var/www/packattack/app/.env on the server.
+# This workflow does not read or write those values.
 
 on:
   push:
-    branches: [main, beta/beta]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -19,23 +18,21 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: packattack
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          command_timeout: 45m
           script: |
             cd /var/www/packattack/app
-            REF="${{ github.ref_name }}"
 
             # Clean stale build artifacts before git operations
             sudo rm -rf .next.old.* 2>/dev/null || true
 
-            # Deploy the branch that triggered this workflow (main or beta/beta)
-            git fetch origin "$REF"
-            git reset --hard "origin/$REF"
+            # Pull latest code
+            git fetch origin main
+            git reset --hard origin/main
             git clean -fd
             npm ci
             npx prisma generate
             npx prisma db push --accept-data-loss
 
-            # Append-only — do not replace existing keys
+            # Add CRON_SECRET if not exists
             if ! grep -q "CRON_SECRET" .env; then
               echo "CRON_SECRET=\"$(openssl rand -base64 32)\"" >> .env
             fi
@@ -67,6 +64,7 @@ jobs:
 
             pm2 save
 
+            # Show status
             sleep 5
             pm2 status
             echo "✓ Deployment complete"
