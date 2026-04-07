@@ -199,92 +199,125 @@ export async function POST(
     });
 
     // Determine winner based on winCondition
-    const useLowest = battle.winCondition === 'LOWEST';
-    const sortedParticipants = battle.participants
-      .map(p => ({ ...p, total: participantTotals[p.id] }))
-      .sort((a, b) => useLowest ? a.total - b.total : b.total - a.total);
-
-    const bestTotal = sortedParticipants[0].total;
-    const winners = sortedParticipants.filter(p => p.total === bestTotal);
-    const isDraw = winners.length > 1;
-
     let winnerId: string | null = null;
     let transferredPullIds: string[] = [];
+    let isDraw = false;
 
-    if (isDraw) {
-      // DRAW: no winner, no transfer
+    if (battle.winCondition === 'SHARE_MODE') {
+      // SHARE_MODE: distribute all cards evenly across participants (round-robin)
+      const allPulls = [...createdPulls].sort((a, b) => a.coinValue - b.coinValue);
+      const participantIds = battle.participants.map(p => p.userId);
+
+      await prisma.$transaction(async (tx) => {
+        for (let i = 0; i < allPulls.length; i++) {
+          const targetUserId = participantIds[i % participantIds.length];
+          const pull = allPulls[i];
+          await tx.pull.update({
+            where: { id: pull.pullId },
+            data: { userId: targetUserId },
+          });
+          await tx.battlePull.updateMany({
+            where: { pullId: pull.pullId },
+            data: { transferredToUserId: targetUserId },
+          });
+          transferredPullIds.push(pull.pullId);
+        }
+      });
+
+      isDraw = true;
       await prisma.battle.update({
         where: { id: battleId },
-        data: {
-          status: 'FINISHED_DRAW',
-          finishedAt: new Date(),
-        },
+        data: { status: 'FINISHED_DRAW', finishedAt: new Date() },
       });
-    } else {
-      // We have a winner
-      const winner = sortedParticipants[0];
-      winnerId = winner.userId;
-      const losers = sortedParticipants.filter(p => p.userId !== winnerId);
 
-      // Card transfer logic based on battleMode
-      const transferOps: Array<{ pullId: string; battlePullId?: string }> = [];
+    } else if (battle.winCondition === 'JACKPOT') {
+      // JACKPOT: weighted random — higher total value = higher chance of winning everything
+      const withTotals = battle.participants.map(p => ({
+        ...p,
+        total: participantTotals[p.id],
+      }));
+      const totalSum = withTotals.reduce((s, p) => s + p.total, 0);
+      let roll = Math.random() * (totalSum || 1);
+      let jackpotWinner = withTotals[0];
+      for (const p of withTotals) {
+        roll -= p.total;
+        if (roll <= 0) { jackpotWinner = p; break; }
+      }
 
-      for (const loser of losers) {
-        const loserPulls = createdPulls
-          .filter(p => p.participantId === loser.id)
-          .sort((a, b) => {
-            if (a.coinValue !== b.coinValue) return a.coinValue - b.coinValue;
-            return a.round - b.round; // tie-break: earliest round
-          });
+      winnerId = jackpotWinner.userId;
+      const losers = withTotals.filter(p => p.userId !== winnerId);
 
-        if (battle.battleMode === 'LOWEST_CARD') {
-          // Transfer loser's lowest value card to winner
-          if (loserPulls.length > 0) {
-            transferOps.push({ pullId: loserPulls[0].pullId });
-          }
-        } else if (battle.battleMode === 'HIGHEST_CARD') {
-          // Transfer loser's highest value card to winner
-          if (loserPulls.length > 0) {
-            const highest = loserPulls[loserPulls.length - 1];
-            transferOps.push({ pullId: highest.pullId });
-          }
-        } else if (battle.battleMode === 'ALL_CARDS') {
-          // Transfer ALL of loser's cards to winner
+      await prisma.$transaction(async (tx) => {
+        for (const loser of losers) {
+          const loserPulls = createdPulls.filter(p => p.participantId === loser.id);
           for (const pull of loserPulls) {
-            transferOps.push({ pullId: pull.pullId });
+            await tx.pull.update({ where: { id: pull.pullId }, data: { userId: winnerId! } });
+            await tx.battlePull.updateMany({ where: { pullId: pull.pullId }, data: { transferredToUserId: winnerId } });
+            transferredPullIds.push(pull.pullId);
           }
         }
-      }
-
-      // Execute transfers
-      if (transferOps.length > 0) {
-        await prisma.$transaction(async (tx) => {
-          for (const op of transferOps) {
-            // Transfer Pull ownership to winner
-            await tx.pull.update({
-              where: { id: op.pullId },
-              data: { userId: winnerId! },
-            });
-
-            // Mark the BattlePull as transferred
-            await tx.battlePull.updateMany({
-              where: { pullId: op.pullId },
-              data: { transferredToUserId: winnerId },
-            });
-
-            transferredPullIds.push(op.pullId);
-          }
-        });
-      }
+      });
 
       await prisma.battle.update({
         where: { id: battleId },
-        data: {
-          status: 'FINISHED_WIN',
-          winnerId,
-          finishedAt: new Date(),
-        },
+        data: { status: 'FINISHED_WIN', winnerId, finishedAt: new Date() },
       });
+
+    } else {
+      // HIGHEST / LOWEST: standard comparison
+      const useLowest = battle.winCondition === 'LOWEST';
+      const sortedParticipants = battle.participants
+        .map(p => ({ ...p, total: participantTotals[p.id] }))
+        .sort((a, b) => useLowest ? a.total - b.total : b.total - a.total);
+
+      const bestTotal = sortedParticipants[0].total;
+      const winners = sortedParticipants.filter(p => p.total === bestTotal);
+      isDraw = winners.length > 1;
+
+      if (isDraw) {
+        await prisma.battle.update({
+          where: { id: battleId },
+          data: { status: 'FINISHED_DRAW', finishedAt: new Date() },
+        });
+      } else {
+        const winner = sortedParticipants[0];
+        winnerId = winner.userId;
+        const losers = sortedParticipants.filter(p => p.userId !== winnerId);
+
+        const transferOps: Array<{ pullId: string }> = [];
+
+        for (const loser of losers) {
+          const loserPulls = createdPulls
+            .filter(p => p.participantId === loser.id)
+            .sort((a, b) => {
+              if (a.coinValue !== b.coinValue) return a.coinValue - b.coinValue;
+              return a.round - b.round;
+            });
+
+          if (battle.battleMode === 'LOWEST_CARD') {
+            if (loserPulls.length > 0) transferOps.push({ pullId: loserPulls[0].pullId });
+          } else if (battle.battleMode === 'HIGHEST_CARD') {
+            if (loserPulls.length > 0) transferOps.push({ pullId: loserPulls[loserPulls.length - 1].pullId });
+          } else if (battle.battleMode === 'ALL_CARDS') {
+            for (const pull of loserPulls) transferOps.push({ pullId: pull.pullId });
+          }
+        }
+
+        if (transferOps.length > 0) {
+          await prisma.$transaction(async (tx) => {
+            for (const op of transferOps) {
+              await tx.pull.update({ where: { id: op.pullId }, data: { userId: winnerId! } });
+              await tx.battlePull.updateMany({ where: { pullId: op.pullId }, data: { transferredToUserId: winnerId } });
+              transferredPullIds.push(op.pullId);
+            }
+          });
+        }
+
+        await prisma.battle.update({
+          where: { id: battleId },
+          data: { status: 'FINISHED_WIN', winnerId, finishedAt: new Date() },
+        });
+      }
     }
 
     // Award XP to all participants

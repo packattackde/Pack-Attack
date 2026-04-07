@@ -6,7 +6,7 @@ export type BattleStatus = 'OPEN' | 'FULL' | 'READY' | 'ACTIVE' | 'FINISHED_WIN'
 
 export type BattleMode = 'LOWEST_CARD' | 'HIGHEST_CARD' | 'ALL_CARDS';
 
-export type WinCondition = 'HIGHEST' | 'LOWEST';
+export type WinCondition = 'HIGHEST' | 'LOWEST' | 'SHARE_MODE' | 'JACKPOT';
 
 export type PaymentStatus = 'PENDING' | 'COMPLETED' | 'FAILED' | 'REFUNDED';
 

@@ -9,14 +9,19 @@ const battleSchema = z.object({
   boxId: z.string(),
   rounds: z.union([z.literal(3), z.literal(5), z.literal(7)]),
   battleMode: z.enum(['LOWEST_CARD', 'HIGHEST_CARD', 'ALL_CARDS']),
-  winCondition: z.enum(['HIGHEST', 'LOWEST']),
+  winCondition: z.enum(['HIGHEST', 'LOWEST', 'SHARE_MODE', 'JACKPOT']),
   maxParticipants: z.number().int().min(2).max(4),
+  privacy: z.enum(['PUBLIC', 'PRIVATE']).optional().default('PUBLIC'),
 });
 
 export async function GET() {
   try {
+    const session = await getCurrentSession();
+    const isAdmin = session?.user?.role === 'ADMIN';
+
     const battles = await withRetry(
       () => prisma.battle.findMany({
+        where: isAdmin ? {} : { privacy: 'PUBLIC' },
         include: {
           creator: { select: { id: true, name: true, email: true } },
           box: true,
@@ -126,6 +131,7 @@ export async function POST(request: NextRequest) {
           battleMode: data.battleMode,
           winCondition: data.winCondition,
           maxParticipants: data.maxParticipants,
+          privacy: data.privacy,
           lobbyExpiresAt,
           participants: {
             create: {
@@ -157,7 +163,7 @@ export async function POST(request: NextRequest) {
       rounds: data.rounds,
       winCondition: data.winCondition,
       rewardMode: data.battleMode,
-      privacy: 'PUBLIC',
+      privacy: data.privacy,
       entryCost: entryFee,
       creatorUsername: user.name || user.email || 'Anonym',
     }).catch((error) => {

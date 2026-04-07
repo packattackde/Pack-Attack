@@ -297,6 +297,7 @@ model Battle {
   battleMode      BattleMode          @default(LOWEST_CARD)
   winCondition    WinCondition        @default(HIGHEST)
   status          BattleStatus        @default(OPEN)
+  privacy         BattlePrivacy       @default(PUBLIC)
   winnerId        String?
   winner          User?               @relation("BattleWinner", fields: [winnerId], references: [id], onDelete: SetNull)
   participants    BattleParticipant[]
@@ -378,6 +379,13 @@ enum BattleMode {
 enum WinCondition {
   HIGHEST
   LOWEST
+  SHARE_MODE
+  JACKPOT
+}
+
+enum BattlePrivacy {
+  PUBLIC
+  PRIVATE
 }
 
 model SaleHistory {
