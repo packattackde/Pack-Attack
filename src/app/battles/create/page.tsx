@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Coins, Users, Zap, Check, Star, Search, Eye, EyeOff, Swords } from 'lucide-react';
+import { ArrowLeft, Coins, Zap, Check, Star, Search, Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
 type Box = {
@@ -51,8 +51,6 @@ export default function CreateBattlePage() {
   const [winCondition, setWinCondition] = useState<'HIGHEST' | 'LOWEST' | 'SHARE_MODE' | 'JACKPOT'>('HIGHEST');
   const [maxParticipants, setMaxParticipants] = useState<2 | 3 | 4>(2);
   const [privacy, setPrivacy] = useState<'PUBLIC' | 'PRIVATE'>('PUBLIC');
-  const [success, setSuccess] = useState(false);
-  const [createdBattleId, setCreatedBattleId] = useState<string | null>(null);
 
   useEffect(() => {
     fetch('/api/boxes')
@@ -92,9 +90,8 @@ export default function CreateBattlePage() {
         addToast({ title: 'Fehler', description: data.error || 'Battle konnte nicht erstellt werden', variant: 'destructive' });
         return;
       }
-      setCreatedBattleId(data.battle.id);
-      setSuccess(true);
-      addToast({ title: 'Battle erstellt!', description: 'Dein Battle wartet auf Mitspieler.' });
+      addToast({ title: 'Battle erstellt!', description: 'Du wirst zur Lobby weitergeleitet...' });
+      router.push(`/battles/${data.battle.id}`);
     } catch {
       addToast({ title: 'Fehler', description: 'Battle konnte nicht erstellt werden', variant: 'destructive' });
     } finally {
@@ -102,33 +99,6 @@ export default function CreateBattlePage() {
     }
   };
 
-  if (success && createdBattleId) {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-6">
-        <div className="max-w-md w-full text-center">
-          <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-[#C84FFF]/10 border border-[#C84FFF]/30 flex items-center justify-center">
-            <Swords className="w-10 h-10 text-[#C84FFF]" />
-          </div>
-          <h1 className="text-3xl font-bold text-white mb-3">Battle erstellt!</h1>
-          <p className="text-[#8888aa] mb-8">Dein Battle ist bereit. Warte auf Mitspieler oder teile den Link.</p>
-          {privacy === 'PRIVATE' && (
-            <div className="mb-6 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20">
-              <p className="text-sm text-amber-400 font-medium mb-1">Privates Battle</p>
-              <p className="text-xs text-[#8888aa]">Teile den Link, damit andere beitreten können.</p>
-            </div>
-          )}
-          <div className="flex flex-col gap-3">
-            <Link href={`/battles/${createdBattleId}`} className="px-6 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl hover:bg-[#E879F9] transition-all">
-              Zum Battle
-            </Link>
-            <Link href="/battles" className="px-6 py-3 text-[#8888aa] hover:text-white transition-colors">
-              Zurück zur Übersicht
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   const selectedStyle = 'border-[#C84FFF] bg-[#C84FFF]/10 shadow-[0_0_20px_rgba(200,79,255,0.12)]';
   const unselectedStyle = 'border-[rgba(255,255,255,0.08)] bg-[#12123a] hover:border-[rgba(255,255,255,0.2)]';
