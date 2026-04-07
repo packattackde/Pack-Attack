@@ -28,7 +28,13 @@ const winConditionNames: Record<string, string> = {
     LOWEST: 'Niedrigster Gesamtwert gewinnt',
 };
 
+// Disabled 2026-04-07 — Discord battle posting paused.
+// Re-enable by setting DISCORD_BATTLE_POSTING_ENABLED = true.
+const DISCORD_BATTLE_POSTING_ENABLED = false;
+
 export async function sendBattleNotificationWebhook(battle: BattleNotification) {
+    if (!DISCORD_BATTLE_POSTING_ENABLED) return;
+
     const webhookUrl = process.env.DISCORD_BATTLE_WEBHOOK_URL;
     if (!webhookUrl) {
         console.error('DISCORD_BATTLE_WEBHOOK_URL not configured');

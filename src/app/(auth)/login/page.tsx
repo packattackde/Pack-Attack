@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Mail, Lock, Eye, EyeOff, ChevronRight, AlertCircle, Gamepad2 } from 'lucide-react';
 
@@ -22,14 +22,34 @@ function DiscordIcon({ className }: { className?: string }) {
   );
 }
 
+const OAUTH_ERROR_MESSAGES: Record<string, string> = {
+  OAuthSignin: 'Could not start the login flow. Please try again.',
+  OAuthCallback: 'Login failed during provider callback. Please try again.',
+  OAuthCreateAccount: 'Could not create your account. The email may already be in use.',
+  OAuthAccountNotLinked: 'This email is already registered with a different login method.',
+  Callback: 'Login callback failed. Please try again.',
+  Default: 'Something went wrong with login. Please try again.',
+  twitch: 'Twitch login is currently unavailable. Please try another method.',
+  discord: 'Discord login is currently unavailable. Please try another method.',
+};
+
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [twitchLoading, setTwitchLoading] = useState(false);
   const [discordLoading, setDiscordLoading] = useState(false);
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ email: '', password: '' });
+
+  useEffect(() => {
+    const errorParam = searchParams.get('error');
+    if (errorParam) {
+      setError(OAUTH_ERROR_MESSAGES[errorParam] ?? OAUTH_ERROR_MESSAGES.Default);
+      router.replace('/login');
+    }
+  }, [searchParams, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -2,7 +2,7 @@ import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import TwitchProvider from 'next-auth/providers/twitch';
 import DiscordProvider from 'next-auth/providers/discord';
-import { PrismaAdapter } from '@auth/prisma-adapter';
+import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import type { Adapter } from 'next-auth/adapters';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
@@ -82,69 +82,74 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   adapter: buildAdapter(),
 
-  providers: [
-    CredentialsProvider({
-      name: 'Credentials',
-      credentials: {
-        email: { label: 'Email', type: 'email' },
-        password: { label: 'Password', type: 'password' },
-      },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null;
+  providers: (() => {
+    const providers: NextAuthOptions['providers'] = [
+      CredentialsProvider({
+        name: 'Credentials',
+        credentials: {
+          email: { label: 'Email', type: 'email' },
+          password: { label: 'Password', type: 'password' },
+        },
+        async authorize(credentials) {
+          if (!credentials?.email || !credentials?.password) return null;
 
-        const user = await withRetry(
-            () => prisma.user.findUnique({ where: { email: credentials.email } }),
-            'auth:findUser'
-        );
+          const user = await withRetry(
+              () => prisma.user.findUnique({ where: { email: credentials.email } }),
+              'auth:findUser'
+          );
 
-        if (!user || !user.passwordHash) return null;
+          if (!user || !user.passwordHash) return null;
 
-        const isValid = await bcrypt.compare(credentials.password, user.passwordHash);
-        if (!isValid) return null;
+          const isValid = await bcrypt.compare(credentials.password, user.passwordHash);
+          if (!isValid) return null;
 
-        if (!user.emailVerified) {
-          console.warn(`[Auth] Login attempt with unverified email: ${user.email}`);
-          return null;
-        }
+          if (!user.emailVerified) {
+            console.warn(`[Auth] Login attempt with unverified email: ${user.email}`);
+            return null;
+          }
 
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
-          image: user.image,
-          twitchUsername: user.twitchUsername,
-          discordUsername: user.discordUsername,
-        };
-      },
-    }),
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+            image: user.image,
+            twitchUsername: user.twitchUsername,
+            discordUsername: user.discordUsername,
+          };
+        },
+      }),
+    ];
 
-    ...(process.env.TWITCH_CLIENT_ID && process.env.TWITCH_CLIENT_SECRET
-        ? [
-          TwitchProvider({
-            clientId: process.env.TWITCH_CLIENT_ID,
-            clientSecret: process.env.TWITCH_CLIENT_SECRET,
-            // Allow signing in with Twitch when the same email already exists
-            // as a credentials or other OAuth account – NextAuth links them.
-            allowDangerousEmailAccountLinking: true,
-          }),
-        ]
-        : []),
+    if (process.env.TWITCH_CLIENT_ID && process.env.TWITCH_CLIENT_SECRET) {
+      console.info('[Auth] Twitch provider enabled');
+      providers.push(
+        TwitchProvider({
+          clientId: process.env.TWITCH_CLIENT_ID,
+          clientSecret: process.env.TWITCH_CLIENT_SECRET,
+          allowDangerousEmailAccountLinking: true,
+        }),
+      );
+    } else {
+      console.warn('[Auth] Twitch provider DISABLED — missing TWITCH_CLIENT_ID or TWITCH_CLIENT_SECRET');
+    }
 
-    ...(process.env.DISCORD_CLIENT_ID && process.env.DISCORD_CLIENT_SECRET
-        ? [
-          DiscordProvider({
-            clientId: process.env.DISCORD_CLIENT_ID,
-            clientSecret: process.env.DISCORD_CLIENT_SECRET,
-            // 'identify email' are the default scopes – explicitly set for clarity
-            authorization: { params: { scope: 'identify email' } },
-            // Allow signing in with Discord when the same email already exists
-            // as a credentials or other OAuth account – NextAuth links them.
-            allowDangerousEmailAccountLinking: true,
-          }),
-        ]
-        : []),
-  ],
+    if (process.env.DISCORD_CLIENT_ID && process.env.DISCORD_CLIENT_SECRET) {
+      console.info('[Auth] Discord provider enabled');
+      providers.push(
+        DiscordProvider({
+          clientId: process.env.DISCORD_CLIENT_ID,
+          clientSecret: process.env.DISCORD_CLIENT_SECRET,
+          authorization: { params: { scope: 'identify email' } },
+          allowDangerousEmailAccountLinking: true,
+        }),
+      );
+    } else {
+      console.warn('[Auth] Discord provider DISABLED — missing DISCORD_CLIENT_ID or DISCORD_CLIENT_SECRET');
+    }
+
+    return providers;
+  })(),
 
   session: {
     strategy: 'jwt',
@@ -185,6 +190,8 @@ export const authOptions: NextAuthOptions = {
     //   user we auto-merge to avoid duplicate accounts.
     // ─────────────────────────────────────────────────────────────────────
     async signIn({ user, account, profile }) {
+      console.info(`[Auth:signIn] provider=${account?.provider ?? 'unknown'} userId=${user?.id ?? 'new'} email=${user?.email ?? 'none'}`);
+
       // ── DISCORD ─────────────────────────────────────────────────────────────
       if (account?.provider === 'discord') {
         const discordProfile = profile as any;
@@ -202,6 +209,7 @@ export const authOptions: NextAuthOptions = {
         } catch { /* ignore */ }
 
         if (connectUserId) {
+          console.info(`[Auth:signIn] Discord connect-flow for userId=${connectUserId}`);
           try {
             const cookieStore = await cookies();
             cookieStore.delete('discord_link_uid');
@@ -211,12 +219,16 @@ export const authOptions: NextAuthOptions = {
             where: { id: connectUserId },
             include: { accounts: true },
           });
-          if (!targetUser) return '/dashboard?tab=connections&error=user_not_found';
+          if (!targetUser) {
+            console.error(`[Auth:signIn] Discord connect-flow: user ${connectUserId} not found`);
+            return '/dashboard?tab=connections&error=user_not_found';
+          }
 
           const existingBinding = await prisma.account.findUnique({
             where: { provider_providerAccountId: { provider: 'discord', providerAccountId: account.providerAccountId } },
           });
           if (existingBinding && existingBinding.userId !== targetUser.id) {
+            console.warn(`[Auth:signIn] Discord account ${account.providerAccountId} already bound to different user`);
             return '/dashboard?tab=connections&error=discord_already_used';
           }
           if (!existingBinding) {
@@ -240,6 +252,7 @@ export const authOptions: NextAuthOptions = {
                 ...(discordImage && !targetUser.image ? { image: discordImage } : {}),
               },
             });
+            console.info(`[Auth:signIn] Discord linked to user ${targetUser.id}`);
           }
           return '/dashboard?tab=connections&success=discord_connected';
         }
@@ -290,7 +303,7 @@ export const authOptions: NextAuthOptions = {
       }
 
       if (connectUserId) {
-        // Clear cookie immediately (one-time use)
+        console.info(`[Auth:signIn] Twitch connect-flow for userId=${connectUserId}`);
         try {
           const cookieStore = await cookies();
           cookieStore.set('twitch_link_uid', '', { maxAge: 0, path: '/' });
@@ -302,6 +315,7 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (!targetUser) {
+          console.error(`[Auth:signIn] Twitch connect-flow: user ${connectUserId} not found`);
           return `/dashboard?tab=connections&error=user_not_found`;
         }
 
@@ -315,6 +329,7 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (existingBinding && existingBinding.userId !== targetUser.id) {
+          console.warn(`[Auth:signIn] Twitch account ${account.providerAccountId} already bound to different user`);
           return `/dashboard?tab=connections&error=${account.provider}_already_used`;
         }
 
@@ -340,6 +355,7 @@ export const authOptions: NextAuthOptions = {
               ...(twitchImage && !targetUser.image ? { image: twitchImage } : {}),
             },
           });
+          console.info(`[Auth:signIn] Twitch linked to user ${targetUser.id}`);
         }
 
         return '/dashboard?tab=connections&success=twitch_connected';
@@ -373,6 +389,7 @@ export const authOptions: NextAuthOptions = {
 
     async jwt({ token, user, trigger, account, profile }) {
       if (user) {
+        console.info(`[Auth:jwt] Creating token for user=${user.id} provider=${account?.provider ?? 'credentials'}`);
         token.id = user.id;
         token.role = (user as any).role || 'USER';
         token.iat = Math.floor(Date.now() / 1000);
@@ -448,8 +465,30 @@ export const authOptions: NextAuthOptions = {
     },
   },
 
+  events: {
+    async signIn({ user, account }) {
+      console.info(`[Auth:event:signIn] user=${user?.id} provider=${account?.provider ?? 'credentials'}`);
+    },
+    async signOut({ token }) {
+      console.info(`[Auth:event:signOut] user=${(token as any)?.id ?? 'unknown'}`);
+    },
+    async linkAccount({ user, account }) {
+      console.info(`[Auth:event:linkAccount] user=${user.id} provider=${account.provider}`);
+    },
+  },
+
+  logger: {
+    error(code, metadata) {
+      console.error(`[Auth:error] code=${code}`, metadata);
+    },
+    warn(code) {
+      console.warn(`[Auth:warn] code=${code}`);
+    },
+  },
+
   pages: {
     signIn: '/login',
+    error: '/login',
   },
 };
 
