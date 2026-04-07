@@ -3,15 +3,6 @@ import { getCurrentSession } from '@/lib/auth';
 import { prisma, withRetry } from '@/lib/prisma';
 import { awardXp } from '@/lib/level';
 
-function shuffleArray<T>(array: T[]): T[] {
-  const shuffled = [...array];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
-}
-
 type CardData = {
   id: string;
   name: string;
@@ -103,7 +94,6 @@ export async function POST(
       }, { status: 400 });
     }
 
-    // Build per-round card pools from BattleRoundBox (new) or fallback to legacy single box
     const roundCardMap: Map<number, CardData[]> = new Map();
 
     if (battle.roundBoxes.length > 0) {
@@ -149,7 +139,16 @@ export async function POST(
       data: { status: 'ACTIVE', startedAt: new Date() },
     });
 
-    const pullOperations: any[] = [];
+    // Pre-compute all draws (no DB needed)
+    type DrawOp = {
+      pullData: { boxId: string; userId: string; cardId: string; cardValue: number };
+      participantId: string;
+      round: number;
+      card: CardData;
+      coinValue: number;
+    };
+
+    const drawOps: DrawOp[] = [];
     const participantTotals: Record<string, number> = {};
 
     for (const participant of battle.participants) {
@@ -165,7 +164,7 @@ export async function POST(
         const coinValue = card.coinValue;
         participantTotals[participant.id] += coinValue;
 
-        pullOperations.push({
+        drawOps.push({
           pullData: {
             boxId: card.boxId,
             userId: participant.userId,
@@ -180,13 +179,15 @@ export async function POST(
       }
     }
 
-    const createdPulls = await prisma.$transaction(async (tx) => {
-      const results: Array<{ pullId: string; participantId: string; round: number; coinValue: number; card: CardData }> = [];
+    // Create all pulls outside of an interactive transaction to avoid timeout.
+    // Use individual creates (Pull needs the ID back for BattlePull linkage).
+    let createdPulls: Array<{ pullId: string; participantId: string; round: number; coinValue: number; card: CardData }> = [];
 
-      for (const op of pullOperations) {
-        const pull = await tx.pull.create({ data: op.pullData });
+    try {
+      for (const op of drawOps) {
+        const pull = await prisma.pull.create({ data: op.pullData });
 
-        await tx.battlePull.create({
+        await prisma.battlePull.create({
           data: {
             battleId,
             participantId: op.participantId,
@@ -199,7 +200,7 @@ export async function POST(
           },
         });
 
-        results.push({
+        createdPulls.push({
           pullId: pull.id,
           participantId: op.participantId,
           round: op.round,
@@ -208,8 +209,9 @@ export async function POST(
         });
       }
 
+      // Update participant totals
       for (const participant of battle.participants) {
-        await tx.battleParticipant.update({
+        await prisma.battleParticipant.update({
           where: { id: participant.id },
           data: {
             totalValue: Math.round(participantTotals[participant.id]),
@@ -217,10 +219,22 @@ export async function POST(
           },
         });
       }
+    } catch (pullError) {
+      // If pull creation fails, reset battle so it's not stuck in ACTIVE
+      console.error('Error creating pulls, resetting battle to FULL:', pullError);
+      await prisma.battle.update({
+        where: { id: battleId },
+        data: { status: 'FULL', startedAt: null },
+      });
+      // Clean up any partial pulls
+      await prisma.battlePull.deleteMany({ where: { battleId } });
+      for (const p of createdPulls) {
+        await prisma.pull.delete({ where: { id: p.pullId } }).catch(() => {});
+      }
+      return NextResponse.json({ error: 'Battle konnte nicht gestartet werden. Bitte erneut versuchen.' }, { status: 500 });
+    }
 
-      return results;
-    });
-
+    // Determine winner and transfer cards
     let winnerId: string | null = null;
     let transferredPullIds: string[] = [];
     let isDraw = false;
@@ -229,15 +243,13 @@ export async function POST(
       const allPulls = [...createdPulls].sort((a, b) => a.coinValue - b.coinValue);
       const participantIds = battle.participants.map(p => p.userId);
 
-      await prisma.$transaction(async (tx) => {
-        for (let i = 0; i < allPulls.length; i++) {
-          const targetUserId = participantIds[i % participantIds.length];
-          const pull = allPulls[i];
-          await tx.pull.update({ where: { id: pull.pullId }, data: { userId: targetUserId } });
-          await tx.battlePull.updateMany({ where: { pullId: pull.pullId }, data: { transferredToUserId: targetUserId } });
-          transferredPullIds.push(pull.pullId);
-        }
-      });
+      for (let i = 0; i < allPulls.length; i++) {
+        const targetUserId = participantIds[i % participantIds.length];
+        const pull = allPulls[i];
+        await prisma.pull.update({ where: { id: pull.pullId }, data: { userId: targetUserId } });
+        await prisma.battlePull.updateMany({ where: { pullId: pull.pullId }, data: { transferredToUserId: targetUserId } });
+        transferredPullIds.push(pull.pullId);
+      }
 
       isDraw = true;
       await prisma.battle.update({
@@ -258,16 +270,14 @@ export async function POST(
       winnerId = jackpotWinner.userId;
       const losers = withTotals.filter(p => p.userId !== winnerId);
 
-      await prisma.$transaction(async (tx) => {
-        for (const loser of losers) {
-          const loserPulls = createdPulls.filter(p => p.participantId === loser.id);
-          for (const pull of loserPulls) {
-            await tx.pull.update({ where: { id: pull.pullId }, data: { userId: winnerId! } });
-            await tx.battlePull.updateMany({ where: { pullId: pull.pullId }, data: { transferredToUserId: winnerId } });
-            transferredPullIds.push(pull.pullId);
-          }
+      for (const loser of losers) {
+        const loserPulls = createdPulls.filter(p => p.participantId === loser.id);
+        for (const pull of loserPulls) {
+          await prisma.pull.update({ where: { id: pull.pullId }, data: { userId: winnerId! } });
+          await prisma.battlePull.updateMany({ where: { pullId: pull.pullId }, data: { transferredToUserId: winnerId } });
+          transferredPullIds.push(pull.pullId);
         }
-      });
+      }
 
       await prisma.battle.update({
         where: { id: battleId },
@@ -309,14 +319,10 @@ export async function POST(
           }
         }
 
-        if (transferOps.length > 0) {
-          await prisma.$transaction(async (tx) => {
-            for (const op of transferOps) {
-              await tx.pull.update({ where: { id: op.pullId }, data: { userId: winnerId! } });
-              await tx.battlePull.updateMany({ where: { pullId: op.pullId }, data: { transferredToUserId: winnerId } });
-              transferredPullIds.push(op.pullId);
-            }
-          });
+        for (const op of transferOps) {
+          await prisma.pull.update({ where: { id: op.pullId }, data: { userId: winnerId! } });
+          await prisma.battlePull.updateMany({ where: { pullId: op.pullId }, data: { transferredToUserId: winnerId } });
+          transferredPullIds.push(op.pullId);
         }
 
         await prisma.battle.update({
