@@ -1,7 +1,8 @@
 import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
-import { Plus, Users, Trophy, Coins, Swords, Clock, ChevronRight, Crown } from 'lucide-react';
+import { Plus, Users, Trophy, Coins, Swords, Clock, ChevronRight, Crown, Trash2 } from 'lucide-react';
+import { DeleteBattleButton, DeleteAllBattlesButton } from './components/DeleteBattleButton';
 
 const MODE_LABELS: Record<string, string> = {
   LOWEST_CARD: '⬇️ Niedrigste',
@@ -16,6 +17,7 @@ const STATUS_CONFIG: Record<string, { label: string; color: string; dot?: boolea
   ACTIVE: { label: 'Läuft', color: 'bg-[#C84FFF]/15 text-[#E879F9] border-[#C84FFF]/20', dot: true },
   FINISHED_WIN: { label: 'Beendet', color: 'bg-[#C84FFF]/10 text-[#C84FFF]/60 border-[#C84FFF]/10' },
   FINISHED_DRAW: { label: 'Unentschieden', color: 'bg-blue-500/10 text-blue-400/60 border-blue-500/10' },
+  CANCELLED: { label: 'Storniert', color: 'bg-red-500/10 text-red-400/60 border-red-500/10' },
 };
 
 async function getBattles(isAdmin: boolean) {
@@ -56,7 +58,7 @@ export default async function BattlesPage() {
   const battles = await getBattles(!!isAdmin);
 
   const activeBattles = battles.filter(b => ['OPEN', 'FULL', 'READY', 'ACTIVE'].includes(b.status));
-  const completedBattles = battles.filter(b => ['FINISHED_WIN', 'FINISHED_DRAW'].includes(b.status));
+  const completedBattles = battles.filter(b => ['FINISHED_WIN', 'FINISHED_DRAW', 'CANCELLED'].includes(b.status));
 
   const getVisibleParticipants = (battle: any) => {
     if (isAdmin) return battle.participants;
@@ -213,6 +215,11 @@ export default async function BattlesPage() {
                   <Trophy className="w-4 h-4 text-amber-400/60" />
                   <h2 className="text-lg font-bold text-[#8888aa]">Abgeschlossen</h2>
                   <span className="text-xs text-[#666688] bg-[#12123a] px-2 py-0.5 rounded-full">{completedBattles.length}</span>
+                  {isAdmin && (
+                    <div className="ml-auto">
+                      <DeleteAllBattlesButton battleIds={completedBattles.map(b => b.id)} />
+                    </div>
+                  )}
                 </div>
                 <div className="space-y-2">
                   {completedBattles.map((battle) => {
@@ -260,6 +267,8 @@ export default async function BattlesPage() {
                           <Coins className="w-3 h-3" />
                           {entryFee.toFixed(0)}
                         </div>
+
+                        {isAdmin && <DeleteBattleButton battleId={battle.id} />}
 
                         <ChevronRight className="w-4 h-4 text-[#333355] group-hover:text-[#666688] transition-colors shrink-0" />
                       </Link>
