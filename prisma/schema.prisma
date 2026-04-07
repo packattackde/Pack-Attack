@@ -143,6 +143,7 @@ model Box {
   cards           Card[]
   pulls           Pull[]
   battles         Battle[]
+  battleRoundBoxes BattleRoundBox[]
   shopBoxOrders   ShopBoxOrder[]
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
@@ -289,8 +290,9 @@ model Battle {
   id              String              @id @default(cuid())
   creatorId       String
   creator         User                @relation("BattleCreator", fields: [creatorId], references: [id], onDelete: Cascade)
-  boxId           String
-  box             Box                 @relation(fields: [boxId], references: [id], onDelete: Cascade)
+  boxId           String?
+  box             Box?                @relation(fields: [boxId], references: [id], onDelete: Cascade)
+  roundBoxes      BattleRoundBox[]
   entryFee        Int                 @default(0)
   maxParticipants Int                 @default(2)
   rounds          Int                 @default(3)
@@ -319,6 +321,18 @@ model Battle {
   @@index([status, finishedAt])
   @@index([status, lobbyExpiresAt])
   @@index([status, autoStartAt])
+}
+
+model BattleRoundBox {
+  id          String   @id @default(cuid())
+  battleId    String
+  battle      Battle   @relation(fields: [battleId], references: [id], onDelete: Cascade)
+  roundNumber Int
+  boxId       String
+  box         Box      @relation(fields: [boxId], references: [id], onDelete: Cascade)
+
+  @@unique([battleId, roundNumber])
+  @@index([battleId])
 }
 
 model BattleParticipant {

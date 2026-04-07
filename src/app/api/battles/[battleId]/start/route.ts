@@ -20,6 +20,7 @@ type CardData = {
   imageUrlGatherer: string | null;
   imageUrlScryfall: string | null;
   rarity: string | null;
+  boxId: string;
 };
 
 function drawRandomCard(cards: CardData[]): CardData {
@@ -59,10 +60,10 @@ export async function POST(
           participants: {
             include: { user: { select: { id: true, name: true, email: true, isBot: true } } },
           },
-          box: {
-            include: {
-              cards: true,
-            },
+          box: { include: { cards: true } },
+          roundBoxes: {
+            include: { box: { include: { cards: true } } },
+            orderBy: { roundNumber: 'asc' },
           },
         },
       }),
@@ -73,23 +74,19 @@ export async function POST(
       return NextResponse.json({ error: 'Battle nicht gefunden' }, { status: 404 });
     }
 
-    // Only creator or admin can start
     const isAdmin = currentUser.role === 'ADMIN';
     if (battle.creatorId !== currentUser.id && !isAdmin) {
       return NextResponse.json({ error: 'Nur der Ersteller oder ein Admin kann das Battle starten' }, { status: 403 });
     }
 
-    // Must be FULL or READY
     if (battle.status !== 'FULL' && battle.status !== 'READY') {
       return NextResponse.json({ error: 'Battle kann nicht gestartet werden (falscher Status)' }, { status: 400 });
     }
 
-    // Must have correct number of participants
     if (battle.participants.length < battle.maxParticipants) {
       return NextResponse.json({ error: 'Nicht genug Spieler im Battle' }, { status: 400 });
     }
 
-    // Auto-ready all bots
     const botParticipants = battle.participants.filter(p => p.user.isBot && !p.isReady);
     if (botParticipants.length > 0) {
       await prisma.battleParticipant.updateMany({
@@ -98,7 +95,6 @@ export async function POST(
       });
     }
 
-    // Check all human players are ready
     const humanNotReady = battle.participants.filter(p => !p.user.isBot && !p.isReady);
     if (humanNotReady.length > 0) {
       return NextResponse.json({
@@ -107,29 +103,53 @@ export async function POST(
       }, { status: 400 });
     }
 
-    const boxCards = battle.box.cards.map(c => ({
-      id: c.id,
-      name: c.name,
-      coinValue: Number(c.coinValue),
-      pullRate: Number(c.pullRate),
-      imageUrlGatherer: c.imageUrlGatherer,
-      imageUrlScryfall: c.imageUrlScryfall,
-      rarity: c.rarity,
-    }));
+    // Build per-round card pools from BattleRoundBox (new) or fallback to legacy single box
+    const roundCardMap: Map<number, CardData[]> = new Map();
 
-    if (boxCards.length === 0) {
-      return NextResponse.json({ error: 'Die Box hat keine Karten' }, { status: 400 });
+    if (battle.roundBoxes.length > 0) {
+      for (const rb of battle.roundBoxes) {
+        const cards = rb.box.cards.map(c => ({
+          id: c.id,
+          name: c.name,
+          coinValue: Number(c.coinValue),
+          pullRate: Number(c.pullRate),
+          imageUrlGatherer: c.imageUrlGatherer,
+          imageUrlScryfall: c.imageUrlScryfall,
+          rarity: c.rarity,
+          boxId: rb.boxId,
+        }));
+        if (cards.length === 0) {
+          return NextResponse.json({ error: `Box "${rb.box.name}" (Runde ${rb.roundNumber}) hat keine Karten` }, { status: 400 });
+        }
+        roundCardMap.set(rb.roundNumber, cards);
+      }
+    } else if (battle.box) {
+      const cards = battle.box.cards.map(c => ({
+        id: c.id,
+        name: c.name,
+        coinValue: Number(c.coinValue),
+        pullRate: Number(c.pullRate),
+        imageUrlGatherer: c.imageUrlGatherer,
+        imageUrlScryfall: c.imageUrlScryfall,
+        rarity: c.rarity,
+        boxId: battle.boxId!,
+      }));
+      if (cards.length === 0) {
+        return NextResponse.json({ error: 'Die Box hat keine Karten' }, { status: 400 });
+      }
+      for (let r = 1; r <= battle.rounds; r++) {
+        roundCardMap.set(r, cards);
+      }
+    } else {
+      return NextResponse.json({ error: 'Keine Boxen für dieses Battle konfiguriert' }, { status: 400 });
     }
 
-    // Set battle to ACTIVE
     await prisma.battle.update({
       where: { id: battleId },
       data: { status: 'ACTIVE', startedAt: new Date() },
     });
 
-    // Generate cards for all rounds and all participants
     const pullOperations: any[] = [];
-    const battlePullOperations: any[] = [];
     const participantTotals: Record<string, number> = {};
 
     for (const participant of battle.participants) {
@@ -137,30 +157,34 @@ export async function POST(
     }
 
     for (let round = 1; round <= battle.rounds; round++) {
+      const roundCards = roundCardMap.get(round);
+      if (!roundCards || roundCards.length === 0) continue;
+
       for (const participant of battle.participants) {
-        const card = drawRandomCard(boxCards);
+        const card = drawRandomCard(roundCards);
         const coinValue = card.coinValue;
         participantTotals[participant.id] += coinValue;
 
-        const pullData = {
-          boxId: battle.boxId,
-          userId: participant.userId,
-          cardId: card.id,
-          cardValue: coinValue,
-        };
-
-        pullOperations.push({ pullData, participantId: participant.id, round, card, coinValue });
+        pullOperations.push({
+          pullData: {
+            boxId: card.boxId,
+            userId: participant.userId,
+            cardId: card.id,
+            cardValue: coinValue,
+          },
+          participantId: participant.id,
+          round,
+          card,
+          coinValue,
+        });
       }
     }
 
-    // Execute all in a transaction
     const createdPulls = await prisma.$transaction(async (tx) => {
       const results: Array<{ pullId: string; participantId: string; round: number; coinValue: number; card: CardData }> = [];
 
       for (const op of pullOperations) {
-        const pull = await tx.pull.create({
-          data: op.pullData,
-        });
+        const pull = await tx.pull.create({ data: op.pullData });
 
         await tx.battlePull.create({
           data: {
@@ -184,7 +208,6 @@ export async function POST(
         });
       }
 
-      // Update participant totals
       for (const participant of battle.participants) {
         await tx.battleParticipant.update({
           where: { id: participant.id },
@@ -198,13 +221,11 @@ export async function POST(
       return results;
     });
 
-    // Determine winner based on winCondition
     let winnerId: string | null = null;
     let transferredPullIds: string[] = [];
     let isDraw = false;
 
     if (battle.winCondition === 'SHARE_MODE') {
-      // SHARE_MODE: distribute all cards evenly across participants (round-robin)
       const allPulls = [...createdPulls].sort((a, b) => a.coinValue - b.coinValue);
       const participantIds = battle.participants.map(p => p.userId);
 
@@ -212,14 +233,8 @@ export async function POST(
         for (let i = 0; i < allPulls.length; i++) {
           const targetUserId = participantIds[i % participantIds.length];
           const pull = allPulls[i];
-          await tx.pull.update({
-            where: { id: pull.pullId },
-            data: { userId: targetUserId },
-          });
-          await tx.battlePull.updateMany({
-            where: { pullId: pull.pullId },
-            data: { transferredToUserId: targetUserId },
-          });
+          await tx.pull.update({ where: { id: pull.pullId }, data: { userId: targetUserId } });
+          await tx.battlePull.updateMany({ where: { pullId: pull.pullId }, data: { transferredToUserId: targetUserId } });
           transferredPullIds.push(pull.pullId);
         }
       });
@@ -231,11 +246,7 @@ export async function POST(
       });
 
     } else if (battle.winCondition === 'JACKPOT') {
-      // JACKPOT: weighted random — higher total value = higher chance of winning everything
-      const withTotals = battle.participants.map(p => ({
-        ...p,
-        total: participantTotals[p.id],
-      }));
+      const withTotals = battle.participants.map(p => ({ ...p, total: participantTotals[p.id] }));
       const totalSum = withTotals.reduce((s, p) => s + p.total, 0);
       let roll = Math.random() * (totalSum || 1);
       let jackpotWinner = withTotals[0];
@@ -264,7 +275,6 @@ export async function POST(
       });
 
     } else {
-      // HIGHEST / LOWEST: standard comparison
       const useLowest = battle.winCondition === 'LOWEST';
       const sortedParticipants = battle.participants
         .map(p => ({ ...p, total: participantTotals[p.id] }))
@@ -283,16 +293,12 @@ export async function POST(
         const winner = sortedParticipants[0];
         winnerId = winner.userId;
         const losers = sortedParticipants.filter(p => p.userId !== winnerId);
-
         const transferOps: Array<{ pullId: string }> = [];
 
         for (const loser of losers) {
           const loserPulls = createdPulls
             .filter(p => p.participantId === loser.id)
-            .sort((a, b) => {
-              if (a.coinValue !== b.coinValue) return a.coinValue - b.coinValue;
-              return a.round - b.round;
-            });
+            .sort((a, b) => a.coinValue !== b.coinValue ? a.coinValue - b.coinValue : a.round - b.round);
 
           if (battle.battleMode === 'LOWEST_CARD') {
             if (loserPulls.length > 0) transferOps.push({ pullId: loserPulls[0].pullId });
@@ -320,7 +326,6 @@ export async function POST(
       }
     }
 
-    // Award XP to all participants
     for (const participant of battle.participants) {
       try {
         const xpAmount = participant.userId === winnerId ? 50 : 20;
@@ -330,12 +335,15 @@ export async function POST(
       }
     }
 
-    // Fetch final battle state
     const finalBattle = await prisma.battle.findUnique({
       where: { id: battleId },
       include: {
         creator: { select: { id: true, name: true, email: true } },
         box: true,
+        roundBoxes: {
+          include: { box: true },
+          orderBy: { roundNumber: 'asc' },
+        },
         participants: {
           include: { user: { select: { id: true, name: true, email: true, isBot: true } } },
         },
@@ -357,6 +365,10 @@ export async function POST(
         ...finalBattle.box,
         price: Number(finalBattle.box.price),
       } : null,
+      roundBoxes: finalBattle.roundBoxes.map(rb => ({
+        ...rb,
+        box: { ...rb.box, price: Number(rb.box.price) },
+      })),
       pulls: finalBattle.pulls?.map(pull => ({
         ...pull,
         coinValue: Number(pull.coinValue),

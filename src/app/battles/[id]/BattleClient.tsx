@@ -54,6 +54,7 @@ type Battle = {
   finishedAt: string | null;
   creator: { id: string; name: string | null; email: string };
   box: any;
+  roundBoxes?: Array<{ roundNumber: number; boxId: string; box: { id: string; name: string; imageUrl: string; price: number } }>;
   participants: Array<{
     id: string;
     userId: string;

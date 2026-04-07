@@ -41,6 +41,12 @@ type BattlePull = {
   participant: { id: string; userId: string; user: any };
 };
 
+type RoundBox = {
+  roundNumber: number;
+  boxId: string;
+  box: { id: string; name: string; imageUrl: string; price: number };
+};
+
 type Battle = {
   id: string;
   creatorId: string;
@@ -57,6 +63,7 @@ type Battle = {
   winnerId: string | null;
   creator: { id: string; name: string | null; email: string };
   box: any;
+  roundBoxes?: RoundBox[];
   participants: Participant[];
   winner: { id: string; name: string | null; email: string } | null;
   pulls: BattlePull[];
@@ -263,13 +270,28 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
         <div className="bg-[#12123a] border border-[rgba(255,255,255,0.08)] rounded-2xl p-5 mb-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div className="flex items-center gap-3">
-              {battle.box?.imageUrl && (
+              {(battle.roundBoxes && battle.roundBoxes.length > 0) ? (
+                <div className="flex -space-x-2 shrink-0">
+                  {[...new Map(battle.roundBoxes.map(rb => [rb.boxId, rb])).values()].slice(0, 3).map((rb, i) => (
+                    <div key={rb.boxId} className="w-10 h-10 rounded-lg overflow-hidden bg-[#1a1a4a] border-2 border-[#12123a]" style={{ zIndex: 3 - i }}>
+                      <img src={rb.box.imageUrl} alt="" className="w-full h-full object-cover" />
+                    </div>
+                  ))}
+                </div>
+              ) : battle.box?.imageUrl ? (
                 <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0 bg-[#1a1a4a]">
                   <img src={battle.box.imageUrl} alt="" className="w-full h-full object-cover" />
                 </div>
-              )}
+              ) : null}
               <div>
-                <h1 className="text-lg font-bold text-white">{battle.box?.name || 'Battle'}</h1>
+                <h1 className="text-lg font-bold text-white">
+                  {battle.roundBoxes && battle.roundBoxes.length > 0
+                    ? (() => {
+                        const unique = [...new Set(battle.roundBoxes.map(rb => rb.box.name))];
+                        return unique.length === 1 ? unique[0] : `${unique.length} Boxen Mix`;
+                      })()
+                    : battle.box?.name || 'Battle'}
+                </h1>
                 <div className="flex items-center gap-2 text-xs text-[#666688]">
                   <span>{battle.rounds} Runden</span>
                   <span>·</span>
@@ -554,6 +576,15 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                       <div className="flex items-center gap-2">
                         {isCurrent && <span className="w-2 h-2 rounded-full bg-[#C84FFF] animate-pulse" />}
                         <span className="text-sm font-bold text-white">Runde {round}</span>
+                        {battle.roundBoxes && battle.roundBoxes.length > 0 && (() => {
+                          const rb = battle.roundBoxes!.find(r => r.roundNumber === round);
+                          return rb ? (
+                            <span className="text-xs text-[#8888aa] flex items-center gap-1.5">
+                              <img src={rb.box.imageUrl} alt="" className="w-4 h-4 rounded object-cover" />
+                              {rb.box.name}
+                            </span>
+                          ) : null;
+                        })()}
                       </div>
                       <span className="text-xs text-[#666688]">{round}/{battle.rounds}</span>
                     </div>

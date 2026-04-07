@@ -25,6 +25,10 @@ async function getBattles(isAdmin: boolean) {
       include: {
         creator: { select: { id: true, name: true, email: true } },
         box: true,
+        roundBoxes: {
+          include: { box: true },
+          orderBy: { roundNumber: 'asc' },
+        },
         participants: {
           include: { user: { select: { id: true, name: true, email: true, isBot: true } } },
         },
@@ -35,7 +39,11 @@ async function getBattles(isAdmin: boolean) {
     });
     return battles.map(battle => ({
       ...battle,
-      box: { ...battle.box, price: Number(battle.box.price) },
+      box: battle.box ? { ...battle.box, price: Number(battle.box.price) } : null,
+      roundBoxes: battle.roundBoxes.map(rb => ({
+        ...rb,
+        box: { ...rb.box, price: Number(rb.box.price) },
+      })),
     }));
   } catch {
     return [];
@@ -113,11 +121,16 @@ export default async function BattlesPage() {
                 </div>
                 <div className="space-y-3">
                   {activeBattles.map((battle) => {
-                    const entryFee = battle.box.price * battle.rounds;
+                    const entryFee = Number(battle.entryFee);
                     const modeLabel = MODE_LABELS[battle.battleMode] || battle.battleMode;
                     const status = STATUS_CONFIG[battle.status] || STATUS_CONFIG.OPEN;
                     const visibleP = getVisibleParticipants(battle);
                     const emptySlots = battle.maxParticipants - battle.participants.length;
+                    const firstBox = battle.roundBoxes?.length > 0 ? battle.roundBoxes[0].box : battle.box;
+                    const uniqueBoxNames = battle.roundBoxes?.length > 0
+                      ? [...new Set(battle.roundBoxes.map((rb: any) => rb.box.name))]
+                      : [firstBox?.name];
+                    const displayName = uniqueBoxNames.length === 1 ? uniqueBoxNames[0] : `${uniqueBoxNames.length} Boxen Mix`;
 
                     return (
                       <Link
@@ -131,14 +144,14 @@ export default async function BattlesPage() {
                       >
                         {/* Box thumbnail */}
                         <div className="w-14 h-14 rounded-lg overflow-hidden shrink-0 bg-[#1a1a4a]">
-                          <img src={battle.box.imageUrl} alt="" className="w-full h-full object-cover" />
+                          {firstBox?.imageUrl && <img src={firstBox.imageUrl} alt="" className="w-full h-full object-cover" />}
                         </div>
 
                         {/* Info */}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
                             <h3 className="font-semibold text-white text-sm truncate group-hover:text-[#C84FFF] transition-colors">
-                              {battle.box.name}
+                              {displayName}
                             </h3>
                             <span className={`shrink-0 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold border ${status.color}`}>
                               {status.dot && <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />}
@@ -203,9 +216,14 @@ export default async function BattlesPage() {
                 </div>
                 <div className="space-y-2">
                   {completedBattles.map((battle) => {
-                    const entryFee = battle.box.price * battle.rounds;
+                    const entryFee = Number(battle.entryFee);
                     const modeLabel = MODE_LABELS[battle.battleMode] || battle.battleMode;
                     const isDraw = battle.status === 'FINISHED_DRAW';
+                    const firstBox = battle.roundBoxes?.length > 0 ? battle.roundBoxes[0].box : battle.box;
+                    const uniqueBoxNames = battle.roundBoxes?.length > 0
+                      ? [...new Set(battle.roundBoxes.map((rb: any) => rb.box.name))]
+                      : [firstBox?.name];
+                    const displayName = uniqueBoxNames.length === 1 ? uniqueBoxNames[0] : `${uniqueBoxNames.length} Boxen Mix`;
 
                     return (
                       <Link
@@ -214,12 +232,12 @@ export default async function BattlesPage() {
                         className="group flex items-center gap-4 bg-[#0e0e2a] border border-[rgba(255,255,255,0.04)] rounded-xl p-3.5 hover:border-[rgba(255,255,255,0.1)] hover:bg-[#12123a] transition-all duration-200"
                       >
                         <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 bg-[#1a1a4a] opacity-60">
-                          <img src={battle.box.imageUrl} alt="" className="w-full h-full object-cover" />
+                          {firstBox?.imageUrl && <img src={firstBox.imageUrl} alt="" className="w-full h-full object-cover" />}
                         </div>
 
                         <div className="flex-1 min-w-0">
                           <h3 className="font-medium text-[#8888aa] text-sm truncate group-hover:text-white transition-colors">
-                            {battle.box.name}
+                            {displayName}
                           </h3>
                           <div className="flex items-center gap-2 text-xs text-[#444466]">
                             <span>{battle.rounds} Runden</span>

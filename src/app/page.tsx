@@ -207,7 +207,7 @@ export default async function DashboardPage() {
 
   const serializedBattles = activeBattles.map((b) => ({
     id: b.id,
-    name: b.box.name + ' Battle',
+    name: (b.box?.name ?? 'Box') + ' Battle',
     rounds: b.rounds,
     participants: b._count.participants,
     maxParticipants: b.maxParticipants,

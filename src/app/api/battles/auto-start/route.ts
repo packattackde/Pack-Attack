@@ -35,7 +35,7 @@ async function startBattle(battleId: string): Promise<{ status: string; message:
     data: { status: 'ACTIVE', startedAt: new Date() },
   });
 
-  const boxCards = battle.box.cards.map(c => ({
+  const boxCards = (battle.box?.cards ?? []).map(c => ({
     id: c.id, name: c.name, coinValue: Number(c.coinValue), pullRate: Number(c.pullRate),
     imageUrlGatherer: c.imageUrlGatherer, imageUrlScryfall: c.imageUrlScryfall, rarity: c.rarity,
   }));
@@ -54,7 +54,7 @@ async function startBattle(battleId: string): Promise<{ status: string; message:
       const card = drawRandomCard(boxCards);
       participantTotals[p.id] += card.coinValue;
       pullOps.push({
-        pullData: { boxId: battle.boxId, userId: p.userId, cardId: card.id, cardValue: card.coinValue },
+        pullData: { boxId: battle.boxId!, userId: p.userId, cardId: card.id, cardValue: card.coinValue },
         participantId: p.id, round, card, coinValue: card.coinValue,
       });
     }

@@ -82,14 +82,12 @@ export async function POST(
       return NextResponse.json({ error: 'Die Lobby-Zeit ist abgelaufen' }, { status: 400 });
     }
 
-    // Entry fee = box.price * rounds
-    const boxPrice = Number(battle.box.price);
     const userCoins = Number(user.coins);
-    const entryFee = boxPrice * battle.rounds;
+    const entryFee = Number(battle.entryFee);
 
     if (userCoins < entryFee) {
       return NextResponse.json({
-        error: `Nicht genug Coins. Du brauchst ${entryFee.toFixed(0)} Coins (${boxPrice.toFixed(0)} × ${battle.rounds} Runden).`,
+        error: `Nicht genug Coins. Du brauchst ${Math.round(entryFee)} Coins.`,
         required: entryFee,
         current: userCoins,
       }, { status: 400 });

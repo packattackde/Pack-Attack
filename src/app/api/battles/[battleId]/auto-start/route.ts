@@ -49,7 +49,7 @@ async function startBattleLogic(battleId: string) {
     data: { status: 'ACTIVE', startedAt: new Date() },
   });
 
-  const boxCards = battle.box.cards.map(c => ({
+  const boxCards = (battle.box?.cards ?? []).map(c => ({
     id: c.id,
     name: c.name,
     coinValue: Number(c.coinValue),
@@ -73,7 +73,7 @@ async function startBattleLogic(battleId: string) {
       const card = drawRandomCard(boxCards);
       participantTotals[participant.id] += card.coinValue;
       pullOps.push({
-        pullData: { boxId: battle.boxId, userId: participant.userId, cardId: card.id, cardValue: card.coinValue },
+        pullData: { boxId: battle.boxId!, userId: participant.userId, cardId: card.id, cardValue: card.coinValue },
         participantId: participant.id,
         round,
         card,

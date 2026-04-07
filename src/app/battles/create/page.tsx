@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Coins, Zap, Check, Star, Search, Eye, EyeOff } from 'lucide-react';
+import { ArrowLeft, Coins, Zap, Check, Star, Search, Eye, EyeOff, Plus, X, Package } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
 type Box = {
@@ -22,8 +22,6 @@ const PLAYER_OPTIONS = [
   { value: 3 as const, label: '1v1v1', sub: '3 Spieler' },
   { value: 4 as const, label: '1v1v1v1', sub: '4 Spieler' },
 ];
-
-const ROUND_OPTIONS = [3, 5, 7] as const;
 
 const MODE_OPTIONS = [
   { value: 'LOWEST_CARD' as const, label: 'Niedrigste Karte', description: 'Gewinner erhält die niedrigste Karte des Verlierers', icon: '⬇️' },
@@ -45,8 +43,7 @@ export default function CreateBattlePage() {
   const [boxes, setBoxes] = useState<Box[]>([]);
   const [boxSearch, setBoxSearch] = useState('');
   const [boxSort, setBoxSort] = useState<'price-asc' | 'price-desc' | 'name'>('price-asc');
-  const [selectedBox, setSelectedBox] = useState<Box | null>(null);
-  const [rounds, setRounds] = useState<3 | 5 | 7>(3);
+  const [pickedBoxes, setPickedBoxes] = useState<Box[]>([]);
   const [battleMode, setBattleMode] = useState<'LOWEST_CARD' | 'HIGHEST_CARD' | 'ALL_CARDS'>('LOWEST_CARD');
   const [winCondition, setWinCondition] = useState<'HIGHEST' | 'LOWEST' | 'SHARE_MODE' | 'JACKPOT'>('HIGHEST');
   const [maxParticipants, setMaxParticipants] = useState<2 | 3 | 4>(2);
@@ -73,17 +70,36 @@ export default function CreateBattlePage() {
     return result;
   }, [boxes, boxSearch, boxSort]);
 
-  const entryFee = selectedBox ? selectedBox.price * rounds : 0;
-  const canCreate = !!selectedBox;
+  const rounds = pickedBoxes.length;
+  const entryFee = pickedBoxes.reduce((sum, b) => sum + b.price, 0);
+  const canCreate = rounds >= 1 && rounds <= 10;
+
+  const addBox = (box: Box) => {
+    if (pickedBoxes.length >= 10) {
+      addToast({ title: 'Maximum erreicht', description: 'Maximal 10 Runden möglich', variant: 'destructive' });
+      return;
+    }
+    setPickedBoxes(prev => [...prev, box]);
+  };
+
+  const removeBox = (index: number) => {
+    setPickedBoxes(prev => prev.filter((_, i) => i !== index));
+  };
 
   const handleSubmit = async () => {
-    if (!selectedBox) return;
+    if (!canCreate) return;
     setLoading(true);
     try {
       const res = await fetch('/api/battles', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ boxId: selectedBox.id, rounds, battleMode, winCondition, maxParticipants, privacy }),
+        body: JSON.stringify({
+          boxIds: pickedBoxes.map(b => b.id),
+          battleMode,
+          winCondition,
+          maxParticipants,
+          privacy,
+        }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -99,7 +115,6 @@ export default function CreateBattlePage() {
     }
   };
 
-
   const selectedStyle = 'border-[#C84FFF] bg-[#C84FFF]/10 shadow-[0_0_20px_rgba(200,79,255,0.12)]';
   const unselectedStyle = 'border-[rgba(255,255,255,0.08)] bg-[#12123a] hover:border-[rgba(255,255,255,0.2)]';
 
@@ -109,7 +124,6 @@ export default function CreateBattlePage() {
       <div className="fixed inset-0 radial-gradient pointer-events-none" />
 
       <div className="relative container py-10 sm:py-14 max-w-7xl">
-        {/* Header */}
         <div className="mb-8">
           <Link href="/battles" className="inline-flex items-center gap-2 text-[#8888aa] hover:text-white mb-4 transition-colors text-sm">
             <ArrowLeft className="w-4 h-4" /> Zurück zu Battles
@@ -121,7 +135,6 @@ export default function CreateBattlePage() {
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* ── Left: Form Sections ── */}
           <div className="flex-1 space-y-8 min-w-0">
 
             {/* Players */}
@@ -141,9 +154,62 @@ export default function CreateBattlePage() {
               </div>
             </section>
 
-            {/* Box Selection */}
+            {/* Picked Boxes (Round Lineup) */}
             <section>
-              <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-3">Box wählen</h2>
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider">
+                  Deine Runden <span className="text-[#C84FFF]">({rounds}/10)</span>
+                </h2>
+                {rounds > 0 && (
+                  <button onClick={() => setPickedBoxes([])} className="text-xs text-red-400/60 hover:text-red-400 transition-colors">
+                    Alle entfernen
+                  </button>
+                )}
+              </div>
+
+              {rounds === 0 ? (
+                <div className="rounded-xl border-2 border-dashed border-[rgba(255,255,255,0.08)] p-8 text-center">
+                  <Package className="w-8 h-8 text-[#444466] mx-auto mb-2" />
+                  <p className="text-sm text-[#666688]">Wähle unten Boxen aus — jede Box = 1 Runde</p>
+                  <p className="text-xs text-[#444466] mt-1">Du kannst die gleiche Box mehrfach hinzufügen</p>
+                </div>
+              ) : (
+                <div className="flex gap-2 flex-wrap">
+                  {pickedBoxes.map((box, i) => (
+                    <div
+                      key={`pick-${i}`}
+                      className="group relative flex items-center gap-2 pl-2 pr-1 py-1.5 rounded-lg bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] hover:border-[#C84FFF]/30 transition-all"
+                    >
+                      <div className="w-8 h-8 rounded-md overflow-hidden shrink-0 bg-[#12123a]">
+                        <img src={box.imageUrl} alt="" className="w-full h-full object-cover" />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="text-xs text-white font-medium truncate max-w-[100px]">{box.name}</div>
+                        <div className="flex items-center gap-1 text-[10px] text-amber-400">
+                          <Coins className="w-2.5 h-2.5" />{box.price.toFixed(0)}
+                        </div>
+                      </div>
+                      <span className="text-[9px] text-[#444466] font-mono ml-1 mr-1">R{i + 1}</span>
+                      <button
+                        onClick={() => removeBox(i)}
+                        className="w-5 h-5 rounded-full bg-red-500/10 hover:bg-red-500/30 flex items-center justify-center transition-colors shrink-0"
+                      >
+                        <X className="w-3 h-3 text-red-400" />
+                      </button>
+                    </div>
+                  ))}
+                  {rounds < 10 && (
+                    <div className="flex items-center justify-center w-10 h-[52px] rounded-lg border-2 border-dashed border-[rgba(255,255,255,0.08)] text-[#444466]">
+                      <Plus className="w-4 h-4" />
+                    </div>
+                  )}
+                </div>
+              )}
+            </section>
+
+            {/* Box Catalog */}
+            <section>
+              <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-3">Box hinzufügen</h2>
               <div className="flex gap-3 mb-4">
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#666688]" />
@@ -169,62 +235,53 @@ export default function CreateBattlePage() {
                 <div className="text-center py-10 text-[#666688] text-sm">Keine Boxen gefunden</div>
               ) : (
                 <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
-                  {filteredBoxes.map(box => (
-                    <button
-                      key={box.id}
-                      onClick={() => setSelectedBox(box)}
-                      className={`relative text-left rounded-xl border overflow-hidden transition-all group ${
-                        selectedBox?.id === box.id ? selectedStyle : unselectedStyle
-                      }`}
-                    >
-                      {selectedBox?.id === box.id && (
-                        <div className="absolute top-2 right-2 z-10 w-5 h-5 bg-[#C84FFF] rounded-full flex items-center justify-center">
-                          <Check className="w-3 h-3 text-black" />
+                  {filteredBoxes.map(box => {
+                    const pickCount = pickedBoxes.filter(b => b.id === box.id).length;
+                    return (
+                      <button
+                        key={box.id}
+                        onClick={() => addBox(box)}
+                        disabled={rounds >= 10}
+                        className={`relative text-left rounded-xl border overflow-hidden transition-all group ${
+                          pickCount > 0 ? selectedStyle : unselectedStyle
+                        } disabled:opacity-40 disabled:cursor-not-allowed`}
+                      >
+                        {pickCount > 0 && (
+                          <div className="absolute top-2 right-2 z-10 min-w-[20px] h-5 px-1 bg-[#C84FFF] rounded-full flex items-center justify-center">
+                            <span className="text-[10px] font-bold text-black">{pickCount}x</span>
+                          </div>
+                        )}
+                        {box.featured && pickCount === 0 && (
+                          <div className="absolute top-2 right-2 z-10">
+                            <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+                          </div>
+                        )}
+                        <div className="aspect-[4/3] overflow-hidden">
+                          <img src={box.imageUrl} alt={box.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                         </div>
-                      )}
-                      {box.featured && !selectedBox?.id && (
-                        <div className="absolute top-2 right-2 z-10">
-                          <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+                        <div className="p-3">
+                          <h3 className="font-medium text-white text-sm leading-tight line-clamp-1">{box.name}</h3>
+                          <div className="flex items-center justify-between mt-1.5">
+                            <span className="text-xs text-[#666688]">{box.cardsPerPack} Karten</span>
+                            <span className="flex items-center gap-1 text-amber-400 text-xs font-semibold">
+                              <Coins className="w-3 h-3" />{box.price.toFixed(0)}
+                            </span>
+                          </div>
                         </div>
-                      )}
-                      <div className="aspect-[4/3] overflow-hidden">
-                        <img src={box.imageUrl} alt={box.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                      </div>
-                      <div className="p-3">
-                        <h3 className="font-medium text-white text-sm leading-tight line-clamp-1">{box.name}</h3>
-                        <div className="flex items-center justify-between mt-1.5">
-                          <span className="text-xs text-[#666688]">{box.cardsPerPack} Karten</span>
-                          <span className="flex items-center gap-1 text-amber-400 text-xs font-semibold">
-                            <Coins className="w-3 h-3" />{box.price.toFixed(0)}
-                          </span>
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/30 transition-all pointer-events-none">
+                          <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-[#C84FFF] rounded-full p-2">
+                            <Plus className="w-5 h-5 text-white" />
+                          </div>
                         </div>
-                      </div>
-                    </button>
-                  ))}
+                      </button>
+                    );
+                  })}
                 </div>
               )}
             </section>
 
-            {/* Rounds */}
-            <section>
-              <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-3">Runden</h2>
-              <div className="flex gap-3">
-                {ROUND_OPTIONS.map(r => (
-                  <button
-                    key={r}
-                    onClick={() => setRounds(r)}
-                    className={`flex-1 py-3 rounded-xl border text-center transition-all ${rounds === r ? selectedStyle : unselectedStyle}`}
-                  >
-                    <div className={`text-xl font-bold ${rounds === r ? 'text-white' : 'text-[#8888aa]'}`}>{r}</div>
-                    <div className="text-xs text-[#666688]">Runden</div>
-                  </button>
-                ))}
-              </div>
-            </section>
-
-            {/* Win Condition + Reward Mode side by side */}
+            {/* Win Condition + Reward Mode */}
             <div className="grid gap-8 md:grid-cols-2">
-              {/* Win Condition */}
               <section>
                 <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-3">Gewinnlogik</h2>
                 <div className="space-y-2">
@@ -251,7 +308,6 @@ export default function CreateBattlePage() {
                 </div>
               </section>
 
-              {/* Reward Mode */}
               <section>
                 <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-3">Belohnungsmodus</h2>
                 <div className="space-y-2">
@@ -304,7 +360,7 @@ export default function CreateBattlePage() {
             </section>
           </div>
 
-          {/* ── Right: Sticky Summary Panel ── */}
+          {/* Sticky Summary Panel */}
           <div className="lg:w-80 shrink-0">
             <div className="lg:sticky lg:top-24">
               <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl p-6">
@@ -316,15 +372,29 @@ export default function CreateBattlePage() {
                     <span className="text-white font-medium">{PLAYER_OPTIONS.find(p => p.value === maxParticipants)?.label}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[#666688]">Box</span>
-                    <span className={`font-medium truncate ml-4 ${selectedBox ? 'text-white' : 'text-[#444466]'}`}>
-                      {selectedBox?.name || 'Nicht gewählt'}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
                     <span className="text-[#666688]">Runden</span>
-                    <span className="text-white font-medium">{rounds}</span>
+                    <span className={`font-medium ${rounds > 0 ? 'text-white' : 'text-[#444466]'}`}>{rounds || '—'}</span>
                   </div>
+                  {rounds > 0 && (
+                    <div>
+                      <span className="text-[#666688] text-xs">Boxen:</span>
+                      <div className="mt-1.5 space-y-1">
+                        {(() => {
+                          const grouped = pickedBoxes.reduce((acc, box) => {
+                            acc.set(box.id, (acc.get(box.id) || { box, count: 0 }));
+                            acc.get(box.id)!.count++;
+                            return acc;
+                          }, new Map<string, { box: Box; count: number }>());
+                          return [...grouped.values()].map(({ box, count }) => (
+                            <div key={box.id} className="flex items-center justify-between text-xs">
+                              <span className="text-white truncate max-w-[140px]">{count > 1 ? `${count}x ` : ''}{box.name}</span>
+                              <span className="text-amber-400 font-medium">{(box.price * count).toFixed(0)}</span>
+                            </div>
+                          ));
+                        })()}
+                      </div>
+                    </div>
+                  )}
                   <div className="flex justify-between">
                     <span className="text-[#666688]">Gewinnlogik</span>
                     <span className="text-white font-medium">{WIN_CONDITION_OPTIONS.find(w => w.value === winCondition)?.icon} {WIN_CONDITION_OPTIONS.find(w => w.value === winCondition)?.label.split(' ')[0]}</span>
@@ -344,12 +414,12 @@ export default function CreateBattlePage() {
                     <span className="text-[#666688] text-sm">Einsatz</span>
                     <span className="text-amber-400 font-bold text-lg flex items-center gap-1">
                       <Coins className="w-4 h-4" />
-                      {entryFee.toFixed(0)}
+                      {Math.round(entryFee)}
                     </span>
                   </div>
-                  {selectedBox && (
+                  {rounds > 0 && (
                     <p className="text-xs text-[#444466] mt-1 text-right">
-                      {selectedBox.price.toFixed(0)} x {rounds} Runden
+                      {rounds} {rounds === 1 ? 'Runde' : 'Runden'} · {new Set(pickedBoxes.map(b => b.id)).size} {new Set(pickedBoxes.map(b => b.id)).size === 1 ? 'Box' : 'Boxen'}
                     </p>
                   )}
                 </div>
@@ -380,9 +450,9 @@ export default function CreateBattlePage() {
             <div>
               <div className="flex items-center gap-1 text-amber-400 font-bold">
                 <Coins className="w-4 h-4" />
-                <span>{entryFee.toFixed(0)} Coins</span>
+                <span>{Math.round(entryFee)} Coins</span>
               </div>
-              <p className="text-xs text-[#666688]">{selectedBox?.name || 'Box wählen'}</p>
+              <p className="text-xs text-[#666688]">{rounds} {rounds === 1 ? 'Runde' : 'Runden'}</p>
             </div>
             <button
               onClick={handleSubmit}

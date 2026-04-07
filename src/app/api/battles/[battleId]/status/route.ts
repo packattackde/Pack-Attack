@@ -31,6 +31,10 @@ export async function GET(
               },
             },
           },
+          roundBoxes: {
+            include: { box: true },
+            orderBy: { roundNumber: 'asc' },
+          },
           participants: {
             include: { user: { select: { id: true, name: true, email: true, isBot: true } } },
           },
@@ -72,6 +76,10 @@ export async function GET(
           coinValue: Number(card.coinValue),
         })),
       } : null,
+      roundBoxes: (battle as any).roundBoxes?.map((rb: any) => ({
+        ...rb,
+        box: { ...rb.box, price: Number(rb.box.price) },
+      })) || [],
       pulls: battle.pulls?.map(pull => ({
         ...pull,
         coinValue: Number(pull.coinValue),

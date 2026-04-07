@@ -6,8 +6,7 @@ import { rateLimit } from '@/lib/rate-limit';
 import { sendBattleNotificationWebhook } from '@/lib/discord-webhook';
 
 const battleSchema = z.object({
-  boxId: z.string(),
-  rounds: z.union([z.literal(3), z.literal(5), z.literal(7)]),
+  boxIds: z.array(z.string()).min(1).max(10),
   battleMode: z.enum(['LOWEST_CARD', 'HIGHEST_CARD', 'ALL_CARDS']),
   winCondition: z.enum(['HIGHEST', 'LOWEST', 'SHARE_MODE', 'JACKPOT']),
   maxParticipants: z.number().int().min(2).max(4),
@@ -25,6 +24,10 @@ export async function GET() {
         include: {
           creator: { select: { id: true, name: true, email: true } },
           box: true,
+          roundBoxes: {
+            include: { box: true },
+            orderBy: { roundNumber: 'asc' },
+          },
           participants: {
             include: { user: { select: { id: true, name: true, email: true, isBot: true } } },
           },
@@ -43,6 +46,10 @@ export async function GET() {
         ...battle.box,
         price: Number(battle.box.price),
       } : null,
+      roundBoxes: battle.roundBoxes.map(rb => ({
+        ...rb,
+        box: { ...rb.box, price: Number(rb.box.price) },
+      })),
       participants: battle.participants.map(p => ({
         ...p,
         totalValue: Number(p.totalValue),
@@ -79,7 +86,6 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const data = battleSchema.parse(body);
 
-    // Check user is not already in an active battle
     const activeBattle = await prisma.battleParticipant.findFirst({
       where: {
         userId: user.id,
@@ -95,28 +101,31 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
 
-    const box = await prisma.box.findUnique({
-      where: { id: data.boxId },
+    const uniqueBoxIds = [...new Set(data.boxIds)];
+    const boxes = await prisma.box.findMany({
+      where: { id: { in: uniqueBoxIds } },
     });
 
-    if (!box) {
-      return NextResponse.json({ error: 'Box nicht gefunden' }, { status: 404 });
+    if (boxes.length !== uniqueBoxIds.length) {
+      return NextResponse.json({ error: 'Eine oder mehrere Boxen nicht gefunden' }, { status: 404 });
     }
 
-    const entryFee = Number(box.price) * data.rounds;
+    const boxMap = new Map(boxes.map(b => [b.id, b]));
+    const rounds = data.boxIds.length;
+    const entryFee = data.boxIds.reduce((sum, id) => sum + Number(boxMap.get(id)!.price), 0);
     const userCoins = Number(user.coins);
 
     if (userCoins < entryFee) {
       return NextResponse.json({
-        error: `Nicht genug Coins. Du brauchst ${entryFee.toFixed(0)} Coins (${Number(box.price).toFixed(0)} × ${data.rounds} Runden).`,
+        error: `Nicht genug Coins. Du brauchst ${Math.round(entryFee)} Coins.`,
         required: entryFee,
         current: userCoins,
       }, { status: 400 });
     }
 
     const lobbyExpiresAt = new Date(Date.now() + 15 * 60 * 1000);
+    const firstBoxId = data.boxIds[0];
 
-    // Deduct coins and create battle in transaction
     const [, battle] = await prisma.$transaction([
       prisma.user.update({
         where: { id: user.id },
@@ -125,23 +134,31 @@ export async function POST(request: NextRequest) {
       prisma.battle.create({
         data: {
           creatorId: user.id,
-          boxId: data.boxId,
+          boxId: firstBoxId,
           entryFee: Math.round(entryFee),
-          rounds: data.rounds,
+          rounds,
           battleMode: data.battleMode,
           winCondition: data.winCondition,
           maxParticipants: data.maxParticipants,
           privacy: data.privacy,
           lobbyExpiresAt,
           participants: {
-            create: {
-              userId: user.id,
-            },
+            create: { userId: user.id },
+          },
+          roundBoxes: {
+            create: data.boxIds.map((boxId, i) => ({
+              roundNumber: i + 1,
+              boxId,
+            })),
           },
         },
         include: {
           creator: { select: { id: true, name: true, email: true } },
           box: true,
+          roundBoxes: {
+            include: { box: true },
+            orderBy: { roundNumber: 'asc' },
+          },
           participants: {
             include: { user: { select: { id: true, name: true, email: true } } },
           },
@@ -149,18 +166,13 @@ export async function POST(request: NextRequest) {
       }),
     ]);
 
-    const modeLabels: Record<string, string> = {
-      LOWEST_CARD: 'Niedrigste Karte',
-      HIGHEST_CARD: 'Höchste Karte',
-      ALL_CARDS: 'Alle Karten',
-    };
-
+    const firstBox = boxMap.get(firstBoxId)!;
     sendBattleNotificationWebhook({
       battleId: battle.id,
-      boxName: box.name,
-      boxImageUrl: box.imageUrl || undefined,
+      boxName: uniqueBoxIds.length === 1 ? firstBox.name : `${uniqueBoxIds.length} Boxen Mix`,
+      boxImageUrl: firstBox.imageUrl || undefined,
       players: data.maxParticipants,
-      rounds: data.rounds,
+      rounds,
       winCondition: data.winCondition,
       rewardMode: data.battleMode,
       privacy: data.privacy,
@@ -177,6 +189,10 @@ export async function POST(request: NextRequest) {
         ...battle.box,
         price: Number(battle.box.price),
       } : null,
+      roundBoxes: battle.roundBoxes.map(rb => ({
+        ...rb,
+        box: { ...rb.box, price: Number(rb.box.price) },
+      })),
       participants: battle.participants.map(p => ({
         ...p,
         totalValue: Number(p.totalValue),
