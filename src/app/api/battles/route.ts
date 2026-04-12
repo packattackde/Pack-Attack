@@ -7,8 +7,8 @@ import { sendBattleNotificationWebhook } from '@/lib/discord-webhook';
 
 const battleSchema = z.object({
   boxIds: z.array(z.string()).min(1).max(10),
-  battleMode: z.enum(['LOWEST_CARD', 'HIGHEST_CARD', 'ALL_CARDS']),
-  winCondition: z.enum(['HIGHEST', 'LOWEST', 'SHARE_MODE', 'JACKPOT']),
+  battleMode: z.enum(['LOWEST_CARD', 'HIGHEST_CARD']),
+  winCondition: z.enum(['HIGHEST', 'LOWEST', 'SHARE_MODE']),
   maxParticipants: z.number().int().min(2).max(4),
   privacy: z.enum(['PUBLIC', 'PRIVATE']).optional().default('PUBLIC'),
 });

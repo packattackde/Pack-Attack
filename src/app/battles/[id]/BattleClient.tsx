@@ -246,10 +246,8 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#12123a] rounded-full text-xs">
                   <Zap className="w-3 h-3 text-[#C84FFF]" />
                   <span className="text-[#8888aa]">
-                    {battle.winCondition === 'JACKPOT' && 'Jackpot — Gewinner erhält alle Karten'}
-                    {battle.winCondition !== 'JACKPOT' && battle.battleMode === 'LOWEST_CARD' && 'Niedrigste Karte übertragen'}
-                    {battle.winCondition !== 'JACKPOT' && battle.battleMode === 'HIGHEST_CARD' && 'Höchste Karte übertragen'}
-                    {battle.winCondition !== 'JACKPOT' && battle.battleMode === 'ALL_CARDS' && 'Alle Karten übertragen'}
+                    {battle.battleMode === 'LOWEST_CARD' && 'Niedrigste Karte übertragen'}
+                    {battle.battleMode === 'HIGHEST_CARD' && 'Höchste Karte übertragen'}
                   </span>
                 </div>
               </div>

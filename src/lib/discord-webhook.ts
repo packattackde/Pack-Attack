@@ -14,13 +14,11 @@ type BattleNotification = {
 const rewardModeEmoji: Record<string, string> = {
     LOWEST_CARD: '⬇️',
     HIGHEST_CARD: '⬆️',
-    ALL_CARDS: '🃏',
 };
 
 const rewardModeNames: Record<string, string> = {
     LOWEST_CARD: 'Niedrigste Karte',
     HIGHEST_CARD: 'Höchste Karte',
-    ALL_CARDS: 'Alle Karten',
 };
 
 const winConditionNames: Record<string, string> = {

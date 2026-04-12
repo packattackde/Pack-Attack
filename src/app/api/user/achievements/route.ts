@@ -84,7 +84,7 @@ export async function GET(request: NextRequest) {
     
     if (updateProgress && achievements.length > 0) {
       // Fetch stats in parallel - optimized queries
-      const [totalPulls, totalBattles, battlesWon, totalSales, totalOrders, totalCoinsEarned, mythicPulls, rarePulls, jackpotWins] = await Promise.all([
+      const [totalPulls, totalBattles, battlesWon, totalSales, totalOrders, totalCoinsEarned, mythicPulls, rarePulls] = await Promise.all([
         prisma.pull.count({ where: { userId: user.id } }),
         prisma.battleParticipant.count({ where: { userId: user.id } }),
         prisma.battle.count({ where: { winnerId: user.id } }),
@@ -93,7 +93,6 @@ export async function GET(request: NextRequest) {
         prisma.saleHistory.aggregate({ where: { userId: user.id }, _sum: { coinsReceived: true } }),
         prisma.pull.count({ where: { userId: user.id, card: { rarity: { in: ['mythic', 'Mythic', 'MYTHIC', 'legendary', 'Legendary', 'LEGENDARY'] } } } }),
         prisma.pull.count({ where: { userId: user.id, card: { rarity: { in: ['rare', 'Rare', 'RARE'] } } } }),
-        prisma.battle.count({ where: { winnerId: user.id, battleMode: 'ALL_CARDS' } }),
       ]);
 
       // Build progress map
@@ -108,7 +107,7 @@ export async function GET(request: NextRequest) {
         WEALTHY: Number(totalCoinsEarned._sum.coinsReceived || 0) + Number(user.coins),
         MILLIONAIRE: Number(totalCoinsEarned._sum.coinsReceived || 0) + Number(user.coins),
         FIRST_ORDER: totalOrders, LOYAL_CUSTOMER: totalOrders,
-        JACKPOT_WINNER: jackpotWins,
+        JACKPOT_WINNER: 0,
       };
 
       // Time-based achievements

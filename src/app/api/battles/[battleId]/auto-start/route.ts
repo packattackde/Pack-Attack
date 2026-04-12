@@ -139,8 +139,6 @@ async function startBattleLogic(battleId: string) {
         transferOps.push(loserPulls[0].pullId);
       } else if (battle.battleMode === 'HIGHEST_CARD' && loserPulls.length > 0) {
         transferOps.push(loserPulls[loserPulls.length - 1].pullId);
-      } else if (battle.battleMode === 'ALL_CARDS') {
-        transferOps.push(...loserPulls.map(p => p.pullId));
       }
     }
 

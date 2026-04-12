@@ -387,14 +387,12 @@ enum BattleStatus {
 enum BattleMode {
   LOWEST_CARD
   HIGHEST_CARD
-  ALL_CARDS
 }
 
 enum WinCondition {
   HIGHEST
   LOWEST
   SHARE_MODE
-  JACKPOT
 }
 
 enum BattlePrivacy {

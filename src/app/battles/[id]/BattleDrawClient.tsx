@@ -754,10 +754,8 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                       <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#12123a] rounded-full text-sm">
                         <Zap className="w-4 h-4 text-[#C84FFF]" />
                         <span className="text-[#8888aa]">
-                          {battle.winCondition === 'JACKPOT' && 'Jackpot — Gewinner erhält alle Karten'}
-                          {battle.winCondition !== 'JACKPOT' && battle.battleMode === 'LOWEST_CARD' && 'Niedrigste Karte des Verlierers übertragen'}
-                          {battle.winCondition !== 'JACKPOT' && battle.battleMode === 'HIGHEST_CARD' && 'Höchste Karte des Verlierers übertragen'}
-                          {battle.winCondition !== 'JACKPOT' && battle.battleMode === 'ALL_CARDS' && 'Alle Karten des Verlierers übertragen'}
+                          {battle.battleMode === 'LOWEST_CARD' && 'Niedrigste Karte des Verlierers übertragen'}
+                          {battle.battleMode === 'HIGHEST_CARD' && 'Höchste Karte des Verlierers übertragen'}
                         </span>
                       </div>
                     </motion.div>

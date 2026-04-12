@@ -26,14 +26,12 @@ const PLAYER_OPTIONS = [
 const MODE_OPTIONS = [
   { value: 'LOWEST_CARD' as const, label: 'Niedrigste Karte', description: 'Gewinner erhält die niedrigste Karte des Verlierers', icon: '⬇️' },
   { value: 'HIGHEST_CARD' as const, label: 'Höchste Karte', description: 'Gewinner erhält die höchste Karte des Verlierers', icon: '⬆️' },
-  { value: 'ALL_CARDS' as const, label: 'Alle Karten', description: 'Gewinner erhält alle Karten des Verlierers', icon: '🃏' },
 ];
 
 const WIN_CONDITION_OPTIONS = [
   { value: 'HIGHEST' as const, label: 'Höchster Wert', description: 'Höchster Gesamtkartenwert gewinnt', icon: '📈' },
   { value: 'LOWEST' as const, label: 'Niedrigster Wert', description: 'Niedrigster Gesamtkartenwert gewinnt', icon: '📉' },
   { value: 'SHARE_MODE' as const, label: 'Teilen', description: 'Karten werden gleichmäßig aufgeteilt', icon: '🤝' },
-  { value: 'JACKPOT' as const, label: 'Jackpot', description: 'Gewichteter Zufall — ein Spieler gewinnt alles', icon: '🎰' },
 ];
 
 export default function CreateBattlePage() {
@@ -44,8 +42,8 @@ export default function CreateBattlePage() {
   const [boxSearch, setBoxSearch] = useState('');
   const [boxSort, setBoxSort] = useState<'price-asc' | 'price-desc' | 'name'>('price-asc');
   const [pickedBoxes, setPickedBoxes] = useState<Box[]>([]);
-  const [battleMode, setBattleMode] = useState<'LOWEST_CARD' | 'HIGHEST_CARD' | 'ALL_CARDS'>('LOWEST_CARD');
-  const [winCondition, setWinCondition] = useState<'HIGHEST' | 'LOWEST' | 'SHARE_MODE' | 'JACKPOT'>('HIGHEST');
+  const [battleMode, setBattleMode] = useState<'LOWEST_CARD' | 'HIGHEST_CARD'>('LOWEST_CARD');
+  const [winCondition, setWinCondition] = useState<'HIGHEST' | 'LOWEST' | 'SHARE_MODE'>('HIGHEST');
   const [maxParticipants, setMaxParticipants] = useState<2 | 3 | 4>(2);
   const [privacy, setPrivacy] = useState<'PUBLIC' | 'PRIVATE'>('PUBLIC');
 

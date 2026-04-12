@@ -257,33 +257,6 @@ export async function POST(
         data: { status: 'FINISHED_DRAW', finishedAt: new Date() },
       });
 
-    } else if (battle.winCondition === 'JACKPOT') {
-      const withTotals = battle.participants.map(p => ({ ...p, total: participantTotals[p.id] }));
-      const totalSum = withTotals.reduce((s, p) => s + p.total, 0);
-      let roll = Math.random() * (totalSum || 1);
-      let jackpotWinner = withTotals[0];
-      for (const p of withTotals) {
-        roll -= p.total;
-        if (roll <= 0) { jackpotWinner = p; break; }
-      }
-
-      winnerId = jackpotWinner.userId;
-      const losers = withTotals.filter(p => p.userId !== winnerId);
-
-      for (const loser of losers) {
-        const loserPulls = createdPulls.filter(p => p.participantId === loser.id);
-        for (const pull of loserPulls) {
-          await prisma.pull.update({ where: { id: pull.pullId }, data: { userId: winnerId! } });
-          await prisma.battlePull.updateMany({ where: { pullId: pull.pullId }, data: { transferredToUserId: winnerId } });
-          transferredPullIds.push(pull.pullId);
-        }
-      }
-
-      await prisma.battle.update({
-        where: { id: battleId },
-        data: { status: 'FINISHED_WIN', winnerId, finishedAt: new Date() },
-      });
-
     } else {
       const useLowest = battle.winCondition === 'LOWEST';
       const sortedParticipants = battle.participants
@@ -314,8 +287,6 @@ export async function POST(
             if (loserPulls.length > 0) transferOps.push({ pullId: loserPulls[0].pullId });
           } else if (battle.battleMode === 'HIGHEST_CARD') {
             if (loserPulls.length > 0) transferOps.push({ pullId: loserPulls[loserPulls.length - 1].pullId });
-          } else if (battle.battleMode === 'ALL_CARDS') {
-            for (const pull of loserPulls) transferOps.push({ pullId: pull.pullId });
           }
         }
 

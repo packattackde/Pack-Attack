@@ -44,7 +44,6 @@ export async function POST() {
       uniqueGamesData,
       mythicPulls,
       rarePulls,
-      jackpotWins,
     ] = await Promise.all([
       prisma.pull.count({ where: { userId: user.id } }),
       prisma.battleParticipant.count({ where: { userId: user.id } }),
@@ -81,9 +80,6 @@ export async function POST() {
           userId: user.id,
           card: { rarity: { in: ['rare', 'Rare', 'RARE'] } },
         },
-      }),
-      prisma.battle.count({
-        where: { winnerId: user.id, battleMode: 'ALL_CARDS' },
       }),
     ]);
 
@@ -127,7 +123,7 @@ export async function POST() {
       LOYAL_CUSTOMER: totalOrders,
       
       // Special achievements
-      JACKPOT_WINNER: jackpotWins,
+      JACKPOT_WINNER: 0,
     };
 
     // Check time-based achievements

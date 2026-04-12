@@ -4,9 +4,9 @@ export type CardGame = 'MAGIC_THE_GATHERING' | 'ONE_PIECE' | 'POKEMON' | 'LORCAN
 
 export type BattleStatus = 'OPEN' | 'FULL' | 'READY' | 'ACTIVE' | 'FINISHED_WIN' | 'FINISHED_DRAW' | 'CANCELLED';
 
-export type BattleMode = 'LOWEST_CARD' | 'HIGHEST_CARD' | 'ALL_CARDS';
+export type BattleMode = 'LOWEST_CARD' | 'HIGHEST_CARD';
 
-export type WinCondition = 'HIGHEST' | 'LOWEST' | 'SHARE_MODE' | 'JACKPOT';
+export type WinCondition = 'HIGHEST' | 'LOWEST' | 'SHARE_MODE';
 
 export type PaymentStatus = 'PENDING' | 'COMPLETED' | 'FAILED' | 'REFUNDED';
 
