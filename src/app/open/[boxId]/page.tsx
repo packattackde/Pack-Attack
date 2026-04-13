@@ -539,181 +539,206 @@ export default function OpenBoxPage() {
       {/* Background Effects */}
       <div className="fixed inset-0 bg-grid opacity-30" />
       <div className="fixed inset-0 radial-gradient" />
-      <div className="fixed top-20 left-10 w-72 h-72 bg-[rgba(200,79,255,0.1)] rounded-full blur-3xl hidden lg:block" />
 
-      <div className="relative container py-12">
-        {/* Back Link */}
-        <Link href="/boxes" className="inline-flex items-center gap-2 text-[#8888aa] hover:text-[#f0f0f5] transition-colors mb-6">
-          <ArrowLeft className="w-4 h-4" />
-          {t('backToBoxes')}
-        </Link>
+      {/* ============ CINEMATIC HERO ============ */}
+      <div className="relative w-full overflow-hidden">
+        {/* Blurred box image as background */}
+        {box.imageUrl && (
+          <div className="absolute inset-0 z-0">
+            <Image
+              src={box.imageUrl}
+              alt=""
+              fill
+              className="object-cover blur-2xl scale-110 opacity-20"
+              unoptimized
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#06061a]/60 via-[#06061a]/40 to-[#06061a]" />
+          </div>
+        )}
+        {!box.imageUrl && (
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-[#1a1a4a] to-[#06061a]" />
+        )}
 
-        <div className="max-w-6xl mx-auto">
-          {/* Box Info Card */}
-          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 mb-6">
-            <div className="flex flex-col md:flex-row items-start gap-6">
-              <div className="relative w-full md:w-48 aspect-[3/4] rounded-xl overflow-hidden flex-shrink-0">
+        <div className="relative z-10 container pt-8 pb-6">
+          {/* Back Link */}
+          <Link href="/boxes" className="inline-flex items-center gap-2 text-[#8888aa] hover:text-[#f0f0f5] transition-colors mb-8">
+            <ArrowLeft className="w-4 h-4" />
+            {t('backToBoxes')}
+          </Link>
+
+          {/* Hero content: floating box image + title */}
+          <div className="flex flex-col items-center text-center">
+            {/* Floating box image */}
+            <div className="relative w-40 h-40 sm:w-52 sm:h-52 mb-6 animate-float">
+              <div className="absolute inset-0 rounded-2xl bg-[#C84FFF]/20 blur-3xl scale-150" />
+              <div className="relative w-full h-full rounded-2xl overflow-hidden border border-[rgba(255,255,255,0.15)] shadow-2xl">
                 {box.imageUrl ? (
-                  <Image src={box.imageUrl} alt={box.name} fill className="object-cover"  />
+                  <Image src={box.imageUrl} alt={box.name} fill className="object-cover" unoptimized />
                 ) : (
                   <div className="w-full h-full bg-[#12123a] flex items-center justify-center">
-                    <Package className="w-12 h-12 text-gray-600" />
+                    <Package className="w-16 h-16 text-gray-600" />
                   </div>
                 )}
               </div>
-              <div className="flex-1">
-                <div className="inline-flex items-center gap-2 px-3 py-1 mb-3 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
-                  <Package className="w-4 h-4 text-[#C84FFF]" />
-                  <span className="text-[#8888aa]">{t('packOpening')}</span>
-                </div>
-                <h1 className="text-3xl font-bold text-[#f0f0f5] mb-3">{box.name}</h1>
-                <p className="text-[#8888aa] mb-4">{box.description}</p>
-                <div className="flex flex-wrap gap-4">
-                  <div className="flex items-center gap-2">
-                    <Coins className="w-5 h-5 text-amber-400" />
-                    <span className="text-[#f0f0f5] font-semibold">{box.price.toFixed(2)} {t('coinsPerPack')}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Layers className="w-5 h-5 text-[#8888aa]" />
-                    <span className="text-[#8888aa]">{box.cardsPerPack} {t('cardsPerPack')}</span>
-                  </div>
-                </div>
+            </div>
+
+            {/* Box name */}
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-3 tracking-tight">
+              {box.name}
+            </h1>
+
+            {/* Game badge + stats */}
+            <div className="flex items-center gap-3 text-sm text-[#8888aa] mb-2">
+              <div className="flex items-center gap-1.5">
+                <Coins className="w-4 h-4 text-amber-400" />
+                <span className="text-[#f0f0f5] font-semibold">{box.price.toFixed(2)} {t('coinsPerPack')}</span>
+              </div>
+              <span className="text-[rgba(255,255,255,0.2)]">·</span>
+              <div className="flex items-center gap-1.5">
+                <Layers className="w-4 h-4 text-[#8888aa]" />
+                <span>{box.cardsPerPack} {t('cardsPerPack')}</span>
               </div>
             </div>
+            {box.description && (
+              <p className="text-[#8888aa] text-sm max-w-lg mb-2">{box.description}</p>
+            )}
           </div>
+        </div>
+      </div>
 
-          {/* Open Box Card */}
-          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 mb-6">
-            <h2 className="text-xl font-bold text-[#f0f0f5] mb-4 flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-[#C84FFF]" />
-              {t('openPack')}
-            </h2>
+      {/* ============ MAIN CONTENT ============ */}
+      <div className="relative container pb-12 -mt-2">
+        <div className="max-w-6xl mx-auto">
+
+          {/* ---- Glassmorphism Control Panel ---- */}
+          <div className="relative z-20 max-w-md mx-auto mb-10 rounded-2xl p-6 bg-[#12123a]/80 backdrop-blur-xl border border-[rgba(255,255,255,0.12)] shadow-[0_8px_40px_rgba(0,0,0,0.5)]">
             
-            <div className="space-y-4">
-              {/* Quantity Selection */}
-              <div>
-                <label className="block text-sm font-medium mb-3 text-[#8888aa]">{t('quantity')}</label>
-                <div className="flex flex-wrap gap-3">
-                  {[1, 2, 3, 4].map((qty) => (
-                    <button
-                      key={qty}
-                      type="button"
-                      onClick={() => setQuantity(qty)}
-                      className={`px-6 py-3 rounded-xl border-2 font-semibold transition-all ${
-                        quantity === qty
-                          ? 'border-[rgba(200,79,255,0.3)] bg-[rgba(200,79,255,0.1)] text-[#C84FFF]'
-                          : 'border-[rgba(255,255,255,0.06)] bg-[#12123a]/50 text-[#8888aa] hover:border-[rgba(255,255,255,0.12)]'
-                      }`}
-                    >
-                      {qty}x
-                    </button>
-                  ))}
-                </div>
+            {/* Quantity Selection */}
+            <p className="text-sm font-semibold text-[#8888aa] text-center mb-4">{t('quantity')}</p>
+            <div className="flex justify-center gap-3 mb-5">
+              {[1, 2, 3, 4].map((qty) => (
+                <button
+                  key={qty}
+                  type="button"
+                  onClick={() => setQuantity(qty)}
+                  className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full text-lg font-bold transition-all duration-200 ${
+                    quantity === qty
+                      ? 'bg-[#C84FFF] text-white shadow-[0_0_20px_rgba(200,79,255,0.4)] scale-110 ring-2 ring-[#C84FFF]/50 ring-offset-2 ring-offset-[#12123a]'
+                      : 'bg-[#1e1e55] text-[#8888aa] border border-[rgba(255,255,255,0.1)] hover:border-[rgba(200,79,255,0.3)] hover:text-[#f0f0f5]'
+                  }`}
+                >
+                  {qty}
+                </button>
+              ))}
+            </div>
+
+            {/* Divider */}
+            <div className="h-px bg-gradient-to-r from-transparent via-[rgba(255,255,255,0.08)] to-transparent mb-4" />
+
+            {/* Price breakdown */}
+            <div className="text-center mb-2">
+              <p className="text-[#f0f0f5] text-lg font-semibold">
+                {quantity} &times; {box.price.toFixed(2)} = <span className="text-[#C84FFF]">{totalCost.toFixed(2)}</span> <span className="text-sm text-[#8888aa]">coins</span>
+              </p>
+            </div>
+            {userCoins !== null && (
+              <p className="text-center text-sm mb-5">
+                <span className="text-[#8888aa]">{t('yourBalance')}: </span>
+                <span className={userCoins >= totalCost ? 'text-emerald-400 font-semibold' : 'text-red-400 font-semibold'}>
+                  {userCoins.toFixed(2)} coins
+                </span>
+                {userCoins >= totalCost && <span className="ml-1.5 text-emerald-400">&#10003;</span>}
+              </p>
+            )}
+
+            {/* Open Button */}
+            <button
+              onClick={() => setShowConfirm(true)}
+              disabled={opening || isAutoOpening || (userCoins !== null && userCoins < totalCost)}
+              className="w-full py-4 bg-gradient-to-r from-[#C84FFF] to-[#9333EA] hover:from-[#E879F9] hover:to-[#C84FFF] text-white font-bold text-base rounded-xl transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2.5 shimmer shadow-[0_0_30px_rgba(200,79,255,0.35)]"
+            >
+              {opening ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                  {t('opening')}
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-5 h-5" />
+                  {quantity > 1 ? t('openPacksPlural', { quantity }) : t('openPacks', { quantity })}
+                </>
+              )}
+            </button>
+
+            {/* "or" divider */}
+            <div className="flex items-center gap-3 my-4">
+              <div className="flex-1 h-px bg-[rgba(255,255,255,0.06)]" />
+              <span className="text-xs text-gray-600 uppercase tracking-wider">or</span>
+              <div className="flex-1 h-px bg-[rgba(255,255,255,0.06)]" />
+            </div>
+
+            {/* Auto Open Section */}
+            <div>
+              <div className="flex items-center justify-center gap-2 mb-3">
+                <Zap className="w-4 h-4 text-amber-400" />
+                <span className="text-sm font-semibold text-[#8888aa]">{t('autoOpen')}</span>
+                <InfoTooltip infoKey="pack.open.autoOpen" />
               </div>
 
-              {/* Cost Display */}
-              <div className="p-4 rounded-xl bg-gradient-to-r from-[rgba(200,79,255,0.08)] to-[rgba(200,79,255,0.03)] border border-[rgba(200,79,255,0.15)]">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-[#8888aa]">{t('totalCost')}</span>
-                  <div className="flex items-center gap-2">
-                    <Coins className="w-5 h-5 text-amber-400" />
-                    <span className="text-2xl font-bold text-[#f0f0f5]">{totalCost.toFixed(2)}</span>
-                  </div>
-                </div>
-                {userCoins !== null && (
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-[#8888aa]">{t('yourBalance')}</span>
-                    <span className={userCoins >= totalCost ? 'text-[#E879F9] font-semibold' : 'text-red-400 font-semibold'}>
-                      {userCoins.toFixed(2)} coins
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              {/* Open Button */}
-              <button
-                onClick={() => setShowConfirm(true)}
-                disabled={opening || isAutoOpening || (userCoins !== null && userCoins < totalCost)}
-                className="w-full py-4 bg-[#C84FFF] hover:bg-[#E879F9] text-white font-semibold rounded-xl transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2 shimmer shadow-[0_0_24px_rgba(200,79,255,0.3)]"
-              >
-                {opening ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
-                    {t('opening')}
-                  </>
-                ) : (
-                  <>
-                    <Package className="w-5 h-5" />
-                    {quantity > 1 ? t('openPacksPlural', { quantity }) : t('openPacks', { quantity })}
-                  </>
-                )}
-              </button>
-
-              {/* Auto Open Section */}
-              <div className="border-t border-[rgba(255,255,255,0.06)] pt-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <Zap className="w-4 h-4 text-amber-400" />
-                  <span className="text-sm font-semibold text-[#8888aa]">{t('autoOpen')}</span>
-                  <InfoTooltip infoKey="pack.open.autoOpen" />
-                  <span className="text-xs text-gray-500 ml-1">— {t('autoOpenDesc')}</span>
-                </div>
-
-                {isAutoOpening ? (
-                    /* Running state */
-                    <div className="space-y-3">
-                      <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 grid grid-cols-3 gap-4 text-center">
-                        <div>
-                          <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">{t('boxesOpened')}</p>
-                          <p className="text-lg font-bold text-[#f0f0f5]">{autoBoxesOpened}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">{t('spent')}</p>
-                          <p className="text-lg font-bold text-amber-400">{autoCoinsSpent.toFixed(2)}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">{t('remaining')}</p>
-                          <p className="text-lg font-bold text-[#E879F9]">{(userCoins ?? 0).toFixed(2)}</p>
-                        </div>
-                      </div>
-                      <button
-                          onClick={handleAutoStop}
-                          className="w-full py-3 rounded-xl border-2 border-red-500/70 bg-red-500/10 hover:bg-red-500/20 text-red-400 font-semibold transition-all flex items-center justify-center gap-2"
-                      >
-                        <Square className="w-4 h-4 fill-current" />
-                        {t('stop')}
-                      </button>
+              {isAutoOpening ? (
+                <div className="space-y-3">
+                  <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 grid grid-cols-3 gap-3 text-center">
+                    <div>
+                      <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">{t('boxesOpened')}</p>
+                      <p className="text-base font-bold text-[#f0f0f5]">{autoBoxesOpened}</p>
                     </div>
-                ) : (
-                    /* Setup state */
-                    <div className="flex gap-2">
-                      <div className="relative flex-1">
-                        <Coins className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                        <input
-                            type="number"
-                            min="0"
-                            step="any"
-                            value={autoMaxCoins}
-                            onChange={(e) => setAutoMaxCoins(e.target.value)}
-                            placeholder={t('maxCoinsPlaceholder')}
-                            className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-[#f0f0f5] placeholder-gray-600 text-sm focus:border-amber-500/60 focus:outline-none"
-                        />
-                      </div>
-                      <button
-                          onClick={() => setShowAutoConfirm(true)}
-                          disabled={opening || (userCoins !== null && userCoins < box.price)}
-                          className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-semibold text-sm transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 flex items-center gap-2 flex-shrink-0"
-                      >
-                        <Zap className="w-4 h-4" />
-                        {t('start')}
-                      </button>
+                    <div>
+                      <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">{t('spent')}</p>
+                      <p className="text-base font-bold text-amber-400">{autoCoinsSpent.toFixed(2)}</p>
                     </div>
-                )}
-              </div>
+                    <div>
+                      <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">{t('remaining')}</p>
+                      <p className="text-base font-bold text-[#E879F9]">{(userCoins ?? 0).toFixed(2)}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleAutoStop}
+                    className="w-full py-2.5 rounded-xl border-2 border-red-500/70 bg-red-500/10 hover:bg-red-500/20 text-red-400 font-semibold transition-all flex items-center justify-center gap-2"
+                  >
+                    <Square className="w-4 h-4 fill-current" />
+                    {t('stop')}
+                  </button>
+                </div>
+              ) : (
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <Coins className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                    <input
+                      type="number"
+                      min="0"
+                      step="any"
+                      value={autoMaxCoins}
+                      onChange={(e) => setAutoMaxCoins(e.target.value)}
+                      placeholder={t('maxCoinsPlaceholder')}
+                      className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-[#1e1e55] border border-[rgba(255,255,255,0.06)] text-[#f0f0f5] placeholder-gray-600 text-sm focus:border-amber-500/60 focus:outline-none"
+                    />
+                  </div>
+                  <button
+                    onClick={() => setShowAutoConfirm(true)}
+                    disabled={opening || (userCoins !== null && userCoins < box.price)}
+                    className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-semibold text-sm transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 flex items-center gap-2 flex-shrink-0"
+                  >
+                    <Zap className="w-4 h-4" />
+                    {t('start')}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* What's in the box */}
-          <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6">
+          {/* ---- Card Pool Section ---- */}
+          <div className="bg-[#1e1e55]/60 backdrop-blur-sm border border-[rgba(255,255,255,0.1)] shadow-lg rounded-2xl p-6">
             <h2 className="text-xl font-bold text-[#f0f0f5] mb-2">{t('whatsInPack')} <InfoTooltip infoKey="pack.open.dropRates" /></h2>
             {box.cards.length > 0 && (
               <p className="text-sm text-[#8888aa] mb-4">{box.cards.length === 1 ? t('cardsAvailable', { count: box.cards.length }) : t('cardsAvailablePlural', { count: box.cards.length })}</p>
@@ -824,7 +849,7 @@ export default function OpenBoxPage() {
 
           {/* Your Pulls */}
           {pulls.length > 0 && (
-            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 mt-6">
+            <div className="bg-[#1e1e55]/60 backdrop-blur-sm border border-[rgba(255,255,255,0.1)] shadow-lg rounded-2xl p-6 mt-6">
               <h2 className="text-xl font-bold text-[#f0f0f5] mb-4">{t('yourPulls')}</h2>
               <div className={`grid gap-5 ${
                 pulls.length === 1 ? 'grid-cols-1 max-w-xs mx-auto' :
