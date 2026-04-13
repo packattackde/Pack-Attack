@@ -468,7 +468,7 @@ export function UsersClient({ initialUsers, totalUsers }: Props) {
                   className="w-full px-4 py-2 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-lg text-white"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-[#f0f0f5] mb-1">Role</label>
                   <select
@@ -561,7 +561,7 @@ export function UsersClient({ initialUsers, totalUsers }: Props) {
                   placeholder="••••••••"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-[#f0f0f5] mb-1">Role</label>
                   <select

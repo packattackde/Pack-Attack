@@ -204,7 +204,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
           <Package className="w-4 h-4 text-[#C84FFF]" />
           <span className="text-[#f0f0f5]">{t('badge')}</span>
         </div>
-        <h1 className="text-4xl md:text-5xl font-bold mb-3">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3">
           <span className="text-white">{t('title').split(' ').slice(0, -1).join(' ')} </span>
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C84FFF] to-[#C84FFF]">{t('title').split(' ').slice(-1)[0]}</span>
         </h1>

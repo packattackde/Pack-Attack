@@ -1043,8 +1043,8 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
             <p className="text-[#8888aa] text-center py-8">No cards in this box yet.</p>
           ) : bulkEditMode ? (
             /* BULK EDIT MODE - Show all cards with editable inputs */
-            <div className="space-y-2">
-              <div className="grid grid-cols-12 gap-2 px-2 py-1 bg-[#12123a] rounded text-xs text-[#8888aa] font-semibold">
+            <div className="space-y-2 overflow-x-auto">
+              <div className="grid grid-cols-12 gap-2 px-2 py-1 bg-[#12123a] rounded text-xs text-[#8888aa] font-semibold min-w-[600px]">
                 <div className="col-span-1">Image</div>
                 <div className="col-span-4">Card Name</div>
                 <div className="col-span-3">Pull Rate %</div>
@@ -1052,7 +1052,7 @@ export function CardManager({ boxId, existingCards, onCardsChange }: CardManager
                 <div className="col-span-1"></div>
               </div>
               {existingCards.map((card) => (
-                <div key={card.id} className="grid grid-cols-12 gap-2 items-center px-2 py-2 bg-[#12123a] rounded hover:bg-[#12123a]">
+                <div key={card.id} className="grid grid-cols-12 gap-2 items-center px-2 py-2 bg-[#12123a] rounded hover:bg-[#12123a] min-w-[600px]">
                   <div className="col-span-1">
                     <div className="relative w-10 h-14 rounded overflow-hidden">
                       {card.imageUrlGatherer ? (

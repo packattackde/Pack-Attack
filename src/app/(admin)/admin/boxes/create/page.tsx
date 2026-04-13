@@ -447,7 +447,7 @@ export default function CreateBoxPage() {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Basic Box Info */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-2 text-white">Box Name</label>
                   <input

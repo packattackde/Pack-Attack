@@ -867,7 +867,7 @@ export default function AdminFeedbackPage() {
 
         {/* Bulk Action Bar */}
         {selectedIds.size > 0 && (
-          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-5 py-3 rounded-2xl bg-gray-900/95 border border-white/[0.12] shadow-2xl shadow-black/50 backdrop-blur-sm">
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-5 py-3 rounded-2xl bg-gray-900/95 border border-white/[0.12] shadow-2xl shadow-black/50 backdrop-blur-sm w-[calc(100vw-1.5rem)] max-w-2xl flex-wrap">
             <span className="text-sm font-medium text-white">{selectedIds.size} selected</span>
             <div className="w-px h-6 bg-white/10" />
 

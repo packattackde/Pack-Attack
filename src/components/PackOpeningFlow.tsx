@@ -396,8 +396,8 @@ export function PackOpeningFlow({
       <AnimatePresence>
         {(phase === 'booster' || phase === 'emerging' || phase === 'revealing' || phase === 'bestPull') && (
           <motion.div
-            className="absolute"
-            style={{ width: 210, height: 370 }}
+            className="absolute w-[min(210px,80vw)]"
+            style={{ aspectRatio: '210/370' }}
             animate={
               phase === 'booster' && (boosterPhase === 'torn' || boosterPhase === 'glow')
                 ? { scale: 0.85, y: 30 }
@@ -803,7 +803,7 @@ export function PackOpeningFlow({
             )}
 
             {/* Flipping card */}
-            <div style={{ perspective: 1000, width: 240, height: 336 }}>
+            <div className="w-[min(240px,85vw)]" style={{ perspective: 1000, aspectRatio: '240/336' }}>
               <motion.div
                 className="relative w-full h-full"
                 style={{ transformStyle: 'preserve-3d' }}

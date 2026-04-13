@@ -281,7 +281,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                       })()
                     : battle.box?.name || t('detail.battle')}
                 </h1>
-                <div className="flex items-center gap-2 text-xs text-[#666688]">
+                <div className="flex items-center flex-wrap gap-x-2 gap-y-1 text-xs text-[#666688]">
                   <span>{battle.rounds} {t('rounds')}</span>
                   <span>·</span>
                   <span>{t(`modeLabelsShort.${battle.battleMode}` as any)}</span>
@@ -578,7 +578,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                       <span className="text-xs text-[#666688]">{round}/{battle.rounds}</span>
                     </div>
                     <div className="p-5">
-                      <div className="grid gap-4" style={{ gridTemplateColumns: `repeat(${Math.min(roundPulls.length, 4)}, 1fr)` }}>
+                      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
                         {roundPulls.map((pull, pullIdx) => {
                           const pName = battle.participants.find(p => p.id === pull.participantId)?.user?.name || '?';
                           const isRoundBest = pull.coinValue === roundHighest && roundPulls.filter(p => p.coinValue === roundHighest).length === 1;
@@ -640,7 +640,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                   transition={{ duration: 0.6, ease: 'easeOut' }}
                   className="bg-gradient-to-b from-blue-500/10 to-blue-500/5 border border-blue-500/30 rounded-3xl p-10 text-center"
                 >
-                  <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.3, type: 'spring', stiffness: 200 }} className="text-7xl mb-5">
+                  <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.3, type: 'spring', stiffness: 200 }} className="text-5xl sm:text-7xl mb-5">
                     🤝
                   </motion.div>
                   <h2 className="text-3xl font-bold text-white mb-3">{t('lobby.drawResult')}</h2>
@@ -665,7 +665,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                   className="relative overflow-hidden"
                 >
                   <div className="absolute inset-0 bg-gradient-to-b from-[#C84FFF]/8 via-transparent to-transparent rounded-3xl" />
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#C84FFF]/5 rounded-full blur-[100px]" />
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[min(600px,100vw)] h-[300px] bg-[#C84FFF]/5 rounded-full blur-[100px]" />
 
                   <div className={`relative border rounded-3xl p-10 ${
                     battle.winnerId === currentUserId
@@ -711,7 +711,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.7 }}
-                      className="flex items-stretch justify-center gap-4 mb-8 max-w-2xl mx-auto"
+                      className="flex flex-col sm:flex-row items-stretch justify-center gap-4 mb-8 max-w-2xl mx-auto w-full px-2"
                     >
                       {sortedByScore.map((p, i) => {
                         const isWinner = p.userId === battle.winnerId;

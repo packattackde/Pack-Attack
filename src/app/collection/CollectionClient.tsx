@@ -297,7 +297,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
             {/* Search & Filters */}
             <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-5 mb-6">
                 <div className="flex flex-wrap gap-4">
-                    <div className="flex-1 min-w-[250px]">
+                    <div className="flex-1 min-w-0 w-full sm:min-w-[250px]">
                         <div className="relative group">
                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8888aa] group-focus-within:text-[#C84FFF] transition-colors" />
                             <input

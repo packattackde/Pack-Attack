@@ -111,7 +111,7 @@ export function LeaderboardClient() {
             <Trophy className="w-4 h-4 text-amber-400" />
             <span className="text-[#f0f0f5]">{t('badge')}</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-3">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3">
             <span className="text-white">{t('title')} </span>
           </h1>
           <p className="text-[#8888aa] text-lg mb-6">

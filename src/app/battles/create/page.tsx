@@ -213,7 +213,7 @@ export default function CreateBattlePage() {
             {/* Box Catalog */}
             <section>
               <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-3">{t('create.addBox')}</h2>
-              <div className="flex gap-3 mb-4">
+              <div className="flex flex-col sm:flex-row gap-3 mb-4">
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#666688]" />
                   <input

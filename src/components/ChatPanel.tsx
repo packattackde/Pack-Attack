@@ -709,7 +709,7 @@ export function ChatPanel() {
                     onKeyDown={handleKeyDown}
                     placeholder={t('placeholder')}
                     maxLength={500}
-                    className="flex-1 h-9 px-3 rounded-lg bg-white/[0.06] border border-white/[0.08] text-sm text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/30 transition-colors"
+                    className="flex-1 min-h-10 px-3 rounded-lg bg-white/[0.06] border border-white/[0.08] text-sm text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/30 transition-colors"
                   />
                   <button
                     onClick={sendMessage}

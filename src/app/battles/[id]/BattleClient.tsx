@@ -159,12 +159,12 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
         {/* Winner Banner */}
         {battle.status === 'FINISHED_DRAW' ? (
           <div className="relative overflow-hidden bg-gradient-to-b from-blue-500/10 to-blue-500/5 border border-blue-500/20 rounded-2xl p-8 text-center mb-6">
-            <div className="text-5xl mb-4">🤝</div>
+            <div className="text-4xl sm:text-5xl mb-4">🤝</div>
             <h1 className="text-3xl font-bold text-white mb-2">{t('detail.drawTitle')}</h1>
             <p className="text-[#8888aa] text-sm max-w-md mx-auto mb-6">
               {battle.winCondition === 'SHARE_MODE' ? t('detail.drawShareMode') : t('detail.drawEqual')}
             </p>
-            <div className="flex items-center justify-center gap-6">
+            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 px-2">
               {sortedParticipants.map((p, i) => (
                 <div key={p.id} className="text-center">
                   <div className="w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold text-white mx-auto mb-2" style={{ background: `linear-gradient(135deg, ${participantColorMap[p.id]}, ${participantColorMap[p.id]}88)` }}>
@@ -349,7 +349,7 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
                       <span className="text-[10px] text-[#444466]">{round}/{battle.rounds}</span>
                     </div>
                     <div className="p-4">
-                      <div className="grid gap-3" style={{ gridTemplateColumns: `repeat(${Math.min(roundPulls.length, 4)}, 1fr)` }}>
+                      <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
                         {roundPulls.map((pull) => {
                           const pName = battle.participants.find(p => p.id === pull.participantId)?.user?.name || '?';
                           const isRoundBest = pull.coinValue === roundHighest && roundPulls.filter(p => p.coinValue === roundHighest).length === 1;
@@ -430,7 +430,7 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
         )}
 
         {/* Actions */}
-        <div className="flex gap-3 justify-center">
+        <div className="flex flex-col sm:flex-row gap-3 justify-center px-2">
           <Link href="/battles" className="px-5 py-2.5 bg-[#12123a] text-white font-semibold rounded-xl hover:bg-[#1a1a4a] transition-all border border-[rgba(255,255,255,0.08)] text-sm">
             {t('detail.backToLobby')}
           </Link>

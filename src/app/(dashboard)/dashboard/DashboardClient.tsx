@@ -982,7 +982,7 @@ export const DashboardClient = memo(function DashboardClient({
                             </h2>
                             {pulls.slice(0, 4).length > 0 ? (
                                 <>
-                                    <div className="grid grid-cols-4 gap-3">
+                                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                                         {pulls.slice(0, 4).map((pull, index) => {
                                             if (!pull.card) return null;
                                             const rarityConfig = getRarityConfig(pull.card.rarity);

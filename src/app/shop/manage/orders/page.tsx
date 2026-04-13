@@ -186,7 +186,7 @@ export default function ManageOrdersPage() {
                   onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
                   className="w-full px-6 py-4 flex items-center justify-between hover:bg-white/5 transition-colors"
                 >
-                  <div className="flex items-center gap-6">
+                  <div className="flex flex-wrap items-center gap-4 sm:gap-6">
                     <div>
                       <p className="font-semibold text-white">#{order.orderNumber.slice(0, 8)}</p>
                       <p className="text-sm text-[#8888aa] flex items-center gap-1">
@@ -198,7 +198,7 @@ export default function ManageOrdersPage() {
                       {t(`statusLabels.${order.status}`)}
                     </span>
                   </div>
-                  <div className="flex items-center gap-6">
+                  <div className="flex flex-wrap items-center gap-4 sm:gap-6">
                     <div className="text-right">
                       <p className="font-semibold text-[#C84FFF]">€{order.total.toFixed(2)}</p>
                       <p className="text-sm text-[#8888aa]">{order.items.length} {t('items')}</p>

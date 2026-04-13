@@ -222,7 +222,7 @@ function PurchaseCoinsContent() {
           <Sparkles className="w-5 h-5 text-amber-400" />
           <span className="text-amber-400 font-semibold">{t('badge')}</span>
         </div>
-        <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
+        <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold mb-6 tracking-tight">
           <span className="text-white">{t('title')} </span>
         </h1>
         <p className="text-[#8888aa] text-xl leading-relaxed" style={{ maxWidth: '42rem', margin: '0 auto' }}>

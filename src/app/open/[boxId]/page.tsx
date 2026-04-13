@@ -900,7 +900,7 @@ export default function OpenBoxPage() {
                 pulls.length === 2 ? 'grid-cols-2 max-w-md mx-auto' :
                 pulls.length === 3 ? 'grid-cols-3 max-w-2xl mx-auto' :
                 pulls.length <= 6 ? 'grid-cols-2 sm:grid-cols-3' :
-                'grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6'
+                'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6'
               }`}>
                 {pulls.map((pull) => {
                   const isFeatured = pull.id === featuredPullId;
@@ -1000,7 +1000,7 @@ export default function OpenBoxPage() {
           <div className="relative max-w-lg w-full flex flex-col items-center animate-in fade-in zoom-in-95 duration-200">
             <button
               onClick={() => setZoomedCard(null)}
-              className="absolute -top-14 right-0 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all hover:scale-110"
+              className="absolute top-2 right-2 sm:-top-14 sm:right-0 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all hover:scale-110"
             >
               <X className="h-6 w-6" />
             </button>

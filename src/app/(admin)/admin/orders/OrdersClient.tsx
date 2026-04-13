@@ -264,7 +264,7 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
                   className="p-4 cursor-pointer hover:bg-white/5 transition-colors"
                   onClick={() => setExpandedOrder(isExpanded ? null : order.id)}
                 >
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-center gap-4">
                       <div className={`p-2 rounded-lg ${status.color}`}>
                         <StatusIcon className="w-5 h-5" />

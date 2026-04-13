@@ -224,7 +224,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                   className="p-5 cursor-pointer hover:bg-white/5 transition-colors"
                   onClick={() => setExpandedOrder(isExpanded ? null : order.id)}
                 >
-                  <div className="flex items-center justify-between gap-4">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                     <div className="flex items-center gap-4 min-w-0">
                       {/* Card Image */}
                       <div className="relative w-14 h-20 rounded-lg overflow-hidden flex-shrink-0 ring-1 ring-gray-700 bg-[#12123a]">
