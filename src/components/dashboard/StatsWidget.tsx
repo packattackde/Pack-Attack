@@ -2,6 +2,7 @@
 
 import { useCountUp } from '@/hooks/useCountUp'
 import { GiChart } from 'react-icons/gi'
+import { InfoTooltip } from '@/components/InfoTooltip'
 
 interface StatsWidgetProps {
   packsOpened: number
@@ -48,8 +49,9 @@ export default function StatsWidget({
     <div
       className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl h-full p-4 sm:p-6 ${className}`}
     >
-      <p className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-3">
-<GiChart className="w-3.5 h-3.5 text-[#C84FFF] inline" /> MY STATS
+      <p className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-3 flex items-center gap-1.5">
+        <GiChart className="w-3.5 h-3.5 text-[#C84FFF] shrink-0" /> MY STATS
+        <InfoTooltip infoKey="dashboard.stats" />
       </p>
 
       <div className="grid grid-cols-2 gap-2 sm:gap-3">

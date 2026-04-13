@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Coins, Zap, Check, Star, Search, Eye, EyeOff, Plus, X, Package } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { InfoTooltip } from '@/components/InfoTooltip';
 
 type Box = {
   id: string;
@@ -137,7 +138,7 @@ export default function CreateBattlePage() {
 
             {/* Players */}
             <section>
-              <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-3">Spieler</h2>
+              <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-3">Spieler <InfoTooltip infoKey="battle.create.players" /></h2>
               <div className="flex gap-3">
                 {PLAYER_OPTIONS.map(opt => (
                   <button
@@ -156,7 +157,7 @@ export default function CreateBattlePage() {
             <section>
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider">
-                  Deine Runden <span className="text-[#C84FFF]">({rounds}/10)</span>
+                  Deine Runden <span className="text-[#C84FFF]">({rounds}/10)</span> <InfoTooltip infoKey="battle.create.rounds" />
                 </h2>
                 {rounds > 0 && (
                   <button onClick={() => setPickedBoxes([])} className="text-xs text-red-400/60 hover:text-red-400 transition-colors">
@@ -281,7 +282,7 @@ export default function CreateBattlePage() {
             {/* Win Condition + Reward Mode */}
             <div className="grid gap-8 md:grid-cols-2">
               <section>
-                <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-3">Gewinnlogik</h2>
+                <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-3">Gewinnlogik <InfoTooltip infoKey="battle.create.winCondition" /></h2>
                 <div className="space-y-2">
                   {WIN_CONDITION_OPTIONS.map(opt => (
                     <button
@@ -307,7 +308,7 @@ export default function CreateBattlePage() {
               </section>
 
               <section>
-                <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-3">Belohnungsmodus</h2>
+                <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-3">Belohnungsmodus <InfoTooltip infoKey="battle.create.rewardMode" /></h2>
                 <div className="space-y-2">
                   {MODE_OPTIONS.map(mode => (
                     <button
@@ -335,7 +336,7 @@ export default function CreateBattlePage() {
 
             {/* Privacy */}
             <section>
-              <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-3">Sichtbarkeit</h2>
+              <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-3">Sichtbarkeit <InfoTooltip infoKey="battle.create.visibility" /></h2>
               <div className="flex gap-3">
                 <button
                   onClick={() => setPrivacy('PUBLIC')}

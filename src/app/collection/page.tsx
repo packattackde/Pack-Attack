@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import { InfoTooltip } from '@/components/InfoTooltip';
 import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { CollectionClient } from './CollectionClient';
@@ -93,10 +94,13 @@ export default async function CollectionPage() {
             <Layers className="w-4 h-4 text-[#C84FFF]" />
             <span className="text-gray-300">Your Cards</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-3">
-            <span className="text-white">My </span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C84FFF] to-[#9333EA]">Collection</span>
-          </h1>
+          <div className="flex flex-wrap items-center gap-2 mb-3">
+            <h1 className="text-4xl md:text-5xl font-bold">
+              <span className="text-white">My </span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C84FFF] to-[#9333EA]">Collection</span>
+            </h1>
+            <InfoTooltip infoKey="collection.overview" />
+          </div>
           <p className="text-[#8888aa] text-lg">Manage your card collection</p>
         </div>
 

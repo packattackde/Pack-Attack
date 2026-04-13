@@ -3,6 +3,7 @@
 import { useState, useMemo, useCallback, memo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { InfoTooltip } from '@/components/InfoTooltip';
 import { useToast } from '@/components/ui/use-toast';
 import { 
   Store, 
@@ -165,9 +166,12 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
             <Store className="w-4 h-4 text-[#C84FFF]" />
             <span className="text-[#f0f0f5]">TCG Marketplace</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Shop <span className="text-[#C84FFF]">Cards & Products</span>
-          </h1>
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold text-white">
+              Shop <span className="text-[#C84FFF]">Cards & Products</span>
+            </h1>
+            <InfoTooltip infoKey="shop.overview" />
+          </div>
           <p className="text-[#8888aa] max-w-2xl mx-auto">
             Browse products from verified sellers. Find singles, sealed products, and accessories.
           </p>

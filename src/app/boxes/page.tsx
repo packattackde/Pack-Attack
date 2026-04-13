@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma';
+import { InfoTooltip } from '@/components/InfoTooltip';
 import { Package } from 'lucide-react';
 import BoxesClient from './BoxesClient';
 import type { Metadata } from 'next';
@@ -87,10 +88,13 @@ export default async function BoxesPage() {
             </div>
             <span className="text-[#f0f0f5] font-medium">Card Packs</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-3 tracking-tight">
-            <span className="text-white">All </span>
-            <span className="text-[#C84FFF]">Boxes</span>
-          </h1>
+          <div className="flex flex-wrap items-center gap-2 mb-3">
+            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
+              <span className="text-white">All </span>
+              <span className="text-[#C84FFF]">Boxes</span>
+            </h1>
+            <InfoTooltip infoKey="boxes.overview" />
+          </div>
           <p className="text-[#8888aa] text-lg">Browse and open packs to build your collection</p>
         </div>
 

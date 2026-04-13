@@ -181,6 +181,14 @@ export default async function AdminDashboard() {
             <h3 className="text-xl font-bold text-white mb-2 group-hover:text-indigo-400 transition-colors">Chat Moderation</h3>
             <p className="text-[#8888aa] text-sm">View chat history, manage bans and timeouts.</p>
           </Link>
+
+          <Link href="/admin/info-texts" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-cyan-500/50 transition-all group">
+            <div className="inline-flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-gradient-to-br from-cyan-500/20 to-teal-500/20">
+              <ShieldCheck className="w-6 h-6 text-cyan-400" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">Info Texts</h3>
+            <p className="text-[#8888aa] text-sm">Edit help tooltips shown across the app.</p>
+          </Link>
         </div>
       </div>
     </div>

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { GiMedal, GiArcheryTarget } from 'react-icons/gi';
+import { InfoTooltip } from '@/components/InfoTooltip';
 
 interface Achievement {
   id: string;
@@ -88,6 +89,11 @@ export default function AchievementsWidget({ className = '' }: AchievementsWidge
         }
         .bar-pulse { animation: bar-pulse 1.5s ease-in-out infinite; }
       `}</style>
+
+      <p className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-3 flex items-center gap-1.5">
+        <GiMedal className="w-3.5 h-3.5 text-[#C84FFF] shrink-0" /> ACHIEVEMENTS
+        <InfoTooltip infoKey="dashboard.achievements" />
+      </p>
 
       {loading && (
         <div className="space-y-3">

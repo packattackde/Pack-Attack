@@ -55,6 +55,7 @@ model User {
   chatMessages        ChatMessage[]
   chatBansReceived    ChatBan[]           @relation("ChatBansReceived")
   chatBansIssued      ChatBan[]           @relation("ChatBansIssued")
+  editedInfoTexts     InfoText[]          @relation("InfoTextEditor")
   // Level system
   xp                        Int      @default(0)
   level                     Int      @default(1)
@@ -1036,6 +1037,18 @@ model ChatBan {
 
   @@index([userId, active])
   @@index([userId, expiresAt])
+}
+
+model InfoText {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  contentDe String   @db.Text
+  contentEn String   @db.Text
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+  editor    User?    @relation("InfoTextEditor", fields: [updatedBy], references: [id], onDelete: SetNull)
+
+  @@index([key])
 }
 
 model ChatLog {

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/use-toast';
 import { Coins, Package, Sparkles, ArrowLeft, Layers, Zap, Square, BadgeDollarSign } from 'lucide-react';
+import { InfoTooltip } from '@/components/InfoTooltip';
 import Image from 'next/image';
 import Link from 'next/link';
 import { emitCoinBalanceUpdate } from '@/lib/coin-events';
@@ -651,6 +652,7 @@ export default function OpenBoxPage() {
                 <div className="flex items-center gap-2 mb-3">
                   <Zap className="w-4 h-4 text-amber-400" />
                   <span className="text-sm font-semibold text-[#8888aa]">Auto Open</span>
+                  <InfoTooltip infoKey="pack.open.autoOpen" />
                   <span className="text-xs text-gray-500 ml-1">— opens boxes automatically until coins run out</span>
                 </div>
 
@@ -710,7 +712,7 @@ export default function OpenBoxPage() {
 
           {/* What's in the box */}
           <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6">
-            <h2 className="text-xl font-bold text-[#f0f0f5] mb-2">What's in the pack?</h2>
+            <h2 className="text-xl font-bold text-[#f0f0f5] mb-2">What&apos;s in the pack? <InfoTooltip infoKey="pack.open.dropRates" /></h2>
             {box.cards.length > 0 && (
               <p className="text-sm text-[#8888aa] mb-4">{box.cards.length} card{box.cards.length !== 1 ? 's' : ''} available</p>
             )}

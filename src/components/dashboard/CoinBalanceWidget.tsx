@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { GiTwoCoins } from 'react-icons/gi'
+import { InfoTooltip } from '@/components/InfoTooltip'
 import { formatCoins } from '@/lib/format'
 
 interface CoinBalanceWidgetProps {
@@ -25,8 +26,9 @@ export default function CoinBalanceWidget({
     <div
       className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl h-full p-4 sm:p-6 ${className}`}
     >
-      <p className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-3">
-<GiTwoCoins className="w-3.5 h-3.5 text-[#C84FFF] inline" /> MY BALANCE
+      <p className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-3 flex items-center gap-1.5">
+        <GiTwoCoins className="w-3.5 h-3.5 text-[#C84FFF] shrink-0" /> MY BALANCE
+        <InfoTooltip infoKey="dashboard.coinBalance" />
       </p>
 
       <p className="text-2xl sm:text-3xl font-extrabold text-[#fbbf24]">
