@@ -3,6 +3,8 @@ import { Outfit, Syne } from "next/font/google";
 import { Providers } from "./providers";
 import { Navigation } from "@/components/Navigation";
 import { ChatPanel } from "@/components/ChatPanel";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 import "./globals.css";
 
 // Next.js font optimization - self-hosted, no render-blocking external requests
@@ -178,13 +180,16 @@ export const metadata: Metadata = {
   category: "games",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
-    <html lang="en" suppressHydrationWarning className={`scroll-smooth ${outfit.variable} ${syne.variable}`}>
+    <html lang={locale} suppressHydrationWarning className={`scroll-smooth ${outfit.variable} ${syne.variable}`}>
       <head>
         {/* Preconnect to card image CDNs for faster loading */}
         <link rel="preconnect" href="https://cards.scryfall.io" crossOrigin="anonymous" />
@@ -238,21 +243,22 @@ export default function RootLayout({
         style={{ overscrollBehavior: 'none' }}
       >
         <Providers>
-          {/* Skip to main content link for accessibility */}
-          <a 
-            href="#main-content" 
-            className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#C84FFF] focus:text-white focus:rounded-lg"
-          >
-            Skip to main content
-          </a>
-          <Navigation />
-          <main
-            id="main-content"
-            className="safe-area-padding-bottom"
-          >
-            {children}
-          </main>
-          <ChatPanel />
+          <NextIntlClientProvider locale={locale} messages={messages}>
+            <a 
+              href="#main-content" 
+              className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#C84FFF] focus:text-white focus:rounded-lg"
+            >
+              Skip to main content
+            </a>
+            <Navigation />
+            <main
+              id="main-content"
+              className="safe-area-padding-bottom"
+            >
+              {children}
+            </main>
+            <ChatPanel />
+          </NextIntlClientProvider>
         </Providers>
       </body>
     </html>

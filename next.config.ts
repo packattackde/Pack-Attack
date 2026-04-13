@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
+import createNextIntlPlugin from 'next-intl/plugin';
 
 /**
  * Security Headers Configuration
@@ -231,5 +232,6 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
 };
 
-export default nextConfig;
+const withNextIntl = createNextIntlPlugin();
+export default withNextIntl(nextConfig);
 

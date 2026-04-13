@@ -7,6 +7,8 @@ import { Package, Swords, Settings, LogIn, LogOut, User, ShoppingCart, Coins, Hi
 import { useCallback, useEffect, useState, useMemo, useRef } from 'react';
 import { subscribeToCoinBalanceUpdates } from '@/lib/coin-events';
 import { usePathname } from 'next/navigation';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { useTranslations } from 'next-intl';
 
 export function Navigation() {
   const { data: session, status } = useSession();
@@ -174,6 +176,8 @@ export function Navigation() {
     return () => clearInterval(interval);
   }, [session, fetchCoins]);
 
+  const t = useTranslations('nav');
+
   const navLinks: Array<{
     href: string;
     icon: React.ElementType;
@@ -184,14 +188,14 @@ export function Navigation() {
     hideForAdmin?: boolean;
     badge?: number;
   }> = [
-    { href: '/boxes', icon: Package, label: 'Boxes', requiresAuth: false },
-    { href: '/battles', icon: Swords, label: 'Battles', requiresAuth: false },
-    { href: '/leaderboard', icon: Trophy, label: 'Leaderboard', requiresAuth: false },
-    { href: '/collection', icon: Package, label: 'Collection', requiresAuth: true },
-    { href: '/sales-history', icon: History, label: 'Sales History', requiresAuth: true },
-    { href: '/feedback', icon: MessageSquare, label: 'Feedback', requiresAuth: false, hideForAdmin: true },
-    { href: '/shop-dashboard', icon: Store, label: 'Shop Dashboard', requiresAuth: true, shopOrAdmin: true },
-    { href: '/admin', icon: Settings, label: 'Admin', requiresAuth: true, adminOnly: true, badge: feedbackCount },
+    { href: '/boxes', icon: Package, label: t('boxes'), requiresAuth: false },
+    { href: '/battles', icon: Swords, label: t('battles'), requiresAuth: false },
+    { href: '/leaderboard', icon: Trophy, label: t('leaderboard'), requiresAuth: false },
+    { href: '/collection', icon: Package, label: t('collection'), requiresAuth: true },
+    { href: '/sales-history', icon: History, label: t('salesHistory'), requiresAuth: true },
+    { href: '/feedback', icon: MessageSquare, label: t('feedback'), requiresAuth: false, hideForAdmin: true },
+    { href: '/shop-dashboard', icon: Store, label: t('shopDashboard'), requiresAuth: true, shopOrAdmin: true },
+    { href: '/admin', icon: Settings, label: t('admin'), requiresAuth: true, adminOnly: true, badge: feedbackCount },
   ];
 
   // PERFORMANCE: Memoize filtered links
@@ -304,25 +308,28 @@ export function Navigation() {
                 <span className="text-sm text-[#f0f0f5] max-w-[100px] truncate">{session.user.name || session.user.email}</span>
               </Link>
 
+              <LanguageSwitcher />
+
               {/* Sign Out */}
               <button
                 onClick={() => signOut({ callbackUrl: '/' })}
                 className="flex items-center justify-center h-10 w-10 rounded-xl text-[#7777a0] hover:text-red-400 hover:bg-red-500/10 transition-all duration-150"
-                title="Sign out"
+                title={t('signOut')}
               >
                 <LogOut className="h-4 w-4" />
               </button>
             </>
           ) : (
             <div className="flex items-center gap-2">
+              <LanguageSwitcher />
               <Button asChild variant="ghost" size="sm" className="text-[#f0f0f5] hover:text-white">
                 <Link href="/login">
                   <LogIn className="mr-2 h-4 w-4" />
-                  Sign In
+                  {t('signIn')}
                 </Link>
               </Button>
               <Button asChild size="sm" className="bg-[#C84FFF] hover:bg-[#A855F7] text-white font-bold rounded-xl shadow-lg shadow-[rgba(200,79,255,0.25)]">
-                <Link href="/register">Get Started</Link>
+                <Link href="/register">{t('getStarted')}</Link>
               </Button>
             </div>
           )}
@@ -355,7 +362,7 @@ export function Navigation() {
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="flex items-center justify-center h-9 w-9 rounded-lg text-[#8888aa] hover:text-white hover:bg-white/[0.06] active:bg-white/10 transition-all touch-target"
-            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-label={mobileMenuOpen ? t('closeMenu') : t('openMenu')}
             aria-expanded={mobileMenuOpen}
             aria-controls="mobile-menu"
           >
@@ -453,6 +460,9 @@ export function Navigation() {
                     )}
                   </div>
                 </Link>
+                <div className="flex gap-2">
+                  <LanguageSwitcher />
+                </div>
                 <button
                   onClick={() => {
                     setMobileMenuOpen(false);
@@ -461,20 +471,23 @@ export function Navigation() {
                   className="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-medium text-red-400 border border-red-500/20 active:bg-red-500/10 transition-colors touch-target min-h-[48px]"
                 >
                   <LogOut className="h-4 w-4" />
-                  Sign Out
+                  {t('signOut')}
                 </button>
               </>
             ) : (
               <div className="space-y-2">
+                <div className="flex justify-center mb-2">
+                  <LanguageSwitcher />
+                </div>
                 <Button asChild className="w-full py-3 min-h-[48px] touch-target bg-[#C84FFF] hover:bg-[#A855F7] text-white shadow-lg shadow-[rgba(200,79,255,0.25)]">
                   <Link href="/register" onClick={() => setMobileMenuOpen(false)}>
-                    Get Started
+                    {t('getStarted')}
                   </Link>
                 </Button>
                 <Button asChild variant="outline" className="w-full py-3 min-h-[48px] touch-target">
                   <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
                     <LogIn className="mr-2 h-4 w-4" />
-                    Sign In
+                    {t('signIn')}
                   </Link>
                 </Button>
               </div>
