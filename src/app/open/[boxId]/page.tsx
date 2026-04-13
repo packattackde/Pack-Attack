@@ -611,247 +611,283 @@ export default function OpenBoxPage() {
       <div className="relative container pb-12 -mt-2">
         <div className="max-w-6xl mx-auto">
 
-          {/* Card Pool + Floating Control Panel — stacked via CSS Grid */}
-          <div className="grid" style={{ gridTemplateColumns: '1fr', gridTemplateRows: '1fr' }}>
+          {/* Card Pool heading */}
+          <h2 className="text-lg font-bold text-[#f0f0f5] mb-2">{t('whatsInPack')} <InfoTooltip infoKey="pack.open.dropRates" /></h2>
+          {box.cards.length > 0 && (
+            <p className="text-sm text-[#8888aa] mb-5">{box.cards.length === 1 ? t('cardsAvailable', { count: box.cards.length }) : t('cardsAvailablePlural', { count: box.cards.length })}</p>
+          )}
 
-            {/* Layer 1: Card Pool (fills the grid cell) */}
-            <div className="rounded-2xl p-4 sm:p-6" style={{ gridArea: '1 / 1' }}>
-              <h2 className="text-lg font-bold text-[#f0f0f5]/60 mb-2">{t('whatsInPack')} <InfoTooltip infoKey="pack.open.dropRates" /></h2>
-            {box.cards.length > 0 && (
-              <p className="text-sm text-[#8888aa]/60 mb-4">{box.cards.length === 1 ? t('cardsAvailable', { count: box.cards.length }) : t('cardsAvailablePlural', { count: box.cards.length })}</p>
-            )}
-            
-            {box.cards.length > 0 ? (
-              <div className={`grid gap-4 ${
-                box.cards.length === 1 ? 'grid-cols-2 max-w-xs mx-auto' :
-                box.cards.length === 2 ? 'grid-cols-2 max-w-lg mx-auto' :
-                box.cards.length === 3 ? 'grid-cols-3 max-w-2xl mx-auto' :
-                box.cards.length <= 6 ? 'grid-cols-3 sm:grid-cols-3' :
-                box.cards.length <= 12 ? 'grid-cols-3 sm:grid-cols-4 md:grid-cols-5' :
-                'grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7'
-              }`}>
-                {box.cards.map((card) => {
-                  const isOpened = openedCardIds.has(card.id);
-                  const isFeatured = isOpened && featuredCardId === card.id;
-                  const cardRarityGlow = getRarityGlow(card.rarity);
+          {/* 3-column layout: Cards LEFT | Panel CENTER | Cards RIGHT */}
+          {(() => {
+            const midpoint = Math.ceil(box.cards.length / 2);
+            const leftCards = box.cards.slice(0, midpoint);
+            const rightCards = box.cards.slice(midpoint);
 
-                  return (
-                    <div
-                      key={card.id}
-                      className={`relative group transition-all duration-300 rounded-2xl p-3 flex flex-col h-full ${
-                        isOpened
-                          ? `ring-2 ring-offset-2 ring-offset-[#06061a] z-10 ${isFeatured ? 'scale-[1.02]' : ''} ${cardRarityGlow.border.replace('border-', 'ring-')}`
-                          : ''
-                      }`}
-                      style={{
-                        background: 'linear-gradient(145deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.6) 100%)',
-                        border: isOpened ? undefined : '1px solid rgba(255, 255, 255, 0.06)',
-                      }}
-                    >
-                      {/* Glow effect behind card on hover */}
-                      <div
-                        className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-2xl -z-10"
-                        style={{
-                          background: `radial-gradient(circle at center, ${cardRarityGlow.glowColor}, transparent 70%)`,
-                          transform: 'scale(1.1)',
-                        }}
-                      />
-
-                      <div
-                        className={`relative aspect-[63/88] w-full rounded-xl overflow-hidden border transition-all duration-300 ${
-                          isOpened
-                            ? `${cardRarityGlow.border} ${isFeatured ? 'scale-105' : 'scale-[1.02]'}`
-                            : 'border-white/[0.08] group-hover:border-white/[0.15]'
-                        } group-hover:-translate-y-1 group-hover:scale-[1.03]`}
-                        style={{
-                          boxShadow: `0 0 0 0 ${cardRarityGlow.glowColor.replace('1)', '0)')}`,
-                          transition: 'all 0.3s ease, box-shadow 0.3s ease',
-                        }}
-                        onMouseEnter={(e) => {
-                          if (!isOpened) {
-                            e.currentTarget.style.boxShadow = `
-                              0 0 30px 8px ${cardRarityGlow.glowColor.replace('1)', '0.6)')},
-                              0 0 60px 15px ${cardRarityGlow.glowColor.replace('1)', '0.3)')},
-                              0 20px 40px rgba(0, 0, 0, 0.5)
-                            `;
-                            e.currentTarget.style.borderColor = cardRarityGlow.glowColor.replace('rgba(', '').replace(')', '').replace(/[\d.]+\)$/, '0.8)');
-                          }
-                        }}
-                        onMouseLeave={(e) => {
-                          if (!isOpened) {
-                            e.currentTarget.style.boxShadow = `0 0 0 0 ${cardRarityGlow.glowColor.replace('1)', '0)')}`;
-                            e.currentTarget.style.borderColor = '';
-                          }
-                        }}
-                        data-rarity={card.rarity?.toLowerCase() || 'common'}
-                      >
-                        {card.imageUrlGatherer ? (
-                          <Image src={card.imageUrlGatherer} alt={card.name} fill className="object-cover" unoptimized />
-                        ) : (
-                          <div className="w-full h-full bg-[#12123a]/60 flex items-center justify-center">
-                            <span className="text-gray-600 text-xs">{t('noImage')}</span>
-                          </div>
-                        )}
-                        {isFeatured && (
-                          <div className={`absolute -top-3 left-1/2 -translate-x-1/2 rounded-full ${cardRarityGlow.bg} ${cardRarityGlow.border} px-3 py-1 text-xs font-bold ${cardRarityGlow.text}`}>
-                            {t('bestPull')}
-                          </div>
-                        )}
-                        <div className="absolute top-2 left-2 bg-black/70 backdrop-blur-sm rounded-lg px-2 py-1 flex items-center gap-1">
-                          <Coins className="h-3 w-3 text-amber-400" />
-                          <span className="text-xs font-bold text-amber-400">{card.coinValue.toFixed(2)}</span>
-                        </div>
-                        <div className="absolute top-2 right-2 bg-black/70 backdrop-blur-sm rounded-lg px-2 py-1">
-                          <span className="text-xs font-bold text-white">{card.pullRate.toFixed(3)}%</span>
-                        </div>
-                        {/* Rarity indicator */}
-                        <div className={`absolute bottom-2 left-2 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase backdrop-blur-sm ${cardRarityGlow.bg} ${cardRarityGlow.text}`}>
-                          {card.rarity || 'Common'}
-                        </div>
-                      </div>
-                      {/* Card name - fixed height area so all boxes are uniform */}
-                      <div className="mt-2.5 px-1 text-center h-10 flex items-center justify-center">
-                        <p className={`text-sm font-semibold truncate w-full ${cardRarityGlow.text}`}>{card.name}</p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            ) : (
-              <div className="text-center py-8 text-[#8888aa]">
-                <p>{t('noCardsAvailable')}</p>
-              </div>
-            )}
-            </div>
-
-            {/* Layer 2: Floating Glassmorphism Control Panel (same grid cell, overlays cards) */}
-            <div className="flex justify-center pointer-events-none z-20 py-8" style={{ gridArea: '1 / 1' }}>
-              <div className="pointer-events-auto sticky top-20 self-start w-full max-w-md h-fit rounded-2xl p-6 bg-[#0a0a2e]/[0.94] backdrop-blur-2xl border border-[rgba(200,79,255,0.2)] shadow-[0_8px_60px_rgba(0,0,0,0.8),0_0_50px_rgba(200,79,255,0.12)]">
-
-                {/* Quantity Selection */}
-                <p className="text-sm font-semibold text-[#8888aa] text-center mb-4">{t('quantity')}</p>
-                <div className="flex justify-center gap-3 mb-5">
-                  {[1, 2, 3, 4].map((qty) => (
-                    <button
-                      key={qty}
-                      type="button"
-                      onClick={() => setQuantity(qty)}
-                      className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full text-lg font-bold transition-all duration-200 ${
-                        quantity === qty
-                          ? 'bg-[#C84FFF] text-white shadow-[0_0_20px_rgba(200,79,255,0.4)] scale-110 ring-2 ring-[#C84FFF]/50 ring-offset-2 ring-offset-[#12123a]'
-                          : 'bg-[#1e1e55] text-[#8888aa] border border-[rgba(255,255,255,0.1)] hover:border-[rgba(200,79,255,0.3)] hover:text-[#f0f0f5]'
-                      }`}
-                    >
-                      {qty}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Divider */}
-                <div className="h-px bg-gradient-to-r from-transparent via-[rgba(255,255,255,0.08)] to-transparent mb-4" />
-
-                {/* Price breakdown */}
-                <div className="text-center mb-2">
-                  <p className="text-[#f0f0f5] text-lg font-semibold">
-                    {quantity} &times; {box.price.toFixed(2)} = <span className="text-[#C84FFF]">{totalCost.toFixed(2)}</span> <span className="text-sm text-[#8888aa]">coins</span>
-                  </p>
-                </div>
-                {userCoins !== null && (
-                  <p className="text-center text-sm mb-5">
-                    <span className="text-[#8888aa]">{t('yourBalance')}: </span>
-                    <span className={userCoins >= totalCost ? 'text-emerald-400 font-semibold' : 'text-red-400 font-semibold'}>
-                      {userCoins.toFixed(2)} coins
-                    </span>
-                    {userCoins >= totalCost && <span className="ml-1.5 text-emerald-400">&#10003;</span>}
-                  </p>
-                )}
-
-                {/* Open Button */}
-                <button
-                  onClick={() => setShowConfirm(true)}
-                  disabled={opening || isAutoOpening || (userCoins !== null && userCoins < totalCost)}
-                  className="w-full py-4 bg-gradient-to-r from-[#C84FFF] to-[#9333EA] hover:from-[#E879F9] hover:to-[#C84FFF] text-white font-bold text-base rounded-xl transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2.5 shimmer shadow-[0_0_30px_rgba(200,79,255,0.35)]"
+            const renderCard = (card: BoxCard) => {
+              const isOpened = openedCardIds.has(card.id);
+              const isFeatured = isOpened && featuredCardId === card.id;
+              const cardRarityGlow = getRarityGlow(card.rarity);
+              return (
+                <div
+                  key={card.id}
+                  className={`relative group transition-all duration-300 rounded-2xl p-2 flex flex-col h-full ${
+                    isOpened
+                      ? `ring-2 ring-offset-2 ring-offset-[#06061a] z-10 ${isFeatured ? 'scale-[1.02]' : ''} ${cardRarityGlow.border.replace('border-', 'ring-')}`
+                      : ''
+                  }`}
+                  style={{
+                    background: 'linear-gradient(145deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.6) 100%)',
+                    border: isOpened ? undefined : '1px solid rgba(255, 255, 255, 0.06)',
+                  }}
                 >
-                  {opening ? (
-                    <>
-                      <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
-                      {t('opening')}
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="w-5 h-5" />
-                      {quantity > 1 ? t('openPacksPlural', { quantity }) : t('openPacks', { quantity })}
-                    </>
-                  )}
-                </button>
-
-                {/* "or" divider */}
-                <div className="flex items-center gap-3 my-4">
-                  <div className="flex-1 h-px bg-[rgba(255,255,255,0.06)]" />
-                  <span className="text-xs text-gray-600 uppercase tracking-wider">or</span>
-                  <div className="flex-1 h-px bg-[rgba(255,255,255,0.06)]" />
+                  <div
+                    className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-2xl -z-10"
+                    style={{
+                      background: `radial-gradient(circle at center, ${cardRarityGlow.glowColor}, transparent 70%)`,
+                      transform: 'scale(1.1)',
+                    }}
+                  />
+                  <div
+                    className={`relative aspect-[63/88] w-full rounded-xl overflow-hidden border transition-all duration-300 ${
+                      isOpened
+                        ? `${cardRarityGlow.border} ${isFeatured ? 'scale-105' : 'scale-[1.02]'}`
+                        : 'border-white/[0.08] group-hover:border-white/[0.15]'
+                    } group-hover:-translate-y-1 group-hover:scale-[1.03]`}
+                    style={{
+                      boxShadow: `0 0 0 0 ${cardRarityGlow.glowColor.replace('1)', '0)')}`,
+                      transition: 'all 0.3s ease, box-shadow 0.3s ease',
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isOpened) {
+                        e.currentTarget.style.boxShadow = `0 0 30px 8px ${cardRarityGlow.glowColor.replace('1)', '0.6)')}, 0 0 60px 15px ${cardRarityGlow.glowColor.replace('1)', '0.3)')}, 0 20px 40px rgba(0, 0, 0, 0.5)`;
+                        e.currentTarget.style.borderColor = cardRarityGlow.glowColor.replace('rgba(', '').replace(')', '').replace(/[\d.]+\)$/, '0.8)');
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isOpened) {
+                        e.currentTarget.style.boxShadow = `0 0 0 0 ${cardRarityGlow.glowColor.replace('1)', '0)')}`;
+                        e.currentTarget.style.borderColor = '';
+                      }
+                    }}
+                    data-rarity={card.rarity?.toLowerCase() || 'common'}
+                  >
+                    {card.imageUrlGatherer ? (
+                      <Image src={card.imageUrlGatherer} alt={card.name} fill className="object-cover" unoptimized />
+                    ) : (
+                      <div className="w-full h-full bg-[#12123a]/60 flex items-center justify-center">
+                        <span className="text-gray-600 text-xs">{t('noImage')}</span>
+                      </div>
+                    )}
+                    {isFeatured && (
+                      <div className={`absolute -top-3 left-1/2 -translate-x-1/2 rounded-full ${cardRarityGlow.bg} ${cardRarityGlow.border} px-3 py-1 text-xs font-bold ${cardRarityGlow.text}`}>
+                        {t('bestPull')}
+                      </div>
+                    )}
+                    <div className="absolute top-1.5 left-1.5 bg-black/70 backdrop-blur-sm rounded-lg px-1.5 py-0.5 flex items-center gap-1">
+                      <Coins className="h-3 w-3 text-amber-400" />
+                      <span className="text-[10px] font-bold text-amber-400">{card.coinValue.toFixed(2)}</span>
+                    </div>
+                    <div className="absolute top-1.5 right-1.5 bg-black/70 backdrop-blur-sm rounded-lg px-1.5 py-0.5">
+                      <span className="text-[10px] font-bold text-white">{card.pullRate.toFixed(3)}%</span>
+                    </div>
+                    <div className={`absolute bottom-1.5 left-1.5 rounded-full px-1.5 py-0.5 text-[8px] font-bold uppercase backdrop-blur-sm ${cardRarityGlow.bg} ${cardRarityGlow.text}`}>
+                      {card.rarity || 'Common'}
+                    </div>
+                  </div>
+                  <div className="mt-1.5 px-1 text-center h-8 flex items-center justify-center">
+                    <p className={`text-xs font-semibold truncate w-full ${cardRarityGlow.text}`}>{card.name}</p>
+                  </div>
                 </div>
+              );
+            };
 
-                {/* Auto Open Section */}
-                <div>
-                  <div className="flex items-center justify-center gap-2 mb-3">
-                    <Zap className="w-4 h-4 text-amber-400" />
-                    <span className="text-sm font-semibold text-[#8888aa]">{t('autoOpen')}</span>
-                    <InfoTooltip infoKey="pack.open.autoOpen" />
+            return (
+              <>
+                {/* Desktop: 3-column side-by-side layout */}
+                <div className="hidden lg:flex items-start gap-5">
+                  {/* Left card grid */}
+                  <div className="flex-1 grid grid-cols-2 xl:grid-cols-3 gap-3">
+                    {leftCards.map(renderCard)}
                   </div>
 
-                  {isAutoOpening ? (
-                    <div className="space-y-3">
-                      <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 grid grid-cols-3 gap-3 text-center">
-                        <div>
-                          <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">{t('boxesOpened')}</p>
-                          <p className="text-base font-bold text-[#f0f0f5]">{autoBoxesOpened}</p>
-                        </div>
-                        <div>
-                          <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">{t('spent')}</p>
-                          <p className="text-base font-bold text-amber-400">{autoCoinsSpent.toFixed(2)}</p>
-                        </div>
-                        <div>
-                          <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">{t('remaining')}</p>
-                          <p className="text-base font-bold text-[#E879F9]">{(userCoins ?? 0).toFixed(2)}</p>
-                        </div>
+                  {/* Center: Static control panel */}
+                  <div className="w-[400px] flex-shrink-0 rounded-2xl p-6 bg-[#0a0a2e]/[0.94] backdrop-blur-2xl border border-[rgba(200,79,255,0.2)] shadow-[0_8px_60px_rgba(0,0,0,0.8),0_0_50px_rgba(200,79,255,0.12)]">
+                    <p className="text-sm font-semibold text-[#8888aa] text-center mb-4">{t('quantity')}</p>
+                    <div className="flex justify-center gap-3 mb-5">
+                      {[1, 2, 3, 4].map((qty) => (
+                        <button
+                          key={qty}
+                          type="button"
+                          onClick={() => setQuantity(qty)}
+                          className={`w-12 h-12 rounded-full text-lg font-bold transition-all duration-200 ${
+                            quantity === qty
+                              ? 'bg-[#C84FFF] text-white shadow-[0_0_20px_rgba(200,79,255,0.4)] scale-110 ring-2 ring-[#C84FFF]/50 ring-offset-2 ring-offset-[#0a0a2e]'
+                              : 'bg-[#1e1e55] text-[#8888aa] border border-[rgba(255,255,255,0.1)] hover:border-[rgba(200,79,255,0.3)] hover:text-[#f0f0f5]'
+                          }`}
+                        >
+                          {qty}
+                        </button>
+                      ))}
+                    </div>
+                    <div className="h-px bg-gradient-to-r from-transparent via-[rgba(255,255,255,0.08)] to-transparent mb-4" />
+                    <div className="text-center mb-2">
+                      <p className="text-[#f0f0f5] text-lg font-semibold">
+                        {quantity} &times; {box.price.toFixed(2)} = <span className="text-[#C84FFF]">{totalCost.toFixed(2)}</span> <span className="text-sm text-[#8888aa]">coins</span>
+                      </p>
+                    </div>
+                    {userCoins !== null && (
+                      <p className="text-center text-sm mb-5">
+                        <span className="text-[#8888aa]">{t('yourBalance')}: </span>
+                        <span className={userCoins >= totalCost ? 'text-emerald-400 font-semibold' : 'text-red-400 font-semibold'}>{userCoins.toFixed(2)} coins</span>
+                        {userCoins >= totalCost && <span className="ml-1.5 text-emerald-400">&#10003;</span>}
+                      </p>
+                    )}
+                    <button
+                      onClick={() => setShowConfirm(true)}
+                      disabled={opening || isAutoOpening || (userCoins !== null && userCoins < totalCost)}
+                      className="w-full py-4 bg-gradient-to-r from-[#C84FFF] to-[#9333EA] hover:from-[#E879F9] hover:to-[#C84FFF] text-white font-bold text-base rounded-xl transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2.5 shimmer shadow-[0_0_30px_rgba(200,79,255,0.35)]"
+                    >
+                      {opening ? (
+                        <><div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />{t('opening')}</>
+                      ) : (
+                        <><Sparkles className="w-5 h-5" />{quantity > 1 ? t('openPacksPlural', { quantity }) : t('openPacks', { quantity })}</>
+                      )}
+                    </button>
+                    <div className="flex items-center gap-3 my-4">
+                      <div className="flex-1 h-px bg-[rgba(255,255,255,0.06)]" />
+                      <span className="text-xs text-gray-600 uppercase tracking-wider">or</span>
+                      <div className="flex-1 h-px bg-[rgba(255,255,255,0.06)]" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-center gap-2 mb-3">
+                        <Zap className="w-4 h-4 text-amber-400" />
+                        <span className="text-sm font-semibold text-[#8888aa]">{t('autoOpen')}</span>
+                        <InfoTooltip infoKey="pack.open.autoOpen" />
                       </div>
-                      <button
-                        onClick={handleAutoStop}
-                        className="w-full py-2.5 rounded-xl border-2 border-red-500/70 bg-red-500/10 hover:bg-red-500/20 text-red-400 font-semibold transition-all flex items-center justify-center gap-2"
-                      >
-                        <Square className="w-4 h-4 fill-current" />
-                        {t('stop')}
-                      </button>
+                      {isAutoOpening ? (
+                        <div className="space-y-3">
+                          <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 grid grid-cols-3 gap-3 text-center">
+                            <div><p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">{t('boxesOpened')}</p><p className="text-base font-bold text-[#f0f0f5]">{autoBoxesOpened}</p></div>
+                            <div><p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">{t('spent')}</p><p className="text-base font-bold text-amber-400">{autoCoinsSpent.toFixed(2)}</p></div>
+                            <div><p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">{t('remaining')}</p><p className="text-base font-bold text-[#E879F9]">{(userCoins ?? 0).toFixed(2)}</p></div>
+                          </div>
+                          <button onClick={handleAutoStop} className="w-full py-2.5 rounded-xl border-2 border-red-500/70 bg-red-500/10 hover:bg-red-500/20 text-red-400 font-semibold transition-all flex items-center justify-center gap-2">
+                            <Square className="w-4 h-4 fill-current" />{t('stop')}
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex gap-2">
+                          <div className="relative flex-1">
+                            <Coins className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                            <input type="number" min="0" step="any" value={autoMaxCoins} onChange={(e) => setAutoMaxCoins(e.target.value)} placeholder={t('maxCoinsPlaceholder')} className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-[#1e1e55] border border-[rgba(255,255,255,0.06)] text-[#f0f0f5] placeholder-gray-600 text-sm focus:border-amber-500/60 focus:outline-none" />
+                          </div>
+                          <button onClick={() => setShowAutoConfirm(true)} disabled={opening || (userCoins !== null && userCoins < box.price)} className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-semibold text-sm transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 flex items-center gap-2 flex-shrink-0">
+                            <Zap className="w-4 h-4" />{t('start')}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Right card grid */}
+                  <div className="flex-1 grid grid-cols-2 xl:grid-cols-3 gap-3">
+                    {rightCards.map(renderCard)}
+                  </div>
+                </div>
+
+                {/* Mobile/Tablet: Panel on top, cards below */}
+                <div className="lg:hidden space-y-6">
+                  {/* Control panel */}
+                  <div className="rounded-2xl p-6 bg-[#0a0a2e]/[0.94] backdrop-blur-2xl border border-[rgba(200,79,255,0.2)] shadow-[0_8px_60px_rgba(0,0,0,0.8),0_0_50px_rgba(200,79,255,0.12)]">
+                    <p className="text-sm font-semibold text-[#8888aa] text-center mb-4">{t('quantity')}</p>
+                    <div className="flex justify-center gap-3 mb-5">
+                      {[1, 2, 3, 4].map((qty) => (
+                        <button
+                          key={qty}
+                          type="button"
+                          onClick={() => setQuantity(qty)}
+                          className={`w-12 h-12 rounded-full text-lg font-bold transition-all duration-200 ${
+                            quantity === qty
+                              ? 'bg-[#C84FFF] text-white shadow-[0_0_20px_rgba(200,79,255,0.4)] scale-110 ring-2 ring-[#C84FFF]/50 ring-offset-2 ring-offset-[#0a0a2e]'
+                              : 'bg-[#1e1e55] text-[#8888aa] border border-[rgba(255,255,255,0.1)] hover:border-[rgba(200,79,255,0.3)] hover:text-[#f0f0f5]'
+                          }`}
+                        >
+                          {qty}
+                        </button>
+                      ))}
+                    </div>
+                    <div className="h-px bg-gradient-to-r from-transparent via-[rgba(255,255,255,0.08)] to-transparent mb-4" />
+                    <div className="text-center mb-2">
+                      <p className="text-[#f0f0f5] text-lg font-semibold">
+                        {quantity} &times; {box.price.toFixed(2)} = <span className="text-[#C84FFF]">{totalCost.toFixed(2)}</span> <span className="text-sm text-[#8888aa]">coins</span>
+                      </p>
+                    </div>
+                    {userCoins !== null && (
+                      <p className="text-center text-sm mb-5">
+                        <span className="text-[#8888aa]">{t('yourBalance')}: </span>
+                        <span className={userCoins >= totalCost ? 'text-emerald-400 font-semibold' : 'text-red-400 font-semibold'}>{userCoins.toFixed(2)} coins</span>
+                        {userCoins >= totalCost && <span className="ml-1.5 text-emerald-400">&#10003;</span>}
+                      </p>
+                    )}
+                    <button
+                      onClick={() => setShowConfirm(true)}
+                      disabled={opening || isAutoOpening || (userCoins !== null && userCoins < totalCost)}
+                      className="w-full py-4 bg-gradient-to-r from-[#C84FFF] to-[#9333EA] hover:from-[#E879F9] hover:to-[#C84FFF] text-white font-bold text-base rounded-xl transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2.5 shimmer shadow-[0_0_30px_rgba(200,79,255,0.35)]"
+                    >
+                      {opening ? (
+                        <><div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />{t('opening')}</>
+                      ) : (
+                        <><Sparkles className="w-5 h-5" />{quantity > 1 ? t('openPacksPlural', { quantity }) : t('openPacks', { quantity })}</>
+                      )}
+                    </button>
+                    <div className="flex items-center gap-3 my-4">
+                      <div className="flex-1 h-px bg-[rgba(255,255,255,0.06)]" />
+                      <span className="text-xs text-gray-600 uppercase tracking-wider">or</span>
+                      <div className="flex-1 h-px bg-[rgba(255,255,255,0.06)]" />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-center gap-2 mb-3">
+                        <Zap className="w-4 h-4 text-amber-400" />
+                        <span className="text-sm font-semibold text-[#8888aa]">{t('autoOpen')}</span>
+                        <InfoTooltip infoKey="pack.open.autoOpen" />
+                      </div>
+                      {isAutoOpening ? (
+                        <div className="space-y-3">
+                          <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 grid grid-cols-3 gap-3 text-center">
+                            <div><p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">{t('boxesOpened')}</p><p className="text-base font-bold text-[#f0f0f5]">{autoBoxesOpened}</p></div>
+                            <div><p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">{t('spent')}</p><p className="text-base font-bold text-amber-400">{autoCoinsSpent.toFixed(2)}</p></div>
+                            <div><p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">{t('remaining')}</p><p className="text-base font-bold text-[#E879F9]">{(userCoins ?? 0).toFixed(2)}</p></div>
+                          </div>
+                          <button onClick={handleAutoStop} className="w-full py-2.5 rounded-xl border-2 border-red-500/70 bg-red-500/10 hover:bg-red-500/20 text-red-400 font-semibold transition-all flex items-center justify-center gap-2">
+                            <Square className="w-4 h-4 fill-current" />{t('stop')}
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex gap-2">
+                          <div className="relative flex-1">
+                            <Coins className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                            <input type="number" min="0" step="any" value={autoMaxCoins} onChange={(e) => setAutoMaxCoins(e.target.value)} placeholder={t('maxCoinsPlaceholder')} className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-[#1e1e55] border border-[rgba(255,255,255,0.06)] text-[#f0f0f5] placeholder-gray-600 text-sm focus:border-amber-500/60 focus:outline-none" />
+                          </div>
+                          <button onClick={() => setShowAutoConfirm(true)} disabled={opening || (userCoins !== null && userCoins < box.price)} className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-semibold text-sm transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 flex items-center gap-2 flex-shrink-0">
+                            <Zap className="w-4 h-4" />{t('start')}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Cards grid below panel on mobile */}
+                  {box.cards.length > 0 ? (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                      {box.cards.map(renderCard)}
                     </div>
                   ) : (
-                    <div className="flex gap-2">
-                      <div className="relative flex-1">
-                        <Coins className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                        <input
-                          type="number"
-                          min="0"
-                          step="any"
-                          value={autoMaxCoins}
-                          onChange={(e) => setAutoMaxCoins(e.target.value)}
-                          placeholder={t('maxCoinsPlaceholder')}
-                          className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-[#1e1e55] border border-[rgba(255,255,255,0.06)] text-[#f0f0f5] placeholder-gray-600 text-sm focus:border-amber-500/60 focus:outline-none"
-                        />
-                      </div>
-                      <button
-                        onClick={() => setShowAutoConfirm(true)}
-                        disabled={opening || (userCoins !== null && userCoins < box.price)}
-                        className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-semibold text-sm transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 flex items-center gap-2 flex-shrink-0"
-                      >
-                        <Zap className="w-4 h-4" />
-                        {t('start')}
-                      </button>
-                    </div>
+                    <div className="text-center py-8 text-[#8888aa]"><p>{t('noCardsAvailable')}</p></div>
                   )}
                 </div>
-              </div>
-            </div>
-          </div>
+              </>
+            );
+          })()}
 
           {/* Your Pulls */}
           {pulls.length > 0 && (
