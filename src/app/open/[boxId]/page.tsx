@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/use-toast';
 import { useTranslations } from 'next-intl';
-import { Coins, Package, Sparkles, ArrowLeft, Layers, Zap, Square, BadgeDollarSign } from 'lucide-react';
+import { Coins, Package, Sparkles, ArrowLeft, Layers, Zap, Square, BadgeDollarSign, X } from 'lucide-react';
 import { InfoTooltip } from '@/components/InfoTooltip';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -292,6 +292,7 @@ export default function OpenBoxPage() {
   const [deckPhase, setDeckPhase] = useState<'idle'|'opening'|'summary'>('idle');
   const revealTimeoutsRef = useRef<Array<ReturnType<typeof setTimeout>>>([]);
   const pendingPullsRef = useRef<any[]>([]);
+  const [zoomedCard, setZoomedCard] = useState<BoxCard | null>(null);
 
   const clearRevealTimeouts = () => {
     revealTimeoutsRef.current.forEach((timeoutId) => clearTimeout(timeoutId));
@@ -630,7 +631,8 @@ export default function OpenBoxPage() {
               return (
                 <div
                   key={card.id}
-                  className={`relative group transition-all duration-300 rounded-2xl p-2 flex flex-col h-full ${
+                  onClick={() => setZoomedCard(card)}
+                  className={`relative group transition-all duration-300 rounded-2xl p-2 flex flex-col h-full cursor-pointer ${
                     isOpened
                       ? `ring-2 ring-offset-2 ring-offset-[#06061a] z-10 ${isFeatured ? 'scale-[1.02]' : ''} ${cardRarityGlow.border.replace('border-', 'ring-')}`
                       : ''
@@ -987,6 +989,78 @@ export default function OpenBoxPage() {
           )}
         </div>
       </div>
+
+      {/* Card Zoom Modal */}
+      {zoomedCard && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          onClick={(e) => { if (e.target === e.currentTarget) setZoomedCard(null); }}
+        >
+          <div className="absolute inset-0 bg-black/90 backdrop-blur-xl" />
+          <div className="relative max-w-lg w-full flex flex-col items-center animate-in fade-in zoom-in-95 duration-200">
+            <button
+              onClick={() => setZoomedCard(null)}
+              className="absolute -top-14 right-0 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all hover:scale-110"
+            >
+              <X className="h-6 w-6" />
+            </button>
+
+            <div
+              className="relative w-full max-w-xs aspect-[63/88] mb-6 rounded-2xl overflow-hidden shadow-2xl shadow-black/50"
+              style={{
+                boxShadow: `0 0 20px ${getRarityGlow(zoomedCard.rarity).glowColor}, 0 0 40px ${getRarityGlow(zoomedCard.rarity).glowColor.replace('1)', '0.25)')}, 0 0 60px ${getRarityGlow(zoomedCard.rarity).glowColor.replace('1)', '0.1)')}`,
+                border: `3px solid ${getRarityGlow(zoomedCard.rarity).glowColor}`,
+              }}
+            >
+              {zoomedCard.imageUrlGatherer ? (
+                <Image
+                  src={zoomedCard.imageUrlGatherer}
+                  alt={zoomedCard.name}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 90vw, 420px"
+                  unoptimized
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-[#12123a] text-5xl">🃏</div>
+              )}
+            </div>
+
+            <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 w-full text-center">
+              {(() => {
+                const glow = getRarityGlow(zoomedCard.rarity);
+                return (
+                  <div
+                    className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold mb-4"
+                    style={{
+                      color: glow.glowColor,
+                      backgroundColor: glow.glowColor.replace('1)', '0.12)').replace('0.6)', '0.12)').replace('0.8)', '0.12)').replace('0.9)', '0.12)'),
+                      border: `1px solid ${glow.glowColor.replace('1)', '0.3)').replace('0.6)', '0.3)').replace('0.8)', '0.3)').replace('0.9)', '0.3)')}`,
+                    }}
+                  >
+                    {zoomedCard.rarity || 'Common'}
+                  </div>
+                );
+              })()}
+
+              <h2 className="text-2xl font-bold text-white mb-2">{zoomedCard.name}</h2>
+              {box && <p className="text-[#8888aa] mb-4">{box.name}</p>}
+
+              <div className="flex items-center justify-center gap-6 mb-2">
+                <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30">
+                  <Coins className="h-5 w-5 text-amber-400" />
+                  <span className="text-xl font-bold text-amber-400">{zoomedCard.coinValue.toFixed(2)}</span>
+                  <span className="text-amber-400/70 text-sm">coins</span>
+                </div>
+                <div className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10">
+                  <span className="text-sm font-semibold text-[#f0f0f5]">{zoomedCard.pullRate.toFixed(3)}%</span>
+                  <span className="text-[#8888aa] text-sm">pull rate</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Pack Opening Flow — handles booster, card reveal, best pull */}
       {deckPhase === 'opening' && box && pendingPullsRef.current.length > 0 && (
