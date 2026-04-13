@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Search, Save, Loader2, Pencil, X, Info } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { useTranslations } from 'next-intl';
 
 type InfoTextEntry = {
   id: string;
@@ -15,6 +16,7 @@ type InfoTextEntry = {
 };
 
 export default function AdminInfoTextsPage() {
+  const t = useTranslations('admin.infoTextsMgmt');
   const { addToast } = useToast();
   const [infoTexts, setInfoTexts] = useState<InfoTextEntry[]>([]);
   const [loading, setLoading] = useState(true);

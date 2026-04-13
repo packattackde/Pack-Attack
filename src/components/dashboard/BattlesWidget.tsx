@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { GiCrossedSwords } from 'react-icons/gi';
 
 interface Battle {
@@ -17,22 +18,23 @@ interface BattlesWidgetProps {
 }
 
 export default function BattlesWidget({ battles, className = '' }: BattlesWidgetProps) {
+  const t = useTranslations('widgets');
   const displayBattles = battles.slice(0, 3);
 
   return (
     <div className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl h-full p-4 sm:p-6 ${className}`}>
       <div className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-3 flex items-center gap-1.5">
-<GiCrossedSwords className="w-3.5 h-3.5 text-[#C84FFF]" /> Active Battles
+<GiCrossedSwords className="w-3.5 h-3.5 text-[#C84FFF]" /> {t('battles.activeBattles')}
       </div>
 
       {displayBattles.length === 0 ? (
         <div className="text-center py-6">
-          <p className="text-sm text-[#8888aa]">No active battles</p>
+          <p className="text-sm text-[#8888aa]">{t('battles.noActiveBattles')}</p>
           <Link
             href="/battles/create"
             className="text-[#C84FFF] text-[11px] font-semibold mt-2 inline-block hover:underline"
           >
-            Create one →
+            {t('battles.createOne')}
           </Link>
         </div>
       ) : (
@@ -51,14 +53,14 @@ export default function BattlesWidget({ battles, className = '' }: BattlesWidget
                       {battle.name}
                     </p>
                     <p className="text-[11px] text-[#8888aa]">
-                      {battle.rounds} Rounds · {battle.participants}/{battle.maxParticipants}
+                      {battle.rounds} {t('battles.rounds')} · {battle.participants}/{battle.maxParticipants}
                     </p>
                   </div>
 
                   <div className="flex items-center gap-2 flex-shrink-0">
                     {almostFull && (
                       <span className="text-[10px] font-semibold text-red-400 animate-pulse whitespace-nowrap">
-                        Almost full!
+                        {t('battles.almostFull')}
                       </span>
                     )}
                     <Link
@@ -67,7 +69,7 @@ export default function BattlesWidget({ battles, className = '' }: BattlesWidget
                         almostFull ? 'animate-pulse' : ''
                       }`}
                     >
-                      Join
+                      {t('battles.join')}
                     </Link>
                   </div>
                 </div>
@@ -79,7 +81,7 @@ export default function BattlesWidget({ battles, className = '' }: BattlesWidget
             href="/battles"
             className="text-[#C84FFF] text-[11px] font-semibold mt-4 inline-block hover:underline"
           >
-            View all battles →
+            {t('battles.viewAll')}
           </Link>
         </>
       )}

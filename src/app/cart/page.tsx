@@ -3,6 +3,7 @@ import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { ShoppingCart } from 'lucide-react';
 import { CartClient } from './CartClient';
+import { getTranslations } from 'next-intl/server';
 
 async function getCart() {
   const session = await getCurrentSession();
@@ -76,6 +77,7 @@ async function getCart() {
 }
 
 export default async function CartPage() {
+  const t = await getTranslations('cart');
   const session = await getCurrentSession();
   if (!session?.user?.email) {
     redirect('/login');
@@ -94,13 +96,13 @@ export default async function CartPage() {
         <div className="mb-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
             <ShoppingCart className="w-4 h-4 text-[#C84FFF]" />
-            <span className="text-[#f0f0f5]">Checkout</span>
+            <span className="text-[#f0f0f5]">{t('badge')}</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-3">
-            <span className="text-white">Shopping </span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C84FFF] to-[#E879F9]">Cart</span>
+            <span className="text-white">{t('title').split(' ').slice(0, -1).join(' ')} </span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C84FFF] to-[#E879F9]">{t('title').split(' ').slice(-1)[0]}</span>
           </h1>
-          <p className="text-[#8888aa] text-lg">Review your items before checkout</p>
+          <p className="text-[#8888aa] text-lg">{t('subtitle')}</p>
         </div>
 
         <CartClient items={items} total={total} upsellCartItems={upsellCartItems} />

@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Coins, Package, ChevronRight, ChevronDown, Filter, Sparkles, Layers } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface Card {
   id: string;
@@ -35,6 +36,7 @@ interface BoxesClientProps {
 }
 
 export default function BoxesClient({ boxes, availableGames }: BoxesClientProps) {
+  const t = useTranslations('boxes');
   const [selectedGame, setSelectedGame] = useState<string>('all');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -43,24 +45,26 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
     return boxes.filter(box => box.games.includes(selectedGame));
   }, [boxes, selectedGame]);
 
-  const gameDisplayNames: Record<string, string> = {
-    'all': 'All Games',
-    'pokemon': 'Pokémon',
-    'magic': 'Magic: The Gathering',
-    'magic_the_gathering': 'Magic: The Gathering',
-    'yugioh': 'Yu-Gi-Oh!',
-    'onepiece': 'One Piece',
-    'one_piece': 'One Piece',
-    'lorcana': 'Disney Lorcana',
-    'digimon': 'Digimon',
-    'sports': 'Sports Cards',
-    'flesh_and_blood': 'Flesh & Blood',
-    'fleshblood': 'Flesh & Blood',
-  };
-
   const getGameDisplayName = (game: string) => {
-    const normalized = game.toLowerCase().replace(/-/g, '_');
-    return gameDisplayNames[normalized] || game.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+    const normalized = game.toUpperCase().replace(/-/g, '_');
+    const gameKeys: Record<string, string> = {
+      'POKEMON': 'POKEMON',
+      'MAGIC': 'MAGIC_THE_GATHERING',
+      'MAGIC_THE_GATHERING': 'MAGIC_THE_GATHERING',
+      'YUGIOH': 'YUGIOH',
+      'ONEPIECE': 'ONE_PIECE',
+      'ONE_PIECE': 'ONE_PIECE',
+      'LORCANA': 'LORCANA',
+      'DIGIMON': 'DIGIMON',
+      'SPORTS': 'SPORTS',
+      'FLESH_AND_BLOOD': 'FLESH_AND_BLOOD',
+      'FLESHBLOOD': 'FLESH_AND_BLOOD',
+    };
+    const key = gameKeys[normalized];
+    if (key) {
+      try { return t(`games.${key}`); } catch { /* fallback */ }
+    }
+    return game.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
   };
 
   return (
@@ -71,13 +75,13 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             className="flex items-center gap-3 px-5 py-4 rounded-2xl text-white font-semibold transition-all w-full sm:min-w-[240px] bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] hover:border-[rgba(200,79,255,0.3)] shadow-lg touch-target min-h-[52px]"
-            aria-label="Filter by game"
+            aria-label={t('filterByGame')}
             aria-expanded={isDropdownOpen}
             aria-controls="game-filter-dropdown"
           >
             <Filter className="w-4 h-4 sm:w-5 sm:h-5 text-[#C84FFF] shrink-0" />
             <span className="flex-1 text-left text-sm sm:text-base">
-              {selectedGame === 'all' ? 'All Games' : getGameDisplayName(selectedGame)}
+              {selectedGame === 'all' ? t('allGames') : getGameDisplayName(selectedGame)}
             </span>
             <ChevronDown className={`w-4 h-4 text-[#8888aa] transition-transform shrink-0 ${isDropdownOpen ? 'rotate-180' : ''}`} />
           </button>
@@ -97,7 +101,7 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
                 id="game-filter-dropdown"
                 className="absolute top-full left-0 mt-3 w-full min-w-[280px] rounded-2xl overflow-hidden z-50 border border-[rgba(255,255,255,0.15)] shadow-2xl bg-[#1e1e55]"
                 role="listbox"
-                aria-label="Game filter options"
+                aria-label={t('gameFilterOptions')}
               >
                 <div className="max-h-[420px] overflow-y-auto py-2 overscroll-contain"
                      style={{
@@ -121,7 +125,7 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
                     aria-selected={selectedGame === 'all'}
                   >
                     <Package className="w-4 h-4 shrink-0" />
-                    <span className="font-semibold">All Games</span>
+                    <span className="font-semibold">{t('allGames')}</span>
                     <span className="ml-auto text-xs px-2 py-0.5 rounded-full bg-[#12123a] text-[#8888aa] font-medium shrink-0">{boxes.length}</span>
                   </button>
 
@@ -168,7 +172,7 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
             <button 
               onClick={() => setSelectedGame('all')}
               className="ml-1 active:text-white transition-colors p-1 min-w-[32px] min-h-[32px] flex items-center justify-center"
-              aria-label="Clear filter"
+              aria-label={t('clearFilter')}
             >
               ✕
             </button>
@@ -177,7 +181,7 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
 
         {/* Results count */}
         <span className="text-[#8888aa] text-sm sm:ml-auto order-first sm:order-none w-full sm:w-auto text-center sm:text-left py-2 sm:py-0">
-          Showing {filteredBoxes.length} of {boxes.length} boxes
+          {t('showing', { count: filteredBoxes.length, total: boxes.length })}
         </span>
       </div>
 
@@ -187,21 +191,21 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
           <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 mb-4 sm:mb-6 rounded-2xl bg-gradient-to-br from-[rgba(200,79,255,0.15)] to-[rgba(200,79,255,0.1)]">
             <Package className="w-8 h-8 sm:w-10 sm:h-10 text-[#C84FFF]" />
           </div>
-          <h2 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-3">No Boxes Found</h2>
-          <p className="text-[#8888aa] mb-6 text-sm sm:text-base">No boxes available for {getGameDisplayName(selectedGame)}</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-3">{t('noBoxes')}</h2>
+          <p className="text-[#8888aa] mb-6 text-sm sm:text-base">{t('noBoxesFor', { game: getGameDisplayName(selectedGame) })}</p>
           <button 
             onClick={() => setSelectedGame('all')}
             className="inline-flex items-center gap-2 px-6 py-4 bg-gradient-to-r from-[#C84FFF] to-[#E879F9] text-white font-semibold rounded-xl transition-all active:scale-95 touch-target min-h-[52px]"
           >
             <Sparkles className="w-5 h-5" />
-            Show All Boxes
+            {t('showAllBoxes')}
           </button>
         </div>
       ) : (
         <>
           {/* Section Label */}
           <div className="flex items-center gap-3 mb-6">
-            <span className="text-[11px] font-semibold uppercase tracking-[1.5px] text-[#C84FFF] whitespace-nowrap">Available Packs</span>
+            <span className="text-[11px] font-semibold uppercase tracking-[1.5px] text-[#C84FFF] whitespace-nowrap">{t('availablePacks')}</span>
             <div className="flex-1 h-px bg-gradient-to-r from-[rgba(200,79,255,0.2)] to-transparent" />
           </div>
 
@@ -277,19 +281,19 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
                 ) : (
                   <div className="flex flex-col items-center justify-center h-full gap-2">
                     <Package className="w-12 h-12 text-[#7777a0]/50" />
-                    <span className="text-xs text-[#7777a0]/50 font-medium">No preview</span>
+                    <span className="text-xs text-[#7777a0]/50 font-medium">{t('noPreview')}</span>
                   </div>
                 )}
 
                 {/* Badges */}
                 {box.featured && (
                   <div className="absolute top-3 left-3 px-3 py-1 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-[11px] font-bold text-white z-10 shadow-md">
-                    ⭐ Featured
+                    {t('featured')}
                   </div>
                 )}
                 {box.createdByShop && (
-                  <div className="absolute top-3 left-3 px-3 py-1 rounded-lg bg-gradient-to-r from-[#9333EA] to-[#7c3aed] text-[11px] font-bold text-white z-10 shadow-md" title={`By ${box.createdByShop.name}`}>
-                    🏪 Partner Shop
+                  <div className="absolute top-3 left-3 px-3 py-1 rounded-lg bg-gradient-to-r from-[#9333EA] to-[#7c3aed] text-[11px] font-bold text-white z-10 shadow-md" title={t('partnerBy', { name: box.createdByShop.name })}>
+                    {t('partnerShop')}
                   </div>
                 )}
                 {box.games && box.games[0] && (
@@ -304,7 +308,7 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
                 <h3 className="text-[17px] font-bold text-white mb-1.5 group-hover:text-[#C84FFF] transition-colors line-clamp-1">
                   {box.name}
                 </h3>
-                <p className="text-[13px] text-[#7777a0] mb-5">{box.cardsPerPack} cards/pack · {box._count.cards} total cards</p>
+                <p className="text-[13px] text-[#7777a0] mb-5">{t('cardsPerPack', { cards: box.cardsPerPack, total: box._count.cards })}</p>
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
@@ -314,7 +318,7 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
                     <span className="text-2xl font-extrabold text-[#C84FFF]">{box.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                   </div>
                   <span className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-[#C84FFF] text-white text-sm font-bold rounded-xl shadow-[0_2px_12px_rgba(200,79,255,0.2)] group-hover:shadow-[0_4px_24px_rgba(200,79,255,0.35)] group-hover:scale-105 transition-all">
-                    Open <ChevronRight className="w-4 h-4" />
+                    {t('open')} <ChevronRight className="w-4 h-4" />
                   </span>
                 </div>
               </div>

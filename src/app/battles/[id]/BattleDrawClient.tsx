@@ -7,19 +7,7 @@ import { ArrowLeft, Swords, Coins, Users, Clock, Play, Check, Shield, Trophy, Sp
 import { useToast } from '@/components/ui/use-toast';
 import { AddBotsControl } from '../components/AddBotsControl';
 import { motion, AnimatePresence } from 'framer-motion';
-
-const MODE_LABELS: Record<string, string> = {
-  LOWEST_CARD: '⬇️ Niedrigste Karte',
-  HIGHEST_CARD: '⬆️ Höchste Karte',
-  ALL_CARDS: '🃏 Alle Karten',
-};
-
-const WIN_CONDITION_LABELS: Record<string, string> = {
-  HIGHEST: '📈 Höchster Wert gewinnt',
-  LOWEST: '📉 Niedrigster Wert gewinnt',
-  SHARE_MODE: '🤝 Karten teilen',
-  JACKPOT: '🎰 Jackpot',
-};
+import { useTranslations } from 'next-intl';
 
 type Participant = {
   id: string;
@@ -97,6 +85,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
 }) {
   const router = useRouter();
   const { addToast } = useToast();
+  const t = useTranslations('battles');
   const [battle, setBattle] = useState<Battle>(initialBattle);
   const [joining, setJoining] = useState(false);
   const [readyLoading, setReadyLoading] = useState(false);
@@ -138,7 +127,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
             runRevealAnimation(data.battle);
           }
           if (data.battle.status === 'CANCELLED') {
-            addToast({ title: 'Battle storniert', description: 'Das Battle wurde automatisch storniert.' });
+            addToast({ title: t('lobby.storniert'), description: t('lobby.storniertDesc') });
           }
         }
       } catch {}
@@ -202,10 +191,10 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
     try {
       const res = await fetch(`/api/battles/${battle.id}/join`, { method: 'POST' });
       const data = await res.json();
-      if (!res.ok) { addToast({ title: 'Fehler', description: data.error, variant: 'destructive' }); return; }
-      addToast({ title: 'Beigetreten!', description: 'Du bist dem Battle beigetreten.' });
+      if (!res.ok) { addToast({ title: t('lobby.joinFailed'), description: data.error, variant: 'destructive' }); return; }
+      addToast({ title: t('lobby.joinedTitle'), description: t('lobby.joinedDesc') });
       if (data.battle) setBattle(data.battle);
-    } catch { addToast({ title: 'Fehler', description: 'Beitritt fehlgeschlagen', variant: 'destructive' }); }
+    } catch { addToast({ title: t('lobby.joinFailed'), variant: 'destructive' }); }
     finally { setJoining(false); }
   };
 
@@ -215,9 +204,9 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
       const isCurrentlyReady = myParticipant?.isReady;
       const res = await fetch(`/api/battles/${battle.id}/ready`, { method: isCurrentlyReady ? 'DELETE' : 'POST' });
       const data = await res.json();
-      if (!res.ok) { addToast({ title: 'Fehler', description: data.error, variant: 'destructive' }); return; }
-      addToast({ title: isCurrentlyReady ? 'Bereit aufgehoben' : 'Bereit!' });
-    } catch { addToast({ title: 'Fehler', description: 'Aktion fehlgeschlagen', variant: 'destructive' }); }
+      if (!res.ok) { addToast({ title: t('lobby.actionFailed'), description: data.error, variant: 'destructive' }); return; }
+      addToast({ title: isCurrentlyReady ? t('lobby.readyRemoved') : t('lobby.ready') });
+    } catch { addToast({ title: t('lobby.actionFailed'), variant: 'destructive' }); }
     finally { setReadyLoading(false); }
   };
 
@@ -226,12 +215,12 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
     try {
       const res = await fetch(`/api/battles/${battle.id}/start`, { method: 'POST' });
       const data = await res.json();
-      if (!res.ok) { addToast({ title: 'Fehler', description: data.error, variant: 'destructive' }); return; }
+      if (!res.ok) { addToast({ title: t('lobby.startFailed'), description: data.error, variant: 'destructive' }); return; }
       if (data.battle) {
         setBattle(data.battle);
         if (!animationPlayedRef.current) { animationPlayedRef.current = true; runRevealAnimation(data.battle); }
       }
-    } catch { addToast({ title: 'Fehler', description: 'Start fehlgeschlagen', variant: 'destructive' }); }
+    } catch { addToast({ title: t('lobby.startFailed'), variant: 'destructive' }); }
     finally { setStarting(false); }
   };
 
@@ -263,7 +252,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
 
       <div className="relative container py-10 sm:py-14 max-w-5xl">
         <Link href="/battles" className="inline-flex items-center gap-2 text-[#8888aa] hover:text-white mb-6 transition-colors text-sm">
-          <ArrowLeft className="w-4 h-4" /> Zurück zu Battles
+          <ArrowLeft className="w-4 h-4" /> {t('lobby.backToBattles')}
         </Link>
 
         {/* ── Battle Header ── */}
@@ -288,16 +277,16 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                   {battle.roundBoxes && battle.roundBoxes.length > 0
                     ? (() => {
                         const unique = [...new Set(battle.roundBoxes.map(rb => rb.box.name))];
-                        return unique.length === 1 ? unique[0] : `${unique.length} Boxen Mix`;
+                        return unique.length === 1 ? unique[0] : `${unique.length} ${t('boxMix')}`;
                       })()
-                    : battle.box?.name || 'Battle'}
+                    : battle.box?.name || t('detail.battle')}
                 </h1>
                 <div className="flex items-center gap-2 text-xs text-[#666688]">
-                  <span>{battle.rounds} Runden</span>
+                  <span>{battle.rounds} {t('rounds')}</span>
                   <span>·</span>
-                  <span>{MODE_LABELS[battle.battleMode]}</span>
+                  <span>{t(`modeLabelsShort.${battle.battleMode}` as any)}</span>
                   <span>·</span>
-                  <span>{WIN_CONDITION_LABELS[battle.winCondition]}</span>
+                  <span>{t(`winConditionLabelsLong.${battle.winCondition}` as any)}</span>
                 </div>
               </div>
             </div>
@@ -322,7 +311,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                     <span className={`text-2xl font-bold font-mono ${lobbyMs < 60000 ? 'text-red-400' : 'text-amber-400'}`}>
                       {formatTimer(lobbyMs)}
                     </span>
-                    <p className="text-xs text-[#666688]">Warte auf Mitspieler</p>
+                    <p className="text-xs text-[#666688]">{t('lobby.waitingForPlayers')}</p>
                   </div>
                 </div>
               </div>
@@ -339,7 +328,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                       {formatTimer(autoStartMs)}
                     </span>
                     <p className="text-xs text-[#666688]">
-                      {allReady ? 'Alle bereit — Auto-Start' : `${readyCount}/${battle.participants.length} bereit`}
+                      {allReady ? t('lobby.allReadyAutoStart') : t('lobby.readyCount', { ready: readyCount, total: battle.participants.length })}
                     </p>
                   </div>
                 </div>
@@ -349,7 +338,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
             {/* Player Seats */}
             <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.08)] rounded-2xl p-6 mb-6">
               <div className="flex items-center justify-between mb-5">
-                <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider">Teilnehmer</h2>
+                <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider">{t('lobby.participants')}</h2>
                 <span className="text-xs text-[#666688]">{battle.participants.length}/{battle.maxParticipants}</span>
               </div>
 
@@ -375,7 +364,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                         {p.user.name?.[0]?.toUpperCase() || '?'}
                       </div>
                       <span className="text-xs text-white font-medium truncate max-w-[80px] text-center">
-                        {p.user.name || 'Spieler'}
+                        {p.user.name || t('lobby.playerFallback')}
                       </span>
                     </div>
 
@@ -401,7 +390,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                     {/* Bot badge */}
                     {isAdmin && p.user.isBot && (
                       <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 text-[9px] px-1.5 py-0.5 bg-purple-500/20 text-purple-400 rounded-full font-medium">
-                        Bot
+                        {t('lobby.bot')}
                       </div>
                     )}
                   </motion.div>
@@ -410,7 +399,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                 {/* VS divider between filled seats */}
                 {battle.participants.length >= 2 && battle.participants.length < battle.maxParticipants && (
                   <div className="hidden sm:flex items-center px-2">
-                    <span className="text-[#C84FFF]/30 font-bold text-sm">VS</span>
+                    <span className="text-[#C84FFF]/30 font-bold text-sm">{t('lobby.vs')}</span>
                   </div>
                 )}
 
@@ -423,7 +412,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                     <div className="w-12 h-12 rounded-full border-2 border-dashed border-[rgba(255,255,255,0.08)] flex items-center justify-center animate-pulse">
                       <Plus className="w-5 h-5 text-[#444466]" />
                     </div>
-                    <span className="text-[10px] text-[#444466]">Frei</span>
+                    <span className="text-[10px] text-[#444466]">{t('lobby.free')}</span>
                   </div>
                 ))}
               </div>
@@ -437,7 +426,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                     animate={{ scale: 1, opacity: 1 }}
                     className="px-4 text-[#C84FFF] font-bold text-lg"
                   >
-                    VS
+                    {t('lobby.vs')}
                   </motion.span>
                   <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#C84FFF]/20 to-transparent" />
                 </div>
@@ -452,7 +441,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                   disabled={joining}
                   className="px-8 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl hover:bg-[#E879F9] transition-all disabled:opacity-50 flex items-center gap-2"
                 >
-                  {joining ? 'Trete bei...' : <><Swords className="w-4 h-4" /> Battle beitreten</>}
+                  {joining ? t('lobby.joining') : <><Swords className="w-4 h-4" /> {t('lobby.joinBattle')}</>}
                 </button>
               )}
 
@@ -466,10 +455,10 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                       : 'bg-[#C84FFF] text-white hover:bg-[#E879F9]'
                   }`}
                 >
-                  {readyLoading ? 'Lade...' : myParticipant?.isReady ? (
-                    <><Check className="w-4 h-4" /> Bereit!</>
+                  {readyLoading ? t('lobby.loading') : myParticipant?.isReady ? (
+                    <><Check className="w-4 h-4" /> {t('lobby.ready')}</>
                   ) : (
-                    <><Shield className="w-4 h-4" /> Bereit melden</>
+                    <><Shield className="w-4 h-4" /> {t('lobby.markReady')}</>
                   )}
                 </button>
               )}
@@ -481,9 +470,9 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                   className="px-8 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl hover:bg-[#E879F9] transition-all disabled:opacity-50 flex items-center gap-2"
                 >
                   {starting ? (
-                    <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Startet...</>
+                    <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> {t('lobby.starting')}</>
                   ) : (
-                    <><Play className="w-4 h-4" /> Battle starten</>
+                    <><Play className="w-4 h-4" /> {t('lobby.startBattle')}</>
                   )}
                 </button>
               )}
@@ -503,7 +492,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
           <div className="bg-[#1a1a4a]/80 border border-[rgba(255,255,255,0.08)] rounded-2xl p-5 mb-6">
             <div className="flex items-center gap-2 mb-4">
               <Trophy className="w-4 h-4 text-amber-400" />
-              <span className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider">Live Punktestand</span>
+              <span className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider">{t('lobby.liveScoreboard')}</span>
             </div>
             <div className="space-y-2">
               {sortedByScore.map((p, i) => {
@@ -543,7 +532,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
         {(isDrawing || battleComplete) && !showWinnerReveal && Object.keys(pullsByRound).length > 0 && (
           <div className="space-y-4 mb-6">
             <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-[#C84FFF]" /> Rundenergebnisse
+              <Sparkles className="w-4 h-4 text-[#C84FFF]" /> {t('lobby.roundResults')}
             </h2>
             {Array.from({ length: battle.rounds }, (_, i) => i + 1).map((round) => {
               const roundPulls = pullsByRound[round] || [];
@@ -553,7 +542,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
               if (!isRevealed) {
                 return (
                   <div key={round} className="bg-[#0e0e2a] border border-dashed border-[rgba(255,255,255,0.05)] rounded-xl p-4 flex items-center justify-center">
-                    <span className="text-[#333355] text-sm">Runde {round}</span>
+                    <span className="text-[#333355] text-sm">{t('detail.roundLabel')} {round}</span>
                   </div>
                 );
               }
@@ -575,7 +564,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                     }`}>
                       <div className="flex items-center gap-2">
                         {isCurrent && <span className="w-2 h-2 rounded-full bg-[#C84FFF] animate-pulse" />}
-                        <span className="text-sm font-bold text-white">Runde {round}</span>
+                        <span className="text-sm font-bold text-white">{t('detail.roundLabel')} {round}</span>
                         {battle.roundBoxes && battle.roundBoxes.length > 0 && (() => {
                           const rb = battle.roundBoxes!.find(r => r.roundNumber === round);
                           return rb ? (
@@ -620,13 +609,13 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                                   <span className="text-[#555577] text-2xl">?</span>
                                 </div>
                               )}
-                              <div className="text-sm text-white font-semibold truncate mb-1">{pull.itemName || 'Unbekannt'}</div>
+                              <div className="text-sm text-white font-semibold truncate mb-1">{pull.itemName || '?'}</div>
                               {pull.itemRarity && (
                                 <div className="text-[10px] text-[#8888aa] mb-1 uppercase tracking-wider">{pull.itemRarity}</div>
                               )}
                               <div className="text-amber-400 font-bold">{pull.coinValue.toFixed(2)}</div>
                               {isTransferred && (
-                                <div className="mt-1 text-[10px] text-red-400 font-medium">Übertragen</div>
+                                <div className="mt-1 text-[10px] text-red-400 font-medium">{t('detail.transferred')}</div>
                               )}
                             </motion.div>
                           );
@@ -654,8 +643,8 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                   <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.3, type: 'spring', stiffness: 200 }} className="text-7xl mb-5">
                     🤝
                   </motion.div>
-                  <h2 className="text-3xl font-bold text-white mb-3">Unentschieden!</h2>
-                  <p className="text-[#8888aa] text-lg max-w-md mx-auto">Gleicher Gesamtwert. Keine Karten übertragen.</p>
+                  <h2 className="text-3xl font-bold text-white mb-3">{t('lobby.drawResult')}</h2>
+                  <p className="text-[#8888aa] text-lg max-w-md mx-auto">{t('lobby.drawResultDesc')}</p>
                   <div className="mt-6 flex items-center justify-center gap-6">
                     {battle.participants.map(p => (
                       <div key={p.id} className="text-center">
@@ -707,13 +696,13 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="text-center mb-8">
                       {battle.winnerId === currentUserId ? (
                         <>
-                          <h2 className="text-4xl font-bold text-[#C84FFF] mb-2">Du hast gewonnen!</h2>
-                          <p className="text-[#8888aa] text-lg">Glückwunsch zum Sieg!</p>
+                          <h2 className="text-4xl font-bold text-[#C84FFF] mb-2">{t('detail.youWon')}</h2>
+                          <p className="text-[#8888aa] text-lg">{t('detail.congrats')}</p>
                         </>
                       ) : (
                         <>
-                          <h2 className="text-4xl font-bold text-white mb-2">{battle.winner?.name || 'Spieler'} gewinnt!</h2>
-                          <p className="text-[#8888aa] text-lg">Nächstes Mal hast du mehr Glück!</p>
+                          <h2 className="text-4xl font-bold text-white mb-2">{battle.winner?.name || t('lobby.playerFallback')} {t('detail.wins')}</h2>
+                          <p className="text-[#8888aa] text-lg">{t('detail.betterLuck')}</p>
                         </>
                       )}
                     </motion.div>
@@ -743,7 +732,7 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                             <div className={`text-2xl font-bold mb-1 ${isWinner ? 'text-[#C84FFF]' : 'text-amber-400'}`}>
                               {p.runningTotal.toFixed(2)}
                             </div>
-                            <div className="text-xs text-[#8888aa]">{isWinner ? 'Gewinner' : 'Verlierer'}</div>
+                            <div className="text-xs text-[#8888aa]">{isWinner ? '👑' : ''}</div>
                             {isWinner && <Crown className="w-5 h-5 text-[#C84FFF] mx-auto mt-2" />}
                           </motion.div>
                         );
@@ -754,8 +743,8 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                       <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#12123a] rounded-full text-sm">
                         <Zap className="w-4 h-4 text-[#C84FFF]" />
                         <span className="text-[#8888aa]">
-                          {battle.battleMode === 'LOWEST_CARD' && 'Niedrigste Karte des Verlierers übertragen'}
-                          {battle.battleMode === 'HIGHEST_CARD' && 'Höchste Karte des Verlierers übertragen'}
+                          {battle.battleMode === 'LOWEST_CARD' && t('lobby.lowestCardTransfer')}
+                          {battle.battleMode === 'HIGHEST_CARD' && t('lobby.highestCardTransfer')}
                         </span>
                       </div>
                     </motion.div>
@@ -770,10 +759,10 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
         {battleComplete && (
           <div className="flex gap-3 justify-center">
             <Link href="/battles" className="px-6 py-3 bg-[#12123a] text-white font-semibold rounded-xl hover:bg-[#1a1a4a] transition-all border border-[rgba(255,255,255,0.08)]">
-              Zurück zur Lobby
+              {t('detail.backToLobby')}
             </Link>
             <Link href="/battles/create" className="px-6 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl hover:bg-[#E879F9] transition-all">
-              Neues Battle
+              {t('detail.newBattle')}
             </Link>
           </div>
         )}

@@ -19,6 +19,7 @@ import {
   CheckCircle2,
   Loader2,
 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 type CategoryAnalytic = {
   category: string;

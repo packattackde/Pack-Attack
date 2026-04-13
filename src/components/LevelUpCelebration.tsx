@@ -1,6 +1,7 @@
 'use client'
 
 import { motion, AnimatePresence } from 'framer-motion'
+import { useTranslations } from 'next-intl'
 import { useEffect } from 'react'
 
 interface LevelUpCelebrationProps {
@@ -11,6 +12,7 @@ interface LevelUpCelebrationProps {
 }
 
 export function LevelUpCelebration({ level, title, visible, onClose }: LevelUpCelebrationProps) {
+  const t = useTranslations('levelUp')
   useEffect(() => {
     if (visible) {
       const timer = setTimeout(onClose, 4000)
@@ -49,7 +51,7 @@ export function LevelUpCelebration({ level, title, visible, onClose }: LevelUpCe
               transition={{ delay: 0.3 }}
               className="font-heading text-lg font-bold uppercase tracking-widest text-[#8888aa]"
             >
-              Level Up!
+              {t('levelUp')}
             </motion.p>
             <motion.p
               initial={{ y: 20, opacity: 0 }}

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useToast } from '@/components/ui/use-toast';
 import { 
   ArrowLeft, 
@@ -36,6 +37,7 @@ type Cart = {
 };
 
 export default function ShopCheckoutPage() {
+  const t = useTranslations('shop.shopCheckout');
   const router = useRouter();
   const { addToast } = useToast();
   const [cart, setCart] = useState<Cart | null>(null);
@@ -82,8 +84,8 @@ export default function ShopCheckoutPage() {
     if (!formData.shippingName || !formData.shippingEmail || !formData.shippingAddress || 
         !formData.shippingCity || !formData.shippingZip || !formData.shippingCountry) {
       addToast({
-        title: 'Missing Information',
-        description: 'Please fill in all required fields',
+        title: t('missingInfo'),
+        description: t('fillRequired'),
         variant: 'destructive',
       });
       return;
@@ -102,7 +104,7 @@ export default function ShopCheckoutPage() {
       if (!res.ok) {
         addToast({
           title: 'Error',
-          description: data.error || 'Failed to place order',
+          description: data.error || t('failedToOrder'),
           variant: 'destructive',
         });
         return;
@@ -110,13 +112,13 @@ export default function ShopCheckoutPage() {
 
       setOrderSuccess(true);
       addToast({
-        title: 'Order Placed!',
-        description: 'Your order has been successfully placed',
+        title: t('orderPlaced'),
+        description: t('orderPlacedDesc'),
       });
     } catch (error) {
       addToast({
         title: 'Error',
-        description: 'Failed to place order',
+        description: t('failedToOrder'),
         variant: 'destructive',
       });
     } finally {
@@ -129,7 +131,7 @@ export default function ShopCheckoutPage() {
       <div className="min-h-screen flex items-center justify-center font-display">
         <div className="text-white flex items-center gap-3">
           <div className="w-6 h-6 border-2 border-[rgba(200,79,255,0.3)] border-t-transparent rounded-full animate-spin" />
-          Loading checkout...
+          {t('title')}...
         </div>
       </div>
     );
@@ -145,22 +147,22 @@ export default function ShopCheckoutPage() {
           <div className="w-20 h-20 rounded-full bg-gradient-to-r from-[#C84FFF] to-[#C84FFF] flex items-center justify-center mx-auto mb-6">
             <CheckCircle className="w-10 h-10 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-white mb-3">Order Placed Successfully!</h1>
+          <h1 className="text-2xl font-bold text-white mb-3">{t('orderPlaced')}</h1>
           <p className="text-[#8888aa] mb-8">
-            Thank you for your order. The seller has been notified and will process your order shortly.
+            {t('orderPlacedDesc')}
           </p>
           <div className="space-y-3">
             <Link
               href="/shop/orders"
               className="block w-full py-3 bg-[#C84FFF] text-white font-semibold rounded-xl hover:brightness-110 transition-all"
             >
-              View My Orders
+              {t('viewOrders')}
             </Link>
             <Link
               href="/shop"
               className="block w-full py-3 bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#f0f0f5] font-medium rounded-xl hover:bg-white/10 transition-colors"
             >
-              Continue Shopping
+              {t('continueShopping')}
             </Link>
           </div>
         </div>
@@ -183,10 +185,10 @@ export default function ShopCheckoutPage() {
         {/* Breadcrumb */}
         <Link href="/shop/cart" className="inline-flex items-center gap-2 text-[#8888aa] hover:text-white transition-colors mb-8">
           <ArrowLeft className="w-4 h-4" />
-          Back to Cart
+          {t('backToCart')}
         </Link>
 
-        <h1 className="text-3xl font-bold text-white mb-8">Checkout</h1>
+        <h1 className="text-3xl font-bold text-white mb-8">{t('title')}</h1>
 
         <form onSubmit={handleSubmit}>
           <div className="grid lg:grid-cols-3 gap-8">
@@ -196,12 +198,12 @@ export default function ShopCheckoutPage() {
               <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6">
                 <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
                   <Truck className="w-5 h-5 text-[#C84FFF]" />
-                  Shipping Address
+                  {t('shippingAddress')}
                 </h2>
 
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="sm:col-span-2">
-                    <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Full Name *</label>
+                    <label className="block text-sm font-medium text-[#f0f0f5] mb-2">{t('fullName')} *</label>
                     <input
                       type="text"
                       required
@@ -213,7 +215,7 @@ export default function ShopCheckoutPage() {
                   </div>
 
                   <div className="sm:col-span-2">
-                    <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Email *</label>
+                    <label className="block text-sm font-medium text-[#f0f0f5] mb-2">{t('email')} *</label>
                     <input
                       type="email"
                       required
@@ -225,7 +227,7 @@ export default function ShopCheckoutPage() {
                   </div>
 
                   <div className="sm:col-span-2">
-                    <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Street Address *</label>
+                    <label className="block text-sm font-medium text-[#f0f0f5] mb-2">{t('street')} *</label>
                     <input
                       type="text"
                       required
@@ -237,7 +239,7 @@ export default function ShopCheckoutPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-[#f0f0f5] mb-2">City *</label>
+                    <label className="block text-sm font-medium text-[#f0f0f5] mb-2">{t('city')} *</label>
                     <input
                       type="text"
                       required
@@ -249,7 +251,7 @@ export default function ShopCheckoutPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Postal Code *</label>
+                    <label className="block text-sm font-medium text-[#f0f0f5] mb-2">{t('zip')} *</label>
                     <input
                       type="text"
                       required
@@ -261,7 +263,7 @@ export default function ShopCheckoutPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Country *</label>
+                    <label className="block text-sm font-medium text-[#f0f0f5] mb-2">{t('country')} *</label>
                     <input
                       type="text"
                       required
@@ -273,7 +275,7 @@ export default function ShopCheckoutPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Phone (Optional)</label>
+                    <label className="block text-sm font-medium text-[#f0f0f5] mb-2">{t('phone')}</label>
                     <input
                       type="tel"
                       value={formData.shippingPhone}
@@ -284,13 +286,13 @@ export default function ShopCheckoutPage() {
                   </div>
 
                   <div className="sm:col-span-2">
-                    <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Order Notes (Optional)</label>
+                    <label className="block text-sm font-medium text-[#f0f0f5] mb-2">{t('notes')}</label>
                     <textarea
                       value={formData.notes}
                       onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                       rows={3}
                       className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none resize-none"
-                      placeholder="Any special instructions..."
+                      placeholder={t('notesPlaceholder')}
                     />
                   </div>
                 </div>
@@ -300,11 +302,11 @@ export default function ShopCheckoutPage() {
               <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6">
                 <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                   <CreditCard className="w-5 h-5 text-[#C84FFF]" />
-                  Payment
+                  {t('payment')}
                 </h2>
                 <p className="text-[#8888aa]">
-                  Payment will be arranged directly with the seller after order confirmation.
-                  You will receive payment instructions via email.
+                  {t('paymentDesc')}
+                  {' '}{t('paymentInstructions')}
                 </p>
               </div>
             </div>
@@ -312,7 +314,7 @@ export default function ShopCheckoutPage() {
             {/* Order Summary */}
             <div>
               <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 sticky top-24">
-                <h2 className="text-xl font-bold text-white mb-6">Order Summary</h2>
+                <h2 className="text-xl font-bold text-white mb-6">{t('orderSummary')}</h2>
 
                 {/* Items */}
                 <div className="space-y-4 mb-6 max-h-64 overflow-y-auto">
@@ -337,7 +339,7 @@ export default function ShopCheckoutPage() {
                         <p className="text-xs text-gray-500 flex items-center gap-1">
                           <Store className="w-3 h-3" /> {item.product.shop.name}
                         </p>
-                        <p className="text-sm text-[#8888aa]">Qty: {item.quantity}</p>
+                        <p className="text-sm text-[#8888aa]">{t('qty')}: {item.quantity}</p>
                       </div>
                       <p className="text-sm text-white font-semibold">
                         €{(item.product.price * item.quantity).toFixed(2)}
@@ -349,15 +351,15 @@ export default function ShopCheckoutPage() {
                 {/* Totals */}
                 <div className="space-y-3 border-t border-[rgba(255,255,255,0.06)] pt-4 mb-6">
                   <div className="flex justify-between text-[#8888aa]">
-                    <span>Subtotal</span>
+                    <span>{t('subtotal')}</span>
                     <span className="text-white">€{cart.total.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-[#8888aa]">
-                    <span>Shipping</span>
+                    <span>{t('shipping')}</span>
                     <span className="text-white">€{shippingCost.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-lg font-semibold border-t border-[rgba(255,255,255,0.06)] pt-3">
-                    <span className="text-white">Total</span>
+                    <span className="text-white">{t('total')}</span>
                     <span className="text-[#C84FFF]">€{grandTotal.toFixed(2)}</span>
                   </div>
                 </div>
@@ -370,12 +372,12 @@ export default function ShopCheckoutPage() {
                   {submitting ? (
                     <>
                       <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      Processing...
+                      {t('processing')}
                     </>
                   ) : (
                     <>
                       <CheckCircle className="w-5 h-5" />
-                      Place Order
+                      {t('placeOrder')}
                     </>
                   )}
                 </button>

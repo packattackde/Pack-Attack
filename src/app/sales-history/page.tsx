@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { SalesHistoryClient } from './SalesHistoryClient';
 import Link from 'next/link';
 import { Receipt, Coins, TrendingUp, Sparkles } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
 
 async function getSalesHistory() {
   const session = await getCurrentSession();
@@ -34,6 +35,7 @@ export default async function SalesHistoryPage() {
   if (!session?.user?.email) {
     redirect('/login');
   }
+  const t = await getTranslations('salesHistory');
 
   const rawSales = await getSalesHistory();
 
@@ -58,13 +60,12 @@ export default async function SalesHistoryPage() {
         <div className="mb-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
             <Receipt className="w-4 h-4 text-[#E879F9]" />
-            <span className="text-[#f0f0f5]">Transaction History</span>
+            <span className="text-[#f0f0f5]">{t('badge')}</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-3">
-            <span className="text-white">Sales </span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#E879F9] to-[#9333EA]">History</span>
+            <span className="text-white">{t('title')} </span>
           </h1>
-          <p className="text-[#8888aa] text-lg">View all cards you've sold back to the shop</p>
+          <p className="text-[#8888aa] text-lg">{t('subtitle')}</p>
         </div>
 
         {/* Stats Bar */}
@@ -76,14 +77,14 @@ export default async function SalesHistoryPage() {
                   <TrendingUp className="w-6 h-6 text-[#E879F9]" />
                 </div>
                 <div className="text-2xl font-bold text-white">{totalSales}</div>
-                <div className="text-sm text-[#8888aa]">Cards Sold</div>
+                <div className="text-sm text-[#8888aa]">{t('cardsSold')}</div>
               </div>
               <div className="text-center">
                 <div className="inline-flex items-center justify-center w-12 h-12 mb-3 rounded-xl bg-amber-500/20">
                   <Coins className="w-6 h-6 text-amber-400" />
                 </div>
                 <div className="text-2xl font-bold text-amber-400">{totalEarned.toLocaleString()}</div>
-                <div className="text-sm text-[#8888aa]">Total Earned</div>
+                <div className="text-sm text-[#8888aa]">{t('totalEarned')}</div>
               </div>
             </div>
           </div>
@@ -94,14 +95,14 @@ export default async function SalesHistoryPage() {
             <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[#C84FFF]/20 to-[#9333EA]/20">
               <Receipt className="w-10 h-10 text-[#E879F9]" />
             </div>
-            <h2 className="text-2xl font-bold text-white mb-3">No Sales Yet</h2>
-            <p className="text-[#8888aa] mb-6">You haven't sold any cards yet. Sell cards from your collection to earn coins!</p>
+            <h2 className="text-2xl font-bold text-white mb-3">{t('noSales')}</h2>
+            <p className="text-[#8888aa] mb-6">{t('noSalesDesc')}</p>
             <Link 
               href="/collection" 
               className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r bg-[#C84FFF] text-white font-semibold rounded-xl transition-all hover:scale-105"
             >
               <Sparkles className="w-5 h-5" />
-              View Collection
+              {t('viewCollection')}
             </Link>
           </div>
         ) : (

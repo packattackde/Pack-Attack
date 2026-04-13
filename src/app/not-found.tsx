@@ -1,7 +1,12 @@
+'use client';
+
 import Link from 'next/link';
 import { Search, Home, ArrowLeft } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 export default function NotFound() {
+  const t = useTranslations('common');
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 flex items-center justify-center p-4 font-display">
       <div className="fixed inset-0 bg-grid opacity-30" />
@@ -13,9 +18,9 @@ export default function NotFound() {
         </div>
         
         <h1 className="text-6xl font-bold text-white mb-2">404</h1>
-        <h2 className="text-xl font-semibold text-gray-300 mb-4">Page Not Found</h2>
+        <h2 className="text-xl font-semibold text-gray-300 mb-4">{t('pageNotFound')}</h2>
         <p className="text-gray-400 mb-8">
-          The page you&apos;re looking for doesn&apos;t exist or has been moved.
+          {t('pageNotFoundDesc')}
         </p>
         
         <div className="flex gap-3">
@@ -24,14 +29,14 @@ export default function NotFound() {
             className="flex-1 px-4 py-3 bg-gradient-to-r from-[#C84FFF] to-[#E879F9] text-white font-semibold rounded-xl transition-all hover:scale-105 flex items-center justify-center gap-2"
           >
             <Home className="w-4 h-4" />
-            Home
+            {t('home')}
           </Link>
           <Link
             href="/boxes"
             className="flex-1 px-4 py-3 rounded-xl font-semibold text-white gradient-border bg-gray-900/50 hover:bg-gray-800/50 transition-all flex items-center justify-center gap-2"
           >
             <ArrowLeft className="w-4 h-4" />
-            Boxes
+            {t('boxes')}
           </Link>
         </div>
       </div>

@@ -8,6 +8,7 @@ import {
   Package, Filter, RotateCcw, Send, MessageSquare
 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { useTranslations } from 'next-intl';
 
 type PayoutItem = {
   id: string;
@@ -58,6 +59,8 @@ export function PayoutsClient({
   eligibleEuro: number;
   shopId: string;
 }) {
+  const t = useTranslations('shopDashboard.payoutsMgmt');
+  const tc = useTranslations('common');
   const router = useRouter();
   const { addToast } = useToast();
   const [payouts, setPayouts] = useState(initialPayouts);
@@ -95,12 +98,12 @@ export function PayoutsClient({
       setEligibleTotal(0);
       setEligibleEuro(0);
       addToast({
-        title: 'Payout Requested',
-        description: `${data.payout.euroAmount.toFixed(2)} € — ${data.payout.items.length} items`,
+        title: t('payoutRequested'),
+        description: `${data.payout.euroAmount.toFixed(2)} € — ${data.payout.items.length} ${t('itemsTotal')}`,
       });
       router.refresh();
     } catch (err: any) {
-      addToast({ title: 'Error', description: err.message, variant: 'destructive' });
+      addToast({ title: tc('error'), description: err.message, variant: 'destructive' });
     } finally {
       setRequesting(false);
     }
@@ -108,7 +111,7 @@ export function PayoutsClient({
 
   const handleResubmit = async (payoutId: string) => {
     if (!resubmitMessage.trim()) {
-      addToast({ title: 'Error', description: 'Please enter a message for the admin', variant: 'destructive' });
+      addToast({ title: tc('error'), description: t('enterMessage'), variant: 'destructive' });
       return;
     }
     setResubmitting(true);
@@ -124,10 +127,10 @@ export function PayoutsClient({
       setPayouts(payouts.map(p => p.id === payoutId ? data.payout : p));
       setResubmitId(null);
       setResubmitMessage('');
-      addToast({ title: 'Payout Resubmitted', description: 'Your payout has been resubmitted for review' });
+      addToast({ title: t('payoutResubmitted'), description: t('resubmittedForReview') });
       router.refresh();
     } catch (err: any) {
-      addToast({ title: 'Error', description: err.message, variant: 'destructive' });
+      addToast({ title: tc('error'), description: err.message, variant: 'destructive' });
     } finally {
       setResubmitting(false);
     }
@@ -143,7 +146,7 @@ export function PayoutsClient({
             <Package className="w-8 h-8 text-[#E879F9] mb-3" />
             <div className="text-3xl font-bold text-white mb-1">{eligibleCount}</div>
             <div className="text-sm text-gray-400">
-              Delivered Items ({eligibleEuro.toFixed(2)} €)
+              {t('deliveredItems', { euro: eligibleEuro.toFixed(2) })}
             </div>
           </div>
         </div>
@@ -153,7 +156,7 @@ export function PayoutsClient({
           <div className="relative">
             <Banknote className="w-8 h-8 text-[#E879F9] mb-3" />
             <div className="text-3xl font-bold text-white mb-1">{totalPaidEuro.toFixed(2)} €</div>
-            <div className="text-sm text-gray-400">Total Paid Out</div>
+            <div className="text-sm text-gray-400">{t('totalPaidOut')}</div>
           </div>
         </div>
 
@@ -161,14 +164,14 @@ export function PayoutsClient({
           {hasPending ? (
             <div className="text-center">
               <AlertCircle className="w-8 h-8 text-yellow-400 mx-auto mb-2" />
-              <p className="text-yellow-400 font-medium text-sm">Payout request pending</p>
-              <p className="text-gray-500 text-xs mt-1">Wait for admin to process your current request</p>
+              <p className="text-yellow-400 font-medium text-sm">{t('payoutPending')}</p>
+              <p className="text-gray-500 text-xs mt-1">{t('waitForAdmin')}</p>
             </div>
           ) : eligibleCount <= 0 ? (
             <div className="text-center">
               <Wallet className="w-8 h-8 text-gray-600 mx-auto mb-2" />
-              <p className="text-gray-500 font-medium text-sm">No delivered items</p>
-              <p className="text-gray-600 text-xs mt-1">Items must be delivered before requesting payout</p>
+              <p className="text-gray-500 font-medium text-sm">{t('noDeliveredItems')}</p>
+              <p className="text-gray-600 text-xs mt-1">{t('mustBeDelivered')}</p>
             </div>
           ) : (
             <button
@@ -181,7 +184,7 @@ export function PayoutsClient({
               ) : (
                 <ArrowRightLeft className="w-5 h-5" />
               )}
-              Request Payout ({eligibleCount} items)
+              {t('requestPayout', { count: eligibleCount })}
             </button>
           )}
         </div>
@@ -200,7 +203,7 @@ export function PayoutsClient({
                 : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white'
             }`}
           >
-            {s === 'ALL' ? 'All' : statusConfig[s]?.label || s}
+            {s === 'ALL' ? t('all') : statusConfig[s]?.label || s}
             {s !== 'ALL' && ` (${payouts.filter(p => p.status === s).length})`}
           </button>
         ))}
@@ -208,12 +211,12 @@ export function PayoutsClient({
 
       {/* Payout History */}
       <div>
-        <h2 className="text-xl font-bold text-white mb-4">Payout History</h2>
+        <h2 className="text-xl font-bold text-white mb-4">{t('payoutHistory')}</h2>
         {filteredPayouts.length === 0 ? (
           <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
             <Wallet className="w-12 h-12 text-gray-700 mx-auto mb-3" />
-            <p className="text-[#8888aa]">No payouts yet</p>
-            <p className="text-gray-600 text-sm mt-1">Request a payout when you have delivered items</p>
+            <p className="text-[#8888aa]">{t('noPayouts')}</p>
+            <p className="text-gray-600 text-sm mt-1">{t('requestWhenDelivered')}</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -321,7 +324,7 @@ export function PayoutsClient({
                         </div>
                       )}
 
-                      <div className="text-sm font-medium text-[#8888aa] mb-2">Included Items</div>
+                      <div className="text-sm font-medium text-[#8888aa] mb-2">{t('includedItems')}</div>
                       <div className="space-y-2 max-h-80 overflow-y-auto">
                         {payout.items.map((item) => (
                           <div key={item.id} className="flex items-center gap-3 bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-lg p-3">
@@ -347,7 +350,7 @@ export function PayoutsClient({
                       </div>
 
                       <div className="flex justify-between items-center pt-3 border-t border-gray-800">
-                        <span className="text-sm text-gray-400">{payout.items.length} items total</span>
+                        <span className="text-sm text-gray-400">{payout.items.length} {t('itemsTotal')}</span>
                         <span className="text-sm font-bold text-[#E879F9]">{payout.euroAmount.toFixed(2)} €</span>
                       </div>
                     </div>

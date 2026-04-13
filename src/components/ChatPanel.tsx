@@ -16,6 +16,7 @@ import {
   VolumeX,
   Bell,
 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface ChatUser {
   id: string;
@@ -113,6 +114,7 @@ function AdminMessageMenu({
   onTimeout: (userId: string, userName: string, duration: string) => void;
   onBan: (userId: string, userName: string) => void;
 }) {
+  const t = useTranslations('chat');
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -133,7 +135,7 @@ function AdminMessageMenu({
       <button
         onClick={() => setOpen(!open)}
         className="flex items-center justify-center w-5 h-5 rounded text-gray-600 hover:text-gray-300 hover:bg-white/[0.06] transition-colors opacity-0 group-hover:opacity-100"
-        aria-label="Message actions"
+        aria-label={t('messageActions')}
       >
         <MoreVertical className="w-3.5 h-3.5" />
       </button>
@@ -148,7 +150,7 @@ function AdminMessageMenu({
             className="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-gray-300 hover:bg-white/[0.06] hover:text-red-400 transition-colors"
           >
             <Trash2 className="w-3.5 h-3.5" />
-            Delete message
+            {t('deleteMessage')}
           </button>
           <div className="h-px bg-white/[0.06] my-1" />
           <button
@@ -159,7 +161,7 @@ function AdminMessageMenu({
             className="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-gray-300 hover:bg-white/[0.06] hover:text-yellow-400 transition-colors"
           >
             <Clock className="w-3.5 h-3.5" />
-            Timeout 1 hour
+            {t('timeout1h')}
           </button>
           <button
             onClick={() => {
@@ -169,7 +171,7 @@ function AdminMessageMenu({
             className="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-gray-300 hover:bg-white/[0.06] hover:text-yellow-400 transition-colors"
           >
             <Clock className="w-3.5 h-3.5" />
-            Timeout 1 day
+            {t('timeout1d')}
           </button>
           <button
             onClick={() => {
@@ -179,7 +181,7 @@ function AdminMessageMenu({
             className="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-gray-300 hover:bg-white/[0.06] hover:text-yellow-400 transition-colors"
           >
             <Clock className="w-3.5 h-3.5" />
-            Timeout 1 week
+            {t('timeout1w')}
           </button>
           <div className="h-px bg-white/[0.06] my-1" />
           <button
@@ -190,7 +192,7 @@ function AdminMessageMenu({
             className="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-red-400 hover:bg-red-500/10 transition-colors"
           >
             <Ban className="w-3.5 h-3.5" />
-            Ban permanently
+            {t('banPermanently')}
           </button>
         </div>
       )}
@@ -199,6 +201,7 @@ function AdminMessageMenu({
 }
 
 export function ChatPanel() {
+  const t = useTranslations('chat');
   const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -239,15 +242,15 @@ export function ChatPanel() {
 
   const cycleSoundMode = () => {
     const next: Record<SoundMode, SoundMode> = { all: 'focused', focused: 'off', off: 'all' };
-    const labels: Record<SoundMode, string> = {
-      all: 'Sound: Always on',
-      focused: 'Sound: Only when tab is active',
-      off: 'Sound: Off',
+    const labelKeys: Record<SoundMode, string> = {
+      all: 'soundAlways',
+      focused: 'soundActiveTab',
+      off: 'soundOff',
     };
     const newMode = next[soundMode];
     setSoundMode(newMode);
     localStorage.setItem(SOUND_MODE_KEY, newMode);
-    setSoundToast(labels[newMode]);
+    setSoundToast(t(labelKeys[newMode]));
   };
 
   // Auto-clear sound toast after 2 seconds
@@ -396,18 +399,17 @@ export function ChatPanel() {
       const res = await fetch(`/api/chat/messages/${messageId}`, { method: 'DELETE' });
       const data = await res.json();
       if (data.success) {
-        // Optimistic update (SSE will also broadcast)
         setMessages((prev) =>
           prev.map((m) =>
             m.id === messageId ? { ...m, content: '[message deleted]', isDeleted: true } : m,
           ),
         );
-        setActionFeedback('Message deleted');
+        setActionFeedback(t('messageDeleted'));
       } else {
-        setActionFeedback(data.error || 'Failed to delete');
+        setActionFeedback(data.error || t('deleteFailed'));
       }
     } catch {
-      setActionFeedback('Failed to delete message');
+      setActionFeedback(t('deleteFailedDesc'));
     }
   };
 
@@ -420,18 +422,19 @@ export function ChatPanel() {
       });
       const data = await res.json();
       if (data.success) {
-        const labels: Record<string, string> = { '1h': '1 hour', '1d': '1 day', '1w': '1 week' };
-        setActionFeedback(`${userName} timed out for ${labels[duration] || duration}`);
+        const durationKey = duration as '1h' | '1d' | '1w';
+        const durationLabel = t(`durations.${durationKey}`);
+        setActionFeedback(t('timedOutUser', { user: userName, duration: durationLabel }));
       } else {
-        setActionFeedback(data.error || 'Failed to timeout');
+        setActionFeedback(data.error || t('timeoutFailed'));
       }
     } catch {
-      setActionFeedback('Failed to timeout user');
+      setActionFeedback(t('timeoutFailedDesc'));
     }
   };
 
   const handleBanUser = async (userId: string, userName: string) => {
-    if (!confirm(`Permanently ban ${userName} from chat?`)) return;
+    if (!confirm(t('confirmBan', { user: userName }))) return;
     try {
       const res = await fetch('/api/chat/admin/ban', {
         method: 'POST',
@@ -440,12 +443,12 @@ export function ChatPanel() {
       });
       const data = await res.json();
       if (data.success) {
-        setActionFeedback(`${userName} banned from chat`);
+        setActionFeedback(t('bannedUser', { user: userName }));
       } else {
-        setActionFeedback(data.error || 'Failed to ban');
+        setActionFeedback(data.error || t('banFailed'));
       }
     } catch {
-      setActionFeedback('Failed to ban user');
+      setActionFeedback(t('banFailedDesc'));
     }
   };
 
@@ -497,7 +500,7 @@ export function ChatPanel() {
     const date = new Date(expiresAt);
     const now = new Date();
     const diff = date.getTime() - now.getTime();
-    if (diff <= 0) return 'expired';
+    if (diff <= 0) return t('expired');
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     if (hours > 24) return `${Math.floor(hours / 24)}d ${hours % 24}h`;
@@ -515,7 +518,7 @@ export function ChatPanel() {
             setUnreadCount(0);
           }}
           className="fixed right-4 bottom-4 z-50 flex items-center justify-center w-12 h-12 rounded-full bg-purple-600 hover:bg-purple-500 text-white shadow-lg shadow-purple-600/30 transition-all duration-200 hover:scale-105 active:scale-95"
-          aria-label="Open chat"
+          aria-label={t('openChat')}
         >
           <MessageCircle className="w-5 h-5" />
           {unreadCount > 0 && (
@@ -533,11 +536,11 @@ export function ChatPanel() {
           <div className="flex items-center justify-between h-12 px-4 border-b border-white/[0.08] bg-[#06061a]/95 shrink-0">
             <div className="flex items-center gap-2">
               <MessageCircle className="w-4 h-4 text-purple-400" />
-              <span className="text-sm font-semibold text-white">Chat</span>
+              <span className="text-sm font-semibold text-white">{t('chat')}</span>
               {connected && (
                 <span className="flex items-center gap-1 text-[10px] text-[#E879F9]">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#C84FFF] animate-pulse" />
-                  live
+                  {t('live')}
                 </span>
               )}
             </div>
@@ -545,7 +548,7 @@ export function ChatPanel() {
               <button
                 onClick={cycleSoundMode}
                 className="flex items-center gap-1 h-7 px-2 rounded-md text-gray-500 hover:text-gray-300 hover:bg-white/[0.06] transition-colors"
-                aria-label={`Sound: ${soundMode}`}
+                aria-label={t('soundSettings')}
               >
                 {soundMode === 'all' ? (
                   <Volume2 className="w-3.5 h-3.5 text-purple-400" />
@@ -554,12 +557,12 @@ export function ChatPanel() {
                 ) : (
                   <VolumeX className="w-3.5 h-3.5" />
                 )}
-                <span className="text-[10px]">Sound settings</span>
+                <span className="text-[10px]">{t('soundSettings')}</span>
               </button>
               <button
                 onClick={() => setIsOpen(false)}
                 className="flex items-center justify-center w-8 h-8 rounded-lg text-gray-400 hover:text-white hover:bg-white/[0.06] transition-colors"
-                aria-label="Close chat"
+                aria-label={t('closeChat')}
               >
                 <X className="w-4 h-4" />
               </button>
@@ -589,8 +592,8 @@ export function ChatPanel() {
             {messages.length === 0 && (
               <div className="flex flex-col items-center justify-center h-full text-center">
                 <MessageCircle className="w-10 h-10 text-gray-700 mb-3" />
-                <p className="text-sm text-gray-500">No messages yet</p>
-                <p className="text-xs text-gray-600 mt-1">Be the first to say something!</p>
+                <p className="text-sm text-gray-500">{t('noMessages')}</p>
+                <p className="text-xs text-gray-600 mt-1">{t('beFirst')}</p>
               </div>
             )}
 
@@ -635,7 +638,7 @@ export function ChatPanel() {
                       <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-red-500/20 border border-red-500/30">
                         <Shield className="w-2.5 h-2.5 text-red-400" />
                         <span className="text-[9px] font-bold text-red-400 uppercase tracking-wider">
-                          Admin
+                          {t('admin')}
                         </span>
                       </span>
                     )}
@@ -684,15 +687,15 @@ export function ChatPanel() {
                   <Ban className="w-4 h-4 text-red-400 shrink-0" />
                   <div className="text-xs text-red-300">
                     {banStatus.type === 'BAN' ? (
-                      <span>You are permanently banned from chat.</span>
+                      <span>{t('banned')}</span>
                     ) : (
                       <span>
-                        Timed out — {formatBanExpiry(banStatus.expiresAt)} remaining
+                        {t('timedOut')}{formatBanExpiry(banStatus.expiresAt)}{t('remaining')}
                       </span>
                     )}
                     {banStatus.reason && (
                       <span className="block text-red-400/70 mt-0.5">
-                        Reason: {banStatus.reason}
+                        {t('reason')}{banStatus.reason}
                       </span>
                     )}
                   </div>
@@ -704,7 +707,7 @@ export function ChatPanel() {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    placeholder="Type a message..."
+                    placeholder={t('placeholder')}
                     maxLength={500}
                     className="flex-1 h-9 px-3 rounded-lg bg-white/[0.06] border border-white/[0.08] text-sm text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/30 transition-colors"
                   />
@@ -712,7 +715,7 @@ export function ChatPanel() {
                     onClick={sendMessage}
                     disabled={!input.trim() || sending}
                     className="flex items-center justify-center w-9 h-9 rounded-lg bg-purple-600 hover:bg-purple-500 disabled:opacity-40 disabled:hover:bg-purple-600 text-white transition-colors"
-                    aria-label="Send message"
+                    aria-label={t('sendMessage')}
                   >
                     <Send className="w-4 h-4" />
                   </button>
@@ -720,7 +723,7 @@ export function ChatPanel() {
               )
             ) : (
               <div className="flex flex-col gap-2">
-                <p className="text-xs text-gray-500 text-center">Sign in to chat</p>
+                <p className="text-xs text-gray-500 text-center">{t('signInToChat')}</p>
                 <div className="flex gap-2">
                   <button
                     onClick={() => signIn('twitch')}
@@ -734,7 +737,7 @@ export function ChatPanel() {
                     className="flex-1 flex items-center justify-center gap-2 h-9 rounded-lg bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.08] text-gray-300 text-sm font-medium transition-colors"
                   >
                     <LogIn className="w-4 h-4" />
-                    Sign In
+                    {t('signIn')}
                   </button>
                 </div>
               </div>

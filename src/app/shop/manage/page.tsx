@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useToast } from '@/components/ui/use-toast';
 import { 
   Store, 
@@ -29,6 +30,7 @@ type Shop = {
 };
 
 export default function ShopManagePage() {
+  const t = useTranslations('shop.manage');
   const router = useRouter();
   const { addToast } = useToast();
   const [shop, setShop] = useState<Shop | null | undefined>(undefined);
@@ -45,8 +47,8 @@ export default function ShopManagePage() {
         
         if (res.status === 403) {
           addToast({
-            title: 'Access Denied',
-            description: 'You need to be a Shop Owner to access this page',
+            title: t('accessDenied'),
+            description: t('needShopOwner'),
             variant: 'destructive',
           });
           router.push('/shop');
@@ -72,7 +74,7 @@ export default function ShopManagePage() {
     if (!shopName.trim()) {
       addToast({
         title: 'Error',
-        description: 'Shop name is required',
+        description: t('shopNameRequired'),
         variant: 'destructive',
       });
       return;
@@ -94,23 +96,22 @@ export default function ShopManagePage() {
       if (!res.ok) {
         addToast({
           title: 'Error',
-          description: data.error || 'Failed to create shop',
+          description: data.error || t('failedToCreate'),
           variant: 'destructive',
         });
         return;
       }
 
       addToast({
-        title: 'Shop Created!',
-        description: 'Your shop has been created successfully',
+        title: t('shopCreated'),
+        description: t('shopCreatedDesc'),
       });
 
-      // Refresh the page to show the shop
       window.location.reload();
     } catch (error) {
       addToast({
         title: 'Error',
-        description: 'Failed to create shop',
+        description: t('failedToCreate'),
         variant: 'destructive',
       });
     } finally {
@@ -123,13 +124,12 @@ export default function ShopManagePage() {
       <div className="min-h-screen flex items-center justify-center font-display">
         <div className="text-white flex items-center gap-3">
           <div className="w-6 h-6 border-2 border-[rgba(200,79,255,0.3)] border-t-transparent rounded-full animate-spin" />
-          Loading...
+          {t('loading')}
         </div>
       </div>
     );
   }
 
-  // Show shop creation form if no shop exists
   if (shop === null) {
     return (
       <div className="min-h-screen font-display">
@@ -142,31 +142,31 @@ export default function ShopManagePage() {
               <div className="w-20 h-20 rounded-full bg-gradient-to-r from-[#C84FFF] to-[#C84FFF] flex items-center justify-center mx-auto mb-6">
                 <Store className="w-10 h-10 text-white" />
               </div>
-              <h1 className="text-3xl font-bold text-white mb-3">Create Your Shop</h1>
-              <p className="text-[#8888aa]">Set up your shop to start selling TCG products</p>
+              <h1 className="text-3xl font-bold text-white mb-3">{t('createShop')}</h1>
+              <p className="text-[#8888aa]">{t('createShopDesc')}</p>
             </div>
 
             <form onSubmit={handleCreateShop} className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-8 space-y-6">
               <div>
-                <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Shop Name *</label>
+                <label className="block text-sm font-medium text-[#f0f0f5] mb-2">{t('shopName')} *</label>
                 <input
                   type="text"
                   required
                   value={shopName}
                   onChange={(e) => setShopName(e.target.value)}
                   className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
-                  placeholder="My Awesome Card Shop"
+                  placeholder={t('shopNamePlaceholder')}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Description</label>
+                <label className="block text-sm font-medium text-[#f0f0f5] mb-2">{t('shopDescription')}</label>
                 <textarea
                   value={shopDescription}
                   onChange={(e) => setShopDescription(e.target.value)}
                   rows={4}
                   className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none resize-none"
-                  placeholder="Tell customers about your shop..."
+                  placeholder={t('shopDescPlaceholder')}
                 />
               </div>
 
@@ -178,12 +178,12 @@ export default function ShopManagePage() {
                 {creating ? (
                   <>
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Creating Shop...
+                    {t('creatingShop')}
                   </>
                 ) : (
                   <>
                     <Store className="w-5 h-5" />
-                    Create Shop
+                    {t('createShopBtn')}
                   </>
                 )}
               </button>
@@ -213,14 +213,14 @@ export default function ShopManagePage() {
                 <span className="px-2 py-1 rounded-lg bg-red-500/20 text-red-400 text-xs font-medium">Inactive</span>
               )}
             </div>
-            <p className="text-[#8888aa]">Manage your shop, products, and orders</p>
+            <p className="text-[#8888aa]">{t('subtitle')}</p>
           </div>
           <Link
             href="/shop/manage/products/new"
             className="inline-flex items-center gap-2 px-6 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl hover:brightness-110 transition-all"
           >
             <Plus className="w-5 h-5" />
-            Add Product
+            {t('addProduct')}
           </Link>
         </div>
 
@@ -232,7 +232,7 @@ export default function ShopManagePage() {
                 <Package className="w-6 h-6 text-[#C84FFF]" />
               </div>
               <div>
-                <p className="text-[#8888aa] text-sm">Products</p>
+                <p className="text-[#8888aa] text-sm">{t('statsProducts')}</p>
                 <p className="text-2xl font-bold text-white">{shop?._count.products || 0}</p>
               </div>
             </div>
@@ -244,7 +244,7 @@ export default function ShopManagePage() {
                 <ShoppingBag className="w-6 h-6 text-[#C84FFF]" />
               </div>
               <div>
-                <p className="text-[#8888aa] text-sm">Orders</p>
+                <p className="text-[#8888aa] text-sm">{t('statsOrders')}</p>
                 <p className="text-2xl font-bold text-white">{shop?._count.orders || 0}</p>
               </div>
             </div>
@@ -256,7 +256,7 @@ export default function ShopManagePage() {
                 <BarChart3 className="w-6 h-6 text-[#C84FFF]" />
               </div>
               <div>
-                <p className="text-[#8888aa] text-sm">Active Products</p>
+                <p className="text-[#8888aa] text-sm">{t('statsActive')}</p>
                 <p className="text-2xl font-bold text-white">
                   {shop?.products.filter(p => p.isActive).length || 0}
                 </p>
@@ -270,7 +270,7 @@ export default function ShopManagePage() {
                 <ImageIcon className="w-6 h-6 text-amber-400" />
               </div>
               <div>
-                <p className="text-[#8888aa] text-sm">Featured</p>
+                <p className="text-[#8888aa] text-sm">{t('statsFeatured')}</p>
                 <p className="text-2xl font-bold text-white">
                   {shop?.products.filter(p => p.featured).length || 0}
                 </p>
@@ -286,9 +286,9 @@ export default function ShopManagePage() {
               <div className="p-3 rounded-xl bg-[rgba(200,79,255,0.15)] group-hover:bg-[rgba(200,79,255,0.2)] transition-colors">
                 <Package className="w-6 h-6 text-[#C84FFF]" />
               </div>
-              <h2 className="text-xl font-bold text-white">Products</h2>
+              <h2 className="text-xl font-bold text-white">{t('productsCard')}</h2>
             </div>
-            <p className="text-[#8888aa]">Manage your product listings, prices, and inventory</p>
+            <p className="text-[#8888aa]">{t('productsDesc')}</p>
           </Link>
 
           <Link href="/shop/manage/orders" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:bg-white/5 transition-colors group">
@@ -296,9 +296,9 @@ export default function ShopManagePage() {
               <div className="p-3 rounded-xl bg-[rgba(200,79,255,0.1)] group-hover:bg-[rgba(200,79,255,0.15)] transition-colors">
                 <ShoppingBag className="w-6 h-6 text-[#C84FFF]" />
               </div>
-              <h2 className="text-xl font-bold text-white">Orders</h2>
+              <h2 className="text-xl font-bold text-white">{t('ordersCard')}</h2>
             </div>
-            <p className="text-[#8888aa]">View and manage customer orders and shipping</p>
+            <p className="text-[#8888aa]">{t('ordersDesc')}</p>
           </Link>
 
           <Link href="/shop/manage/settings" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:bg-white/5 transition-colors group">
@@ -306,9 +306,9 @@ export default function ShopManagePage() {
               <div className="p-3 rounded-xl bg-[rgba(200,79,255,0.1)] group-hover:bg-[rgba(200,79,255,0.2)] transition-colors">
                 <Settings className="w-6 h-6 text-[#C84FFF]" />
               </div>
-              <h2 className="text-xl font-bold text-white">Settings</h2>
+              <h2 className="text-xl font-bold text-white">{t('settingsCard')}</h2>
             </div>
-            <p className="text-[#8888aa]">Update your shop details, logo, and preferences</p>
+            <p className="text-[#8888aa]">{t('settingsDesc')}</p>
           </Link>
         </div>
       </div>

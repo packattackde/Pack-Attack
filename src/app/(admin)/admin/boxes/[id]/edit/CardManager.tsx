@@ -7,6 +7,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { Search, Plus, Trash2, X, Edit2, Save, XCircle, Check, Store } from 'lucide-react';
 import Image from 'next/image';
 import { Coins } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 type ShopOption = {
   id: string;

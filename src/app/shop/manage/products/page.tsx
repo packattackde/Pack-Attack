@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useToast } from '@/components/ui/use-toast';
 import { 
   Package, 
@@ -28,21 +29,9 @@ type Product = {
   featured: boolean;
 };
 
-const categoryDisplayNames: Record<string, string> = {
-  SINGLE_CARD: 'Single Card',
-  BOOSTER_BOX: 'Booster Box',
-  BOOSTER_PACK: 'Booster Pack',
-  STARTER_DECK: 'Starter Deck',
-  STRUCTURE_DECK: 'Structure Deck',
-  ACCESSORIES: 'Accessories',
-  SLEEVES: 'Sleeves',
-  PLAYMAT: 'Playmat',
-  BINDER: 'Binder',
-  DECK_BOX: 'Deck Box',
-  OTHER: 'Other',
-};
-
 export default function ManageProductsPage() {
+  const t = useTranslations('shop.manageProducts');
+  const tCat = useTranslations('shop.categories');
   const router = useRouter();
   const { addToast } = useToast();
   const [products, setProducts] = useState<Product[]>([]);
@@ -75,7 +64,7 @@ export default function ManageProductsPage() {
   }, [router]);
 
   const handleDelete = async (productId: string) => {
-    if (!confirm('Are you sure you want to delete this product?')) return;
+    if (!confirm(t('confirmDelete'))) return;
 
     setDeleting(productId);
     try {
@@ -87,7 +76,7 @@ export default function ManageProductsPage() {
         const data = await res.json();
         addToast({
           title: 'Error',
-          description: data.error || 'Failed to delete product',
+          description: data.error || t('failedToDelete'),
           variant: 'destructive',
         });
         return;
@@ -95,13 +84,13 @@ export default function ManageProductsPage() {
 
       setProducts((prev) => prev.filter((p) => p.id !== productId));
       addToast({
-        title: 'Deleted',
-        description: 'Product has been deleted',
+        title: t('deleted'),
+        description: t('deletedDesc'),
       });
     } catch (error) {
       addToast({
         title: 'Error',
-        description: 'Failed to delete product',
+        description: t('failedToDelete'),
         variant: 'destructive',
       });
     } finally {
@@ -126,13 +115,13 @@ export default function ManageProductsPage() {
       ));
 
       addToast({
-        title: product.isActive ? 'Deactivated' : 'Activated',
-        description: `Product is now ${product.isActive ? 'hidden' : 'visible'}`,
+        title: product.isActive ? t('deactivated') : t('activated'),
+        description: product.isActive ? t('nowHidden') : t('nowVisible'),
       });
     } catch (error) {
       addToast({
         title: 'Error',
-        description: 'Failed to update product',
+        description: t('failedToUpdate'),
         variant: 'destructive',
       });
     }
@@ -155,13 +144,13 @@ export default function ManageProductsPage() {
       ));
 
       addToast({
-        title: product.featured ? 'Unfeatured' : 'Featured',
-        description: `Product ${product.featured ? 'removed from' : 'added to'} featured list`,
+        title: product.featured ? t('unfeatured') : t('featured'),
+        description: product.featured ? t('removedFromFeatured') : t('addedToFeatured'),
       });
     } catch (error) {
       addToast({
         title: 'Error',
-        description: 'Failed to update product',
+        description: t('failedToUpdate'),
         variant: 'destructive',
       });
     }
@@ -176,7 +165,7 @@ export default function ManageProductsPage() {
       <div className="min-h-screen flex items-center justify-center font-display">
         <div className="text-white flex items-center gap-3">
           <div className="w-6 h-6 border-2 border-[rgba(200,79,255,0.3)] border-t-transparent rounded-full animate-spin" />
-          Loading products...
+          {t('loading')}
         </div>
       </div>
     );
@@ -191,16 +180,16 @@ export default function ManageProductsPage() {
         {/* Breadcrumb */}
         <Link href="/shop/manage" className="inline-flex items-center gap-2 text-[#8888aa] hover:text-white transition-colors mb-8">
           <ArrowLeft className="w-4 h-4" />
-          Back to Dashboard
+          {t('backToDashboard')}
         </Link>
 
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div className="flex items-center gap-3">
             <Package className="w-8 h-8 text-[#C84FFF]" />
-            <h1 className="text-3xl font-bold text-white">Products</h1>
+            <h1 className="text-3xl font-bold text-white">{t('title')}</h1>
             <span className="px-3 py-1 rounded-full bg-[#12123a] text-[#f0f0f5] text-sm">
-              {products.length} total
+              {t('totalCount', { count: products.length })}
             </span>
           </div>
           <Link
@@ -208,7 +197,7 @@ export default function ManageProductsPage() {
             className="inline-flex items-center gap-2 px-6 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl hover:brightness-110 transition-all"
           >
             <Plus className="w-5 h-5" />
-            Add Product
+            {t('addProduct')}
           </Link>
         </div>
 
@@ -217,7 +206,7 @@ export default function ManageProductsPage() {
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8888aa]" />
           <input
             type="text"
-            placeholder="Search products..."
+            placeholder={t('searchPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-12 pr-4 py-3 rounded-xl bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none transition-colors"
@@ -229,10 +218,10 @@ export default function ManageProductsPage() {
           <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
             <Package className="w-16 h-16 text-gray-600 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-white mb-2">
-              {searchQuery ? 'No Products Found' : 'No Products Yet'}
+              {searchQuery ? t('noProducts') : t('noProductsYet')}
             </h2>
             <p className="text-[#8888aa] mb-6">
-              {searchQuery ? 'Try a different search term' : 'Add your first product to get started'}
+              {searchQuery ? t('tryDifferent') : t('addFirst')}
             </p>
             {!searchQuery && (
               <Link
@@ -240,7 +229,7 @@ export default function ManageProductsPage() {
                 className="inline-flex items-center gap-2 px-6 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl"
               >
                 <Plus className="w-5 h-5" />
-                Add Product
+                {t('addProduct')}
               </Link>
             )}
           </div>
@@ -250,12 +239,12 @@ export default function ManageProductsPage() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-[rgba(255,255,255,0.06)]/50">
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-[#8888aa]">Product</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-[#8888aa]">Category</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-[#8888aa]">Price</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-[#8888aa]">Stock</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-[#8888aa]">Status</th>
-                    <th className="px-6 py-4 text-right text-sm font-semibold text-[#8888aa]">Actions</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-[#8888aa]">{t('tableHeaders.product')}</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-[#8888aa]">{t('tableHeaders.category')}</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-[#8888aa]">{t('tableHeaders.price')}</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-[#8888aa]">{t('tableHeaders.stock')}</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-[#8888aa]">{t('tableHeaders.status')}</th>
+                    <th className="px-6 py-4 text-right text-sm font-semibold text-[#8888aa]">{t('tableHeaders.actions')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[rgba(255,255,255,0.06)]">
@@ -281,7 +270,7 @@ export default function ManageProductsPage() {
                             <p className="font-semibold text-white">{product.name}</p>
                             {product.featured && (
                               <span className="inline-flex items-center gap-1 text-amber-400 text-xs">
-                                <Star className="w-3 h-3" /> Featured
+                                <Star className="w-3 h-3" /> {t('featured')}
                               </span>
                             )}
                           </div>
@@ -289,7 +278,7 @@ export default function ManageProductsPage() {
                       </td>
                       <td className="px-6 py-4">
                         <span className="text-[#f0f0f5]">
-                          {categoryDisplayNames[product.category] || product.category}
+                          {tCat(product.category)}
                         </span>
                       </td>
                       <td className="px-6 py-4">
@@ -308,7 +297,7 @@ export default function ManageProductsPage() {
                             ? 'bg-[#C84FFF]/20 text-[#E879F9]' 
                             : 'bg-gray-500/20 text-[#8888aa]'
                         }`}>
-                          {product.isActive ? 'Active' : 'Hidden'}
+                          {product.isActive ? t('active') : t('hidden')}
                         </span>
                       </td>
                       <td className="px-6 py-4">
@@ -320,7 +309,7 @@ export default function ManageProductsPage() {
                                 ? 'text-amber-400 hover:bg-amber-500/20' 
                                 : 'text-[#8888aa] hover:bg-[#12123a]'
                             }`}
-                            title={product.featured ? 'Remove from featured' : 'Add to featured'}
+                            title={product.featured ? t('removeFromFeatured') : t('addToFeatured')}
                           >
                             <Star className="w-4 h-4" />
                           </button>
@@ -331,14 +320,14 @@ export default function ManageProductsPage() {
                                 ? 'text-[#E879F9] hover:bg-[#C84FFF]/20' 
                                 : 'text-[#8888aa] hover:bg-[#12123a]'
                             }`}
-                            title={product.isActive ? 'Hide product' : 'Show product'}
+                            title={product.isActive ? t('hideProduct') : t('showProduct')}
                           >
                             {product.isActive ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
                           </button>
                           <Link
                             href={`/shop/manage/products/${product.id}/edit`}
                             className="p-2 rounded-lg text-[#C84FFF] hover:bg-[rgba(200,79,255,0.15)] transition-colors"
-                            title="Edit product"
+                            title={t('editProduct')}
                           >
                             <Edit className="w-4 h-4" />
                           </Link>
@@ -346,7 +335,7 @@ export default function ManageProductsPage() {
                             onClick={() => handleDelete(product.id)}
                             disabled={deleting === product.id}
                             className="p-2 rounded-lg text-red-400 hover:bg-red-500/20 transition-colors disabled:opacity-50"
-                            title="Delete product"
+                            title={t('deleteProduct')}
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>

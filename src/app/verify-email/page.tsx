@@ -5,19 +5,19 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { CheckCircle2, XCircle, Loader2, Mail, Sparkles } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 type VerificationStatus = 'loading' | 'success' | 'error' | 'expired' | 'already-verified';
 
 function VerifyEmailContent() {
+  const t = useTranslations('auth');
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
   const [status, setStatus] = useState<VerificationStatus>('loading');
-  const [message, setMessage] = useState('');
 
   useEffect(() => {
     if (!token) {
       setStatus('error');
-      setMessage('No verification token provided');
       return;
     }
 
@@ -29,23 +29,18 @@ function VerifyEmailContent() {
         if (res.ok) {
           if (data.message === 'Email already verified') {
             setStatus('already-verified');
-            setMessage('Your email is already verified');
           } else {
             setStatus('success');
-            setMessage('Your email has been verified successfully!');
           }
         } else {
           if (data.error?.includes('expired')) {
             setStatus('expired');
-            setMessage('Your verification link has expired');
           } else {
             setStatus('error');
-            setMessage(data.error || 'Failed to verify email');
           }
         }
-      } catch (error) {
+      } catch {
         setStatus('error');
-        setMessage('An error occurred while verifying your email');
       }
     };
 
@@ -59,8 +54,8 @@ function VerifyEmailContent() {
           <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[rgba(200,79,255,0.1)] to-purple-500/20">
             <Loader2 className="w-10 h-10 text-[#C84FFF] animate-spin" />
           </div>
-          <h2 className="text-2xl font-bold text-white mb-2">Verifying Email</h2>
-          <p className="text-[#8888aa]">Please wait while we verify your email address...</p>
+          <h2 className="text-2xl font-bold text-white mb-2">{t('verify.verifying')}</h2>
+          <p className="text-[#8888aa]">{t('verify.verifyingDesc')}</p>
         </>
       )}
 
@@ -69,20 +64,20 @@ function VerifyEmailContent() {
           <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[#C84FFF]/20 to-[#9333EA]/20">
             <CheckCircle2 className="w-10 h-10 text-[#E879F9]" />
           </div>
-          <h2 className="text-2xl font-bold text-white mb-2">Email Verified!</h2>
-          <p className="text-[#8888aa] mb-6">{message}</p>
+          <h2 className="text-2xl font-bold text-white mb-2">{t('verify.verified')}</h2>
+          <p className="text-[#8888aa] mb-6">{t('verify.verifiedSuccess')}</p>
           <div className="space-y-3">
             <Link
               href="/login"
               className="block w-full py-4 bg-[#C84FFF] hover:bg-[#E879F9] text-white font-semibold rounded-xl transition-all hover:scale-[1.02]"
             >
-              Sign In to Your Account
+              {t('verify.signInToAccount')}
             </Link>
             <Link
               href="/boxes"
               className="block w-full py-4 text-[#8888aa] hover:text-white transition-colors"
             >
-              Browse Boxes
+              {t('verify.browseBoxes')}
             </Link>
           </div>
         </>
@@ -93,13 +88,13 @@ function VerifyEmailContent() {
           <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[rgba(200,79,255,0.1)] to-purple-500/20">
             <CheckCircle2 className="w-10 h-10 text-[#C84FFF]" />
           </div>
-          <h2 className="text-2xl font-bold text-white mb-2">Already Verified</h2>
-          <p className="text-[#8888aa] mb-6">{message}</p>
+          <h2 className="text-2xl font-bold text-white mb-2">{t('verify.alreadyVerified')}</h2>
+          <p className="text-[#8888aa] mb-6">{t('verify.alreadyVerifiedMsg')}</p>
           <Link
             href="/login"
             className="block w-full py-4 bg-[#C84FFF] hover:bg-[#E879F9] text-white font-semibold rounded-xl transition-all hover:scale-[1.02]"
           >
-            Sign In to Your Account
+            {t('verify.signInToAccount')}
           </Link>
         </>
       )}
@@ -109,16 +104,16 @@ function VerifyEmailContent() {
           <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-500/20">
             <Mail className="w-10 h-10 text-amber-400" />
           </div>
-          <h2 className="text-2xl font-bold text-white mb-2">Link Expired</h2>
-          <p className="text-[#8888aa] mb-6">{message}</p>
+          <h2 className="text-2xl font-bold text-white mb-2">{t('verify.linkExpired')}</h2>
+          <p className="text-[#8888aa] mb-6">{t('verify.linkExpiredMsg')}</p>
           <p className="text-sm text-gray-500 mb-4">
-            Please request a new verification email from the login page.
+            {t('verify.requestNewLink')}
           </p>
           <Link
             href="/login"
             className="block w-full py-4 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-semibold rounded-xl transition-all hover:scale-[1.02]"
           >
-            Go to Login
+            {t('goToLogin')}
           </Link>
         </>
       )}
@@ -128,13 +123,13 @@ function VerifyEmailContent() {
           <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-red-500/20 to-pink-500/20">
             <XCircle className="w-10 h-10 text-red-400" />
           </div>
-          <h2 className="text-2xl font-bold text-white mb-2">Verification Failed</h2>
-          <p className="text-[#8888aa] mb-6">{message}</p>
+          <h2 className="text-2xl font-bold text-white mb-2">{t('verify.failed')}</h2>
+          <p className="text-[#8888aa] mb-6">{!token ? t('verify.noToken') : t('verify.failedMsg')}</p>
           <Link
             href="/login"
             className="block w-full py-4 bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-600 hover:to-gray-500 text-white font-semibold rounded-xl transition-all hover:scale-[1.02]"
           >
-            Back to Login
+            {t('verify.signInToAccount')}
           </Link>
         </>
       )}
@@ -143,18 +138,22 @@ function VerifyEmailContent() {
 }
 
 function LoadingState() {
+  const t = useTranslations('auth');
+
   return (
     <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-8 text-center">
       <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[rgba(200,79,255,0.1)] to-purple-500/20">
         <Loader2 className="w-10 h-10 text-[#C84FFF] animate-spin" />
       </div>
-      <h2 className="text-2xl font-bold text-white mb-2">Loading</h2>
-      <p className="text-[#8888aa]">Please wait...</p>
+      <h2 className="text-2xl font-bold text-white mb-2">{t('verify.verifying')}</h2>
+      <p className="text-[#8888aa]">{t('verify.pleaseWait')}</p>
     </div>
   );
 }
 
 export default function VerifyEmailPage() {
+  const t = useTranslations('auth');
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display p-4">
       {/* Background effects */}
@@ -181,7 +180,7 @@ export default function VerifyEmailPage() {
         <div className="mt-6 text-center">
           <Link href="/" className="inline-flex items-center gap-2 text-gray-500 hover:text-[#f0f0f5] transition-colors text-sm">
             <Sparkles className="w-4 h-4" />
-            Back to Home
+            {t('layout.backToHome')}
           </Link>
         </div>
       </div>

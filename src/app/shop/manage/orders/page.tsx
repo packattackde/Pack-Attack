@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useToast } from '@/components/ui/use-toast';
 import { 
   ShoppingBag, 
@@ -63,17 +64,10 @@ const statusColors: Record<string, string> = {
   REFUNDED: 'bg-gray-500/20 text-[#8888aa]',
 };
 
-const statusOptions = [
-  { value: 'PENDING', label: 'Pending' },
-  { value: 'PAID', label: 'Paid' },
-  { value: 'PROCESSING', label: 'Processing' },
-  { value: 'SHIPPED', label: 'Shipped' },
-  { value: 'DELIVERED', label: 'Delivered' },
-  { value: 'CANCELLED', label: 'Cancelled' },
-  { value: 'REFUNDED', label: 'Refunded' },
-];
+const statusKeys = ['PENDING', 'PAID', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED', 'REFUNDED'] as const;
 
 export default function ManageOrdersPage() {
+  const t = useTranslations('shop.manageOrders');
   const router = useRouter();
   const { addToast } = useToast();
   const [orders, setOrders] = useState<Order[]>([]);
@@ -119,7 +113,7 @@ export default function ManageOrdersPage() {
       if (!res.ok) {
         addToast({
           title: 'Error',
-          description: data.error || 'Failed to update order',
+          description: data.error || t('failedToUpdate'),
           variant: 'destructive',
         });
         return;
@@ -130,13 +124,13 @@ export default function ManageOrdersPage() {
       ));
 
       addToast({
-        title: 'Updated',
-        description: `Order status changed to ${status}`,
+        title: t('updated'),
+        description: t('updatedDesc'),
       });
     } catch (error) {
       addToast({
         title: 'Error',
-        description: 'Failed to update order',
+        description: t('failedToUpdate'),
         variant: 'destructive',
       });
     } finally {
@@ -149,7 +143,7 @@ export default function ManageOrdersPage() {
       <div className="min-h-screen flex items-center justify-center font-display">
         <div className="text-white flex items-center gap-3">
           <div className="w-6 h-6 border-2 border-[rgba(200,79,255,0.3)] border-t-transparent rounded-full animate-spin" />
-          Loading orders...
+          {t('loading')}
         </div>
       </div>
     );
@@ -164,15 +158,15 @@ export default function ManageOrdersPage() {
         {/* Breadcrumb */}
         <Link href="/shop/manage" className="inline-flex items-center gap-2 text-[#8888aa] hover:text-white transition-colors mb-8">
           <ArrowLeft className="w-4 h-4" />
-          Back to Dashboard
+          {t('backToDashboard')}
         </Link>
 
         {/* Header */}
         <div className="flex items-center gap-3 mb-8">
           <ShoppingBag className="w-8 h-8 text-[#C84FFF]" />
-          <h1 className="text-3xl font-bold text-white">Orders</h1>
+          <h1 className="text-3xl font-bold text-white">{t('title')}</h1>
           <span className="px-3 py-1 rounded-full bg-[#12123a] text-[#f0f0f5] text-sm">
-            {orders.length} total
+            {t('totalCount', { count: orders.length })}
           </span>
         </div>
 
@@ -180,8 +174,8 @@ export default function ManageOrdersPage() {
         {orders.length === 0 ? (
           <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
             <ShoppingBag className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-white mb-2">No Orders Yet</h2>
-            <p className="text-[#8888aa]">Orders will appear here when customers purchase your products</p>
+            <h2 className="text-xl font-semibold text-white mb-2">{t('noOrders')}</h2>
+            <p className="text-[#8888aa]">{t('noOrdersDesc')}</p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -201,13 +195,13 @@ export default function ManageOrdersPage() {
                       </p>
                     </div>
                     <span className={`px-3 py-1 rounded-lg text-xs font-medium ${statusColors[order.status] || 'bg-gray-500/20 text-[#8888aa]'}`}>
-                      {order.status}
+                      {t(`statusLabels.${order.status}`)}
                     </span>
                   </div>
                   <div className="flex items-center gap-6">
                     <div className="text-right">
                       <p className="font-semibold text-[#C84FFF]">€{order.total.toFixed(2)}</p>
-                      <p className="text-sm text-[#8888aa]">{order.items.length} item(s)</p>
+                      <p className="text-sm text-[#8888aa]">{order.items.length} {t('items')}</p>
                     </div>
                     <ChevronDown className={`w-5 h-5 text-[#8888aa] transition-transform ${expandedOrder === order.id ? 'rotate-180' : ''}`} />
                   </div>
@@ -221,7 +215,7 @@ export default function ManageOrdersPage() {
                       <div className="lg:col-span-2">
                         <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
                           <Package className="w-4 h-4 text-[#C84FFF]" />
-                          Items
+                          {t('items')}
                         </h3>
                         <div className="space-y-3">
                           {order.items.map((item) => (
@@ -242,7 +236,7 @@ export default function ManageOrdersPage() {
                               </div>
                               <div className="flex-1">
                                 <p className="font-medium text-white">{item.productName}</p>
-                                <p className="text-sm text-[#8888aa]">Qty: {item.quantity}</p>
+                                <p className="text-sm text-[#8888aa]">{t('qty')}: {item.quantity}</p>
                               </div>
                               <p className="font-semibold text-white">€{(item.price * item.quantity).toFixed(2)}</p>
                             </div>
@@ -252,15 +246,15 @@ export default function ManageOrdersPage() {
                         {/* Order Summary */}
                         <div className="mt-4 p-4 rounded-xl bg-[#12123a] space-y-2">
                           <div className="flex justify-between text-sm">
-                            <span className="text-[#8888aa]">Subtotal</span>
+                            <span className="text-[#8888aa]">{t('subtotal')}</span>
                             <span className="text-white">€{order.subtotal.toFixed(2)}</span>
                           </div>
                           <div className="flex justify-between text-sm">
-                            <span className="text-[#8888aa]">Shipping</span>
+                            <span className="text-[#8888aa]">{t('shipping')}</span>
                             <span className="text-white">€{order.shippingCost.toFixed(2)}</span>
                           </div>
                           <div className="flex justify-between font-semibold border-t border-[rgba(255,255,255,0.06)] pt-2">
-                            <span className="text-white">Total</span>
+                            <span className="text-white">{t('total')}</span>
                             <span className="text-[#C84FFF]">€{order.total.toFixed(2)}</span>
                           </div>
                         </div>
@@ -272,10 +266,10 @@ export default function ManageOrdersPage() {
                         <div>
                           <h3 className="font-semibold text-white mb-3 flex items-center gap-2">
                             <User className="w-4 h-4 text-[#C84FFF]" />
-                            Customer
+                            {t('customer')}
                           </h3>
                           <div className="p-4 rounded-xl bg-[#12123a] space-y-2">
-                            <p className="text-white">{order.user.name || 'Anonymous'}</p>
+                            <p className="text-white">{order.user.name || t('anonymous')}</p>
                             <p className="text-sm text-[#8888aa] flex items-center gap-1">
                               <Mail className="w-3 h-3" /> {order.user.email}
                             </p>
@@ -286,7 +280,7 @@ export default function ManageOrdersPage() {
                         <div>
                           <h3 className="font-semibold text-white mb-3 flex items-center gap-2">
                             <Truck className="w-4 h-4 text-cyan-400" />
-                            Ship To
+                            {t('shipTo')}
                           </h3>
                           <div className="p-4 rounded-xl bg-[#12123a] space-y-1 text-sm">
                             <p className="text-white">{order.shippingName}</p>
@@ -302,16 +296,16 @@ export default function ManageOrdersPage() {
 
                         {/* Status Update */}
                         <div>
-                          <h3 className="font-semibold text-white mb-3">Update Status</h3>
+                          <h3 className="font-semibold text-white mb-3">{t('updateStatus')}</h3>
                           <select
                             value={order.status}
                             onChange={(e) => updateOrderStatus(order.id, e.target.value)}
                             disabled={updating === order.id}
                             className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none disabled:opacity-50"
                           >
-                            {statusOptions.map((status) => (
-                              <option key={status.value} value={status.value} className="bg-[#0B0B2B]">
-                                {status.label}
+                            {statusKeys.map((status) => (
+                              <option key={status} value={status} className="bg-[#0B0B2B]">
+                                {t(`statusLabels.${status}`)}
                               </option>
                             ))}
                           </select>
@@ -320,7 +314,7 @@ export default function ManageOrdersPage() {
                         {/* Notes */}
                         {order.notes && (
                           <div>
-                            <h3 className="font-semibold text-white mb-3">Customer Notes</h3>
+                            <h3 className="font-semibold text-white mb-3">{t('customerNotes')}</h3>
                             <div className="p-4 rounded-xl bg-[#12123a]">
                               <p className="text-sm text-[#f0f0f5]">{order.notes}</p>
                             </div>

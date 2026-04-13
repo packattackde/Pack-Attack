@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma';
 import { CollectionClient } from './CollectionClient';
 import Link from 'next/link';
 import { Layers, Package, Sparkles } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
 
 async function getCollection() {
   const session = await getCurrentSession();
@@ -65,6 +66,7 @@ async function getCollection() {
 }
 
 export default async function CollectionPage() {
+  const t = await getTranslations('collection');
   const session = await getCurrentSession();
   if (!session?.user?.email) {
     redirect('/login');
@@ -92,16 +94,16 @@ export default async function CollectionPage() {
         <div className="mb-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
             <Layers className="w-4 h-4 text-[#C84FFF]" />
-            <span className="text-gray-300">Your Cards</span>
+            <span className="text-gray-300">{t('badge')}</span>
           </div>
           <div className="flex flex-wrap items-center gap-2 mb-3">
             <h1 className="text-4xl md:text-5xl font-bold">
-              <span className="text-white">My </span>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C84FFF] to-[#9333EA]">Collection</span>
+              <span className="text-white">{t('title').split(' ').slice(0, -1).join(' ')} </span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C84FFF] to-[#9333EA]">{t('title').split(' ').slice(-1)[0]}</span>
             </h1>
             <InfoTooltip infoKey="collection.overview" />
           </div>
-          <p className="text-[#8888aa] text-lg">Manage your card collection</p>
+          <p className="text-[#8888aa] text-lg">{t('subtitle')}</p>
         </div>
 
         {/* Stats Bar */}
@@ -110,24 +112,24 @@ export default async function CollectionPage() {
             <div className={`grid grid-cols-2 gap-4 ${(rarities['None'] || 0) > 0 ? 'md:grid-cols-5' : 'md:grid-cols-4'}`}>
               <div className="text-center">
                 <div className="text-2xl font-bold text-[#C84FFF]">{totalCards}</div>
-                <div className="text-sm text-[#8888aa]">Total Cards</div>
+                <div className="text-sm text-[#8888aa]">{t('totalCards')}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-amber-400">{totalValue.toLocaleString()}</div>
-                <div className="text-sm text-[#8888aa]">Total Value</div>
+                <div className="text-sm text-[#8888aa]">{t('totalValue')}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-purple-400">{rarities['Rare'] || 0}</div>
-                <div className="text-sm text-[#8888aa]">Rare Cards</div>
+                <div className="text-sm text-[#8888aa]">{t('rareCards')}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-amber-500">{(rarities['Mythic'] || 0) + (rarities['Legendary'] || 0)}</div>
-                <div className="text-sm text-[#8888aa]">Mythic/Legendary</div>
+                <div className="text-sm text-[#8888aa]">{t('mythicLegendary')}</div>
               </div>
               {(rarities['None'] || 0) > 0 && (
                 <div className="text-center">
                   <div className="text-2xl font-bold text-[#C84FFF]">{rarities['None']}</div>
-                  <div className="text-sm text-[#8888aa]">Sealed Products</div>
+                  <div className="text-sm text-[#8888aa]">{t('sealedProducts')}</div>
                 </div>
               )}
             </div>
@@ -139,14 +141,14 @@ export default async function CollectionPage() {
             <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[#C84FFF]/20 to-[#9333EA]/20">
               <Package className="w-10 h-10 text-[#C84FFF]" />
             </div>
-            <h2 className="text-2xl font-bold text-white mb-3">Collection Empty</h2>
-            <p className="text-[#8888aa] mb-6">Open some boxes to start building your collection!</p>
+            <h2 className="text-2xl font-bold text-white mb-3">{t('empty')}</h2>
+            <p className="text-[#8888aa] mb-6">{t('emptyDesc')}</p>
             <Link 
               href="/boxes" 
               className="inline-flex items-center gap-2 px-6 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl transition-all hover:scale-105 hover:shadow-[0_0_24px_rgba(200,79,255,0.3)]"
             >
               <Sparkles className="w-5 h-5" />
-              Browse Boxes
+              {t('browseBoxes')}
             </Link>
           </div>
         ) : (

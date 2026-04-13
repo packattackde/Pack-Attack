@@ -10,6 +10,7 @@ import { Coins, Package, ArrowLeft, Edit, Plus } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { EditBoxForm } from './EditBoxForm';
 import { CardManager } from './CardManager';
+import { useTranslations } from 'next-intl';
 
 type BoxCard = {
   id: string;

@@ -4,25 +4,7 @@ import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Swords, Coins, Trophy, Crown, RefreshCw, ArrowRightLeft, Star, Zap, Sparkles, Share2, Copy, Check } from 'lucide-react';
-
-const MODE_LABELS: Record<string, string> = {
-  LOWEST_CARD: '⬇️ Niedrigste Karte',
-  HIGHEST_CARD: '⬆️ Höchste Karte',
-  ALL_CARDS: '🃏 Alle Karten',
-};
-
-const WIN_CONDITION_LABELS: Record<string, string> = {
-  HIGHEST: '📈 Höchster Wert',
-  LOWEST: '📉 Niedrigster Wert',
-  SHARE_MODE: '🤝 Teilen',
-  JACKPOT: '🎰 Jackpot',
-};
-
-const STATUS_LABELS: Record<string, { label: string; color: string }> = {
-  FINISHED_WIN: { label: 'Abgeschlossen', color: 'bg-[#C84FFF]/15 text-[#E879F9] border border-[#C84FFF]/20' },
-  FINISHED_DRAW: { label: 'Unentschieden', color: 'bg-blue-500/15 text-blue-400 border border-blue-500/20' },
-  CANCELLED: { label: 'Storniert', color: 'bg-red-500/15 text-red-400 border border-red-500/20' },
-};
+import { useTranslations } from 'next-intl';
 
 const PLAYER_COLORS = ['#C84FFF', '#3B82F6', '#F59E0B', '#10B981'];
 
@@ -83,8 +65,15 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
   const router = useRouter();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [copied, setCopied] = useState(false);
+  const t = useTranslations('battles');
 
-  const statusInfo = STATUS_LABELS[battle.status] || { label: battle.status, color: 'bg-gray-500/20 text-gray-400' };
+  const statusColor = {
+    FINISHED_WIN: 'bg-[#C84FFF]/15 text-[#E879F9] border border-[#C84FFF]/20',
+    FINISHED_DRAW: 'bg-blue-500/15 text-blue-400 border border-blue-500/20',
+    CANCELLED: 'bg-red-500/15 text-red-400 border border-red-500/20',
+  }[battle.status] || 'bg-gray-500/20 text-gray-400';
+
+  const statusLabel = t(`statusLabels.${battle.status}` as any);
 
   const useLowest = battle.winCondition === 'LOWEST';
   const sortedParticipants = [...battle.participants].sort((a, b) =>
@@ -99,7 +88,6 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
 
   const transferredPulls = (battle.pulls || []).filter(p => p.transferredToUserId);
 
-  // Cumulative scores per round for the timeline chart
   const cumulativeScores = useMemo(() => {
     const scores: Record<string, number[]> = {};
     for (const p of battle.participants) {
@@ -132,10 +120,10 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
 
   const handleShare = async () => {
     const url = typeof window !== 'undefined' ? window.location.href : '';
-    const winnerName = battle.winner?.name || 'Unentschieden';
-    const text = `Pack-Attack Battle: ${battle.box?.name} — ${battle.rounds} Runden — Gewinner: ${winnerName}`;
+    const winnerName = battle.winner?.name || t('statusLabels.FINISHED_DRAW');
+    const shareText = `${t('detail.shareTitle')}: ${battle.box?.name} — ${battle.rounds} ${t('rounds')} — ${winnerName}`;
     if (navigator.share) {
-      try { await navigator.share({ title: 'Pack-Attack Battle', text, url }); } catch {}
+      try { await navigator.share({ title: t('detail.shareTitle'), text: shareText, url }); } catch {}
     } else {
       await navigator.clipboard.writeText(url);
       setCopied(true);
@@ -156,11 +144,11 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
       <div className="relative container py-10 sm:py-14 max-w-5xl">
         <div className="flex items-center justify-between mb-6">
           <Link href="/battles" className="inline-flex items-center gap-2 text-[#8888aa] hover:text-white transition-colors text-sm">
-            <ArrowLeft className="w-4 h-4" /> Zurück zu Battles
+            <ArrowLeft className="w-4 h-4" /> {t('detail.backToBattles')}
           </Link>
           <div className="flex items-center gap-2">
             <button onClick={handleShare} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.08)] text-[#8888aa] hover:text-white hover:border-[rgba(255,255,255,0.2)] transition-all text-xs">
-              {copied ? <><Check className="w-3 h-3 text-emerald-400" /> Kopiert</> : <><Share2 className="w-3 h-3" /> Teilen</>}
+              {copied ? <><Check className="w-3 h-3 text-emerald-400" /> {t('detail.copied')}</> : <><Share2 className="w-3 h-3" /> {t('detail.share')}</>}
             </button>
             <button onClick={handleRefresh} className="p-1.5 rounded-lg text-[#8888aa] hover:text-white transition-colors">
               <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
@@ -172,9 +160,9 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
         {battle.status === 'FINISHED_DRAW' ? (
           <div className="relative overflow-hidden bg-gradient-to-b from-blue-500/10 to-blue-500/5 border border-blue-500/20 rounded-2xl p-8 text-center mb-6">
             <div className="text-5xl mb-4">🤝</div>
-            <h1 className="text-3xl font-bold text-white mb-2">Unentschieden!</h1>
+            <h1 className="text-3xl font-bold text-white mb-2">{t('detail.drawTitle')}</h1>
             <p className="text-[#8888aa] text-sm max-w-md mx-auto mb-6">
-              {battle.winCondition === 'SHARE_MODE' ? 'Karten wurden gleichmäßig aufgeteilt.' : 'Gleicher Gesamtwert — keine Karten übertragen.'}
+              {battle.winCondition === 'SHARE_MODE' ? t('detail.drawShareMode') : t('detail.drawEqual')}
             </p>
             <div className="flex items-center justify-center gap-6">
               {sortedParticipants.map((p, i) => (
@@ -208,13 +196,13 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
               <div className="text-center mb-6">
                 {battle.winnerId === currentUserId ? (
                   <>
-                    <h1 className="text-3xl font-bold text-[#C84FFF] mb-1">Du hast gewonnen!</h1>
-                    <p className="text-[#8888aa]">Glückwunsch zum Sieg!</p>
+                    <h1 className="text-3xl font-bold text-[#C84FFF] mb-1">{t('detail.youWon')}</h1>
+                    <p className="text-[#8888aa]">{t('detail.congrats')}</p>
                   </>
                 ) : (
                   <>
-                    <h1 className="text-3xl font-bold text-white mb-1">{battle.winner.name || battle.winner.email} gewinnt!</h1>
-                    <p className="text-[#8888aa]">Nächstes Mal hast du mehr Glück!</p>
+                    <h1 className="text-3xl font-bold text-white mb-1">{battle.winner.name || battle.winner.email} {t('detail.wins')}</h1>
+                    <p className="text-[#8888aa]">{t('detail.betterLuck')}</p>
                   </>
                 )}
               </div>
@@ -236,7 +224,7 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
                         <div className={`h-full rounded-full ${isWinner ? 'bg-[#C84FFF]' : 'bg-[#8888aa]/40'}`} style={{ width: `${barWidth}%` }} />
                       </div>
                       <div className={`text-2xl font-bold ${isWinner ? 'text-[#C84FFF]' : 'text-amber-400'}`}>{p.totalValue.toFixed(2)}</div>
-                      <div className="text-[10px] text-[#666688] mt-0.5">{isWinner ? 'Gewinner' : 'Verlierer'}</div>
+                      <div className="text-[10px] text-[#666688] mt-0.5">{isWinner ? '👑' : ''}</div>
                     </div>
                   );
                 })}
@@ -246,8 +234,8 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#12123a] rounded-full text-xs">
                   <Zap className="w-3 h-3 text-[#C84FFF]" />
                   <span className="text-[#8888aa]">
-                    {battle.battleMode === 'LOWEST_CARD' && 'Niedrigste Karte übertragen'}
-                    {battle.battleMode === 'HIGHEST_CARD' && 'Höchste Karte übertragen'}
+                    {battle.battleMode === 'LOWEST_CARD' && t('detail.lowestTransferred')}
+                    {battle.battleMode === 'HIGHEST_CARD' && t('detail.highestTransferred')}
                   </span>
                 </div>
               </div>
@@ -256,8 +244,8 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
         ) : battle.status === 'CANCELLED' ? (
           <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-8 text-center mb-6">
             <div className="text-5xl mb-3">❌</div>
-            <h1 className="text-2xl font-bold text-white mb-1">Battle storniert</h1>
-            <p className="text-[#8888aa] text-sm">Dieses Battle wurde storniert.</p>
+            <h1 className="text-2xl font-bold text-white mb-1">{t('detail.cancelled')}</h1>
+            <p className="text-[#8888aa] text-sm">{t('detail.cancelledDesc')}</p>
           </div>
         ) : null}
 
@@ -270,25 +258,25 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <h2 className="text-sm font-bold text-white truncate">{battle.box?.name || 'Battle'}</h2>
-              <span className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-semibold ${statusInfo.color}`}>{statusInfo.label}</span>
+              <h2 className="text-sm font-bold text-white truncate">{battle.box?.name || t('detail.battle')}</h2>
+              <span className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-semibold ${statusColor}`}>{statusLabel}</span>
             </div>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
             <div className="bg-[#0e0e2a] rounded-lg px-3 py-2">
-              <div className="text-[#444466]">Belohnung</div>
-              <div className="text-white font-medium">{MODE_LABELS[battle.battleMode]}</div>
+              <div className="text-[#444466]">{t('detail.reward')}</div>
+              <div className="text-white font-medium">{t(`modeLabelsShort.${battle.battleMode}` as any)}</div>
             </div>
             <div className="bg-[#0e0e2a] rounded-lg px-3 py-2">
-              <div className="text-[#444466]">Gewinnlogik</div>
-              <div className="text-white font-medium">{WIN_CONDITION_LABELS[battle.winCondition]}</div>
+              <div className="text-[#444466]">{t('detail.winCondition')}</div>
+              <div className="text-white font-medium">{t(`winConditionLabelsFull.${battle.winCondition}` as any)}</div>
             </div>
             <div className="bg-[#0e0e2a] rounded-lg px-3 py-2">
-              <div className="text-[#444466]">Runden</div>
+              <div className="text-[#444466]">{t('rounds')}</div>
               <div className="text-white font-medium">{battle.rounds}</div>
             </div>
             <div className="bg-[#0e0e2a] rounded-lg px-3 py-2">
-              <div className="text-[#444466]">Einsatz</div>
+              <div className="text-[#444466]">{t('detail.entryFee')}</div>
               <div className="text-amber-400 font-medium flex items-center gap-1"><Coins className="w-3 h-3" />{battle.entryFee}</div>
             </div>
           </div>
@@ -297,7 +285,7 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
         {/* Round-by-Round Score Timeline */}
         {battle.rounds > 0 && Object.keys(pullsByRound).length > 0 && (
           <div className="bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-xl p-5 mb-6">
-            <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-4">Punkteverlauf</h2>
+            <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-4">{t('detail.scoreTimeline')}</h2>
 
             {/* Legend */}
             <div className="flex items-center gap-4 mb-4 flex-wrap">
@@ -334,7 +322,7 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
                 {/* Round labels */}
                 {Array.from({ length: battle.rounds + 1 }, (_, i) => (
                   <text key={i} x={i * 80 + 40} y="160" textAnchor="middle" fill="#444466" fontSize="10" fontFamily="inherit">
-                    {i === 0 ? 'Start' : `R${i}`}
+                    {i === 0 ? t('detail.start') : `R${i}`}
                   </text>
                 ))}
               </svg>
@@ -346,7 +334,7 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
         {Object.keys(pullsByRound).length > 0 && (
           <div className="mb-6">
             <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-3 flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-[#C84FFF]" /> Runden-Übersicht
+              <Sparkles className="w-4 h-4 text-[#C84FFF]" /> {t('detail.roundOverview')}
             </h2>
             <div className="space-y-3">
               {Array.from({ length: battle.rounds }, (_, i) => i + 1).map((round) => {
@@ -357,7 +345,7 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
                 return (
                   <div key={round} className="bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-xl overflow-hidden">
                     <div className="px-4 py-2.5 bg-[#0e0e2a] flex items-center justify-between">
-                      <span className="text-xs font-bold text-white">Runde {round}</span>
+                      <span className="text-xs font-bold text-white">{t('detail.roundLabel')} {round}</span>
                       <span className="text-[10px] text-[#444466]">{round}/{battle.rounds}</span>
                     </div>
                     <div className="p-4">
@@ -384,14 +372,14 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
                                   <span className="text-[#333355] text-xl">?</span>
                                 </div>
                               )}
-                              <div className="text-xs text-white font-semibold truncate mb-0.5">{pull.itemName || 'Unbekannt'}</div>
+                              <div className="text-xs text-white font-semibold truncate mb-0.5">{pull.itemName || '?'}</div>
                               {pull.itemRarity && (
                                 <div className="text-[9px] text-[#666688] mb-0.5 uppercase tracking-wider">{pull.itemRarity}</div>
                               )}
                               <div className="text-amber-400 font-bold text-sm">{pull.coinValue.toFixed(2)}</div>
                               {isTransferred && (
                                 <div className="mt-1 text-[9px] text-red-400 font-medium flex items-center justify-center gap-0.5">
-                                  <ArrowRightLeft className="w-2.5 h-2.5" /> Übertragen
+                                  <ArrowRightLeft className="w-2.5 h-2.5" /> {t('detail.transferred')}
                                 </div>
                               )}
                             </div>
@@ -410,7 +398,7 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
         {transferredPulls.length > 0 && (
           <div className="bg-red-500/5 border border-red-500/10 rounded-xl p-5 mb-6">
             <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-3 flex items-center gap-2">
-              <ArrowRightLeft className="w-4 h-4 text-red-400" /> Übertragene Karten
+              <ArrowRightLeft className="w-4 h-4 text-red-400" /> {t('detail.transferredCards')}
             </h2>
             <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-3">
               {transferredPulls.map((pull) => {
@@ -426,7 +414,7 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
-                      <div className="text-xs text-white font-medium truncate">{pull.itemName || 'Unbekannt'}</div>
+                      <div className="text-xs text-white font-medium truncate">{pull.itemName || '?'}</div>
                       <div className="text-[10px] text-amber-400 font-bold">{pull.coinValue.toFixed(2)}</div>
                       <div className="text-[10px] text-[#666688] flex items-center gap-1">
                         <span className="text-red-400">{fromPlayer?.user?.name || '?'}</span>
@@ -444,10 +432,10 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
         {/* Actions */}
         <div className="flex gap-3 justify-center">
           <Link href="/battles" className="px-5 py-2.5 bg-[#12123a] text-white font-semibold rounded-xl hover:bg-[#1a1a4a] transition-all border border-[rgba(255,255,255,0.08)] text-sm">
-            Zurück zur Lobby
+            {t('detail.backToLobby')}
           </Link>
           <Link href="/battles/create" className="px-5 py-2.5 bg-[#C84FFF] text-white font-semibold rounded-xl hover:bg-[#E879F9] transition-all text-sm">
-            Neues Battle
+            {t('detail.newBattle')}
           </Link>
         </div>
       </div>

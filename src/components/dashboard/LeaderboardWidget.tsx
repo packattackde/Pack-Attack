@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { GiLaurelCrown } from 'react-icons/gi';
 import { InfoTooltip } from '@/components/InfoTooltip';
 import { formatCoins } from '@/lib/format';
@@ -39,13 +40,14 @@ export default function LeaderboardWidget({
   month,
   className = '',
 }: LeaderboardWidgetProps) {
+  const t = useTranslations('widgets');
   const topEntries = entries.slice(0, 10);
   const userInTop10 = userRank > 0 && userRank <= 10 && topEntries.some(e => e.rank === userRank);
 
   return (
     <div className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl h-full p-4 sm:p-6 ${className}`}>
       <div className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-2 flex items-center gap-1.5">
-        <GiLaurelCrown className="w-3.5 h-3.5 text-[#C84FFF] shrink-0" /> Leaderboard
+        <GiLaurelCrown className="w-3.5 h-3.5 text-[#C84FFF] shrink-0" /> {t('leaderboard.leaderboard')}
         <InfoTooltip infoKey="leaderboard.rankings" />
       </div>
 
@@ -53,8 +55,8 @@ export default function LeaderboardWidget({
 
       {topEntries.length === 0 ? (
         <div className="text-center py-6">
-          <p className="text-sm text-[#8888aa]">No rankings yet this month</p>
-          <p className="text-[11px] text-[#7777a0] mt-1">Start opening packs to climb the leaderboard!</p>
+          <p className="text-sm text-[#8888aa]">{t('leaderboard.noRankings')}</p>
+          <p className="text-[11px] text-[#7777a0] mt-1">{t('leaderboard.startOpening')}</p>
         </div>
       ) : (
         <div className="space-y-1">
@@ -72,7 +74,7 @@ export default function LeaderboardWidget({
                 {entry.name}
               </span>
               <span className="text-[10px] text-[#8888aa] font-semibold flex-shrink-0">
-                {formatCoins(entry.points)} pts
+                {formatCoins(entry.points)} {t('leaderboard.pts')}
               </span>
             </div>
           ))}
@@ -88,10 +90,10 @@ export default function LeaderboardWidget({
               {userRank || '—'}
             </span>
             <span className="text-[12px] text-[#C84FFF] font-semibold flex-1">
-              You
+              {t('leaderboard.you')}
             </span>
             <span className="text-[10px] text-[#C84FFF] font-semibold flex-shrink-0">
-              {formatCoins(userPoints)} pts
+              {formatCoins(userPoints)} {t('leaderboard.pts')}
             </span>
           </div>
         </>
@@ -101,7 +103,7 @@ export default function LeaderboardWidget({
         href="/leaderboard"
         className="text-[#C84FFF] text-[11px] font-semibold mt-3 inline-block hover:underline"
       >
-        Full leaderboard →
+        {t('leaderboard.fullLeaderboard')}
       </Link>
     </div>
   );

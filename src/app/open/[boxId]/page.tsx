@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/use-toast';
+import { useTranslations } from 'next-intl';
 import { Coins, Package, Sparkles, ArrowLeft, Layers, Zap, Square, BadgeDollarSign } from 'lucide-react';
 import { InfoTooltip } from '@/components/InfoTooltip';
 import Image from 'next/image';
@@ -178,12 +179,12 @@ const getRarityGlow = (rarity: string | undefined): RarityTier => {
 
 // Rarity tier sell-button metadata (ordered from common → legendary)
 const TIER_ORDER = ['lindwurm-common', 'lindwurm-uncommon', 'lindwurm-rare', 'lindwurm-epic', 'lindwurm-legendary'] as const;
-const TIER_META: Record<string, { label: string; btnClass: string }> = {
-  'lindwurm-common':    { label: 'Commons',    btnClass: 'border-gray-500/60 text-gray-300 hover:bg-gray-500/10' },
-  'lindwurm-uncommon':  { label: 'Uncommons',  btnClass: 'border-[#C84FFF]/60 text-[#E879F9] hover:bg-[#C84FFF]/10' },
-  'lindwurm-rare':      { label: 'Rares',      btnClass: 'border-blue-500/60 text-blue-400 hover:bg-blue-500/10' },
-  'lindwurm-epic':      { label: 'Epics',      btnClass: 'border-purple-500/60 text-purple-400 hover:bg-purple-500/10' },
-  'lindwurm-legendary': { label: 'Legendaries', btnClass: 'border-amber-500/60 text-amber-400 hover:bg-amber-500/10' },
+const TIER_META: Record<string, { label: string; labelKey: string; btnClass: string }> = {
+  'lindwurm-common':    { label: 'Commons',     labelKey: 'rarities.commons',     btnClass: 'border-gray-500/60 text-gray-300 hover:bg-gray-500/10' },
+  'lindwurm-uncommon':  { label: 'Uncommons',   labelKey: 'rarities.uncommons',   btnClass: 'border-[#C84FFF]/60 text-[#E879F9] hover:bg-[#C84FFF]/10' },
+  'lindwurm-rare':      { label: 'Rares',       labelKey: 'rarities.rares',       btnClass: 'border-blue-500/60 text-blue-400 hover:bg-blue-500/10' },
+  'lindwurm-epic':      { label: 'Epics',       labelKey: 'rarities.epics',       btnClass: 'border-purple-500/60 text-purple-400 hover:bg-purple-500/10' },
+  'lindwurm-legendary': { label: 'Legendaries', labelKey: 'rarities.legendaries', btnClass: 'border-amber-500/60 text-amber-400 hover:bg-amber-500/10' },
 };
 
 type Box = {
@@ -263,6 +264,7 @@ function getRarityEffects(lindwurm: string) {
 }
 
 export default function OpenBoxPage() {
+  const t = useTranslations('open');
   const params = useParams();
   const router = useRouter();
   const { addToast } = useToast();
@@ -343,8 +345,8 @@ export default function OpenBoxPage() {
     const totalCost = box.price * quantity;
     if (userCoins !== null && userCoins < totalCost) {
       addToast({
-        title: 'Insufficient Coins',
-        description: `You need ${totalCost.toFixed(2)} coins but only have ${userCoins.toFixed(2)}`,
+        title: t('insufficientCoins'),
+        description: t('insufficientCoinsDesc', { needed: totalCost.toFixed(2), have: userCoins.toFixed(2) }),
         variant: 'destructive',
       });
       return;
@@ -371,7 +373,7 @@ export default function OpenBoxPage() {
       if (!res.ok) {
         addToast({
           title: 'Error',
-          description: data.error || 'Failed to open box',
+          description: data.error || t('failedToOpen'),
           variant: 'destructive',
         });
         setDeckPhase('idle');
@@ -395,7 +397,7 @@ export default function OpenBoxPage() {
       if (pullsData.length === 0) {
         setDeckPhase('idle');
         setOpening(false);
-        addToast({ title: 'Success', description: `Opened ${quantity} pack${quantity > 1 ? 's' : ''}!` });
+        addToast({ title: 'Success', description: t('openedPacks', { count: quantity }) });
         return;
       }
 
@@ -405,7 +407,7 @@ export default function OpenBoxPage() {
       console.error('Error opening box:', error);
       clearRevealTimeouts();
       setOpening(false);
-      addToast({ title: 'Error', description: 'Failed to open box', variant: 'destructive' });
+      addToast({ title: 'Error', description: t('failedToOpen'), variant: 'destructive' });
     }
   };
 
@@ -449,7 +451,7 @@ export default function OpenBoxPage() {
             await new Promise<void>(r => setTimeout(r, retryAfter * 1000));
             continue; // retry this iteration
           }
-          addToast({ title: 'Error', description: data.error || 'Failed to open box', variant: 'destructive' });
+          addToast({ title: 'Error', description: data.error || t('failedToOpen'), variant: 'destructive' });
           break;
         }
 
@@ -495,7 +497,7 @@ export default function OpenBoxPage() {
       emitCoinBalanceUpdate({ balance: data.newBalance });
       addToast({
         title: 'Sold!',
-        description: `Sold ${sellConfirm.pullIds.length} ${TIER_META[sellConfirm.tier]?.label ?? 'cards'} for ${sellConfirm.coins.toFixed(2)} coins.`,
+        description: `Sold ${sellConfirm.pullIds.length} ${TIER_META[sellConfirm.tier]?.labelKey ? t(TIER_META[sellConfirm.tier].labelKey) : 'cards'} for ${sellConfirm.coins.toFixed(2)} coins.`,
       });
       setSellConfirm(null);
     } catch (error) {
@@ -510,7 +512,7 @@ export default function OpenBoxPage() {
       <div className="min-h-screen flex items-center justify-center font-display">
         <div className="text-[#f0f0f5] flex items-center gap-3">
           <div className="w-6 h-6 border-2 border-[#C84FFF] border-t-transparent rounded-full animate-spin" />
-          Loading pack...
+          {t('loadingPack')}
         </div>
       </div>
     );
@@ -523,7 +525,7 @@ export default function OpenBoxPage() {
         <div className="relative container py-12">
           <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
             <Package className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-            <p className="text-[#8888aa]">This pack has no cards yet.</p>
+            <p className="text-[#8888aa]">{t('noCards')}</p>
           </div>
         </div>
       </div>
@@ -543,7 +545,7 @@ export default function OpenBoxPage() {
         {/* Back Link */}
         <Link href="/boxes" className="inline-flex items-center gap-2 text-[#8888aa] hover:text-[#f0f0f5] transition-colors mb-6">
           <ArrowLeft className="w-4 h-4" />
-          Back to Boxes
+          {t('backToBoxes')}
         </Link>
 
         <div className="max-w-6xl mx-auto">
@@ -562,18 +564,18 @@ export default function OpenBoxPage() {
               <div className="flex-1">
                 <div className="inline-flex items-center gap-2 px-3 py-1 mb-3 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
                   <Package className="w-4 h-4 text-[#C84FFF]" />
-                  <span className="text-[#8888aa]">Pack Opening</span>
+                  <span className="text-[#8888aa]">{t('packOpening')}</span>
                 </div>
                 <h1 className="text-3xl font-bold text-[#f0f0f5] mb-3">{box.name}</h1>
                 <p className="text-[#8888aa] mb-4">{box.description}</p>
                 <div className="flex flex-wrap gap-4">
                   <div className="flex items-center gap-2">
                     <Coins className="w-5 h-5 text-amber-400" />
-                    <span className="text-[#f0f0f5] font-semibold">{box.price.toFixed(2)} coins/pack</span>
+                    <span className="text-[#f0f0f5] font-semibold">{box.price.toFixed(2)} {t('coinsPerPack')}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Layers className="w-5 h-5 text-[#8888aa]" />
-                    <span className="text-[#8888aa]">{box.cardsPerPack} cards/pack</span>
+                    <span className="text-[#8888aa]">{box.cardsPerPack} {t('cardsPerPack')}</span>
                   </div>
                 </div>
               </div>
@@ -584,13 +586,13 @@ export default function OpenBoxPage() {
           <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 mb-6">
             <h2 className="text-xl font-bold text-[#f0f0f5] mb-4 flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-[#C84FFF]" />
-              Open Pack
+              {t('openPack')}
             </h2>
             
             <div className="space-y-4">
               {/* Quantity Selection */}
               <div>
-                <label className="block text-sm font-medium mb-3 text-[#8888aa]">Quantity</label>
+                <label className="block text-sm font-medium mb-3 text-[#8888aa]">{t('quantity')}</label>
                 <div className="flex flex-wrap gap-3">
                   {[1, 2, 3, 4].map((qty) => (
                     <button
@@ -612,7 +614,7 @@ export default function OpenBoxPage() {
               {/* Cost Display */}
               <div className="p-4 rounded-xl bg-gradient-to-r from-[rgba(200,79,255,0.08)] to-[rgba(200,79,255,0.03)] border border-[rgba(200,79,255,0.15)]">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-[#8888aa]">Total Cost:</span>
+                  <span className="text-[#8888aa]">{t('totalCost')}</span>
                   <div className="flex items-center gap-2">
                     <Coins className="w-5 h-5 text-amber-400" />
                     <span className="text-2xl font-bold text-[#f0f0f5]">{totalCost.toFixed(2)}</span>
@@ -620,7 +622,7 @@ export default function OpenBoxPage() {
                 </div>
                 {userCoins !== null && (
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-[#8888aa]">Your Balance:</span>
+                    <span className="text-[#8888aa]">{t('yourBalance')}</span>
                     <span className={userCoins >= totalCost ? 'text-[#E879F9] font-semibold' : 'text-red-400 font-semibold'}>
                       {userCoins.toFixed(2)} coins
                     </span>
@@ -637,12 +639,12 @@ export default function OpenBoxPage() {
                 {opening ? (
                   <>
                     <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
-                    Opening...
+                    {t('opening')}
                   </>
                 ) : (
                   <>
                     <Package className="w-5 h-5" />
-                    Open {quantity}x Pack{quantity > 1 ? 's' : ''}
+                    {quantity > 1 ? t('openPacksPlural', { quantity }) : t('openPacks', { quantity })}
                   </>
                 )}
               </button>
@@ -651,9 +653,9 @@ export default function OpenBoxPage() {
               <div className="border-t border-[rgba(255,255,255,0.06)] pt-4">
                 <div className="flex items-center gap-2 mb-3">
                   <Zap className="w-4 h-4 text-amber-400" />
-                  <span className="text-sm font-semibold text-[#8888aa]">Auto Open</span>
+                  <span className="text-sm font-semibold text-[#8888aa]">{t('autoOpen')}</span>
                   <InfoTooltip infoKey="pack.open.autoOpen" />
-                  <span className="text-xs text-gray-500 ml-1">— opens boxes automatically until coins run out</span>
+                  <span className="text-xs text-gray-500 ml-1">— {t('autoOpenDesc')}</span>
                 </div>
 
                 {isAutoOpening ? (
@@ -661,15 +663,15 @@ export default function OpenBoxPage() {
                     <div className="space-y-3">
                       <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 grid grid-cols-3 gap-4 text-center">
                         <div>
-                          <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Boxes</p>
+                          <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">{t('boxesOpened')}</p>
                           <p className="text-lg font-bold text-[#f0f0f5]">{autoBoxesOpened}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Spent</p>
+                          <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">{t('spent')}</p>
                           <p className="text-lg font-bold text-amber-400">{autoCoinsSpent.toFixed(2)}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Remaining</p>
+                          <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">{t('remaining')}</p>
                           <p className="text-lg font-bold text-[#E879F9]">{(userCoins ?? 0).toFixed(2)}</p>
                         </div>
                       </div>
@@ -678,7 +680,7 @@ export default function OpenBoxPage() {
                           className="w-full py-3 rounded-xl border-2 border-red-500/70 bg-red-500/10 hover:bg-red-500/20 text-red-400 font-semibold transition-all flex items-center justify-center gap-2"
                       >
                         <Square className="w-4 h-4 fill-current" />
-                        Stop
+                        {t('stop')}
                       </button>
                     </div>
                 ) : (
@@ -692,7 +694,7 @@ export default function OpenBoxPage() {
                             step="any"
                             value={autoMaxCoins}
                             onChange={(e) => setAutoMaxCoins(e.target.value)}
-                            placeholder="Max coins (leave empty = unlimited)"
+                            placeholder={t('maxCoinsPlaceholder')}
                             className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-[#f0f0f5] placeholder-gray-600 text-sm focus:border-amber-500/60 focus:outline-none"
                         />
                       </div>
@@ -702,7 +704,7 @@ export default function OpenBoxPage() {
                           className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-semibold text-sm transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 flex items-center gap-2 flex-shrink-0"
                       >
                         <Zap className="w-4 h-4" />
-                        Start
+                        {t('start')}
                       </button>
                     </div>
                 )}
@@ -712,9 +714,9 @@ export default function OpenBoxPage() {
 
           {/* What's in the box */}
           <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6">
-            <h2 className="text-xl font-bold text-[#f0f0f5] mb-2">What&apos;s in the pack? <InfoTooltip infoKey="pack.open.dropRates" /></h2>
+            <h2 className="text-xl font-bold text-[#f0f0f5] mb-2">{t('whatsInPack')} <InfoTooltip infoKey="pack.open.dropRates" /></h2>
             {box.cards.length > 0 && (
-              <p className="text-sm text-[#8888aa] mb-4">{box.cards.length} card{box.cards.length !== 1 ? 's' : ''} available</p>
+              <p className="text-sm text-[#8888aa] mb-4">{box.cards.length === 1 ? t('cardsAvailable', { count: box.cards.length }) : t('cardsAvailablePlural', { count: box.cards.length })}</p>
             )}
             
             {box.cards.length > 0 ? (
@@ -785,12 +787,12 @@ export default function OpenBoxPage() {
                           <Image src={card.imageUrlGatherer} alt={card.name} fill className="object-cover" unoptimized />
                         ) : (
                           <div className="w-full h-full bg-[#12123a]/60 flex items-center justify-center">
-                            <span className="text-gray-600 text-xs">No Image</span>
+                            <span className="text-gray-600 text-xs">{t('noImage')}</span>
                           </div>
                         )}
                         {isFeatured && (
                           <div className={`absolute -top-3 left-1/2 -translate-x-1/2 rounded-full ${cardRarityGlow.bg} ${cardRarityGlow.border} px-3 py-1 text-xs font-bold ${cardRarityGlow.text}`}>
-                            Best Pull
+                            {t('bestPull')}
                           </div>
                         )}
                         <div className="absolute top-2 left-2 bg-black/70 backdrop-blur-sm rounded-lg px-2 py-1 flex items-center gap-1">
@@ -815,7 +817,7 @@ export default function OpenBoxPage() {
               </div>
             ) : (
               <div className="text-center py-8 text-[#8888aa]">
-                <p>No cards available in this pack yet.</p>
+                <p>{t('noCardsAvailable')}</p>
               </div>
             )}
           </div>
@@ -823,7 +825,7 @@ export default function OpenBoxPage() {
           {/* Your Pulls */}
           {pulls.length > 0 && (
             <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 mt-6">
-              <h2 className="text-xl font-bold text-[#f0f0f5] mb-4">Your Pulls</h2>
+              <h2 className="text-xl font-bold text-[#f0f0f5] mb-4">{t('yourPulls')}</h2>
               <div className={`grid gap-5 ${
                 pulls.length === 1 ? 'grid-cols-1 max-w-xs mx-auto' :
                 pulls.length === 2 ? 'grid-cols-2 max-w-md mx-auto' :
@@ -878,7 +880,7 @@ export default function OpenBoxPage() {
                       )}
                       {isFeatured && (
                         <div className={`absolute top-2 right-2 rounded-full backdrop-blur-sm ${pullRarityGlow.bg} ${pullRarityGlow.border} px-2 py-0.5 text-[10px] font-bold ${pullRarityGlow.text}`}>
-                          Best Pull
+                          {t('bestPull')}
                         </div>
                       )}
                       {/* Rarity indicator */}
@@ -899,7 +901,7 @@ export default function OpenBoxPage() {
                   onClick={() => router.push('/collection')}
                   className="px-6 py-3 rounded-xl font-semibold text-[#f0f0f5] gradient-border bg-[#06061a]/50 hover:bg-[#12123a]/50 transition-all"
                 >
-                  View Collection
+                  {t('viewCollection')}
                 </button>
                 <button
                   onClick={() => {
@@ -911,7 +913,7 @@ export default function OpenBoxPage() {
                   }}
                   className="px-6 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl transition-all hover:scale-105 shadow-[0_0_24px_rgba(200,79,255,0.3)]"
                 >
-                  Open More
+                  {t('openMore')}
                 </button>
               </div>
             </div>
@@ -948,7 +950,7 @@ export default function OpenBoxPage() {
           <div className="flex min-h-full items-center justify-center p-4">
           <div className="relative flex flex-col items-center w-full max-w-2xl py-8">
 
-            <p className="mb-1 text-xs font-semibold uppercase tracking-[0.2em] text-gray-500">Opening Results</p>
+            <p className="mb-1 text-xs font-semibold uppercase tracking-[0.2em] text-gray-500">{t('openingResults')}</p>
             <h2 className="text-2xl font-bold text-[#f0f0f5] mb-6">
               {(() => {
                 const boxes = Math.round(pulls.length / (box.cardsPerPack || 1));
@@ -1017,7 +1019,7 @@ export default function OpenBoxPage() {
                               <Image src={group.card.imageUrlGatherer} alt={group.card.name} fill className="object-cover" unoptimized />
                             ) : (
                               <div className="w-full h-full bg-[#12123a] flex items-center justify-center">
-                                <span className="text-gray-600 text-xs">No Image</span>
+                                <span className="text-gray-600 text-xs">{t('noImage')}</span>
                               </div>
                             )}
                             {/* Shimmer sweep (rare+) */}
@@ -1037,7 +1039,7 @@ export default function OpenBoxPage() {
                             {/* Sold overlay */}
                             {allSold && (
                               <div className="absolute inset-0 flex items-center justify-center bg-black/50" style={{ zIndex: 25 }}>
-                                <span className="text-[11px] font-bold text-white uppercase tracking-widest bg-black/60 px-2 py-0.5 rounded">Sold</span>
+                                <span className="text-[11px] font-bold text-white uppercase tracking-widest bg-black/60 px-2 py-0.5 rounded">{t('sell')}</span>
                               </div>
                             )}
                           </div>
@@ -1076,7 +1078,7 @@ export default function OpenBoxPage() {
                 <div className="w-full mb-5">
                   <div className="flex items-center gap-2 mb-3">
                     <BadgeDollarSign className="w-4 h-4 text-gray-500" />
-                    <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">Sell by Rarity</p>
+                    <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">{t('sellByRarity')}</p>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {entries.map(tier => {
@@ -1088,7 +1090,7 @@ export default function OpenBoxPage() {
                           onClick={() => setSellConfirm({ tier, pullIds: g.pullIds, coins: g.coins })}
                           className={`px-3 py-2 rounded-xl border text-sm font-medium transition-all hover:scale-[1.02] ${meta.btnClass}`}
                         >
-                          Sell {meta.label} ({g.pullIds.length}x) — {g.coins.toFixed(2)} coins
+                          {t('sell')} {t(meta.labelKey)} ({g.pullIds.length}x) — {g.coins.toFixed(2)} coins
                         </button>
                       );
                     })}
@@ -1101,12 +1103,12 @@ export default function OpenBoxPage() {
             <div className="flex items-center gap-3 px-8 py-4 rounded-2xl bg-white/[0.04] border border-white/[0.08] mb-6">
               <Coins className="w-6 h-6 text-amber-400 flex-shrink-0" />
               <div>
-                <p className="text-xs text-gray-500 uppercase tracking-widest">Total Value</p>
+                <p className="text-xs text-gray-500 uppercase tracking-widest">{t('totalValue')}</p>
                 <p className="text-2xl font-bold text-[#f0f0f5]">
                   {pulls.filter(p => !soldPullIds.has(p.id)).reduce((sum, p) => sum + (p.card?.coinValue ?? 0), 0).toFixed(2)} coins
                 </p>
                 {soldPullIds.size > 0 && (
-                  <p className="text-xs text-gray-500 mt-0.5">{soldPullIds.size} card{soldPullIds.size !== 1 ? 's' : ''} sold</p>
+                  <p className="text-xs text-gray-500 mt-0.5">{t('cardsSold', { count: soldPullIds.size })}</p>
                 )}
               </div>
             </div>
@@ -1115,7 +1117,7 @@ export default function OpenBoxPage() {
               onClick={() => setDeckPhase('idle')}
               className="px-8 py-3 bg-[#C84FFF] hover:bg-[#E879F9] text-white font-semibold rounded-xl transition-all hover:scale-105 shadow-[0_0_24px_rgba(200,79,255,0.3)]"
             >
-              Close
+              {t('openPack')}
             </button>
           </div>
           </div>
@@ -1129,14 +1131,10 @@ export default function OpenBoxPage() {
           <div className="relative z-10 w-full max-w-sm rounded-2xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] p-6 shadow-2xl">
             <div className="flex items-center gap-2 mb-1">
               <BadgeDollarSign className="w-5 h-5 text-amber-400" />
-              <h3 className="text-lg font-bold text-[#f0f0f5]">Sell {TIER_META[sellConfirm.tier]?.label}?</h3>
+              <h3 className="text-lg font-bold text-[#f0f0f5]">{t('sellQuestion', { label: TIER_META[sellConfirm.tier]?.labelKey ? t(TIER_META[sellConfirm.tier].labelKey) : '' })}</h3>
             </div>
             <p className="text-[#8888aa] text-sm mb-5">
-              Sell{' '}
-              <span className="text-[#f0f0f5] font-semibold">{sellConfirm.pullIds.length} {TIER_META[sellConfirm.tier]?.label}</span>
-              {' '}for{' '}
-              <span className="text-amber-400 font-semibold">{sellConfirm.coins.toFixed(2)} coins</span>?
-              {' '}This cannot be undone.
+              {t('thisCannotBeUndone')}
             </p>
             <div className="flex gap-3">
               <button
@@ -1144,7 +1142,7 @@ export default function OpenBoxPage() {
                 disabled={sellingSummary}
                 className="flex-1 py-2.5 rounded-xl border border-[rgba(255,255,255,0.06)] text-[#8888aa] hover:text-[#f0f0f5] hover:border-[rgba(255,255,255,0.12)] font-medium transition-colors disabled:opacity-50"
               >
-                Cancel
+                {t('stop')}
               </button>
               <button
                 onClick={handleSellByTier}
@@ -1152,9 +1150,9 @@ export default function OpenBoxPage() {
                 className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-semibold transition-all hover:scale-[1.02] flex items-center justify-center gap-2 disabled:opacity-50 disabled:hover:scale-100"
               >
                 {sellingSummary ? (
-                  <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Selling...</>
+                  <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> {t('selling')}</>
                 ) : (
-                  <><BadgeDollarSign className="w-4 h-4" /> Sell</>
+                  <><BadgeDollarSign className="w-4 h-4" /> {t('sell')}</>
                 )}
               </button>
             </div>
@@ -1172,12 +1170,12 @@ export default function OpenBoxPage() {
           <div className="relative z-10 w-full max-w-sm rounded-2xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] p-6 shadow-2xl">
             <div className="flex items-center gap-2 mb-1">
               <Zap className="w-5 h-5 text-amber-400" />
-              <h3 className="text-lg font-bold text-[#f0f0f5]">Start Auto Open?</h3>
+              <h3 className="text-lg font-bold text-[#f0f0f5]">{t('startAutoOpen')}</h3>
             </div>
             <p className="text-[#8888aa] text-sm mb-5">
               {autoMaxCoins !== '' && !isNaN(parseFloat(autoMaxCoins))
-                ? <>Will open packs until you spend up to <span className="text-amber-400 font-semibold">{parseFloat(autoMaxCoins).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} coins</span> or run out of coins.</>
-                : <>Will open packs until your coins run out. Current balance: <span className="text-amber-400 font-semibold">{(userCoins ?? 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} coins</span>.</>
+                ? <>{t('autoOpenDesc')} <span className="text-amber-400 font-semibold">{parseFloat(autoMaxCoins).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} coins</span></>
+                : <>{t('autoOpenDesc')} <span className="text-amber-400 font-semibold">{(userCoins ?? 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} coins</span></>
               }
             </p>
             <div className="flex gap-3">
@@ -1185,14 +1183,14 @@ export default function OpenBoxPage() {
                 onClick={() => setShowAutoConfirm(false)}
                 className="flex-1 py-2.5 rounded-xl border border-[rgba(255,255,255,0.06)] text-[#8888aa] hover:text-[#f0f0f5] hover:border-[rgba(255,255,255,0.12)] font-medium transition-colors"
               >
-                Cancel
+                {t('stop')}
               </button>
               <button
                 onClick={() => { setShowAutoConfirm(false); handleAutoOpen(); }}
                 className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-semibold transition-all hover:scale-[1.02] flex items-center justify-center gap-2"
               >
                 <Zap className="w-4 h-4" />
-                Start
+                {t('start')}
               </button>
             </div>
           </div>
@@ -1209,27 +1207,24 @@ export default function OpenBoxPage() {
           />
           {/* Dialog */}
           <div className="relative z-10 w-full max-w-sm rounded-2xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] p-6 shadow-2xl">
-            <h3 className="text-lg font-bold text-[#f0f0f5] mb-1">Open {quantity}x Pack{quantity > 1 ? 's' : ''}?</h3>
+            <h3 className="text-lg font-bold text-[#f0f0f5] mb-1">{t('confirmOpen', { quantity })}?</h3>
             <p className="text-[#8888aa] text-sm mb-5">
-              This will cost{' '}
-              <span className="text-amber-400 font-semibold">
-                {totalCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} coins
-              </span>
-              . This action cannot be undone.
+              {t('confirmCost', { cost: totalCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) })}
+              {' '}{t('cannotBeUndone')}
             </p>
             <div className="flex gap-3">
               <button
                 onClick={() => setShowConfirm(false)}
                 className="flex-1 py-2.5 rounded-xl border border-[rgba(255,255,255,0.06)] text-[#8888aa] hover:text-[#f0f0f5] hover:border-[rgba(255,255,255,0.12)] font-medium transition-colors"
               >
-                Cancel
+                {t('stop')}
               </button>
               <button
                 onClick={() => { setShowConfirm(false); handleOpen(); }}
                 className="flex-1 py-2.5 rounded-xl bg-[#C84FFF] hover:bg-[#E879F9] text-white font-semibold transition-all hover:scale-[1.02] flex items-center justify-center gap-2 shadow-[0_0_24px_rgba(200,79,255,0.3)]"
               >
                 <Coins className="w-4 h-4" />
-                Confirm
+                {t('openPack')}
               </button>
             </div>
           </div>

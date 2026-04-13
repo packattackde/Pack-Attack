@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
 import { formatCoins } from '@/lib/format';
 import { GiTwoCoins, GiCardboardBox, GiCardPlay } from 'react-icons/gi';
@@ -31,6 +32,7 @@ function getRarityColor(rarity: string): string {
 }
 
 export default function CardLightbox({ isOpen, onClose, card }: CardLightboxProps) {
+  const t = useTranslations('widgets');
   const glowColor = getRarityColor(card.rarity);
 
   useEffect(() => {
@@ -127,14 +129,14 @@ export default function CardLightbox({ isOpen, onClose, card }: CardLightboxProp
                   href={`/open/${card.boxId}`}
                   className="block w-full text-center px-4 py-3 font-bold rounded-xl text-sm text-black bg-[#C84FFF] hover:brightness-110 transition shadow-[0_0_12px_rgba(200,79,255,0.3)]"
                 >
-                  <span className="flex items-center justify-center gap-2"><GiCardboardBox className="w-4 h-4" /> Open this Box →</span>
+                  <span className="flex items-center justify-center gap-2"><GiCardboardBox className="w-4 h-4" /> {t('cardLightbox.openThisBox')}</span>
                 </Link>
               )}
               <Link
                 href="/collection"
                 className="block w-full text-center px-4 py-3 font-semibold rounded-xl text-sm text-[#f0f0f5] bg-[rgba(255,255,255,0.08)] hover:bg-[rgba(255,255,255,0.12)] border border-[rgba(255,255,255,0.1)] transition"
               >
-                <span className="flex items-center justify-center gap-2"><GiCardPlay className="w-4 h-4" /> View Collection</span>
+                <span className="flex items-center justify-center gap-2"><GiCardPlay className="w-4 h-4" /> {t('cardLightbox.viewCollection')}</span>
               </Link>
             </div>
           </motion.div>

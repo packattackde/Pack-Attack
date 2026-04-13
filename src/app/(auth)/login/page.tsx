@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Mail, Lock, Eye, EyeOff, ChevronRight, AlertCircle, Gamepad2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 function TwitchIcon({ className }: { className?: string }) {
   return (
@@ -22,18 +23,8 @@ function DiscordIcon({ className }: { className?: string }) {
   );
 }
 
-const OAUTH_ERROR_MESSAGES: Record<string, string> = {
-  OAuthSignin: 'Could not start the login flow. Please try again.',
-  OAuthCallback: 'Login failed during provider callback. Please try again.',
-  OAuthCreateAccount: 'Could not create your account. The email may already be in use.',
-  OAuthAccountNotLinked: 'This email is already registered with a different login method.',
-  Callback: 'Login callback failed. Please try again.',
-  Default: 'Something went wrong with login. Please try again.',
-  twitch: 'Twitch login is currently unavailable. Please try another method.',
-  discord: 'Discord login is currently unavailable. Please try another method.',
-};
-
 export default function LoginPage() {
+  const t = useTranslations('auth');
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
@@ -43,13 +34,27 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ email: '', password: '' });
 
+  const getOAuthErrorMessage = useCallback((errorCode: string) => {
+    const errorMap: Record<string, string> = {
+      OAuthSignin: t('errors.oauthSignin'),
+      OAuthCallback: t('errors.oauthCallback'),
+      OAuthCreateAccount: t('errors.oauthCreateAccount'),
+      OAuthAccountNotLinked: t('errors.oauthAccountNotLinked'),
+      Callback: t('errors.callback'),
+      Default: t('errors.default'),
+      twitch: t('errors.twitch'),
+      discord: t('errors.discord'),
+    };
+    return errorMap[errorCode] ?? errorMap.Default;
+  }, [t]);
+
   useEffect(() => {
     const errorParam = searchParams.get('error');
     if (errorParam) {
-      setError(OAUTH_ERROR_MESSAGES[errorParam] ?? OAUTH_ERROR_MESSAGES.Default);
+      setError(getOAuthErrorMessage(errorParam));
       router.replace('/login');
     }
-  }, [searchParams, router]);
+  }, [searchParams, router, getOAuthErrorMessage]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,14 +69,14 @@ export default function LoginPage() {
       });
 
       if (result?.error) {
-        setError('Invalid email or password. Please try again.');
+        setError(t('errors.invalidCredentials'));
         return;
       }
 
       router.push('/dashboard');
       router.refresh();
     } catch {
-      setError('Something went wrong. Please try again.');
+      setError(t('errors.somethingWrong'));
     } finally {
       setLoading(false);
     }
@@ -95,8 +100,8 @@ export default function LoginPage() {
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-[rgba(200,79,255,0.1)] ring-1 ring-[rgba(200,79,255,0.2)] mb-4">
             <Gamepad2 className="w-6 h-6 text-[#C84FFF]" />
           </div>
-          <h2 className="text-2xl font-bold text-white mb-1">Welcome back</h2>
-          <p className="text-sm text-gray-500">Sign in to continue your adventure</p>
+          <h2 className="text-2xl font-bold text-white mb-1">{t('welcomeBack')}</h2>
+          <p className="text-sm text-gray-500">{t('signInToContinue')}</p>
         </div>
 
         {/* Social Login Buttons */}
@@ -111,7 +116,7 @@ export default function LoginPage() {
             ) : (
               <>
                 <TwitchIcon className="w-5 h-5" />
-                Twitch
+                {t('signInWithTwitch')}
               </>
             )}
           </button>
@@ -125,7 +130,7 @@ export default function LoginPage() {
             ) : (
               <>
                 <DiscordIcon className="w-5 h-5" />
-                Discord
+                {t('signInWithDiscord')}
               </>
             )}
           </button>
@@ -134,7 +139,7 @@ export default function LoginPage() {
         {/* Divider */}
         <div className="flex items-center gap-3 mb-6">
           <div className="flex-1 h-px bg-white/[0.06]" />
-          <span className="text-[11px] text-gray-600 font-medium uppercase tracking-wider">or with email</span>
+          <span className="text-[11px] text-gray-600 font-medium uppercase tracking-wider">{t('orWithEmail')}</span>
           <div className="flex-1 h-px bg-white/[0.06]" />
         </div>
 
@@ -149,7 +154,7 @@ export default function LoginPage() {
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-[#8888aa] mb-1.5 ml-1">Email</label>
+            <label className="block text-xs font-medium text-[#8888aa] mb-1.5 ml-1">{t('email')}</label>
             <div className="relative">
               <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-600" />
               <input
@@ -158,16 +163,16 @@ export default function LoginPage() {
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 className="w-full h-11 pl-10 pr-4 rounded-xl bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder-gray-600 focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.2)] focus:bg-white/[0.06] outline-none transition-all"
-                placeholder="you@example.com"
+                placeholder={t('emailPlaceholder')}
               />
             </div>
           </div>
 
           <div>
             <div className="flex items-center justify-between mb-1.5 ml-1">
-              <label className="text-xs font-medium text-[#8888aa]">Password</label>
+              <label className="text-xs font-medium text-[#8888aa]">{t('password')}</label>
               <button type="button" className="text-[11px] text-[#C84FFF]/70 hover:text-[#C84FFF] transition-colors">
-                Forgot password?
+                {t('forgotPassword')}
               </button>
             </div>
             <div className="relative">
@@ -178,7 +183,7 @@ export default function LoginPage() {
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 className="w-full h-11 pl-10 pr-11 rounded-xl bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder-gray-600 focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.2)] focus:bg-white/[0.06] outline-none transition-all"
-                placeholder="Enter your password"
+                placeholder={t('passwordPlaceholder')}
               />
               <button
                 type="button"
@@ -199,7 +204,7 @@ export default function LoginPage() {
               <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
             ) : (
               <>
-                Sign In
+                {t('signIn')}
                 <ChevronRight className="w-4 h-4" />
               </>
             )}
@@ -208,9 +213,9 @@ export default function LoginPage() {
 
         {/* Register link */}
         <p className="mt-6 text-center text-sm text-gray-500">
-          Don&apos;t have an account?{' '}
+          {t('noAccount')}{' '}
           <Link href="/register" className="text-[#C84FFF] hover:text-[#E879F9] font-medium transition-colors">
-            Create one
+            {t('createOne')}
           </Link>
         </p>
       </div>

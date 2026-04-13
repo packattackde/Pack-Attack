@@ -8,6 +8,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { Loader2, Store, Package, ArrowLeft, Save, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 type Card = {
   id: string;
@@ -31,6 +32,8 @@ type Box = {
 };
 
 export default function EditShopBoxPage({ params }: { params: Promise<{ id: string }> }) {
+  const t = useTranslations('shopDashboard.editBox');
+  const tc = useTranslations('common');
   const resolvedParams = use(params);
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -70,8 +73,8 @@ export default function EditShopBoxPage({ params }: { params: Promise<{ id: stri
 
       if (!res.ok) {
         addToast({
-          title: 'Error',
-          description: data.error || 'Failed to load box',
+        title: tc('error'),
+        description: data.error || t('failedToLoad'),
           variant: 'destructive',
         });
         router.push('/shop-dashboard/boxes');
@@ -88,8 +91,8 @@ export default function EditShopBoxPage({ params }: { params: Promise<{ id: stri
       });
     } catch (error) {
       addToast({
-        title: 'Error',
-        description: 'Failed to load box',
+        title: tc('error'),
+        description: t('failedToLoad'),
         variant: 'destructive',
       });
     } finally {
@@ -118,22 +121,22 @@ export default function EditShopBoxPage({ params }: { params: Promise<{ id: stri
 
       if (!res.ok) {
         addToast({
-          title: 'Error',
-          description: data.error || 'Failed to update box',
+        title: tc('error'),
+        description: data.error || t('failedToUpdate'),
           variant: 'destructive',
         });
         return;
       }
 
       addToast({
-        title: 'Success',
-        description: 'Box updated successfully',
+        title: tc('success'),
+        description: t('boxUpdated'),
       });
       router.push('/shop-dashboard/boxes');
     } catch (error) {
       addToast({
-        title: 'Error',
-        description: 'Failed to update box',
+        title: tc('error'),
+        description: t('failedToUpdate'),
         variant: 'destructive',
       });
     } finally {
@@ -146,7 +149,7 @@ export default function EditShopBoxPage({ params }: { params: Promise<{ id: stri
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin text-[#C84FFF] mx-auto mb-4" />
-          <p className="text-[#8888aa]">Loading box...</p>
+          <p className="text-[#8888aa]">{t('loadingBox')}</p>
         </div>
       </div>
     );
@@ -170,21 +173,20 @@ export default function EditShopBoxPage({ params }: { params: Promise<{ id: stri
             className="inline-flex items-center gap-2 text-[#8888aa] hover:text-white transition-colors mb-4"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Back to Boxes</span>
+            <span>{t('backToBoxes')}</span>
           </Link>
           
           <div className="flex items-center gap-3 mb-4">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
               <Store className="w-4 h-4 text-cyan-400" />
-              <span className="text-[#f0f0f5]">Shop Dashboard</span>
+              <span className="text-[#f0f0f5]">{t('badge')}</span>
             </div>
           </div>
           
           <h1 className="text-3xl md:text-4xl font-bold mb-2 font-heading">
-            <span className="text-white">Edit </span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">Box</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">{t('title')}</span>
           </h1>
-          <p className="text-[#8888aa]">Update your box details and settings.</p>
+          <p className="text-[#8888aa]">{t('subtitle')}</p>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-6">
@@ -207,7 +209,7 @@ export default function EditShopBoxPage({ params }: { params: Promise<{ id: stri
               </div>
               <div className="p-4">
                 <h3 className="font-bold text-white mb-2">{box.name}</h3>
-                <p className="text-sm text-[#8888aa] mb-4">{box.cards.length} cards in this box</p>
+                <p className="text-sm text-[#8888aa] mb-4">{t('cardsInBox', { count: box.cards.length })}</p>
                 
                 {/* Card Preview Grid */}
                 <div className="grid grid-cols-4 gap-1">
@@ -234,7 +236,7 @@ export default function EditShopBoxPage({ params }: { params: Promise<{ id: stri
             <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-[#f0f0f5]">Box Name</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5]">{t('boxName')}</label>
                   <input
                     type="text"
                     required
@@ -245,7 +247,7 @@ export default function EditShopBoxPage({ params }: { params: Promise<{ id: stri
                 </div>
 
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-[#f0f0f5]">Description</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5]">{t('description')}</label>
                   <textarea
                     required
                     value={formData.description}
@@ -257,7 +259,7 @@ export default function EditShopBoxPage({ params }: { params: Promise<{ id: stri
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="block text-sm font-medium text-[#f0f0f5]">Price (coins)</label>
+                    <label className="block text-sm font-medium text-[#f0f0f5]">{t('priceCoins')}</label>
                     <input
                       type="number"
                       step="0.01"
@@ -269,7 +271,7 @@ export default function EditShopBoxPage({ params }: { params: Promise<{ id: stri
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="block text-sm font-medium text-[#f0f0f5]">Cards Per Pack</label>
+                    <label className="block text-sm font-medium text-[#f0f0f5]">{t('cardsPerPack')}</label>
                     <input
                       type="number"
                       required
@@ -290,8 +292,8 @@ export default function EditShopBoxPage({ params }: { params: Promise<{ id: stri
                     className="w-5 h-5 rounded border-gray-600 bg-[#12123a] text-cyan-500 focus:ring-cyan-500 focus:ring-offset-gray-900"
                   />
                   <label htmlFor="isActive" className="text-[#f0f0f5] cursor-pointer">
-                    <span className="font-medium">Active</span>
-                    <p className="text-sm text-gray-500">When active, users can see and open this box</p>
+                    <span className="font-medium">{t('activeLabel')}</span>
+                    <p className="text-sm text-gray-500">{t('activeHint')}</p>
                   </label>
                 </div>
 
@@ -304,12 +306,12 @@ export default function EditShopBoxPage({ params }: { params: Promise<{ id: stri
                     {saving ? (
                       <>
                         <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        Saving...
+                        {t('saving')}
                       </>
                     ) : (
                       <>
                         <Save className="h-4 w-4 mr-2" />
-                        Save Changes
+                        {t('saveChanges')}
                       </>
                     )}
                   </Button>
@@ -319,7 +321,7 @@ export default function EditShopBoxPage({ params }: { params: Promise<{ id: stri
                     onClick={() => router.back()}
                     className="border-[rgba(255,255,255,0.06)] text-[#8888aa] hover:text-white hover:bg-[#12123a]"
                   >
-                    Cancel
+                    {t('cancel')}
                   </Button>
                 </div>
               </form>

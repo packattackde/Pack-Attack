@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { ArrowLeft, Coins, Zap, Check, Star, Search, Eye, EyeOff, Plus, X, Package } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { InfoTooltip } from '@/components/InfoTooltip';
+import { useTranslations } from 'next-intl';
 
 type Box = {
   id: string;
@@ -18,26 +19,10 @@ type Box = {
   featured: boolean;
 };
 
-const PLAYER_OPTIONS = [
-  { value: 2 as const, label: '1 vs 1', sub: '2 Spieler' },
-  { value: 3 as const, label: '1v1v1', sub: '3 Spieler' },
-  { value: 4 as const, label: '1v1v1v1', sub: '4 Spieler' },
-];
-
-const MODE_OPTIONS = [
-  { value: 'LOWEST_CARD' as const, label: 'Niedrigste Karte', description: 'Gewinner erhält die niedrigste Karte des Verlierers', icon: '⬇️' },
-  { value: 'HIGHEST_CARD' as const, label: 'Höchste Karte', description: 'Gewinner erhält die höchste Karte des Verlierers', icon: '⬆️' },
-];
-
-const WIN_CONDITION_OPTIONS = [
-  { value: 'HIGHEST' as const, label: 'Höchster Wert', description: 'Höchster Gesamtkartenwert gewinnt', icon: '📈' },
-  { value: 'LOWEST' as const, label: 'Niedrigster Wert', description: 'Niedrigster Gesamtkartenwert gewinnt', icon: '📉' },
-  { value: 'SHARE_MODE' as const, label: 'Teilen', description: 'Karten werden gleichmäßig aufgeteilt', icon: '🤝' },
-];
-
 export default function CreateBattlePage() {
   const router = useRouter();
   const { addToast } = useToast();
+  const t = useTranslations('battles');
   const [loading, setLoading] = useState(false);
   const [boxes, setBoxes] = useState<Box[]>([]);
   const [boxSearch, setBoxSearch] = useState('');
@@ -48,11 +33,28 @@ export default function CreateBattlePage() {
   const [maxParticipants, setMaxParticipants] = useState<2 | 3 | 4>(2);
   const [privacy, setPrivacy] = useState<'PUBLIC' | 'PRIVATE'>('PUBLIC');
 
+  const PLAYER_OPTIONS = [
+    { value: 2 as const, label: t('create.playerOptions.2'), sub: t('create.playerOptions.2sub') },
+    { value: 3 as const, label: t('create.playerOptions.3'), sub: t('create.playerOptions.3sub') },
+    { value: 4 as const, label: t('create.playerOptions.4'), sub: t('create.playerOptions.4sub') },
+  ];
+
+  const MODE_OPTIONS = [
+    { value: 'LOWEST_CARD' as const, label: t('create.modeOptions.LOWEST_CARD'), description: t('create.modeOptions.LOWEST_CARD_desc'), icon: '⬇️' },
+    { value: 'HIGHEST_CARD' as const, label: t('create.modeOptions.HIGHEST_CARD'), description: t('create.modeOptions.HIGHEST_CARD_desc'), icon: '⬆️' },
+  ];
+
+  const WIN_CONDITION_OPTIONS = [
+    { value: 'HIGHEST' as const, label: t('create.winOptions.HIGHEST'), description: t('create.winOptions.HIGHEST_desc'), icon: '📈' },
+    { value: 'LOWEST' as const, label: t('create.winOptions.LOWEST'), description: t('create.winOptions.LOWEST_desc'), icon: '📉' },
+    { value: 'SHARE_MODE' as const, label: t('create.winOptions.SHARE_MODE'), description: t('create.winOptions.SHARE_MODE_desc'), icon: '🤝' },
+  ];
+
   useEffect(() => {
     fetch('/api/boxes')
       .then(res => res.json())
       .then(data => { if (data.boxes) setBoxes(data.boxes); })
-      .catch(() => addToast({ title: 'Fehler', description: 'Boxen konnten nicht geladen werden', variant: 'destructive' }));
+      .catch(() => addToast({ title: t('create.boxLoadError'), variant: 'destructive' }));
   }, []);
 
   const filteredBoxes = useMemo(() => {
@@ -75,7 +77,7 @@ export default function CreateBattlePage() {
 
   const addBox = (box: Box) => {
     if (pickedBoxes.length >= 10) {
-      addToast({ title: 'Maximum erreicht', description: 'Maximal 10 Runden möglich', variant: 'destructive' });
+      addToast({ title: t('create.maxRoundsTitle'), description: t('create.maxRoundsDesc'), variant: 'destructive' });
       return;
     }
     setPickedBoxes(prev => [...prev, box]);
@@ -102,13 +104,13 @@ export default function CreateBattlePage() {
       });
       const data = await res.json();
       if (!res.ok) {
-        addToast({ title: 'Fehler', description: data.error || 'Battle konnte nicht erstellt werden', variant: 'destructive' });
+        addToast({ title: t('create.createError'), description: data.error || t('create.createError'), variant: 'destructive' });
         return;
       }
-      addToast({ title: 'Battle erstellt!', description: 'Du wirst zur Lobby weitergeleitet...' });
+      addToast({ title: t('create.createdTitle'), description: t('create.createdDesc') });
       router.push(`/battles/${data.battle.id}`);
     } catch {
-      addToast({ title: 'Fehler', description: 'Battle konnte nicht erstellt werden', variant: 'destructive' });
+      addToast({ title: t('create.createError'), variant: 'destructive' });
     } finally {
       setLoading(false);
     }
@@ -116,6 +118,8 @@ export default function CreateBattlePage() {
 
   const selectedStyle = 'border-[#C84FFF] bg-[#C84FFF]/10 shadow-[0_0_20px_rgba(200,79,255,0.12)]';
   const unselectedStyle = 'border-[rgba(255,255,255,0.08)] bg-[#12123a] hover:border-[rgba(255,255,255,0.2)]';
+
+  const boxCount = new Set(pickedBoxes.map(b => b.id)).size;
 
   return (
     <div className="min-h-screen font-display">
@@ -125,11 +129,11 @@ export default function CreateBattlePage() {
       <div className="relative container py-10 sm:py-14 max-w-7xl">
         <div className="mb-8">
           <Link href="/battles" className="inline-flex items-center gap-2 text-[#8888aa] hover:text-white mb-4 transition-colors text-sm">
-            <ArrowLeft className="w-4 h-4" /> Zurück zu Battles
+            <ArrowLeft className="w-4 h-4" /> {t('create.backToBattles')}
           </Link>
           <h1 className="text-3xl md:text-4xl font-bold">
-            <span className="text-white">Neues </span>
-            <span className="text-[#C84FFF]">Battle</span>
+            <span className="text-white">{t('create.newBattle').split(' ')[0]} </span>
+            <span className="text-[#C84FFF]">{t('create.newBattle').split(' ').slice(1).join(' ')}</span>
           </h1>
         </div>
 
@@ -138,7 +142,7 @@ export default function CreateBattlePage() {
 
             {/* Players */}
             <section>
-              <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-3">Spieler <InfoTooltip infoKey="battle.create.players" /></h2>
+              <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-3">{t('create.players')} <InfoTooltip infoKey="battle.create.players" /></h2>
               <div className="flex gap-3">
                 {PLAYER_OPTIONS.map(opt => (
                   <button
@@ -157,11 +161,11 @@ export default function CreateBattlePage() {
             <section>
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider">
-                  Deine Runden <span className="text-[#C84FFF]">({rounds}/10)</span> <InfoTooltip infoKey="battle.create.rounds" />
+                  {t('create.yourRounds')} <span className="text-[#C84FFF]">({rounds}/10)</span> <InfoTooltip infoKey="battle.create.rounds" />
                 </h2>
                 {rounds > 0 && (
                   <button onClick={() => setPickedBoxes([])} className="text-xs text-red-400/60 hover:text-red-400 transition-colors">
-                    Alle entfernen
+                    {t('create.removeAll')}
                   </button>
                 )}
               </div>
@@ -169,8 +173,8 @@ export default function CreateBattlePage() {
               {rounds === 0 ? (
                 <div className="rounded-xl border-2 border-dashed border-[rgba(255,255,255,0.08)] p-8 text-center">
                   <Package className="w-8 h-8 text-[#444466] mx-auto mb-2" />
-                  <p className="text-sm text-[#666688]">Wähle unten Boxen aus — jede Box = 1 Runde</p>
-                  <p className="text-xs text-[#444466] mt-1">Du kannst die gleiche Box mehrfach hinzufügen</p>
+                  <p className="text-sm text-[#666688]">{t('create.selectBoxes')}</p>
+                  <p className="text-xs text-[#444466] mt-1">{t('create.canAddMultiple')}</p>
                 </div>
               ) : (
                 <div className="flex gap-2 flex-wrap">
@@ -208,13 +212,13 @@ export default function CreateBattlePage() {
 
             {/* Box Catalog */}
             <section>
-              <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-3">Box hinzufügen</h2>
+              <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-3">{t('create.addBox')}</h2>
               <div className="flex gap-3 mb-4">
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#666688]" />
                   <input
                     type="text"
-                    placeholder="Box suchen..."
+                    placeholder={t('create.searchBox')}
                     value={boxSearch}
                     onChange={e => setBoxSearch(e.target.value)}
                     className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.08)] text-sm text-white placeholder-[#666688] focus:border-[#C84FFF]/40 focus:outline-none transition-colors"
@@ -225,13 +229,13 @@ export default function CreateBattlePage() {
                   onChange={e => setBoxSort(e.target.value as typeof boxSort)}
                   className="px-3 py-2.5 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.08)] text-sm text-[#8888aa] focus:border-[#C84FFF]/40 focus:outline-none"
                 >
-                  <option value="price-asc">Preis ↑</option>
-                  <option value="price-desc">Preis ↓</option>
-                  <option value="name">Name</option>
+                  <option value="price-asc">{t('create.priceAsc')}</option>
+                  <option value="price-desc">{t('create.priceDesc')}</option>
+                  <option value="name">{t('create.name')}</option>
                 </select>
               </div>
               {filteredBoxes.length === 0 ? (
-                <div className="text-center py-10 text-[#666688] text-sm">Keine Boxen gefunden</div>
+                <div className="text-center py-10 text-[#666688] text-sm">{t('create.noBoxes')}</div>
               ) : (
                 <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
                   {filteredBoxes.map(box => {
@@ -261,7 +265,7 @@ export default function CreateBattlePage() {
                         <div className="p-3">
                           <h3 className="font-medium text-white text-sm leading-tight line-clamp-1">{box.name}</h3>
                           <div className="flex items-center justify-between mt-1.5">
-                            <span className="text-xs text-[#666688]">{box.cardsPerPack} Karten</span>
+                            <span className="text-xs text-[#666688]">{box.cardsPerPack} {t('create.cards')}</span>
                             <span className="flex items-center gap-1 text-amber-400 text-xs font-semibold">
                               <Coins className="w-3 h-3" />{box.price.toFixed(0)}
                             </span>
@@ -282,7 +286,7 @@ export default function CreateBattlePage() {
             {/* Win Condition + Reward Mode */}
             <div className="grid gap-8 md:grid-cols-2">
               <section>
-                <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-3">Gewinnlogik <InfoTooltip infoKey="battle.create.winCondition" /></h2>
+                <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-3">{t('create.winCondition')} <InfoTooltip infoKey="battle.create.winCondition" /></h2>
                 <div className="space-y-2">
                   {WIN_CONDITION_OPTIONS.map(opt => (
                     <button
@@ -308,7 +312,7 @@ export default function CreateBattlePage() {
               </section>
 
               <section>
-                <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-3">Belohnungsmodus <InfoTooltip infoKey="battle.create.rewardMode" /></h2>
+                <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-3">{t('create.rewardMode')} <InfoTooltip infoKey="battle.create.rewardMode" /></h2>
                 <div className="space-y-2">
                   {MODE_OPTIONS.map(mode => (
                     <button
@@ -336,25 +340,25 @@ export default function CreateBattlePage() {
 
             {/* Privacy */}
             <section>
-              <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-3">Sichtbarkeit <InfoTooltip infoKey="battle.create.visibility" /></h2>
+              <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-3">{t('create.visibility')} <InfoTooltip infoKey="battle.create.visibility" /></h2>
               <div className="flex gap-3">
                 <button
                   onClick={() => setPrivacy('PUBLIC')}
                   className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border transition-all ${privacy === 'PUBLIC' ? selectedStyle : unselectedStyle}`}
                 >
                   <Eye className={`w-4 h-4 ${privacy === 'PUBLIC' ? 'text-[#C84FFF]' : 'text-[#666688]'}`} />
-                  <span className={`font-semibold text-sm ${privacy === 'PUBLIC' ? 'text-white' : 'text-[#8888aa]'}`}>Öffentlich</span>
+                  <span className={`font-semibold text-sm ${privacy === 'PUBLIC' ? 'text-white' : 'text-[#8888aa]'}`}>{t('create.public')}</span>
                 </button>
                 <button
                   onClick={() => setPrivacy('PRIVATE')}
                   className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border transition-all ${privacy === 'PRIVATE' ? selectedStyle : unselectedStyle}`}
                 >
                   <EyeOff className={`w-4 h-4 ${privacy === 'PRIVATE' ? 'text-[#C84FFF]' : 'text-[#666688]'}`} />
-                  <span className={`font-semibold text-sm ${privacy === 'PRIVATE' ? 'text-white' : 'text-[#8888aa]'}`}>Privat</span>
+                  <span className={`font-semibold text-sm ${privacy === 'PRIVATE' ? 'text-white' : 'text-[#8888aa]'}`}>{t('create.private')}</span>
                 </button>
               </div>
               {privacy === 'PRIVATE' && (
-                <p className="text-xs text-[#666688] mt-2">Nur über direkten Link erreichbar.</p>
+                <p className="text-xs text-[#666688] mt-2">{t('create.privateHint')}</p>
               )}
             </section>
           </div>
@@ -363,20 +367,20 @@ export default function CreateBattlePage() {
           <div className="lg:w-80 shrink-0">
             <div className="lg:sticky lg:top-24">
               <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl p-6">
-                <h3 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-4">Zusammenfassung</h3>
+                <h3 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-4">{t('create.summary')}</h3>
 
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-[#666688]">Spieler</span>
+                    <span className="text-[#666688]">{t('create.players')}</span>
                     <span className="text-white font-medium">{PLAYER_OPTIONS.find(p => p.value === maxParticipants)?.label}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[#666688]">Runden</span>
+                    <span className="text-[#666688]">{t('rounds')}</span>
                     <span className={`font-medium ${rounds > 0 ? 'text-white' : 'text-[#444466]'}`}>{rounds || '—'}</span>
                   </div>
                   {rounds > 0 && (
                     <div>
-                      <span className="text-[#666688] text-xs">Boxen:</span>
+                      <span className="text-[#666688] text-xs">{t('create.boxPlural')}:</span>
                       <div className="mt-1.5 space-y-1">
                         {(() => {
                           const grouped = pickedBoxes.reduce((acc, box) => {
@@ -395,22 +399,22 @@ export default function CreateBattlePage() {
                     </div>
                   )}
                   <div className="flex justify-between">
-                    <span className="text-[#666688]">Gewinnlogik</span>
+                    <span className="text-[#666688]">{t('create.winCondition')}</span>
                     <span className="text-white font-medium">{WIN_CONDITION_OPTIONS.find(w => w.value === winCondition)?.icon} {WIN_CONDITION_OPTIONS.find(w => w.value === winCondition)?.label.split(' ')[0]}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[#666688]">Belohnung</span>
+                    <span className="text-[#666688]">{t('create.reward')}</span>
                     <span className="text-white font-medium">{MODE_OPTIONS.find(m => m.value === battleMode)?.icon} {MODE_OPTIONS.find(m => m.value === battleMode)?.label}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[#666688]">Sichtbarkeit</span>
-                    <span className="text-white font-medium">{privacy === 'PUBLIC' ? 'Öffentlich' : 'Privat'}</span>
+                    <span className="text-[#666688]">{t('create.visibility')}</span>
+                    <span className="text-white font-medium">{privacy === 'PUBLIC' ? t('create.public') : t('create.private')}</span>
                   </div>
                 </div>
 
                 <div className="border-t border-[rgba(255,255,255,0.08)] mt-4 pt-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-[#666688] text-sm">Einsatz</span>
+                    <span className="text-[#666688] text-sm">{t('create.entryFee')}</span>
                     <span className="text-amber-400 font-bold text-lg flex items-center gap-1">
                       <Coins className="w-4 h-4" />
                       {Math.round(entryFee)}
@@ -418,7 +422,7 @@ export default function CreateBattlePage() {
                   </div>
                   {rounds > 0 && (
                     <p className="text-xs text-[#444466] mt-1 text-right">
-                      {rounds} {rounds === 1 ? 'Runde' : 'Runden'} · {new Set(pickedBoxes.map(b => b.id)).size} {new Set(pickedBoxes.map(b => b.id)).size === 1 ? 'Box' : 'Boxen'}
+                      {rounds} {rounds === 1 ? t('create.box') : t('rounds')} · {boxCount} {boxCount === 1 ? t('create.box') : t('create.boxPlural')}
                     </p>
                   )}
                 </div>
@@ -429,14 +433,14 @@ export default function CreateBattlePage() {
                   className="w-full mt-5 px-6 py-3.5 bg-[#C84FFF] text-white font-semibold rounded-xl hover:bg-[#E879F9] transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {loading ? (
-                    <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Erstelle...</>
+                    <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> {t('create.creating')}</>
                   ) : (
-                    <><Zap className="w-5 h-5" /> Battle erstellen</>
+                    <><Zap className="w-5 h-5" /> {t('create.createBattle')}</>
                   )}
                 </button>
 
                 <p className="text-[10px] text-[#444466] mt-3 leading-relaxed text-center">
-                  Lobby 15 Min offen. Kein Gegner = Erstattung. Auto-Start 3 Min nach vollem Lobby.
+                  {t('create.lobbyInfo')}
                 </p>
               </div>
             </div>
@@ -451,7 +455,7 @@ export default function CreateBattlePage() {
                 <Coins className="w-4 h-4" />
                 <span>{Math.round(entryFee)} Coins</span>
               </div>
-              <p className="text-xs text-[#666688]">{rounds} {rounds === 1 ? 'Runde' : 'Runden'}</p>
+              <p className="text-xs text-[#666688]">{rounds} {t('rounds')}</p>
             </div>
             <button
               onClick={handleSubmit}
@@ -461,7 +465,7 @@ export default function CreateBattlePage() {
               {loading ? (
                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               ) : (
-                <><Zap className="w-4 h-4" /> Erstellen</>
+                <><Zap className="w-4 h-4" /> {t('create.create')}</>
               )}
             </button>
           </div>

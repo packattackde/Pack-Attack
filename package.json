@@ -24,7 +24,8 @@
     "test:api": "playwright test tests/api/",
     "test:e2e": "playwright test tests/e2e/",
     "test:report": "playwright show-report",
-    "neon:dev-branch": "powershell -ExecutionPolicy Bypass -File ./scripts/neon-create-dev-branch.ps1"
+    "neon:dev-branch": "powershell -ExecutionPolicy Bypass -File ./scripts/neon-create-dev-branch.ps1",
+    "i18n:check": "tsx scripts/check-i18n-parity.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

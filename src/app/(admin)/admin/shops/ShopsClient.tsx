@@ -8,6 +8,7 @@ import {
   AlertCircle, Database
 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { useTranslations } from 'next-intl';
 
 type Shop = {
   id: string;
@@ -34,6 +35,7 @@ type Totals = {
 };
 
 export function ShopsClient() {
+  const t = useTranslations('admin.shopsMgmt');
   const { addToast } = useToast();
   const [shops, setShops] = useState<Shop[]>([]);
   const [totals, setTotals] = useState<Totals>({ shops: 0, orders: 0, pendingOrders: 0, revenue: 0 });

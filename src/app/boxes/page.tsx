@@ -3,17 +3,20 @@ import { InfoTooltip } from '@/components/InfoTooltip';
 import { Package } from 'lucide-react';
 import BoxesClient from './BoxesClient';
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 
-// SEO Metadata
-export const metadata: Metadata = {
-  title: 'Trading Card Boxes - PullForge',
-  description: 'Browse our selection of trading card boxes. Open Pokemon, Magic: The Gathering, Yu-Gi-Oh, One Piece, Lorcana and more. Real cards, real thrills!',
-  openGraph: {
-    title: 'Trading Card Boxes - PullForge',
-    description: 'Browse our selection of trading card boxes from all major TCGs.',
-    type: 'website',
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('boxes');
+  return {
+    title: t('metaTitle'),
+    description: t('metaDesc'),
+    openGraph: {
+      title: t('metaTitle'),
+      description: t('metaDesc'),
+      type: 'website',
+    },
+  };
+}
 
 // PERFORMANCE: Use ISR with 60-second revalidation instead of force-dynamic
 // This caches the page and regenerates it every 60 seconds, reducing DB load
@@ -56,6 +59,7 @@ async function getBoxes() {
 }
 
 export default async function BoxesPage() {
+  const t = await getTranslations('boxes');
   const rawBoxes = await getBoxes();
 
   // Convert Decimal to Number for client component
@@ -86,16 +90,16 @@ export default async function BoxesPage() {
             <div className="flex items-center justify-center w-5 h-5 rounded-full bg-[rgba(200,79,255,0.15)]">
               <Package className="w-3 h-3 text-[#C84FFF]" />
             </div>
-            <span className="text-[#f0f0f5] font-medium">Card Packs</span>
+            <span className="text-[#f0f0f5] font-medium">{t('badge')}</span>
           </div>
           <div className="flex flex-wrap items-center gap-2 mb-3">
             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
-              <span className="text-white">All </span>
-              <span className="text-[#C84FFF]">Boxes</span>
+              <span className="text-white">{t('title').split(' ').slice(0, -1).join(' ')} </span>
+              <span className="text-[#C84FFF]">{t('title').split(' ').slice(-1)[0]}</span>
             </h1>
             <InfoTooltip infoKey="boxes.overview" />
           </div>
-          <p className="text-[#8888aa] text-lg">Browse and open packs to build your collection</p>
+          <p className="text-[#8888aa] text-lg">{t('subtitle')}</p>
         </div>
 
         {/* Client-side filterable boxes */}

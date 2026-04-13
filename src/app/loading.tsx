@@ -1,6 +1,11 @@
+'use client';
+
 import { Package } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 export default function Loading() {
+  const t = useTranslations('common');
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 flex items-center justify-center font-display">
       <div className="fixed inset-0 bg-grid opacity-30" />
@@ -13,7 +18,7 @@ export default function Loading() {
           </div>
           <div className="absolute inset-0 rounded-2xl border-2 border-[rgba(200,79,255,0.3)] animate-ping" />
         </div>
-        <p className="text-gray-400 font-medium">Loading...</p>
+        <p className="text-gray-400 font-medium">{t('loading')}</p>
       </div>
     </div>
   );

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import CardLightbox from './CardLightbox'
 import { GiTrophyCup, GiCardPickup, GiCardboardBox, GiTwoCoins, GiCardPlay } from 'react-icons/gi'
 import { formatCoins } from '@/lib/format'
@@ -40,6 +41,7 @@ export default function BestPullWidget({
   isEmpty,
   className = '',
 }: BestPullWidgetProps) {
+  const t = useTranslations('widgets')
   const glowColor = getRarityColor(rarity || 'rare')
   const [lightboxOpen, setLightboxOpen] = useState(false)
 
@@ -48,17 +50,17 @@ export default function BestPullWidget({
     return (
       <div className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl h-full p-4 sm:p-6 ${className}`}>
         <div className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-4 flex items-center gap-1.5">
-<GiTrophyCup className="w-3.5 h-3.5 text-[#C84FFF]" /> Today&apos;s Best Pull
+<GiTrophyCup className="w-3.5 h-3.5 text-[#C84FFF]" /> {t('bestPull.todaysBestPull')}
         </div>
         <div className="flex flex-col items-center text-center py-4">
           <GiCardPickup className="w-10 h-10 text-[#7777a0] mb-3" />
-          <h4 className="text-lg font-bold text-[#f0f0f5] mb-1">No hits yet today</h4>
-          <p className="text-[12px] text-[#8888aa] mb-5">Be the first to pull something amazing!</p>
+          <h4 className="text-lg font-bold text-[#f0f0f5] mb-1">{t('bestPull.noPullsYet')}</h4>
+          <p className="text-[12px] text-[#8888aa] mb-5">{t('bestPull.beFirst')}</p>
           <Link
             href="/boxes"
             className="min-h-[44px] inline-flex items-center gap-2 px-6 py-3 bg-[#C84FFF] text-white text-sm font-bold rounded-xl shadow-[0_0_15px_rgba(200,79,255,0.2)] hover:shadow-[0_0_25px_rgba(200,79,255,0.35)] hover:scale-105 transition-all"
           >
-            <GiCardboardBox className="w-4 h-4" /> Open a Box →
+            <GiCardboardBox className="w-4 h-4" /> {t('bestPull.openBox')}
           </Link>
         </div>
       </div>
@@ -74,7 +76,7 @@ export default function BestPullWidget({
         }}
       >
         <p className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-3">
-<GiTrophyCup className="w-3.5 h-3.5 text-[#C84FFF]" /> TODAY&apos;S BEST PULL
+<GiTrophyCup className="w-3.5 h-3.5 text-[#C84FFF]" /> {t('bestPull.todaysBestPull')}
         </p>
 
         <div className="flex flex-row gap-4 items-start">
@@ -131,7 +133,7 @@ export default function BestPullWidget({
           href={`/open/${boxId}`}
           className="min-h-[44px] mt-4 flex items-center justify-center gap-2 w-full px-4 py-3 font-bold rounded-xl text-sm text-black bg-[#C84FFF] hover:brightness-110 transition shadow-[0_0_12px_rgba(200,79,255,0.3)]"
         >
-          <GiCardboardBox className="w-4 h-4" /> Open this Box →
+          <GiCardboardBox className="w-4 h-4" /> {t('bestPull.openThisBox')}
         </Link>
       </div>
 

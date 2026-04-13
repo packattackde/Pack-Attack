@@ -10,6 +10,7 @@ import { Search, Plus, Trash2, X, Check, Loader2, FolderOpen, Save, Sparkles, St
 import Image from 'next/image';
 import { PresetGallery } from '@/components/admin/PresetGallery';
 import { SavePresetModal } from '@/components/admin/SavePresetModal';
+import { useTranslations } from 'next-intl';
 
 type ShopOption = {
   id: string;

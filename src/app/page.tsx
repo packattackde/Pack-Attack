@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { titleForLevel, xpProgressInCurrentLevel } from '@/lib/level';
@@ -16,10 +17,13 @@ import AchievementsWidget from '@/components/dashboard/AchievementsWidget';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata = {
-  title: 'Dashboard | PullForge',
-  description: 'Your personalized TCG pack opening dashboard',
-};
+export async function generateMetadata() {
+  const tc = await getTranslations('common');
+  return {
+    title: tc('metaDashboardTitle'),
+    description: tc('metaDashboardDesc'),
+  };
+}
 
 export default async function DashboardPage() {
   const session = await getCurrentSession();
@@ -134,6 +138,9 @@ export default async function DashboardPage() {
 
   if (!user) redirect('/login');
 
+  const t = await getTranslations('dashboard');
+  const tc = await getTranslations('common');
+
   // Derived data
   const xpProgress = xpProgressInCurrentLevel(user.xp, user.level);
   const title = titleForLevel(user.level);
@@ -164,33 +171,19 @@ export default async function DashboardPage() {
   }
 
   // Dynamic subtitle
-  let dynamicSubtitle = 'Ready to open some packs?';
+  let dynamicSubtitle = t('readyToOpen');
   if (luckStreak >= 3)
-    dynamicSubtitle = `Your luck streak: ${luckStreak} hits in a row!`;
+    dynamicSubtitle = t('luckStreak', { count: luckStreak });
   else if (activeBattles.length > 0)
-    dynamicSubtitle = `${activeBattles.length} Battle${activeBattles.length > 1 ? 's' : ''} waiting for you`;
+    dynamicSubtitle = t('battlesWaiting', { count: activeBattles.length });
 
   // Month name for leaderboard
-  const monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
   const currentMonth =
-    monthNames[new Date().getMonth()] + ' ' + new Date().getFullYear();
+    tc(`months.${new Date().getMonth()}`) + ' ' + new Date().getFullYear();
 
   // Serialize data for client components
   const serializedHits = recentHits.map((p) => ({
-    cardName: p.card?.name || 'Unknown Card',
+    cardName: p.card?.name || tc('unknownCard'),
     cardImage: p.card?.imageUrlGatherer || null,
     rarity: p.card?.rarity || 'common',
     coinValue: p.card?.coinValue ? Number(p.card.coinValue) : 0,
@@ -198,7 +191,7 @@ export default async function DashboardPage() {
   }));
 
   const serializedPulls = recentPulls.map((p) => ({
-    cardName: p.card?.name || 'Unknown Card',
+    cardName: p.card?.name || tc('unknownCard'),
     cardImage: p.card?.imageUrlGatherer || null,
     rarity: p.card?.rarity || 'common',
     coinValue: p.card?.coinValue ? Number(p.card.coinValue) : 0,
@@ -207,7 +200,7 @@ export default async function DashboardPage() {
 
   const serializedBattles = activeBattles.map((b) => ({
     id: b.id,
-    name: (b.box?.name ?? 'Box') + ' Battle',
+    name: (b.box?.name ?? tc('box')) + ' ' + tc('battle'),
     rounds: b.rounds,
     participants: b._count.participants,
     maxParticipants: b.maxParticipants,
@@ -232,7 +225,7 @@ export default async function DashboardPage() {
         <div className="grid grid-cols-1 sm:grid-cols-6 lg:grid-cols-12 gap-3 sm:gap-4 lg:gap-5 flex-1">
           <WelcomeWidget
             className="sm:col-span-6 lg:col-span-8"
-            userName={user.name || 'Player'}
+            userName={user.name || tc('player')}
             level={user.level}
             xpInCurrentLevel={xpProgress.current}
             xpForNextLevel={xpProgress.required}
@@ -256,7 +249,7 @@ export default async function DashboardPage() {
               cardImage={bestPullToday.card.imageUrlGatherer}
               rarity={bestPullToday.card.rarity}
               coinValue={Number(bestPullToday.card.coinValue)}
-              pullerName={bestPullToday.user.name || 'Anonymous'}
+              pullerName={bestPullToday.user.name || tc('anonymous')}
               boxId={bestPullToday.box.id}
               boxName={bestPullToday.box.name}
             />

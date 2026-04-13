@@ -3,6 +3,7 @@
 import { useState, useMemo, useCallback, memo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { InfoTooltip } from '@/components/InfoTooltip';
 import { useToast } from '@/components/ui/use-toast';
 import { 
@@ -53,40 +54,8 @@ interface ShopClientProps {
   games: GameCount[];
 }
 
-const categoryDisplayNames: Record<string, string> = {
-  SINGLE_CARD: 'Single Cards',
-  BOOSTER_BOX: 'Booster Boxes',
-  BOOSTER_PACK: 'Booster Packs',
-  STARTER_DECK: 'Starter Decks',
-  STRUCTURE_DECK: 'Structure Decks',
-  ACCESSORIES: 'Accessories',
-  SLEEVES: 'Sleeves',
-  PLAYMAT: 'Playmats',
-  BINDER: 'Binders',
-  DECK_BOX: 'Deck Boxes',
-  OTHER: 'Other',
-};
-
-const gameDisplayNames: Record<string, string> = {
-  MAGIC_THE_GATHERING: 'Magic: The Gathering',
-  ONE_PIECE: 'One Piece',
-  POKEMON: 'Pokémon',
-  LORCANA: 'Lorcana',
-  YUGIOH: 'Yu-Gi-Oh!',
-  FLESH_AND_BLOOD: 'Flesh and Blood',
-};
-
-const conditionDisplayNames: Record<string, string> = {
-  MINT: 'Mint',
-  NEAR_MINT: 'Near Mint',
-  EXCELLENT: 'Excellent',
-  GOOD: 'Good',
-  LIGHT_PLAYED: 'Light Played',
-  PLAYED: 'Played',
-  POOR: 'Poor',
-};
-
 export function ShopClient({ initialProducts, categories, games }: ShopClientProps) {
+  const t = useTranslations('shop');
   const { addToast } = useToast();
   const [products] = useState(initialProducts);
   const [searchQuery, setSearchQuery] = useState('');
@@ -130,20 +99,20 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
       if (!res.ok) {
         addToast({
           title: 'Error',
-          description: data.error || 'Failed to add to cart',
+          description: data.error || t('failedToAdd'),
           variant: 'destructive',
         });
         return;
       }
 
       addToast({
-        title: 'Added to Cart',
-        description: 'Item has been added to your cart',
+        title: t('addedToCart'),
+        description: t('addedToCartDesc'),
       });
     } catch (error) {
       addToast({
         title: 'Error',
-        description: 'Failed to add to cart',
+        description: t('failedToAdd'),
         variant: 'destructive',
       });
     } finally {
@@ -164,16 +133,18 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-2 mb-4 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
             <Store className="w-4 h-4 text-[#C84FFF]" />
-            <span className="text-[#f0f0f5]">TCG Marketplace</span>
+            <span className="text-[#f0f0f5]">{t('badge')}</span>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-2 mb-4">
             <h1 className="text-4xl md:text-5xl font-bold text-white">
-              Shop <span className="text-[#C84FFF]">Cards & Products</span>
+              {t.rich('title', {
+                highlight: (chunks) => <span className="text-[#C84FFF]">{chunks}</span>
+              })}
             </h1>
             <InfoTooltip infoKey="shop.overview" />
           </div>
           <p className="text-[#8888aa] max-w-2xl mx-auto">
-            Browse products from verified sellers. Find singles, sealed products, and accessories.
+            {t('subtitle')}
           </p>
         </div>
 
@@ -185,7 +156,7 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8888aa]" />
               <input
                 type="text"
-                placeholder="Search products..."
+                placeholder={t('searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-12 pr-4 py-3 rounded-xl bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none transition-colors"
@@ -199,10 +170,10 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
                 onChange={(e) => setSelectedCategory(e.target.value)}
                 className="appearance-none pl-4 pr-10 py-3 rounded-xl bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none transition-colors cursor-pointer min-w-[180px]"
               >
-                <option value="all" className="bg-[#0B0B2B]">All Categories</option>
+                <option value="all" className="bg-[#0B0B2B]">{t('allCategories')}</option>
                 {categories.map((cat) => (
                   <option key={cat.category} value={cat.category} className="bg-[#0B0B2B]">
-                    {categoryDisplayNames[cat.category] || cat.category} ({cat._count})
+                    {t(`categories.${cat.category}`)} ({cat._count})
                   </option>
                 ))}
               </select>
@@ -216,10 +187,10 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
                 onChange={(e) => setSelectedGame(e.target.value)}
                 className="appearance-none pl-4 pr-10 py-3 rounded-xl bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none transition-colors cursor-pointer min-w-[180px]"
               >
-                <option value="all" className="bg-[#0B0B2B]">All Games</option>
+                <option value="all" className="bg-[#0B0B2B]">{t('allGames')}</option>
                 {games.filter(g => g.game).map((g) => (
                   <option key={g.game} value={g.game!} className="bg-[#0B0B2B]">
-                    {gameDisplayNames[g.game!] || g.game} ({g._count})
+                    {g.game} ({g._count})
                   </option>
                 ))}
               </select>
@@ -232,7 +203,7 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
               className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#C84FFF] text-white font-semibold hover:brightness-110 transition-all"
             >
               <ShoppingCart className="w-5 h-5" />
-              <span>Cart</span>
+              <span>{t('cartLink')}</span>
             </Link>
           </div>
 
@@ -241,19 +212,19 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
             <div className="flex flex-wrap gap-2 mt-4">
               {searchQuery && (
                 <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[rgba(200,79,255,0.15)] text-[#C84FFF] text-sm">
-                  Search: "{searchQuery}"
+                  Search: &quot;{searchQuery}&quot;
                   <button onClick={() => setSearchQuery('')} className="ml-1 hover:text-white">×</button>
                 </span>
               )}
               {selectedCategory !== 'all' && (
                 <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-purple-500/20 text-purple-400 text-sm">
-                  {categoryDisplayNames[selectedCategory] || selectedCategory}
+                  {t(`categories.${selectedCategory}`)}
                   <button onClick={() => setSelectedCategory('all')} className="ml-1 hover:text-white">×</button>
                 </span>
               )}
               {selectedGame !== 'all' && (
                 <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[rgba(200,79,255,0.15)] text-[#C84FFF] text-sm">
-                  {gameDisplayNames[selectedGame] || selectedGame}
+                  {selectedGame}
                   <button onClick={() => setSelectedGame('all')} className="ml-1 hover:text-white">×</button>
                 </span>
               )}
@@ -276,7 +247,7 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
           <div className="mb-12">
             <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
               <Sparkles className="w-6 h-6 text-amber-400" />
-              Featured Products
+              {t('featuredProducts')}
             </h2>
             <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {featuredProducts.map((product) => (
@@ -297,21 +268,21 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-white flex items-center gap-2">
               <Package className="w-6 h-6 text-[#C84FFF]" />
-              {selectedCategory !== 'all' || selectedGame !== 'all' ? 'Filtered Results' : 'All Products'}
+              {selectedCategory !== 'all' || selectedGame !== 'all' ? t('filteredResults') : t('allProducts')}
             </h2>
             <span className="text-[#8888aa]">
-              {filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''}
+              {filteredProducts.length} {filteredProducts.length !== 1 ? t('products') : t('product')}
             </span>
           </div>
 
           {regularProducts.length === 0 && featuredProducts.length === 0 ? (
             <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
               <Package className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-white mb-2">No Products Found</h3>
+              <h3 className="text-xl font-semibold text-white mb-2">{t('noProducts')}</h3>
               <p className="text-[#8888aa]">
                 {searchQuery || selectedCategory !== 'all' || selectedGame !== 'all'
-                  ? 'Try adjusting your filters or search query'
-                  : 'No products are available at the moment. Check back later!'}
+                  ? t('noProductsFilter')
+                  : t('noProductsYet')}
               </p>
             </div>
           ) : (
@@ -344,6 +315,7 @@ const ProductCard = memo(function ProductCard({
   isAdding: boolean;
   featured?: boolean;
 }) {
+  const t = useTranslations('shop');
   const discount = product.comparePrice 
     ? Math.round((1 - product.price / product.comparePrice) * 100)
     : null;
@@ -370,7 +342,7 @@ const ProductCard = memo(function ProductCard({
           <div className="absolute top-3 left-3 flex flex-col gap-2">
             {featured && (
               <span className="px-2 py-1 rounded-lg bg-amber-500 text-gray-900 text-xs font-bold flex items-center gap-1">
-                <Star className="w-3 h-3" /> Featured
+                <Star className="w-3 h-3" /> {t('featuredProducts')}
               </span>
             )}
             {discount && discount > 0 && (
@@ -384,7 +356,7 @@ const ProductCard = memo(function ProductCard({
           {product.game && (
             <div className="absolute top-3 right-3">
               <span className="px-2 py-1 rounded-lg bg-black/70 text-white text-xs">
-                {gameDisplayNames[product.game] || product.game}
+                {product.game}
               </span>
             </div>
           )}
@@ -393,7 +365,7 @@ const ProductCard = memo(function ProductCard({
           {product.stock <= 3 && product.stock > 0 && (
             <div className="absolute bottom-3 left-3">
               <span className="px-2 py-1 rounded-lg bg-orange-500/90 text-white text-xs font-bold">
-                Only {product.stock} left!
+                {t('onlyLeft', { count: product.stock })}
               </span>
             </div>
           )}
@@ -418,10 +390,10 @@ const ProductCard = memo(function ProductCard({
         {/* Category & Condition */}
         <div className="flex flex-wrap gap-1 mb-3">
           <span className="px-2 py-0.5 rounded bg-[#12123a] text-[#8888aa] text-xs">
-            {categoryDisplayNames[product.category] || product.category}
+            {t(`categories.${product.category}`)}
           </span>
           <span className="px-2 py-0.5 rounded bg-[#12123a] text-[#8888aa] text-xs">
-            {conditionDisplayNames[product.condition] || product.condition}
+            {t(`conditions.${product.condition}`)}
           </span>
         </div>
 
@@ -442,12 +414,12 @@ const ProductCard = memo(function ProductCard({
           {isAdding ? (
             <>
               <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              Adding...
+              {t('adding')}
             </>
           ) : (
             <>
               <ShoppingCart className="w-4 h-4" />
-              Add to Cart
+              {t('addToCart')}
             </>
           )}
         </button>

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, useParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useToast } from '@/components/ui/use-toast';
 import {
   Package,
@@ -14,41 +15,33 @@ import {
   Loader2
 } from 'lucide-react';
 
-const categories = [
-  { value: 'SINGLE_CARD', label: 'Single Card' },
-  { value: 'BOOSTER_BOX', label: 'Booster Box' },
-  { value: 'BOOSTER_PACK', label: 'Booster Pack' },
-  { value: 'STARTER_DECK', label: 'Starter Deck' },
-  { value: 'STRUCTURE_DECK', label: 'Structure Deck' },
-  { value: 'ACCESSORIES', label: 'Accessories' },
-  { value: 'SLEEVES', label: 'Sleeves' },
-  { value: 'PLAYMAT', label: 'Playmat' },
-  { value: 'BINDER', label: 'Binder' },
-  { value: 'DECK_BOX', label: 'Deck Box' },
-  { value: 'OTHER', label: 'Other' },
-];
+const categoryKeys = [
+  'SINGLE_CARD', 'BOOSTER_BOX', 'BOOSTER_PACK', 'STARTER_DECK', 'STRUCTURE_DECK',
+  'ACCESSORIES', 'SLEEVES', 'PLAYMAT', 'BINDER', 'DECK_BOX', 'OTHER',
+] as const;
 
-const games = [
-  { value: '', label: 'No specific game' },
-  { value: 'MAGIC_THE_GATHERING', label: 'Magic: The Gathering' },
-  { value: 'ONE_PIECE', label: 'One Piece' },
-  { value: 'POKEMON', label: 'Pokémon' },
-  { value: 'LORCANA', label: 'Lorcana' },
-  { value: 'YUGIOH', label: 'Yu-Gi-Oh!' },
-  { value: 'FLESH_AND_BLOOD', label: 'Flesh and Blood' },
-];
+const gameKeys = [
+  '', 'MAGIC_THE_GATHERING', 'ONE_PIECE', 'POKEMON', 'LORCANA', 'YUGIOH', 'FLESH_AND_BLOOD',
+] as const;
 
-const conditions = [
-  { value: 'MINT', label: 'Mint' },
-  { value: 'NEAR_MINT', label: 'Near Mint' },
-  { value: 'EXCELLENT', label: 'Excellent' },
-  { value: 'GOOD', label: 'Good' },
-  { value: 'LIGHT_PLAYED', label: 'Light Played' },
-  { value: 'PLAYED', label: 'Played' },
-  { value: 'POOR', label: 'Poor' },
-];
+const gameDisplayNames: Record<string, string> = {
+  '': 'No specific game',
+  MAGIC_THE_GATHERING: 'Magic: The Gathering',
+  ONE_PIECE: 'One Piece',
+  POKEMON: 'Pokémon',
+  LORCANA: 'Lorcana',
+  YUGIOH: 'Yu-Gi-Oh!',
+  FLESH_AND_BLOOD: 'Flesh and Blood',
+};
+
+const conditionKeys = [
+  'MINT', 'NEAR_MINT', 'EXCELLENT', 'GOOD', 'LIGHT_PLAYED', 'PLAYED', 'POOR',
+] as const;
 
 export default function EditProductPage() {
+  const t = useTranslations('shop.productForm');
+  const tCat = useTranslations('shop.categories');
+  const tCond = useTranslations('shop.conditions');
   const router = useRouter();
   const params = useParams();
   const productId = params.id as string;
@@ -134,8 +127,8 @@ export default function EditProductPage() {
 
     if (!formData.name || !formData.price || !formData.category) {
       addToast({
-        title: 'Missing Information',
-        description: 'Please fill in all required fields',
+        title: t('missingInfo'),
+        description: t('fillRequired'),
         variant: 'destructive',
       });
       return;
@@ -167,22 +160,22 @@ export default function EditProductPage() {
       if (!res.ok) {
         addToast({
           title: 'Error',
-          description: data.error || 'Failed to update product',
+          description: data.error || t('failedToUpdate'),
           variant: 'destructive',
         });
         return;
       }
 
       addToast({
-        title: 'Product Updated!',
-        description: 'Your changes have been saved',
+        title: t('updated'),
+        description: t('updatedDesc'),
       });
 
       router.push('/shop/manage/products');
     } catch {
       addToast({
         title: 'Error',
-        description: 'Failed to update product',
+        description: t('failedToUpdate'),
         variant: 'destructive',
       });
     } finally {
@@ -195,7 +188,7 @@ export default function EditProductPage() {
       <div className="min-h-screen flex items-center justify-center font-display">
         <div className="text-white flex items-center gap-3">
           <Loader2 className="w-6 h-6 animate-spin text-[#C84FFF]" />
-          Loading product...
+          {t('loadingProduct')}
         </div>
       </div>
     );
@@ -206,14 +199,14 @@ export default function EditProductPage() {
       <div className="min-h-screen flex items-center justify-center font-display">
         <div className="text-center">
           <Package className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-white mb-2">Product Not Found</h2>
-          <p className="text-[#8888aa] mb-6">This product doesn&apos;t exist or you don&apos;t have access.</p>
+          <h2 className="text-xl font-semibold text-white mb-2">{t('notFound')}</h2>
+          <p className="text-[#8888aa] mb-6">{t('notFoundDesc')}</p>
           <Link
             href="/shop/manage/products"
             className="inline-flex items-center gap-2 px-6 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Products
+            {t('backToProducts')}
           </Link>
         </div>
       </div>
@@ -228,70 +221,70 @@ export default function EditProductPage() {
       <div className="relative container py-12">
         <Link href="/shop/manage/products" className="inline-flex items-center gap-2 text-[#8888aa] hover:text-white transition-colors mb-8">
           <ArrowLeft className="w-4 h-4" />
-          Back to Products
+          {t('backToProducts')}
         </Link>
 
         <div className="max-w-2xl mx-auto">
           <div className="flex items-center gap-3 mb-8">
             <Package className="w-8 h-8 text-[#C84FFF]" />
-            <h1 className="text-3xl font-bold text-white">Edit Product</h1>
+            <h1 className="text-3xl font-bold text-white">{t('editTitle')}</h1>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Basic Info */}
             <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 space-y-4">
-              <h2 className="text-lg font-semibold text-white mb-4">Basic Information</h2>
+              <h2 className="text-lg font-semibold text-white mb-4">{t('basicInfo')}</h2>
 
               <div>
-                <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Product Name *</label>
+                <label className="block text-sm font-medium text-[#f0f0f5] mb-2">{t('productName')} *</label>
                 <input
                   type="text"
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
-                  placeholder="e.g., Charizard VMAX - Rainbow Rare"
+                  placeholder={t('productNamePlaceholder')}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Description</label>
+                <label className="block text-sm font-medium text-[#f0f0f5] mb-2">{t('description')}</label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={4}
                   className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none resize-none"
-                  placeholder="Describe your product..."
+                  placeholder={t('descriptionPlaceholder')}
                 />
               </div>
 
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Category *</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">{t('category')} *</label>
                   <select
                     required
                     value={formData.category}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                     className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                   >
-                    {categories.map((cat) => (
-                      <option key={cat.value} value={cat.value} className="bg-[#0B0B2B]">
-                        {cat.label}
+                    {categoryKeys.map((key) => (
+                      <option key={key} value={key} className="bg-[#0B0B2B]">
+                        {tCat(key)}
                       </option>
                     ))}
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Game</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">{t('game')}</label>
                   <select
                     value={formData.game}
                     onChange={(e) => setFormData({ ...formData, game: e.target.value })}
                     className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                   >
-                    {games.map((game) => (
-                      <option key={game.value} value={game.value} className="bg-[#0B0B2B]">
-                        {game.label}
+                    {gameKeys.map((key) => (
+                      <option key={key} value={key} className="bg-[#0B0B2B]">
+                        {gameDisplayNames[key]}
                       </option>
                     ))}
                   </select>
@@ -299,15 +292,15 @@ export default function EditProductPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Condition</label>
+                <label className="block text-sm font-medium text-[#f0f0f5] mb-2">{t('condition')}</label>
                 <select
                   value={formData.condition}
                   onChange={(e) => setFormData({ ...formData, condition: e.target.value })}
                   className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
                 >
-                  {conditions.map((cond) => (
-                    <option key={cond.value} value={cond.value} className="bg-[#0B0B2B]">
-                      {cond.label}
+                  {conditionKeys.map((key) => (
+                    <option key={key} value={key} className="bg-[#0B0B2B]">
+                      {tCond(key)}
                     </option>
                   ))}
                 </select>
@@ -316,11 +309,11 @@ export default function EditProductPage() {
 
             {/* Pricing & Inventory */}
             <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 space-y-4">
-              <h2 className="text-lg font-semibold text-white mb-4">Pricing & Inventory</h2>
+              <h2 className="text-lg font-semibold text-white mb-4">{t('pricingInventory')}</h2>
 
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Price (€) *</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">{t('price')} *</label>
                   <input
                     type="number"
                     required
@@ -334,7 +327,7 @@ export default function EditProductPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Compare Price (€)</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">{t('comparePrice')}</label>
                   <input
                     type="number"
                     min="0.01"
@@ -342,14 +335,14 @@ export default function EditProductPage() {
                     value={formData.comparePrice}
                     onChange={(e) => setFormData({ ...formData, comparePrice: e.target.value })}
                     className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
-                    placeholder="Original price for discount display"
+                    placeholder={t('comparePricePlaceholder')}
                   />
                 </div>
               </div>
 
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Stock Quantity *</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">{t('stock')} *</label>
                   <input
                     type="number"
                     required
@@ -362,13 +355,13 @@ export default function EditProductPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">SKU (Optional)</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">{t('sku')}</label>
                   <input
                     type="text"
                     value={formData.sku}
                     onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
                     className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
-                    placeholder="Product SKU"
+                    placeholder={t('skuPlaceholder')}
                   />
                 </div>
               </div>
@@ -382,7 +375,7 @@ export default function EditProductPage() {
                     onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
                     className="w-5 h-5 rounded bg-[#12123a] border-[rgba(255,255,255,0.06)] text-[#C84FFF] focus:ring-[rgba(200,79,255,0.3)]"
                   />
-                  <label htmlFor="featured" className="text-[#f0f0f5]">Featured</label>
+                  <label htmlFor="featured" className="text-[#f0f0f5]">{t('featureProduct')}</label>
                 </div>
 
                 <div className="flex items-center gap-3">
@@ -393,14 +386,14 @@ export default function EditProductPage() {
                     onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
                     className="w-5 h-5 rounded bg-[#12123a] border-[rgba(255,255,255,0.06)] text-[#C84FFF] focus:ring-[rgba(200,79,255,0.3)]"
                   />
-                  <label htmlFor="isActive" className="text-[#f0f0f5]">Active (visible in shop)</label>
+                  <label htmlFor="isActive" className="text-[#f0f0f5]">{t('activeProduct')}</label>
                 </div>
               </div>
             </div>
 
             {/* Images */}
             <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 space-y-4">
-              <h2 className="text-lg font-semibold text-white mb-4">Images</h2>
+              <h2 className="text-lg font-semibold text-white mb-4">{t('images')}</h2>
 
               <div className="flex gap-2">
                 <input
@@ -409,7 +402,7 @@ export default function EditProductPage() {
                   onChange={(e) => setImageUrl(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addImage(); } }}
                   className="flex-1 px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
-                  placeholder="Enter image URL"
+                  placeholder={t('imageUrlPlaceholder')}
                 />
                 <button
                   type="button"
@@ -438,7 +431,7 @@ export default function EditProductPage() {
                       </button>
                       {index === 0 && (
                         <span className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/70 text-white text-xs">
-                          Main
+                          {t('main')}
                         </span>
                       )}
                     </div>
@@ -447,8 +440,8 @@ export default function EditProductPage() {
               ) : (
                 <div className="text-center py-8 border-2 border-dashed border-[rgba(255,255,255,0.1)] rounded-xl">
                   <ImageIcon className="w-12 h-12 text-gray-600 mx-auto mb-3" />
-                  <p className="text-[#8888aa]">No images added yet</p>
-                  <p className="text-gray-500 text-sm">Add image URLs above</p>
+                  <p className="text-[#8888aa]">{t('noImages')}</p>
+                  <p className="text-gray-500 text-sm">{t('addImagesHint')}</p>
                 </div>
               )}
             </div>
@@ -459,7 +452,7 @@ export default function EditProductPage() {
                 href="/shop/manage/products"
                 className="flex-1 py-4 bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#f0f0f5] font-semibold rounded-xl hover:bg-white/10 transition-colors text-center"
               >
-                Cancel
+                {t('cancel')}
               </Link>
               <button
                 type="submit"
@@ -469,12 +462,12 @@ export default function EditProductPage() {
                 {submitting ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin" />
-                    Saving...
+                    {t('saving')}
                   </>
                 ) : (
                   <>
                     <Save className="w-5 h-5" />
-                    Save Changes
+                    {t('saveChanges')}
                   </>
                 )}
               </button>

@@ -27,7 +27,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Info, Pencil, X, Save, Loader2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import ReactMarkdown from 'react-markdown';
 
 type InfoTooltipProps = {
@@ -40,6 +40,7 @@ type InfoTooltipProps = {
 export function InfoTooltip({ infoKey, placement = 'inline', fallback, className = '' }: InfoTooltipProps) {
   const { data: session } = useSession();
   const locale = useLocale();
+  const t = useTranslations('common');
   const isAdmin = session?.user?.role === 'ADMIN';
 
   const [open, setOpen] = useState(false);
@@ -157,7 +158,7 @@ export function InfoTooltip({ infoKey, placement = 'inline', fallback, className
           {editing ? (
             <div className="p-4 space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-[#8888aa] uppercase tracking-wider">Info bearbeiten</span>
+                <span className="text-xs font-semibold text-[#8888aa] uppercase tracking-wider">{t('editInfo')}</span>
                 <button onClick={() => setEditing(false)} className="text-[#666688] hover:text-white transition-colors">
                   <X className="w-4 h-4" />
                 </button>
@@ -184,7 +185,7 @@ export function InfoTooltip({ infoKey, placement = 'inline', fallback, className
               </div>
               {updatedAt && (
                 <p className="text-[10px] text-[#444466]">
-                  Zuletzt aktualisiert: {new Date(updatedAt).toLocaleString()}
+                  {t('lastUpdated')} {new Date(updatedAt).toLocaleString()}
                 </p>
               )}
               <button
@@ -193,7 +194,7 @@ export function InfoTooltip({ infoKey, placement = 'inline', fallback, className
                 className="w-full flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-semibold text-white bg-[#C84FFF] hover:bg-[#E879F9] rounded-lg transition-colors disabled:opacity-50"
               >
                 {saving ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
-                {saving ? 'Speichern...' : 'Speichern'}
+                {saving ? t('saving') : t('save')}
               </button>
             </div>
           ) : (
@@ -203,14 +204,14 @@ export function InfoTooltip({ infoKey, placement = 'inline', fallback, className
                   {!loaded ? (
                     <div className="flex items-center gap-2 text-[#666688]">
                       <Loader2 className="w-3 h-3 animate-spin" />
-                      <span>Laden...</span>
+                      <span>{t('loading')}</span>
                     </div>
                   ) : displayContent ? (
                     <ReactMarkdown>{displayContent}</ReactMarkdown>
                   ) : displayFallback ? (
                     <p>{displayFallback}</p>
                   ) : (
-                    <p className="text-[#444466] italic">Kein Hilfetext verfügbar.</p>
+                    <p className="text-[#444466] italic">{t('noHelpText')}</p>
                   )}
                 </div>
                 {isAdmin && loaded && (

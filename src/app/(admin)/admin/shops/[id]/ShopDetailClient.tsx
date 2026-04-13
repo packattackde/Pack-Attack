@@ -10,6 +10,7 @@ import {
   Star, Coins, Euro, AlertCircle
 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { useTranslations } from 'next-intl';
 
 type Order = {
   id: string;

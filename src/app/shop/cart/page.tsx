@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useToast } from '@/components/ui/use-toast';
 import { 
   ShoppingCart, 
@@ -40,6 +41,7 @@ type Cart = {
 };
 
 export default function ShopCartPage() {
+  const t = useTranslations('shop.shopCart');
   const router = useRouter();
   const { addToast } = useToast();
   const [cart, setCart] = useState<Cart | null>(null);
@@ -81,13 +83,12 @@ export default function ShopCartPage() {
       if (!res.ok) {
         addToast({
           title: 'Error',
-          description: data.error || 'Failed to update quantity',
+          description: data.error || t('failedToUpdate'),
           variant: 'destructive',
         });
         return;
       }
 
-      // Update local state
       setCart((prev) => {
         if (!prev) return prev;
         const items = prev.items.map((item) => 
@@ -100,7 +101,7 @@ export default function ShopCartPage() {
     } catch (error) {
       addToast({
         title: 'Error',
-        description: 'Failed to update quantity',
+        description: t('failedToUpdate'),
         variant: 'destructive',
       });
     } finally {
@@ -120,13 +121,12 @@ export default function ShopCartPage() {
       if (!res.ok) {
         addToast({
           title: 'Error',
-          description: data.error || 'Failed to remove item',
+          description: data.error || t('failedToRemove'),
           variant: 'destructive',
         });
         return;
       }
 
-      // Update local state
       setCart((prev) => {
         if (!prev) return prev;
         const items = prev.items.filter((item) => item.id !== itemId);
@@ -136,13 +136,13 @@ export default function ShopCartPage() {
       });
 
       addToast({
-        title: 'Removed',
-        description: 'Item removed from cart',
+        title: t('removed'),
+        description: t('itemRemoved'),
       });
     } catch (error) {
       addToast({
         title: 'Error',
-        description: 'Failed to remove item',
+        description: t('failedToRemove'),
         variant: 'destructive',
       });
     } finally {
@@ -159,14 +159,14 @@ export default function ShopCartPage() {
       if (res.ok) {
         setCart({ id: cart?.id || '', items: [], total: 0, itemCount: 0 });
         addToast({
-          title: 'Cart Cleared',
-          description: 'All items have been removed',
+          title: t('cleared'),
+          description: t('clearedDesc'),
         });
       }
     } catch (error) {
       addToast({
         title: 'Error',
-        description: 'Failed to clear cart',
+        description: t('failedToClear'),
         variant: 'destructive',
       });
     }
@@ -177,7 +177,7 @@ export default function ShopCartPage() {
       <div className="min-h-screen flex items-center justify-center font-display">
         <div className="text-white flex items-center gap-3">
           <div className="w-6 h-6 border-2 border-[rgba(200,79,255,0.3)] border-t-transparent rounded-full animate-spin" />
-          Loading cart...
+          {t('title')}...
         </div>
       </div>
     );
@@ -195,15 +195,15 @@ export default function ShopCartPage() {
         {/* Breadcrumb */}
         <Link href="/shop" className="inline-flex items-center gap-2 text-[#8888aa] hover:text-white transition-colors mb-8">
           <ArrowLeft className="w-4 h-4" />
-          Continue Shopping
+          {t('continueShopping')}
         </Link>
 
         <div className="flex items-center gap-3 mb-8">
           <ShoppingCart className="w-8 h-8 text-[#C84FFF]" />
-          <h1 className="text-3xl font-bold text-white">Shopping Cart</h1>
+          <h1 className="text-3xl font-bold text-white">{t('title')}</h1>
           {cart && cart.itemCount > 0 && (
             <span className="px-3 py-1 rounded-full bg-[rgba(200,79,255,0.15)] text-[#C84FFF] text-sm">
-              {cart.itemCount} item{cart.itemCount !== 1 ? 's' : ''}
+              {cart.itemCount} {t('items')}
             </span>
           )}
         </div>
@@ -211,14 +211,14 @@ export default function ShopCartPage() {
         {isEmpty ? (
           <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center max-w-md mx-auto">
             <ShoppingCart className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-white mb-2">Your Cart is Empty</h2>
-            <p className="text-[#8888aa] mb-6">Browse our shop and add some products!</p>
+            <h2 className="text-xl font-semibold text-white mb-2">{t('empty')}</h2>
+            <p className="text-[#8888aa] mb-6">{t('emptyDesc')}</p>
             <Link
               href="/shop"
               className="inline-flex items-center gap-2 px-6 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl hover:brightness-110 transition-all"
             >
               <Package className="w-5 h-5" />
-              Browse Products
+              {t('browseProducts')}
             </Link>
           </div>
         ) : (
@@ -322,29 +322,29 @@ export default function ShopCartPage() {
                 className="text-red-400 hover:text-red-300 text-sm flex items-center gap-1 transition-colors"
               >
                 <Trash2 className="w-4 h-4" />
-                Clear Cart
+                {t('clearCart')}
               </button>
             </div>
 
             {/* Order Summary */}
             <div>
               <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 sticky top-24">
-                <h2 className="text-xl font-bold text-white mb-6">Order Summary</h2>
+                <h2 className="text-xl font-bold text-white mb-6">{t('orderSummary')}</h2>
 
                 <div className="space-y-3 mb-6">
                   <div className="flex justify-between text-[#8888aa]">
-                    <span>Subtotal ({cart.itemCount} items)</span>
+                    <span>{t('subtotal')} ({cart.itemCount} {t('items')})</span>
                     <span className="text-white">€{cart.total.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-[#8888aa]">
-                    <span>Shipping</span>
-                    <span className="text-white">Calculated at checkout</span>
+                    <span>{t('shipping')}</span>
+                    <span className="text-white">{t('shippingCalc')}</span>
                   </div>
                 </div>
 
                 <div className="border-t border-[rgba(255,255,255,0.06)] pt-4 mb-6">
                   <div className="flex justify-between">
-                    <span className="text-lg font-semibold text-white">Total</span>
+                    <span className="text-lg font-semibold text-white">{t('total')}</span>
                     <span className="text-2xl font-bold text-[#C84FFF]">€{cart.total.toFixed(2)}</span>
                   </div>
                 </div>
@@ -354,14 +354,14 @@ export default function ShopCartPage() {
                   className="w-full py-4 bg-[#C84FFF] text-white font-semibold rounded-xl hover:brightness-110 transition-all flex items-center justify-center gap-2"
                 >
                   <CreditCard className="w-5 h-5" />
-                  Proceed to Checkout
+                  {t('proceedToCheckout')}
                 </Link>
 
                 <Link
                   href="/shop"
                   className="w-full mt-3 py-3 bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#f0f0f5] font-medium rounded-xl hover:bg-white/10 transition-colors flex items-center justify-center gap-2"
                 >
-                  Continue Shopping
+                  {t('continueShopping')}
                 </Link>
               </div>
             </div>

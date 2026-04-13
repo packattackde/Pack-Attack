@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Save, FileText, CheckCircle } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 type Props = {
   shopId: string;
@@ -10,6 +11,7 @@ type Props = {
 };
 
 export function DealerDetailsClient({ shopId, initialTaxId }: Props) {
+  const t = useTranslations('shopDashboard.dealer');
   const router = useRouter();
   const [taxId, setTaxId] = useState(initialTaxId || '');
   const [savedTaxId, setSavedTaxId] = useState(initialTaxId || '');
@@ -36,7 +38,7 @@ export function DealerDetailsClient({ shopId, initialTaxId }: Props) {
       router.refresh();
       setTimeout(() => setSaved(false), 3000);
     } catch (err) {
-      alert(`Fehler beim Speichern: ${(err as Error).message}`);
+      alert(t('saveError', { message: (err as Error).message }));
     } finally {
       setSaving(false);
     }
@@ -51,25 +53,25 @@ export function DealerDetailsClient({ shopId, initialTaxId }: Props) {
           <FileText className="w-5 h-5 text-indigo-400" />
         </div>
         <div>
-          <h2 className="text-xl font-bold text-white">Angaben für Händler</h2>
-          <p className="text-sm text-[#8888aa]">Pflichtangaben für gewerbliche Verkäufer</p>
+          <h2 className="text-xl font-bold text-white">{t('title')}</h2>
+          <p className="text-sm text-[#8888aa]">{t('subtitle')}</p>
         </div>
       </div>
 
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-[#f0f0f5] mb-2">
-            Steuer-ID / USt-IdNr.
+            {t('taxIdLabel')}
           </label>
           <input
             type="text"
             value={taxId}
             onChange={e => setTaxId(e.target.value)}
-            placeholder="z.B. DE123456789"
+            placeholder={t('taxIdPlaceholder')}
             className="w-full max-w-md px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none transition-colors"
           />
           <p className="text-xs text-gray-500 mt-1.5">
-            Umsatzsteuer-Identifikationsnummer gemäß §27a UStG
+            {t('taxIdHint')}
           </p>
         </div>
 
@@ -84,12 +86,12 @@ export function DealerDetailsClient({ shopId, initialTaxId }: Props) {
             ) : (
               <Save className="w-4 h-4" />
             )}
-            {saving ? 'Speichern...' : 'Speichern'}
+            {saving ? t('saving') : t('save')}
           </button>
           {saved && (
             <span className="inline-flex items-center gap-1.5 text-sm text-[#E879F9]">
               <CheckCircle className="w-4 h-4" />
-              Gespeichert
+              {t('saved')}
             </span>
           )}
         </div>

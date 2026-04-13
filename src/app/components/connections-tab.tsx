@@ -6,6 +6,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { useToast } from '@/components/ui/use-toast';
+import { useTranslations } from 'next-intl';
 import { Shield, Star, Gift, Trophy, Coins, Zap, X, CheckCircle2, MessageCircle, Gamepad2 } from 'lucide-react';
 
 type ConnectionInfo = {
@@ -23,6 +24,7 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { addToast } = useToast();
+    const t = useTranslations('connections');
 
     const [connections, setConnections] = useState<Connections>({ twitch: null, discord: null });
     const [loading, setLoading] = useState(true);
@@ -30,34 +32,33 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
     const [connectingDiscord, setConnectingDiscord] = useState(false);
     const [disconnecting, setDisconnecting] = useState<string | null>(null);
 
-    // Nach OAuth-Redirect: ?success= oder ?error= auswerten
     useEffect(() => {
         const success = searchParams.get('success');
         const error = searchParams.get('error');
 
         if (success === 'twitch_connected') {
-            addToast({ title: '🎉 Twitch verbunden!', description: 'Dein Twitch-Account ist jetzt verknüpft.' });
+            addToast({ title: t('twitchConnected'), description: t('twitchConnectedDesc') });
             router.replace('/dashboard?tab=connections');
             fetchConnections();
         }
 
         if (success === 'discord_connected') {
-            addToast({ title: '🎉 Discord verbunden!', description: 'Dein Discord-Account ist jetzt verknüpft.' });
+            addToast({ title: t('discordConnected'), description: t('discordConnectedDesc') });
             router.replace('/dashboard?tab=connections');
             fetchConnections();
         }
 
         if (error) {
             const messages: Record<string, string> = {
-                twitch_already_used: 'Dieser Twitch-Account ist bereits mit einem anderen User verknüpft.',
-                discord_already_used: 'Dieser Discord-Account ist bereits mit einem anderen User verknüpft.',
-                already_connected: 'Dieser Account ist bereits verbunden.',
-                user_not_found: 'Session-Fehler. Bitte versuche es erneut.',
-                link_failed: 'Verknüpfung fehlgeschlagen. Bitte versuche es erneut.',
+                twitch_already_used: t('errors.twitchAlreadyLinked'),
+                discord_already_used: t('errors.discordAlreadyLinked'),
+                already_connected: t('errors.alreadyConnected'),
+                user_not_found: t('errors.sessionError'),
+                link_failed: t('errors.linkFailed'),
             };
             addToast({
-                title: 'Fehler',
-                description: messages[error] ?? 'Etwas ist schiefgelaufen.',
+                title: t('errors.somethingWrong'),
+                description: messages[error] ?? t('errors.somethingWrong'),
                 variant: 'destructive',
             });
             router.replace('/dashboard?tab=connections');
@@ -90,11 +91,11 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
 
             if (!res.ok) {
                 const messages: Record<string, string> = {
-                    already_connected: 'Twitch ist bereits verbunden.',
-                    Unauthorized: 'Bitte zuerst einloggen.',
+                    already_connected: t('twitchAlreadyConnected'),
+                    Unauthorized: t('unauthorized'),
                 };
                 addToast({
-                    title: 'Fehler',
+                    title: t('errors.somethingWrong'),
                     description: messages[data.error] ?? data.error,
                     variant: 'destructive',
                 });
@@ -105,7 +106,7 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
             await signIn('twitch', { callbackUrl: '/dashboard?tab=connections' });
         } catch (err) {
             console.error('Connect Twitch failed:', err);
-            addToast({ title: 'Fehler', description: 'Verbindung fehlgeschlagen.', variant: 'destructive' });
+            addToast({ title: t('errors.somethingWrong'), description: t('connectionFailed'), variant: 'destructive' });
             setConnectingTwitch(false);
         }
     };
@@ -118,11 +119,11 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
 
             if (!res.ok) {
                 const messages: Record<string, string> = {
-                    already_connected: 'Discord ist bereits verbunden.',
-                    Unauthorized: 'Bitte zuerst einloggen.',
+                    already_connected: t('discordAlreadyConnected'),
+                    Unauthorized: t('unauthorized'),
                 };
                 addToast({
-                    title: 'Fehler',
+                    title: t('errors.somethingWrong'),
                     description: messages[data.error] ?? data.error,
                     variant: 'destructive',
                 });
@@ -133,7 +134,7 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
             await signIn('discord', { callbackUrl: '/dashboard?tab=connections' });
         } catch (err) {
             console.error('Connect Discord failed:', err);
-            addToast({ title: 'Fehler', description: 'Verbindung fehlgeschlagen.', variant: 'destructive' });
+            addToast({ title: t('errors.somethingWrong'), description: t('connectionFailed'), variant: 'destructive' });
             setConnectingDiscord(false);
         }
     };
@@ -150,15 +151,15 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
             const data = await res.json();
 
             if (!res.ok) {
-                addToast({ title: 'Fehler', description: data.error, variant: 'destructive' });
+                addToast({ title: t('errors.somethingWrong'), description: data.error, variant: 'destructive' });
                 return;
             }
 
             setConnections((prev) => ({ ...prev, [provider]: null }));
-            const label = provider === 'twitch' ? 'Twitch' : 'Discord';
-            addToast({ title: 'Getrennt', description: `${label} wurde entknüpft.` });
+            const label = provider === 'twitch' ? t('twitch') : t('discord');
+            addToast({ title: t('disconnected'), description: t('disconnectedDesc', { platform: label }) });
         } catch {
-            addToast({ title: 'Fehler', description: 'Trennung fehlgeschlagen.', variant: 'destructive' });
+            addToast({ title: t('errors.somethingWrong'), description: t('disconnectFailed'), variant: 'destructive' });
         } finally {
             setDisconnecting(null);
         }
@@ -186,11 +187,11 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
             <div style={animStyle('0s')}>
                 <h2 className="text-5xl md:text-6xl font-black tracking-tight mb-4">
           <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 bg-clip-text text-transparent">
-            Connect Your World
+            {t('hero')}
           </span>
                 </h2>
                 <p className="text-xl text-gray-400 max-w-2xl">
-                    Unite your gaming profiles and unlock exclusive perks across platforms
+                    {t('heroDesc')}
                 </p>
             </div>
 
@@ -232,7 +233,7 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
                                         )}
                                     </div>
                                     <div>
-                                        <h3 className="text-2xl font-bold text-white mb-1">Discord</h3>
+                                        <h3 className="text-2xl font-bold text-white mb-1">{t('discord')}</h3>
                                         <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border ${
                                             isDiscordConnected
                                                 ? 'bg-[#C84FFF]/10 border-[#C84FFF]/30'
@@ -240,7 +241,7 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
                                         }`}>
                                             <div className={`w-2 h-2 rounded-full ${isDiscordConnected ? 'bg-[#C84FFF] animate-pulse' : 'bg-gray-500'}`} />
                                             <span className={`text-xs font-semibold uppercase tracking-wider ${isDiscordConnected ? 'text-[#E879F9]' : 'text-gray-400'}`}>
-                                                {loading ? '...' : isDiscordConnected ? 'Connected' : 'Not Connected'}
+                                                {loading ? '...' : isDiscordConnected ? t('connected') : t('notConnected')}
                                             </span>
                                         </div>
                                     </div>
@@ -248,17 +249,17 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
                             </div>
 
                             <p className="text-gray-400 text-base leading-relaxed mb-6">
-                                Join our thriving community server and unlock special roles that give you access to exclusive channels, events, and insider updates.
+                                {t('discordDesc')}
                             </p>
 
                             <div className="grid grid-cols-2 gap-3 mb-6">
                                 <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-indigo-500/5 border border-indigo-500/10">
                                     <Star className="w-4 h-4 text-indigo-400 flex-shrink-0" />
-                                    <span className="text-sm text-indigo-300 font-medium">Exclusive Roles</span>
+                                    <span className="text-sm text-indigo-300 font-medium">{t('exclusiveRoles')}</span>
                                 </div>
                                 <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-indigo-500/5 border border-indigo-500/10">
                                     <Gift className="w-4 h-4 text-indigo-400 flex-shrink-0" />
-                                    <span className="text-sm text-indigo-300 font-medium">Early Access</span>
+                                    <span className="text-sm text-indigo-300 font-medium">{t('earlyAccess')}</span>
                                 </div>
                             </div>
 
@@ -267,7 +268,7 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
                                     <div className="px-4 py-3 rounded-xl bg-[#C84FFF]/5 border border-[#C84FFF]/10 mb-6">
                                         <div className="flex items-center justify-between">
                                             <div>
-                                                <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Connected Since</p>
+                                                <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">{t('connectedSince')}</p>
                                                 <p className="text-sm font-bold text-white">{formatDate(connections.discord.createdAt)}</p>
                                             </div>
                                             <div className="w-10 h-10 rounded-full bg-[#C84FFF]/20 flex items-center justify-center">
@@ -286,7 +287,7 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
                                             ) : (
                                                 <X className="w-4 h-4" />
                                             )}
-                                            <span>Disconnect Account</span>
+                                            <span>{t('disconnect')}</span>
                                         </button>
                                     </div>
                                 </>
@@ -301,18 +302,18 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
                                             {connectingDiscord ? (
                                                 <>
                                                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                                    <span className="text-white font-bold text-lg">Verbinde...</span>
+                                                    <span className="text-white font-bold text-lg">{t('connecting')}</span>
                                                 </>
                                             ) : (
                                                 <>
                                                     <Zap className="w-5 h-5 text-white" />
-                                                    <span className="text-white font-bold text-lg">Connect Discord</span>
+                                                    <span className="text-white font-bold text-lg">{t('connectDiscord')}</span>
                                                 </>
                                             )}
                                         </div>
                                     </button>
                                     <p className="text-center text-xs text-gray-500 mt-3">
-                                        Instant setup • Less than 30 seconds
+                                        {t('instantSetup')}
                                     </p>
                                 </div>
                             )}
@@ -355,7 +356,7 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
                                         )}
                                     </div>
                                     <div>
-                                        <h3 className="text-2xl font-bold text-white mb-1">Twitch</h3>
+                                        <h3 className="text-2xl font-bold text-white mb-1">{t('twitch')}</h3>
                                         <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border ${
                                             isTwitchConnected
                                                 ? 'bg-[#C84FFF]/10 border-[#C84FFF]/30'
@@ -363,7 +364,7 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
                                         }`}>
                                             <div className={`w-2 h-2 rounded-full ${isTwitchConnected ? 'bg-[#C84FFF] animate-pulse' : 'bg-gray-500'}`} />
                                             <span className={`text-xs font-semibold uppercase tracking-wider ${isTwitchConnected ? 'text-[#E879F9]' : 'text-gray-400'}`}>
-                                                {loading ? '...' : isTwitchConnected ? 'Connected' : 'Not Connected'}
+                                                {loading ? '...' : isTwitchConnected ? t('connected') : t('notConnected')}
                                             </span>
                                         </div>
                                     </div>
@@ -371,17 +372,17 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
                             </div>
 
                             <p className="text-gray-400 text-base leading-relaxed mb-6">
-                                Earn exclusive rewards while streaming your favorite games or watching other creators. Your activity unlocks special benefits.
+                                {t('twitchDesc')}
                             </p>
 
                             <div className="grid grid-cols-2 gap-3 mb-6">
                                 <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-purple-500/5 border border-purple-500/10">
                                     <Trophy className="w-4 h-4 text-purple-400 flex-shrink-0" />
-                                    <span className="text-sm text-purple-300 font-medium">Stream Rewards</span>
+                                    <span className="text-sm text-purple-300 font-medium">{t('streamRewards')}</span>
                                 </div>
                                 <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-purple-500/5 border border-purple-500/10">
                                     <Coins className="w-4 h-4 text-purple-400 flex-shrink-0" />
-                                    <span className="text-sm text-purple-300 font-medium">Watch & Earn</span>
+                                    <span className="text-sm text-purple-300 font-medium">{t('watchAndEarn')}</span>
                                 </div>
                             </div>
 
@@ -390,7 +391,7 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
                                     <div className="px-4 py-3 rounded-xl bg-[#C84FFF]/5 border border-[#C84FFF]/10 mb-6">
                                         <div className="flex items-center justify-between">
                                             <div>
-                                                <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Connected Since</p>
+                                                <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">{t('connectedSince')}</p>
                                                 <p className="text-sm font-bold text-white">{formatDate(connections.twitch.createdAt)}</p>
                                             </div>
                                             <div className="w-10 h-10 rounded-full bg-[#C84FFF]/20 flex items-center justify-center">
@@ -409,7 +410,7 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
                                             ) : (
                                                 <X className="w-4 h-4" />
                                             )}
-                                            <span>Disconnect Account</span>
+                                            <span>{t('disconnect')}</span>
                                         </button>
                                     </div>
                                 </>
@@ -424,18 +425,18 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
                                             {connectingTwitch ? (
                                                 <>
                                                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                                    <span className="text-white font-bold text-lg">Verbinde...</span>
+                                                    <span className="text-white font-bold text-lg">{t('connecting')}</span>
                                                 </>
                                             ) : (
                                                 <>
                                                     <Zap className="w-5 h-5 text-white" />
-                                                    <span className="text-white font-bold text-lg">Connect Twitch</span>
+                                                    <span className="text-white font-bold text-lg">{t('connectTwitch')}</span>
                                                 </>
                                             )}
                                         </div>
                                     </button>
                                     <p className="text-center text-xs text-gray-500 mt-3">
-                                        Instant setup • Less than 30 seconds
+                                        {t('instantSetup')}
                                     </p>
                                 </div>
                             )}
@@ -455,9 +456,9 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
                         <Shield className="w-6 h-6 text-[#C84FFF]" />
                     </div>
                     <div>
-                        <h4 className="text-lg font-bold text-white mb-2">Your Privacy is Protected</h4>
+                        <h4 className="text-lg font-bold text-white mb-2">{t('privacy')}</h4>
                         <p className="text-gray-400 leading-relaxed">
-                            We only use your connected accounts to verify your identity and provide platform-specific features. All data is encrypted and you maintain full control — disconnect anytime with a single click.
+                            {t('privacyDesc')}
                         </p>
                     </div>
                 </div>

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { useToast } from '@/components/ui/use-toast';
 import { 
   Store, 
@@ -39,40 +40,8 @@ type Product = {
   };
 };
 
-const categoryDisplayNames: Record<string, string> = {
-  SINGLE_CARD: 'Single Card',
-  BOOSTER_BOX: 'Booster Box',
-  BOOSTER_PACK: 'Booster Pack',
-  STARTER_DECK: 'Starter Deck',
-  STRUCTURE_DECK: 'Structure Deck',
-  ACCESSORIES: 'Accessories',
-  SLEEVES: 'Sleeves',
-  PLAYMAT: 'Playmat',
-  BINDER: 'Binder',
-  DECK_BOX: 'Deck Box',
-  OTHER: 'Other',
-};
-
-const gameDisplayNames: Record<string, string> = {
-  MAGIC_THE_GATHERING: 'Magic: The Gathering',
-  ONE_PIECE: 'One Piece',
-  POKEMON: 'Pokémon',
-  LORCANA: 'Lorcana',
-  YUGIOH: 'Yu-Gi-Oh!',
-  FLESH_AND_BLOOD: 'Flesh and Blood',
-};
-
-const conditionDisplayNames: Record<string, string> = {
-  MINT: 'Mint',
-  NEAR_MINT: 'Near Mint',
-  EXCELLENT: 'Excellent',
-  GOOD: 'Good',
-  LIGHT_PLAYED: 'Light Played',
-  PLAYED: 'Played',
-  POOR: 'Poor',
-};
-
 export default function ProductPage() {
+  const t = useTranslations('shop');
   const params = useParams();
   const router = useRouter();
   const { addToast } = useToast();
@@ -93,7 +62,7 @@ export default function ProductPage() {
         } else {
           addToast({
             title: 'Error',
-            description: 'Product not found',
+            description: t('product_detail.notFound'),
             variant: 'destructive',
           });
           router.push('/shop');
@@ -124,20 +93,20 @@ export default function ProductPage() {
       if (!res.ok) {
         addToast({
           title: 'Error',
-          description: data.error || 'Failed to add to cart',
+          description: data.error || t('failedToAdd'),
           variant: 'destructive',
         });
         return;
       }
 
       addToast({
-        title: 'Added to Cart',
-        description: `${quantity}x ${product.name} added to your cart`,
+        title: t('addedToCart'),
+        description: t('addedToCartDesc'),
       });
     } catch (error) {
       addToast({
         title: 'Error',
-        description: 'Failed to add to cart',
+        description: t('failedToAdd'),
         variant: 'destructive',
       });
     } finally {
@@ -150,7 +119,7 @@ export default function ProductPage() {
       <div className="min-h-screen flex items-center justify-center font-display">
         <div className="text-white flex items-center gap-3">
           <div className="w-6 h-6 border-2 border-[rgba(200,79,255,0.3)] border-t-transparent rounded-full animate-spin" />
-          Loading product...
+          {t('manage.loading')}
         </div>
       </div>
     );
@@ -161,9 +130,9 @@ export default function ProductPage() {
       <div className="min-h-screen flex items-center justify-center font-display">
         <div className="text-center">
           <Package className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-white mb-2">Product Not Found</h1>
+          <h1 className="text-2xl font-bold text-white mb-2">{t('product_detail.notFound')}</h1>
           <Link href="/shop" className="text-[#C84FFF] hover:underline">
-            Back to Shop
+            {t('product_detail.backToShop')}
           </Link>
         </div>
       </div>
@@ -184,7 +153,7 @@ export default function ProductPage() {
         {/* Breadcrumb */}
         <Link href="/shop" className="inline-flex items-center gap-2 text-[#8888aa] hover:text-white transition-colors mb-8">
           <ArrowLeft className="w-4 h-4" />
-          Back to Shop
+          {t('product_detail.backToShop')}
         </Link>
 
         <div className="grid lg:grid-cols-2 gap-12">
@@ -227,7 +196,7 @@ export default function ProductPage() {
               <div className="absolute top-4 left-4 flex flex-col gap-2">
                 {product.featured && (
                   <span className="px-3 py-1 rounded-lg bg-amber-500 text-gray-900 text-sm font-bold flex items-center gap-1">
-                    <Star className="w-4 h-4" /> Featured
+                    <Star className="w-4 h-4" /> {t('featuredProducts')}
                   </span>
                 )}
                 {discount && discount > 0 && (
@@ -279,16 +248,16 @@ export default function ProductPage() {
             <div className="flex flex-wrap gap-2">
               <span className="px-3 py-1 rounded-lg bg-[#12123a] text-[#f0f0f5] text-sm flex items-center gap-1">
                 <Tag className="w-3 h-3" />
-                {categoryDisplayNames[product.category] || product.category}
+                {t(`categories.${product.category}`)}
               </span>
               {product.game && (
                 <span className="px-3 py-1 rounded-lg bg-[rgba(200,79,255,0.15)] text-[#C84FFF] text-sm">
-                  {gameDisplayNames[product.game] || product.game}
+                  {product.game}
                 </span>
               )}
               <span className="px-3 py-1 rounded-lg bg-purple-500/20 text-purple-400 text-sm flex items-center gap-1">
                 <Shield className="w-3 h-3" />
-                {conditionDisplayNames[product.condition] || product.condition}
+                {t(`conditions.${product.condition}`)}
               </span>
             </div>
 
@@ -310,15 +279,15 @@ export default function ProductPage() {
               {product.stock > 0 ? (
                 <>
                   <div className="w-2 h-2 rounded-full bg-[#C84FFF]" />
-                  <span className="text-[#E879F9]">In Stock</span>
+                  <span className="text-[#E879F9]">{t('product_detail.inStock')}</span>
                   {product.stock <= 5 && (
-                    <span className="text-orange-400 text-sm">- Only {product.stock} left!</span>
+                    <span className="text-orange-400 text-sm">- {t('product_detail.onlyLeft', { count: product.stock })}</span>
                   )}
                 </>
               ) : (
                 <>
                   <div className="w-2 h-2 rounded-full bg-red-500" />
-                  <span className="text-red-400">Out of Stock</span>
+                  <span className="text-red-400">{t('product_detail.outOfStock')}</span>
                 </>
               )}
             </div>
@@ -328,7 +297,7 @@ export default function ProductPage() {
               <div className="space-y-4">
                 {/* Quantity Selector */}
                 <div className="flex items-center gap-4">
-                  <span className="text-[#8888aa]">Quantity:</span>
+                  <span className="text-[#8888aa]">{t('product_detail.quantity')}:</span>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => setQuantity((q) => Math.max(1, q - 1))}
@@ -355,12 +324,12 @@ export default function ProductPage() {
                   {addingToCart ? (
                     <>
                       <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      Adding to Cart...
+                      {t('product_detail.addingToCart')}
                     </>
                   ) : (
                     <>
                       <ShoppingCart className="w-5 h-5" />
-                      Add to Cart - €{(product.price * quantity).toFixed(2)}
+                      {t('product_detail.addToCartPrice', { price: (product.price * quantity).toFixed(2) })}
                     </>
                   )}
                 </button>
@@ -370,7 +339,7 @@ export default function ProductPage() {
             {/* Description */}
             {product.description && (
               <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl p-6">
-                <h2 className="text-lg font-semibold text-white mb-3">Description</h2>
+                <h2 className="text-lg font-semibold text-white mb-3">{t('product_detail.description')}</h2>
                 <p className="text-[#8888aa] whitespace-pre-wrap">{product.description}</p>
               </div>
             )}

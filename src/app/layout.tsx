@@ -4,7 +4,7 @@ import { Providers } from "./providers";
 import { Navigation } from "@/components/Navigation";
 import { ChatPanel } from "@/components/ChatPanel";
 import { NextIntlClientProvider } from "next-intl";
-import { getLocale, getMessages } from "next-intl/server";
+import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import "./globals.css";
 
 // Next.js font optimization - self-hosted, no render-blocking external requests
@@ -187,6 +187,7 @@ export default async function RootLayout({
 }>) {
   const locale = await getLocale();
   const messages = await getMessages();
+  const t = await getTranslations('common');
 
   return (
     <html lang={locale} suppressHydrationWarning className={`scroll-smooth ${outfit.variable} ${syne.variable}`}>
@@ -242,13 +243,13 @@ export default async function RootLayout({
         // Prevent pull-to-refresh on mobile when not at top
         style={{ overscrollBehavior: 'none' }}
       >
-        <Providers>
+        <Providers messages={messages} locale={locale}>
           <NextIntlClientProvider locale={locale} messages={messages}>
             <a 
               href="#main-content" 
               className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#C84FFF] focus:text-white focus:rounded-lg"
             >
-              Skip to main content
+              {t('skipToContent')}
             </a>
             <Navigation />
             <main

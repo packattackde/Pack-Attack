@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { GiCardPlay, GiSpeaker, GiSpeakerOff } from 'react-icons/gi'
 
 interface TickerItem {
@@ -65,6 +66,7 @@ const rarityBadgeStyles: Record<string, string> = {
 }
 
 export default function LiveTicker({ className }: LiveTickerProps) {
+  const t = useTranslations('widgets')
   const [items, setItems] = useState<TickerItem[]>([])
   const [connected, setConnected] = useState(false)
   const [paused, setPaused] = useState(false)
@@ -281,12 +283,12 @@ export default function LiveTicker({ className }: LiveTickerProps) {
             }}
           />
           <span className="text-[10px] sm:text-[11px] font-bold text-white tracking-wider uppercase">
-            Live
+            {t('liveTicker.live')}
           </span>
           <button
             onClick={(e) => { e.stopPropagation(); setSoundEnabled(!soundEnabled); }}
             className="ml-1 text-[12px] opacity-50 hover:opacity-100 transition-opacity"
-            title={soundEnabled ? 'Mute' : 'Unmute'}
+            title={soundEnabled ? t('liveTicker.mute') : t('liveTicker.unmute')}
           >
             {soundEnabled ? <GiSpeaker className="w-3.5 h-3.5" /> : <GiSpeakerOff className="w-3.5 h-3.5" />}
           </button>
@@ -295,7 +297,7 @@ export default function LiveTicker({ className }: LiveTickerProps) {
         {/* Ticker track */}
         {items.length === 0 ? (
           <div className="flex items-center px-4">
-            <span className="text-[11px] text-[#555570]">Waiting for pulls...</span>
+            <span className="text-[11px] text-[#555570]">{t('liveTicker.waiting')}</span>
           </div>
         ) : (
           <div
@@ -376,7 +378,7 @@ export default function LiveTicker({ className }: LiveTickerProps) {
 
                     {/* Open CTA */}
                     <span className="text-[8px] text-[#C84FFF] font-semibold shrink-0 ml-1">
-                      Open →
+                      {t('liveTicker.open')}
                     </span>
                   </Link>
                 )

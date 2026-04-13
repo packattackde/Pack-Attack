@@ -15,6 +15,7 @@ import {
   ChevronDown,
   Pencil,
 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 type ImportResult = {
   success: boolean;
@@ -66,6 +67,7 @@ const CONDITIONS = [
 ];
 
 export function StockImportClient() {
+  const t = useTranslations('shopDashboard.stockImport');
   const [activeTab, setActiveTab] = useState<'text' | 'file'>('text');
   const [textInput, setTextInput] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -161,7 +163,7 @@ export function StockImportClient() {
           }`}
         >
           <FileText className="w-4 h-4" />
-          Text Import
+          {t('textImport')}
         </button>
         <button
           onClick={() => setActiveTab('file')}
@@ -172,7 +174,7 @@ export function StockImportClient() {
           }`}
         >
           <FileSpreadsheet className="w-4 h-4" />
-          File Import (CSV / Excel)
+          {t('fileImport')}
         </button>
       </div>
 
@@ -182,7 +184,7 @@ export function StockImportClient() {
         className="flex items-center gap-2 text-sm text-[#E879F9] hover:text-[#f0abfc] transition-colors"
       >
         <Info className="w-4 h-4" />
-        {showHelp ? 'Hide format guide' : 'Show format guide'}
+        {showHelp ? t('hideFormatGuide') : t('showFormatGuide')}
       </button>
 
       {showHelp && (
@@ -220,14 +222,14 @@ export function StockImportClient() {
         className="flex items-center gap-2 text-sm text-[#8888aa] hover:text-white transition-colors"
       >
         <ChevronDown className={`w-4 h-4 transition-transform ${showDefaults ? 'rotate-180' : ''}`} />
-        Default values for imported items
+        {t('defaultValues')}
       </button>
 
       {showDefaults && (
         <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-5">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="text-xs text-[#8888aa] mb-1.5 block">Default Game</label>
+              <label className="text-xs text-[#8888aa] mb-1.5 block">{t('defaultGame')}</label>
               <select
                 value={defaultGame}
                 onChange={(e) => setDefaultGame(e.target.value)}
@@ -237,7 +239,7 @@ export function StockImportClient() {
               </select>
             </div>
             <div>
-              <label className="text-xs text-[#8888aa] mb-1.5 block">Default Category</label>
+              <label className="text-xs text-[#8888aa] mb-1.5 block">{t('defaultCategory')}</label>
               <select
                 value={defaultCategory}
                 onChange={(e) => setDefaultCategory(e.target.value)}
@@ -247,7 +249,7 @@ export function StockImportClient() {
               </select>
             </div>
             <div>
-              <label className="text-xs text-[#8888aa] mb-1.5 block">Default Condition</label>
+              <label className="text-xs text-[#8888aa] mb-1.5 block">{t('defaultCondition')}</label>
               <select
                 value={defaultCondition}
                 onChange={(e) => setDefaultCondition(e.target.value)}
@@ -263,7 +265,7 @@ export function StockImportClient() {
       {/* Text Import */}
       {activeTab === 'text' && (
         <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6">
-          <label className="text-sm font-medium text-white mb-2 block">Paste your card list</label>
+          <label className="text-sm font-medium text-white mb-2 block">{t('pasteCardList')}</label>
           <textarea
             value={textInput}
             onChange={(e) => setTextInput(e.target.value)}
@@ -273,7 +275,7 @@ export function StockImportClient() {
           />
           <div className="flex items-center justify-between mt-3">
             <p className="text-xs text-gray-500">
-              {textInput.split('\n').filter(l => l.trim().length > 0 && !l.startsWith('#') && !l.startsWith('//')).length} items detected
+              {t('itemsDetected', { count: textInput.split('\n').filter(l => l.trim().length > 0 && !l.startsWith('#') && !l.startsWith('//')).length })}
             </p>
           </div>
         </div>
@@ -312,8 +314,8 @@ export function StockImportClient() {
               <div className="inline-flex items-center justify-center w-16 h-16 mb-4 rounded-2xl bg-gradient-to-br from-[#7c3aed]/20 to-cyan-500/20 ring-1 ring-[#C84FFF]/30">
                 <Upload className="w-8 h-8 text-[#E879F9]" />
               </div>
-              <p className="text-white font-medium mb-1">Drop your file here or click to browse</p>
-              <p className="text-sm text-gray-500 mb-4">Supports CSV, TSV, and text files</p>
+              <p className="text-white font-medium mb-1">{t('dropFileHere')}</p>
+              <p className="text-sm text-gray-500 mb-4">{t('supportedFormats')}</p>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -327,7 +329,7 @@ export function StockImportClient() {
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#E879F9] hover:text-white cursor-pointer transition-colors"
               >
                 <Plus className="w-4 h-4" />
-                Choose File
+                {t('chooseFile')}
               </label>
             </div>
           )}
@@ -347,12 +349,12 @@ export function StockImportClient() {
         {importing ? (
           <>
             <RefreshCw className="w-4 h-4 animate-spin" />
-            Importing...
+            {t('importing')}
           </>
         ) : (
           <>
             <Upload className="w-4 h-4" />
-            Import to Stock
+            {t('importToStock')}
           </>
         )}
       </button>
@@ -369,7 +371,7 @@ export function StockImportClient() {
               <AlertCircle className="w-6 h-6 text-red-400" />
             )}
             <h3 className="text-lg font-semibold text-white">
-              {result.success ? 'Import Complete' : 'Import Failed'}
+              {result.success ? t('importComplete') : t('importFailed')}
             </h3>
           </div>
 
@@ -377,26 +379,26 @@ export function StockImportClient() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-3 text-center">
                 <p className="text-2xl font-bold text-white">{result.summary.totalItems}</p>
-                <p className="text-xs text-[#8888aa]">Total Items</p>
+                <p className="text-xs text-[#8888aa]">{t('totalItems')}</p>
               </div>
               <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-3 text-center">
                 <p className="text-2xl font-bold text-[#E879F9]">{result.summary.created}</p>
-                <p className="text-xs text-[#8888aa]">New Products</p>
+                <p className="text-xs text-[#8888aa]">{t('newProducts')}</p>
               </div>
               <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-3 text-center">
                 <p className="text-2xl font-bold text-cyan-400">{result.summary.updated}</p>
-                <p className="text-xs text-[#8888aa]">Stock Updated</p>
+                <p className="text-xs text-[#8888aa]">{t('stockUpdated')}</p>
               </div>
               <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-3 text-center">
                 <p className="text-2xl font-bold text-red-400">{result.summary.errors}</p>
-                <p className="text-xs text-[#8888aa]">Errors</p>
+                <p className="text-xs text-[#8888aa]">{t('errors')}</p>
               </div>
             </div>
           )}
 
           {result.created.length > 0 && (
             <div>
-              <h4 className="text-sm font-medium text-[#E879F9] mb-2">New Products Created</h4>
+              <h4 className="text-sm font-medium text-[#E879F9] mb-2">{t('newProductsCreated')}</h4>
               <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-3 max-h-48 overflow-y-auto space-y-1">
                 {result.created.map((item, i) => (
                   <div key={i} className="flex items-center justify-between gap-2 py-0.5">
@@ -418,7 +420,7 @@ export function StockImportClient() {
 
           {result.updated.length > 0 && (
             <div>
-              <h4 className="text-sm font-medium text-cyan-400 mb-2">Stock Updated</h4>
+              <h4 className="text-sm font-medium text-cyan-400 mb-2">{t('stockUpdatedTitle')}</h4>
               <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-3 max-h-48 overflow-y-auto space-y-1">
                 {result.updated.map((item, i) => (
                   <div key={i} className="flex items-center justify-between gap-2 py-0.5">
@@ -441,7 +443,7 @@ export function StockImportClient() {
 
           {result.errors && result.errors.length > 0 && (
             <div>
-              <h4 className="text-sm font-medium text-red-400 mb-2">Errors</h4>
+              <h4 className="text-sm font-medium text-red-400 mb-2">{t('errorsTitle')}</h4>
               <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-3 max-h-40 overflow-y-auto space-y-1">
                 {result.errors.map((err, i) => (
                   <p key={i} className="text-sm text-red-300">{err}</p>

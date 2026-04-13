@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { GiTwoCoins } from 'react-icons/gi'
 import { InfoTooltip } from '@/components/InfoTooltip'
 import { formatCoins } from '@/lib/format'
@@ -20,6 +21,7 @@ export default function CoinBalanceWidget({
   monthlyCap,
   className = '',
 }: CoinBalanceWidgetProps) {
+  const t = useTranslations('widgets')
   const isLow = coins < cheapestBoxPrice
 
   return (
@@ -27,7 +29,7 @@ export default function CoinBalanceWidget({
       className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl h-full p-4 sm:p-6 ${className}`}
     >
       <p className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-3 flex items-center gap-1.5">
-        <GiTwoCoins className="w-3.5 h-3.5 text-[#C84FFF] shrink-0" /> MY BALANCE
+        <GiTwoCoins className="w-3.5 h-3.5 text-[#C84FFF] shrink-0" /> {t('coinBalance.myBalance')}
         <InfoTooltip infoKey="dashboard.coinBalance" />
       </p>
 
@@ -36,7 +38,7 @@ export default function CoinBalanceWidget({
       </p>
 
       <p className="text-xs text-[#8888aa] mt-1">
-        Monthly earnings: {monthlyEarnings} / {monthlyCap} cap
+        {t('coinBalance.monthlyEarnings')}: {monthlyEarnings} / {monthlyCap} {t('coinBalance.cap')}
       </p>
 
       <Link
@@ -46,12 +48,12 @@ export default function CoinBalanceWidget({
         }`}
       >
         <GiTwoCoins className="w-4 h-4 text-black" />
-        Top Up Coins
+        {t('coinBalance.topUp')}
       </Link>
 
       {isLow && (
         <p className="text-xs text-[#fbbf24] mt-2 text-center">
-          Running low! Recharge to keep pulling.
+          {t('coinBalance.runningLow')}
         </p>
       )}
     </div>

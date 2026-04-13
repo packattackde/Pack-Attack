@@ -14,6 +14,7 @@ import {
   MoreVertical,
   UserPlus,
 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface ChatLogEntry {
   id: string;

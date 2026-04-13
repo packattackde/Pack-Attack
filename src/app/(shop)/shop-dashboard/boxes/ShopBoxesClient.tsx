@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { Package, Edit, Eye, EyeOff, Trash2, ShoppingCart, Users, Coins, MoreVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
+import { useTranslations } from 'next-intl';
 
 type Box = {
   id: string;
@@ -23,6 +24,8 @@ type Box = {
 };
 
 export function ShopBoxesClient({ boxes: initialBoxes, isAdmin }: { boxes: Box[]; isAdmin: boolean }) {
+  const t = useTranslations('shopDashboard.boxes');
+  const tc = useTranslations('common');
   const router = useRouter();
   const { addToast } = useToast();
   const [boxes, setBoxes] = useState(initialBoxes);
@@ -47,13 +50,13 @@ export function ShopBoxesClient({ boxes: initialBoxes, isAdmin }: { boxes: Box[]
       ));
 
       addToast({
-        title: 'Success',
-        description: `Box ${!currentStatus ? 'activated' : 'deactivated'} successfully`,
+        title: tc('success'),
+        description: !currentStatus ? t('boxActivated') : t('boxDeactivated'),
       });
     } catch (error) {
       addToast({
-        title: 'Error',
-        description: 'Failed to update box status',
+        title: tc('error'),
+        description: t('failedUpdate'),
         variant: 'destructive',
       });
     } finally {
@@ -62,7 +65,7 @@ export function ShopBoxesClient({ boxes: initialBoxes, isAdmin }: { boxes: Box[]
   };
 
   const deleteBox = async (boxId: string) => {
-    if (!confirm('Are you sure you want to delete this box? This action cannot be undone.')) {
+    if (!confirm(t('confirmDelete'))) {
       return;
     }
 
@@ -79,13 +82,13 @@ export function ShopBoxesClient({ boxes: initialBoxes, isAdmin }: { boxes: Box[]
       setBoxes(boxes.filter(box => box.id !== boxId));
 
       addToast({
-        title: 'Success',
-        description: 'Box deleted successfully',
+        title: tc('success'),
+        description: t('boxDeleted'),
       });
     } catch (error) {
       addToast({
-        title: 'Error',
-        description: 'Failed to delete box',
+        title: tc('error'),
+        description: t('failedDelete'),
         variant: 'destructive',
       });
     } finally {
@@ -97,16 +100,16 @@ export function ShopBoxesClient({ boxes: initialBoxes, isAdmin }: { boxes: Box[]
     return (
       <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
         <Package className="w-16 h-16 text-gray-700 mx-auto mb-4" />
-        <h3 className="text-xl font-bold text-white mb-2">No Boxes Yet</h3>
+        <h3 className="text-xl font-bold text-white mb-2">{t('noBoxes')}</h3>
         <p className="text-[#8888aa] mb-6 max-w-md mx-auto">
-          Create your first card box to start selling to users. Add cards, set prices, and watch the orders come in!
+          {t('noBoxesDesc')}
         </p>
         <Link
           href="/shop-dashboard/boxes/create"
           className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#C84FFF] to-cyan-500 hover:from-[#9333EA] hover:to-[#7c3aed] text-white font-medium transition-all"
         >
           <Package className="w-5 h-5" />
-          <span>Create Your First Box</span>
+          <span>{t('createFirst')}</span>
         </Link>
       </div>
     );
@@ -142,7 +145,7 @@ export function ShopBoxesClient({ boxes: initialBoxes, isAdmin }: { boxes: Box[]
                 ? 'bg-[#C84FFF]/20 text-[#E879F9] border border-[#C84FFF]/30' 
                 : 'bg-red-500/20 text-red-400 border border-red-500/30'
             }`}>
-              {box.isActive ? 'Active' : 'Inactive'}
+              {box.isActive ? t('active') : t('inactive')}
             </div>
 
             {/* Shop Badge (Admin view) */}
@@ -165,26 +168,26 @@ export function ShopBoxesClient({ boxes: initialBoxes, isAdmin }: { boxes: Box[]
                   <Coins className="w-3 h-3" />
                   <span className="text-sm font-bold">{box.price}</span>
                 </div>
-                <span className="text-[10px] text-gray-500">Price</span>
+                <span className="text-[10px] text-gray-500">{t('price')}</span>
               </div>
               <div className="text-center p-2 rounded-lg bg-[#12123a]">
                 <div className="flex items-center justify-center gap-1 text-cyan-400 mb-1">
                   <Users className="w-3 h-3" />
                   <span className="text-sm font-bold">{box._count.pulls}</span>
                 </div>
-                <span className="text-[10px] text-gray-500">Opens</span>
+                <span className="text-[10px] text-gray-500">{t('opens')}</span>
               </div>
               <div className="text-center p-2 rounded-lg bg-[#12123a]">
                 <div className="flex items-center justify-center gap-1 text-[#E879F9] mb-1">
                   <ShoppingCart className="w-3 h-3" />
                   <span className="text-sm font-bold">{box._count.shopBoxOrders}</span>
                 </div>
-                <span className="text-[10px] text-gray-500">Orders</span>
+                <span className="text-[10px] text-gray-500">{t('orders')}</span>
               </div>
             </div>
 
             <div className="text-xs text-gray-500 mb-4">
-              {box.cards.length} cards • {box.cardsPerPack} per pack
+              {t('cardsPerPack', { cards: box.cards.length, perPack: box.cardsPerPack })}
             </div>
 
             {/* Actions */}
@@ -203,12 +206,12 @@ export function ShopBoxesClient({ boxes: initialBoxes, isAdmin }: { boxes: Box[]
                 {box.isActive ? (
                   <>
                     <EyeOff className="w-4 h-4 mr-1" />
-                    Deactivate
+                    {t('deactivate')}
                   </>
                 ) : (
                   <>
                     <Eye className="w-4 h-4 mr-1" />
-                    Activate
+                    {t('activate')}
                   </>
                 )}
               </Button>

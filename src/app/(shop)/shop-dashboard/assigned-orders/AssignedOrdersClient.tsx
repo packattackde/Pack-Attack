@@ -8,6 +8,7 @@ import {
   MapPin, Mail, User, Coins, Euro, Link2, Save, AlertCircle, Store 
 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { useTranslations } from 'next-intl';
 
 type OrderItem = {
   id: string;
@@ -60,6 +61,8 @@ const statusConfig: Record<string, { color: string; icon: React.ElementType; lab
 };
 
 export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders: Order[]; stats: Stats }) {
+  const t = useTranslations('shopDashboard.assigned');
+  const tc = useTranslations('common');
   const router = useRouter();
   const { addToast } = useToast();
   const [orders, setOrders] = useState(initialOrders);
@@ -90,15 +93,15 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
 
       setOrders(orders.map(o => o.id === orderId ? { ...o, ...data.order } : o));
       addToast({
-        title: 'Success',
-        description: `Order status updated to ${newStatus}`,
+        title: tc('success'),
+        description: t('orderUpdated', { status: newStatus }),
       });
       router.refresh();
     } catch (error) {
       console.error('Error updating order:', error);
       addToast({
-        title: 'Error',
-        description: 'Failed to update order',
+        title: tc('error'),
+        description: t('failedUpdate'),
         variant: 'destructive',
       });
     } finally {
@@ -135,15 +138,15 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
 
       setOrders(orders.map(o => o.id === orderId ? { ...o, ...data.order } : o));
       addToast({
-        title: 'Success',
-        description: 'Order information updated',
+        title: tc('success'),
+        description: t('orderInfoUpdated'),
       });
       router.refresh();
     } catch (error) {
       console.error('Error updating tracking:', error);
       addToast({
-        title: 'Error',
-        description: 'Failed to update order',
+        title: tc('error'),
+        description: t('failedUpdate'),
         variant: 'destructive',
       });
     } finally {
@@ -160,7 +163,7 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
-          <p className="text-sm text-[#8888aa]">Total Assigned</p>
+          <p className="text-sm text-[#8888aa]">{t('totalAssigned')}</p>
           <p className="text-2xl font-bold text-white">{stats.total}</p>
         </div>
         <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
@@ -185,9 +188,9 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
       <div className="bg-[#1a1a4a] shadow-md rounded-xl p-4 border border-purple-500/30 flex items-start gap-3">
         <AlertCircle className="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5" />
         <div>
-          <p className="text-white font-medium">These orders have been assigned to you by an admin</p>
+          <p className="text-white font-medium">{t('infoBannerTitle')}</p>
           <p className="text-sm text-[#8888aa] mt-1">
-            You are responsible for processing and shipping these orders. Update the status and add tracking information as you fulfill each order.
+            {t('infoBannerDesc')}
           </p>
         </div>
       </div>
@@ -204,7 +207,7 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
                 : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white'
             }`}
           >
-            {status === 'ALL' ? 'All Orders' : statusConfig[status]?.label || status}
+            {status === 'ALL' ? t('allOrders') : statusConfig[status]?.label || status}
           </button>
         ))}
       </div>
@@ -213,8 +216,8 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
       {filteredOrders.length === 0 ? (
         <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
           <Package className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-          <p className="text-[#8888aa]">No assigned orders found</p>
-          <p className="text-sm text-gray-500 mt-2">Orders assigned to you by admins will appear here</p>
+          <p className="text-[#8888aa]">{t('noAssignedOrders')}</p>
+          <p className="text-sm text-gray-500 mt-2">{t('ordersWillAppear')}</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -393,7 +396,7 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
                         className="mt-3 px-4 py-2 bg-[#9333EA] hover:bg-[#7c3aed] disabled:opacity-50 text-white rounded-lg text-sm font-medium flex items-center gap-2 transition-colors"
                       >
                         <Save className="w-4 h-4" />
-                        Save Changes
+                        {t('saveChanges')}
                       </button>
                     </div>
 
@@ -435,7 +438,7 @@ export function AssignedOrdersClient({ orders: initialOrders, stats }: { orders:
 
                     {/* Status Update */}
                     <div className="flex items-center justify-between pt-4 border-t border-[rgba(255,255,255,0.06)]">
-                      <p className="text-sm text-[#8888aa]">Update Status:</p>
+                      <p className="text-sm text-[#8888aa]">{t('updateStatus')}</p>
                       <div className="flex gap-2 flex-wrap">
                         {['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'].map((s) => {
                           const cfg = statusConfig[s];

@@ -7,6 +7,7 @@ import {
   AlertCircle, Loader2, RefreshCw, SlidersHorizontal
 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { useTranslations } from 'next-intl';
 
 type Product = {
   id: string;
@@ -57,6 +58,8 @@ const CONDITION_LABELS: Record<string, string> = {
 };
 
 export function StockManagerClient({ shopId }: { shopId: string }) {
+  const t = useTranslations('shopDashboard.stock');
+  const tc = useTranslations('common');
   const { addToast } = useToast();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -97,7 +100,7 @@ export function StockManagerClient({ shopId }: { shopId: string }) {
         setTotalPages(data.totalPages);
       }
     } catch {
-      addToast({ title: 'Error', description: 'Failed to load stock', variant: 'destructive' });
+      addToast({ title: tc('error'), description: t('failedToLoad'), variant: 'destructive' });
     } finally {
       setLoading(false);
     }
@@ -126,14 +129,14 @@ export function StockManagerClient({ shopId }: { shopId: string }) {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Delete this product permanently?')) return;
+    if (!confirm(t('confirmDeleteProduct'))) return;
     setDeletingId(id);
     try {
       const res = await fetch(`/api/shop-dashboard/stock/products/${id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed to delete');
       setProducts(prev => prev.filter(p => p.id !== id));
       setTotal(prev => prev - 1);
-      addToast({ title: 'Deleted', description: 'Product removed from stock' });
+      addToast({ title: t('deleted'), description: t('productRemoved') });
     } catch (err: any) {
       addToast({ title: 'Error', description: err.message, variant: 'destructive' });
     } finally {
@@ -161,7 +164,7 @@ export function StockManagerClient({ shopId }: { shopId: string }) {
             type="text"
             value={search}
             onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-            placeholder="Search products..."
+            placeholder={t('searchProducts')}
             className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-gray-800/80 border border-[rgba(255,255,255,0.06)] text-white text-sm focus:ring-2 focus:ring-[#C84FFF] focus:border-transparent"
           />
         </div>
@@ -174,7 +177,7 @@ export function StockManagerClient({ shopId }: { shopId: string }) {
           }`}
         >
           <SlidersHorizontal className="w-4 h-4" />
-          Filters
+          {t('filters')}
           {(filterGame || filterStatus) && (
             <span className="w-2 h-2 rounded-full bg-[#C84FFF]" />
           )}
@@ -194,7 +197,7 @@ export function StockManagerClient({ shopId }: { shopId: string }) {
             onChange={(e) => { setFilterGame(e.target.value); setPage(1); }}
             className="bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white rounded-lg px-3 py-2 text-sm"
           >
-            <option value="">All Games</option>
+            <option value="">{t('allGames')}</option>
             {Object.entries(GAME_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
           </select>
           <select
@@ -202,17 +205,17 @@ export function StockManagerClient({ shopId }: { shopId: string }) {
             onChange={(e) => { setFilterStatus(e.target.value); setPage(1); }}
             className="bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white rounded-lg px-3 py-2 text-sm"
           >
-            <option value="">All Status</option>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-            <option value="out_of_stock">Out of Stock</option>
+            <option value="">{t('allStatus')}</option>
+            <option value="active">{t('activeFilter')}</option>
+            <option value="inactive">{t('inactiveFilter')}</option>
+            <option value="out_of_stock">{t('outOfStockFilter')}</option>
           </select>
           {(filterGame || filterStatus) && (
             <button
               onClick={() => { setFilterGame(''); setFilterStatus(''); setPage(1); }}
               className="text-xs text-gray-500 hover:text-white transition-colors"
             >
-              Clear filters
+              {t('clearFilters')}
             </button>
           )}
         </div>
@@ -220,33 +223,33 @@ export function StockManagerClient({ shopId }: { shopId: string }) {
 
       {/* Summary */}
       <div className="text-sm text-gray-500">
-        {total} product{total !== 1 ? 's' : ''} found
+        {t('productsFound', { count: total })}
       </div>
 
       {/* Product List */}
       {loading ? (
         <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
           <Loader2 className="w-8 h-8 text-[#E879F9] animate-spin mx-auto mb-3" />
-          <p className="text-[#8888aa]">Loading stock...</p>
+          <p className="text-[#8888aa]">{t('loadingStock')}</p>
         </div>
       ) : products.length === 0 ? (
         <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
           <Package className="w-12 h-12 text-gray-700 mx-auto mb-3" />
-          <p className="text-[#8888aa]">No products found</p>
-          <p className="text-gray-600 text-sm mt-1">Import stock using the Import tab</p>
+          <p className="text-[#8888aa]">{t('noProducts')}</p>
+          <p className="text-gray-600 text-sm mt-1">{t('importHint')}</p>
         </div>
       ) : (
         <div className="space-y-2">
           {/* Header */}
           <div className="hidden md:grid grid-cols-12 gap-3 px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-            <div className="col-span-4">Product</div>
-            <div className="col-span-1 text-center">Game</div>
-            <div className="col-span-1 text-center">Condition</div>
-            <div className="col-span-1 text-right">Price</div>
-            <div className="col-span-1 text-center">Stock</div>
-            <div className="col-span-1 text-center">Status</div>
-            <div className="col-span-1 text-center">SKU</div>
-            <div className="col-span-2 text-right">Actions</div>
+            <div className="col-span-4">{t('headerProduct')}</div>
+            <div className="col-span-1 text-center">{t('headerGame')}</div>
+            <div className="col-span-1 text-center">{t('headerCondition')}</div>
+            <div className="col-span-1 text-right">{t('headerPrice')}</div>
+            <div className="col-span-1 text-center">{t('headerStock')}</div>
+            <div className="col-span-1 text-center">{t('headerStatus')}</div>
+            <div className="col-span-1 text-center">{t('headerSKU')}</div>
+            <div className="col-span-2 text-right">{t('headerActions')}</div>
           </div>
 
           {products.map((product) => {
@@ -394,7 +397,7 @@ export function StockManagerClient({ shopId }: { shopId: string }) {
       {totalPages > 1 && (
         <div className="flex items-center justify-between pt-4">
           <p className="text-sm text-gray-500">
-            Page {page} of {totalPages}
+            {t('pageOf', { page, total: totalPages })}
           </p>
           <div className="flex gap-2">
             <button

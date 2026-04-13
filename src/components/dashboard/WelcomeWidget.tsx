@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { GiCardboardBox, GiCrossedSwords } from 'react-icons/gi'
 
 interface WelcomeWidgetProps {
@@ -24,6 +25,7 @@ export default function WelcomeWidget({
   dynamicSubtitle,
   className = '',
 }: WelcomeWidgetProps) {
+  const t = useTranslations('widgets')
   return (
     <div
       className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl h-full p-4 sm:p-6 ${className}`}
@@ -32,7 +34,7 @@ export default function WelcomeWidget({
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>
           <h2 className="text-xl sm:text-2xl font-extrabold text-[#f0f0f5]">
-            Welcome back, <span className="text-[#C84FFF]">{userName}</span>!
+            {t('welcome.welcomeBack')} <span className="text-[#C84FFF]">{userName}</span>!
           </h2>
           <p className="text-sm text-[#8888aa] mt-1">{dynamicSubtitle}</p>
         </div>
@@ -42,13 +44,13 @@ export default function WelcomeWidget({
             href="/boxes"
             className="min-h-[44px] flex items-center justify-center gap-2 px-4 py-2 bg-[#C84FFF] text-white font-semibold rounded-xl text-sm whitespace-nowrap hover:brightness-110 transition"
           >
-            <GiCardboardBox className="w-4 h-4" /> Open Box
+            <GiCardboardBox className="w-4 h-4" /> {t('welcome.openBox')}
           </Link>
           <Link
             href="/battles"
             className="min-h-[44px] flex items-center justify-center gap-2 px-4 py-2 border border-[rgba(200,79,255,0.3)] text-[#C84FFF] font-semibold rounded-xl text-sm whitespace-nowrap hover:bg-[rgba(200,79,255,0.05)] transition"
           >
-            <GiCrossedSwords className="w-4 h-4" /> Join Battle
+            <GiCrossedSwords className="w-4 h-4" /> {t('welcome.joinBattle')}
           </Link>
         </div>
       </div>
@@ -57,7 +59,7 @@ export default function WelcomeWidget({
       <div className="mt-5">
         <div className="flex items-center gap-3 mb-2">
           <span className="text-base sm:text-lg font-extrabold text-[#C84FFF]">
-            Level {level}
+            {t('welcome.level')} {level}
           </span>
           <span className="text-xs font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[rgba(200,79,255,0.1)] text-[#C84FFF] border border-[rgba(200,79,255,0.2)]">
             {title}
@@ -75,10 +77,10 @@ export default function WelcomeWidget({
         {/* XP numbers */}
         <div className="flex justify-between mt-1.5 text-xs text-[#8888aa]">
           <span>
-            {xpInCurrentLevel.toLocaleString()} / {xpForNextLevel.toLocaleString()} XP
+            {xpInCurrentLevel.toLocaleString()} / {xpForNextLevel.toLocaleString()} {t('welcome.xp')}
           </span>
           <span>
-            {xpPercent}% to Lv.{level + 1}
+            {t('welcome.percentToLevel', { percent: xpPercent, level: level + 1 })}
           </span>
         </div>
       </div>

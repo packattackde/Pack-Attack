@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
+import { useTranslations } from 'next-intl';
 
 type Order = {
   id: string;
@@ -50,6 +51,8 @@ const statusConfig: Record<string, { color: string; bgColor: string; icon: React
 };
 
 export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: Order[]; isAdmin: boolean }) {
+  const t = useTranslations('shopDashboard.orderMgmt');
+  const tc = useTranslations('common');
   const router = useRouter();
   const { addToast } = useToast();
   const [orders, setOrders] = useState(initialOrders);
@@ -78,13 +81,13 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
 
       setOrders(orders.map(o => o.id === orderId ? data.order : o));
       addToast({
-        title: 'Success',
-        description: `Order status updated to ${newStatus}`,
+        title: tc('success'),
+        description: t('orderStatusUpdated', { status: newStatus }),
       });
     } catch (error: any) {
       addToast({
-        title: 'Error',
-        description: error.message || 'Failed to update order',
+        title: tc('error'),
+        description: error.message || t('failedUpdateOrder'),
         variant: 'destructive',
       });
     } finally {
@@ -114,13 +117,13 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
       setEditingTracking(null);
       setTrackingData({ number: '', url: '' });
       addToast({
-        title: 'Success',
-        description: 'Tracking information updated',
+        title: tc('success'),
+        description: t('trackingUpdated'),
       });
     } catch (error: any) {
       addToast({
-        title: 'Error',
-        description: error.message || 'Failed to update tracking',
+        title: tc('error'),
+        description: error.message || t('failedUpdateTracking'),
         variant: 'destructive',
       });
     } finally {
@@ -147,13 +150,13 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
       setEditingNotes(null);
       setShopNotes('');
       addToast({
-        title: 'Success',
-        description: 'Notes updated',
+        title: tc('success'),
+        description: t('notesUpdated'),
       });
     } catch (error: any) {
       addToast({
-        title: 'Error',
-        description: error.message || 'Failed to update notes',
+        title: tc('error'),
+        description: error.message || t('failedUpdateNotes'),
         variant: 'destructive',
       });
     } finally {
@@ -169,9 +172,9 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
     return (
       <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
         <Package className="w-16 h-16 text-gray-700 mx-auto mb-4" />
-        <h3 className="text-xl font-bold text-white mb-2">No Orders Yet</h3>
+        <h3 className="text-xl font-bold text-white mb-2">{t('noOrders')}</h3>
         <p className="text-[#8888aa] max-w-md mx-auto">
-          When users open your boxes and order cards, the orders will appear here for you to process and ship.
+          {t('noOrdersDesc')}
         </p>
       </div>
     );
@@ -191,7 +194,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                 : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white hover:bg-[#12123a]'
             }`}
           >
-            {status === 'ALL' ? 'All Orders' : statusConfig[status]?.label || status}
+            {status === 'ALL' ? t('allOrders') : statusConfig[status]?.label || status}
             {status !== 'ALL' && (
               <span className="ml-2 text-xs opacity-70">
                 ({orders.filter(o => o.status === status).length})
@@ -205,7 +208,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
       {filteredOrders.length === 0 ? (
         <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-8 text-center">
           <AlertCircle className="w-10 h-10 text-gray-600 mx-auto mb-3" />
-          <p className="text-[#8888aa]">No orders with this status</p>
+          <p className="text-[#8888aa]">{t('noOrdersStatus')}</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -285,10 +288,10 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                       <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                         <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
                           <User className="w-4 h-4 text-[#E879F9]" />
-                          Customer
+                          {t('customer')}
                         </h4>
                         <div className="space-y-2 text-sm">
-                          <p className="text-[#f0f0f5]">{order.user.name || 'No name'}</p>
+                          <p className="text-[#f0f0f5]">{order.user.name || t('noName')}</p>
                           <p className="text-[#8888aa] flex items-center gap-2">
                             <Mail className="w-3 h-3" />
                             {order.user.email}
@@ -300,7 +303,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                       <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                         <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
                           <MapPin className="w-4 h-4 text-[#E879F9]" />
-                          Shipping Address
+                          {t('shippingAddress')}
                         </h4>
                         <div className="space-y-1 text-sm text-[#8888aa]">
                           <p className="text-[#f0f0f5]">{order.shippingName}</p>
@@ -322,7 +325,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                     <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                       <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
                         <Package className="w-4 h-4 text-[#E879F9]" />
-                        Order Item
+                        {t('orderItem')}
                       </h4>
                       <div className="flex items-center gap-4">
                         <div className="relative w-20 h-28 rounded-lg overflow-hidden ring-1 ring-gray-700 flex-shrink-0">
@@ -353,7 +356,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                     {/* Customer Notes */}
                     {order.notes && (
                       <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
-                        <h4 className="font-semibold text-white mb-2">Customer Notes</h4>
+                        <h4 className="font-semibold text-white mb-2">{t('customerNotes')}</h4>
                         <p className="text-sm text-[#8888aa]">{order.notes}</p>
                       </div>
                     )}
@@ -362,21 +365,21 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                     <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                       <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
                         <Truck className="w-4 h-4 text-[#E879F9]" />
-                        Tracking Information
+                        {t('trackingInfo')}
                       </h4>
                       
                       {editingTracking === order.id ? (
                         <div className="space-y-3">
                           <input
                             type="text"
-                            placeholder="Tracking Number"
+                            placeholder={t('trackingNumber')}
                             value={trackingData.number}
                             onChange={(e) => setTrackingData({ ...trackingData, number: e.target.value })}
                             className="w-full px-3 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white text-sm focus:border-[#C84FFF] focus:outline-none"
                           />
                           <input
                             type="text"
-                            placeholder="Tracking URL (optional)"
+                            placeholder={t('trackingUrlOptional')}
                             value={trackingData.url}
                             onChange={(e) => setTrackingData({ ...trackingData, url: e.target.value })}
                             className="w-full px-3 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white text-sm focus:border-[#C84FFF] focus:outline-none"
@@ -415,7 +418,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                                 rel="noopener noreferrer"
                                 className="text-sm text-[#E879F9] hover:text-[#f0abfc] flex items-center gap-1 mt-1"
                               >
-                                Track Package <ExternalLink className="w-3 h-3" />
+                                {t('trackPackage')} <ExternalLink className="w-3 h-3" />
                               </a>
                             )}
                           </div>
@@ -442,7 +445,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                           className="border-[#C84FFF]/50 text-[#E879F9] hover:bg-[#C84FFF]/10"
                         >
                           <Truck className="w-4 h-4 mr-2" />
-                          Add Tracking
+                          {t('addTracking')}
                         </Button>
                       )}
                     </div>
@@ -451,13 +454,13 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                     <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                       <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
                         <MessageSquare className="w-4 h-4 text-[#E879F9]" />
-                        Internal Notes
+                        {t('internalNotes')}
                       </h4>
                       
                       {editingNotes === order.id ? (
                         <div className="space-y-3">
                           <textarea
-                            placeholder="Add internal notes about this order..."
+                            placeholder={t('addNotesPlaceholder')}
                             value={shopNotes}
                             onChange={(e) => setShopNotes(e.target.value)}
                             rows={3}
@@ -509,14 +512,14 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                           className="border-[rgba(255,255,255,0.06)] text-[#8888aa]"
                         >
                           <MessageSquare className="w-4 h-4 mr-2" />
-                          Add Notes
+                          {t('addNotes')}
                         </Button>
                       )}
                     </div>
 
                     {/* Status Update */}
                     <div className="pt-4 border-t border-[rgba(255,255,255,0.06)]">
-                      <p className="text-sm text-[#8888aa] mb-3">Update Order Status:</p>
+                      <p className="text-sm text-[#8888aa] mb-3">{t('updateOrderStatus')}</p>
                       <div className="flex gap-2 flex-wrap">
                         {['PENDING', 'CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'].map((s) => {
                           const cfg = statusConfig[s];

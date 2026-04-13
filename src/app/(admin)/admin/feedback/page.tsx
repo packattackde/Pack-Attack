@@ -36,6 +36,7 @@ import {
   Archive,
   Inbox,
 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 // ─── Types ───────────────────────────────────────────────
 

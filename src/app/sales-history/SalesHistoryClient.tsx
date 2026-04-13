@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { Coins, Calendar, CheckCircle2 } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
+import { useTranslations } from 'next-intl';
 
 type Sale = {
   id: string;
@@ -14,6 +15,7 @@ type Sale = {
 };
 
 export function SalesHistoryClient({ sales }: { sales: Sale[] }) {
+  const t = useTranslations('salesHistory');
   return (
     <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
       {sales.map((sale) => (
@@ -31,7 +33,7 @@ export function SalesHistoryClient({ sales }: { sales: Sale[] }) {
               />
             ) : (
               <div className="w-full h-full bg-gray-800 flex items-center justify-center">
-                <span className="text-gray-600 text-xs">No Image</span>
+                <span className="text-gray-600 text-xs">{t('noImage')}</span>
               </div>
             )}
             <div className="absolute top-2 right-2 rounded-full bg-[#C84FFF] p-1">

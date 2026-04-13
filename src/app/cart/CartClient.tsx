@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Coins, Trash2, CreditCard, Truck, ShoppingBag, Plus, Minus, Check, Euro } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 type CartItem = {
   id: string;
@@ -49,6 +50,9 @@ type Props = {
 };
 
 export function CartClient({ items, total, upsellCartItems }: Props) {
+  const t = useTranslations('cart');
+  const tCommon = useTranslations('common');
+  const tCollection = useTranslations('collection');
   const { addToast } = useToast();
   const router = useRouter();
   const [loading, setLoading] = useState<string | null>(null);
@@ -76,14 +80,14 @@ export function CartClient({ items, total, upsellCartItems }: Props) {
       const data = await res.json();
 
       if (!res.ok) {
-        addToast({ title: 'Error', description: data.error || 'Failed to remove item', variant: 'destructive' });
+        addToast({ title: t('failedToRemove'), description: data.error || t('failedToRemove'), variant: 'destructive' });
         return;
       }
 
-      addToast({ title: 'Success', description: 'Item removed from cart' });
+      addToast({ title: t('itemRemoved'), description: t('itemRemoved') });
       router.refresh();
     } catch {
-      addToast({ title: 'Error', description: 'Failed to remove item', variant: 'destructive' });
+      addToast({ title: t('failedToRemove'), description: t('failedToRemove'), variant: 'destructive' });
     } finally {
       setLoading(null);
     }
@@ -100,17 +104,17 @@ export function CartClient({ items, total, upsellCartItems }: Props) {
 
       if (!res.ok) {
         const data = await res.json();
-        addToast({ title: 'Error', description: data.error || 'Failed to update cart', variant: 'destructive' });
+        addToast({ title: t('failedToUpdate'), description: data.error || t('failedToUpdate'), variant: 'destructive' });
         return;
       }
 
       if (action === 'add') {
-        addToast({ title: 'Added to Cart', description: 'Item added to your order' });
+        addToast({ title: t('adding'), description: t('adding') });
       }
 
       router.refresh();
     } catch {
-      addToast({ title: 'Error', description: 'Failed to update cart', variant: 'destructive' });
+      addToast({ title: t('failedToUpdate'), description: t('failedToUpdate'), variant: 'destructive' });
     } finally {
       setAddingUpsell(null);
     }
@@ -126,7 +130,7 @@ export function CartClient({ items, total, upsellCartItems }: Props) {
       });
       router.refresh();
     } catch {
-      addToast({ title: 'Error', description: 'Failed to update payment method', variant: 'destructive' });
+      addToast({ title: t('failedToUpdate'), description: t('failedToUpdate'), variant: 'destructive' });
     } finally {
       setAddingUpsell(null);
     }
@@ -145,8 +149,8 @@ export function CartClient({ items, total, upsellCartItems }: Props) {
           <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[rgba(200,79,255,0.1)] to-[rgba(200,79,255,0.08)]">
             <ShoppingBag className="w-10 h-10 text-[#C84FFF]" />
           </div>
-          <h2 className="text-2xl font-bold text-white mb-3">Cart Empty</h2>
-          <p className="text-[#8888aa] mb-6">Add cards from your collection to checkout, or browse add-on items below!</p>
+          <h2 className="text-2xl font-bold text-white mb-3">{t('empty')}</h2>
+          <p className="text-[#8888aa] mb-6">{t('emptyDesc')}</p>
         </div>
       ) : (
       <div className="grid gap-6 lg:grid-cols-3">
@@ -165,7 +169,7 @@ export function CartClient({ items, total, upsellCartItems }: Props) {
                     <h3 className="font-semibold text-white mb-2">{item.pull.card.name}</h3>
                     <div className="flex items-center gap-2 mb-4">
                       <Coins className="h-4 w-4 text-amber-400" />
-                      <span className="font-semibold text-amber-400">{item.pull.card.coinValue} coins</span>
+                      <span className="font-semibold text-amber-400">{item.pull.card.coinValue} {tCommon('coins').toLowerCase()}</span>
                     </div>
                     <button
                       onClick={() => handleRemove(item.pull.id)}
@@ -173,7 +177,7 @@ export function CartClient({ items, total, upsellCartItems }: Props) {
                       className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-red-400 bg-red-500/10 hover:bg-red-500/20 transition-colors text-sm font-medium disabled:opacity-50"
                     >
                       <Trash2 className="h-4 w-4" />
-                      Remove
+                      {tCommon('remove')}
                     </button>
                   </div>
                 </div>
@@ -191,7 +195,7 @@ export function CartClient({ items, total, upsellCartItems }: Props) {
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
                     <ShoppingBag className="h-3.5 w-3.5 text-amber-400" />
-                    <span className="text-xs text-amber-400 font-medium">Add-on</span>
+                    <span className="text-xs text-amber-400 font-medium">{t('addon')}</span>
                   </div>
                   <h3 className="font-semibold text-white mb-2">{ui.upsellItem.name}</h3>
                   <div className="flex items-center gap-4 flex-wrap">
@@ -208,12 +212,12 @@ export function CartClient({ items, total, upsellCartItems }: Props) {
                           onClick={() => handleTogglePayment(ui.upsellItem.id, true)}
                           className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium transition-all ${ui.payWithCoins ? 'bg-amber-500/20 text-amber-400' : 'text-[#8888aa] hover:text-[#f0f0f5]'}`}
                         >
-                          <Coins className="h-3 w-3" /> Coins
+                          <Coins className="h-3 w-3" /> {tCommon('coins')}
                         </button>
                       </div>
                     )}
                     <span className="font-bold text-amber-400">
-                      {ui.payWithCoins ? `${ui.upsellItem.coinPrice.toFixed(2)} coins` : `${ui.upsellItem.price.toFixed(2)} €`}
+                      {ui.payWithCoins ? `${ui.upsellItem.coinPrice.toFixed(2)} ${tCommon('coins').toLowerCase()}` : `${ui.upsellItem.price.toFixed(2)} €`}
                     </span>
                     <div className="flex items-center gap-2 bg-[#12123a] rounded-lg px-1">
                       <button
@@ -234,7 +238,7 @@ export function CartClient({ items, total, upsellCartItems }: Props) {
                     </div>
                     <span className="text-[#8888aa] text-sm">
                       = {ui.payWithCoins
-                        ? `${(ui.upsellItem.coinPrice * ui.quantity).toFixed(2)} coins`
+                        ? `${(ui.upsellItem.coinPrice * ui.quantity).toFixed(2)} ${tCommon('coins').toLowerCase()}`
                         : `${(ui.upsellItem.price * ui.quantity).toFixed(2)} €`}
                     </span>
                   </div>
@@ -254,13 +258,13 @@ export function CartClient({ items, total, upsellCartItems }: Props) {
         {/* Checkout Sidebar */}
         <div className="lg:col-span-1">
           <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 sticky top-4">
-            <h3 className="text-lg font-bold text-white mb-4">Order Summary</h3>
+            <h3 className="text-lg font-bold text-white mb-4">{t('orderSummary')}</h3>
             
             <div className="space-y-3 mb-6">
               {items.length > 0 && (
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-[#8888aa]">Cards ({items.length})</span>
-                  <span className="text-white">{total} coins</span>
+                  <span className="text-[#8888aa]">{t('cardsCount', { count: items.length })}</span>
+                  <span className="text-white">{total} {tCommon('coins').toLowerCase()}</span>
                 </div>
               )}
               {upsellCartItems.length > 0 && (
@@ -270,33 +274,33 @@ export function CartClient({ items, total, upsellCartItems }: Props) {
                       <span className="text-[#8888aa]">{ui.upsellItem.name} x{ui.quantity}</span>
                       <span className={ui.payWithCoins ? 'text-yellow-400' : 'text-amber-400'}>
                         {ui.payWithCoins
-                          ? `${(ui.upsellItem.coinPrice * ui.quantity).toFixed(2)} coins`
+                          ? `${(ui.upsellItem.coinPrice * ui.quantity).toFixed(2)} ${tCommon('coins').toLowerCase()}`
                           : `${(ui.upsellItem.price * ui.quantity).toFixed(2)} €`}
                       </span>
                     </div>
                   ))}
                   {upsellEurTotal > 0 && (
                     <div className="flex items-center justify-between text-sm font-medium">
-                      <span className="text-[#f0f0f5]">Add-ons (EUR)</span>
+                      <span className="text-[#f0f0f5]">{t('addOnsEUR')}</span>
                       <span className="text-amber-400">{upsellEurTotal.toFixed(2)} €</span>
                     </div>
                   )}
                   {upsellCoinTotal > 0 && (
                     <div className="flex items-center justify-between text-sm font-medium">
-                      <span className="text-[#f0f0f5]">Add-ons (Coins)</span>
-                      <span className="text-yellow-400">{upsellCoinTotal.toFixed(2)} coins</span>
+                      <span className="text-[#f0f0f5]">{t('addOnsCoins')}</span>
+                      <span className="text-yellow-400">{upsellCoinTotal.toFixed(2)} {tCommon('coins').toLowerCase()}</span>
                     </div>
                   )}
                 </>
               )}
               <div className="flex items-center justify-between text-sm">
-                <span className="text-[#8888aa]">Shipping</span>
+                <span className="text-[#8888aa]">{t('shipping')}</span>
                 <span className="text-white">5,00 €</span>
               </div>
               <div className="h-px bg-[rgba(255,255,255,0.06)]" />
               {items.length > 0 && (
                 <div className="flex items-center justify-between">
-                  <span className="text-[#8888aa]">Cards Value</span>
+                  <span className="text-[#8888aa]">{t('cardsValue')}</span>
                   <div className="flex items-center gap-2">
                     <Coins className="h-5 w-5 text-amber-400" />
                     <span className="text-2xl font-bold text-white">{total}</span>
@@ -305,7 +309,7 @@ export function CartClient({ items, total, upsellCartItems }: Props) {
               )}
               {upsellCoinTotal > 0 && (
                 <div className="flex items-center justify-between">
-                  <span className="text-[#8888aa]">Add-ons Coins</span>
+                  <span className="text-[#8888aa]">{t('addOnsCoins')}</span>
                   <div className="flex items-center gap-2">
                     <Coins className="h-4 w-4 text-yellow-400" />
                     <span className="text-lg font-bold text-yellow-400">{upsellCoinTotal.toFixed(2)}</span>
@@ -314,7 +318,7 @@ export function CartClient({ items, total, upsellCartItems }: Props) {
               )}
               {upsellEurTotal > 0 && (
                 <div className="flex items-center justify-between">
-                  <span className="text-[#8888aa]">Total EUR</span>
+                  <span className="text-[#8888aa]">{t('totalEUR')}</span>
                   <span className="text-xl font-bold text-amber-400">{(upsellEurTotal + 5).toFixed(2)} €</span>
                 </div>
               )}
@@ -326,11 +330,11 @@ export function CartClient({ items, total, upsellCartItems }: Props) {
                 className="w-full py-4 bg-gradient-to-r from-[#C84FFF] to-[#E879F9] hover:from-[#E879F9] hover:to-[#C84FFF] text-white font-semibold rounded-xl transition-all hover:scale-[1.02] flex items-center justify-center gap-2"
               >
                 <CreditCard className="h-5 w-5" />
-                Proceed to Checkout
+                {t('proceedToCheckout')}
               </button>
               <div className="flex items-center justify-center gap-2 text-sm text-[#8888aa]">
                 <Truck className="h-4 w-4" />
-                <span>Real cards shipped to you</span>
+                <span>{t('realCardsShipped')}</span>
               </div>
             </div>
           </div>
@@ -343,7 +347,7 @@ export function CartClient({ items, total, upsellCartItems }: Props) {
         <div>
           <div className="flex items-center gap-3 mb-6">
             <ShoppingBag className="w-6 h-6 text-amber-400" />
-            <h2 className="text-2xl font-bold text-white">Ordered with the most</h2>
+            <h2 className="text-2xl font-bold text-white">{t('orderedWithMost')}</h2>
           </div>
           <div className="grid gap-6 md:grid-cols-3">
             {upsellItems.map(item => {
@@ -375,7 +379,7 @@ export function CartClient({ items, total, upsellCartItems }: Props) {
                         </span>
                         {item.coinPrice > 0 && (
                           <span className="block text-sm font-medium text-yellow-400 mt-0.5">
-                            or {item.coinPrice.toFixed(2)} coins
+                            {tCommon('or')} {item.coinPrice.toFixed(2)} {tCommon('coins').toLowerCase()}
                           </span>
                         )}
                       </div>
@@ -389,16 +393,16 @@ export function CartClient({ items, total, upsellCartItems }: Props) {
                         }`}
                       >
                         {addingUpsell === item.id ? (
-                          <span>Adding...</span>
+                          <span>{t('adding')}</span>
                         ) : isInCart ? (
                           <>
                             <Plus className="h-4 w-4" />
-                            Add More
+                            {t('addMore')}
                           </>
                         ) : (
                           <>
                             <ShoppingBag className="h-4 w-4" />
-                            Add to Cart
+                            {tCollection('addToCart')}
                           </>
                         )}
                       </button>

@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useToast } from '@/components/ui/use-toast';
+import { useTranslations } from 'next-intl';
 import { 
   Coins, 
   Euro, 
@@ -91,6 +92,7 @@ const coinPackages: CoinPackage[] = [
 ];
 
 function PurchaseCoinsContent() {
+  const t = useTranslations('coins');
   const { addToast } = useToast();
   const searchParams = useSearchParams();
   const [userCoins, setUserCoins] = useState<number | null>(null);
@@ -130,8 +132,8 @@ function PurchaseCoinsContent() {
 
     if (cancelled === 'true') {
       addToast({
-        title: 'Payment Cancelled',
-        description: 'Your payment was cancelled.',
+        title: t('paymentCancelled'),
+        description: t('paymentCancelledDesc'),
       });
       // Clean URL
       window.history.replaceState({}, '', '/purchase-coins');
@@ -151,8 +153,8 @@ function PurchaseCoinsContent() {
         .then((data) => {
           if (data.success) {
             addToast({
-              title: 'Payment Successful! 🎉',
-              description: `You received ${data.coinsAdded?.toLocaleString()} coins!`,
+              title: t('paymentSuccess'),
+              description: t('paymentSuccessDesc', { amount: data.coinsAdded?.toLocaleString() }),
             });
             setUserCoins(data.newBalance);
             emitCoinBalanceUpdate({ balance: data.newBalance });
@@ -183,7 +185,7 @@ function PurchaseCoinsContent() {
       if (!res.ok) {
         addToast({
           title: 'Error',
-          description: data.error || 'Failed to create checkout session',
+          description: data.error || t('failedToCheckout'),
           variant: 'destructive',
         });
         return;
@@ -197,7 +199,7 @@ function PurchaseCoinsContent() {
       console.error('Error creating checkout:', error);
       addToast({
         title: 'Error',
-        description: 'Failed to start checkout. Please try again.',
+        description: t('failedToStart'),
         variant: 'destructive',
       });
     } finally {
@@ -218,14 +220,13 @@ function PurchaseCoinsContent() {
       >
         <div className="inline-flex items-center gap-2 px-5 py-2.5 mb-8 rounded-full bg-[#1a1a4a] shadow-md border border-amber-500/20">
           <Sparkles className="w-5 h-5 text-amber-400" />
-          <span className="text-amber-400 font-semibold">Power Up Your Collection</span>
+          <span className="text-amber-400 font-semibold">{t('badge')}</span>
         </div>
         <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
-          <span className="text-white">Get </span>
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-400 to-orange-400">Coins</span>
+          <span className="text-white">{t('title')} </span>
         </h1>
         <p className="text-[#8888aa] text-xl leading-relaxed" style={{ maxWidth: '42rem', margin: '0 auto' }}>
-          Unlock packs, join epic battles, and build your ultimate trading card collection
+          {t('subtitle')}
         </p>
       </div>
 
@@ -246,7 +247,7 @@ function PurchaseCoinsContent() {
                 <Coins className="w-7 h-7 text-amber-400" />
               </div>
               <div>
-                <p className="text-sm text-[#8888aa] font-medium">Current Balance</p>
+                <p className="text-sm text-[#8888aa] font-medium">{t('currentBalance')}</p>
                 <p className="text-3xl font-bold text-white">{userCoins.toLocaleString()}</p>
               </div>
             </div>
@@ -254,7 +255,7 @@ function PurchaseCoinsContent() {
               href="/dashboard" 
               className="hidden sm:flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-[#f0f0f5] hover:text-white transition-all text-sm font-medium"
             >
-              Dashboard <ArrowRight className="w-4 h-4" />
+              {t('dashboard')} <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>
@@ -262,7 +263,7 @@ function PurchaseCoinsContent() {
 
       {/* Section Title */}
       <h2 className="text-center text-[#8888aa] text-sm font-semibold uppercase tracking-wider mb-8">
-        Choose Your Package
+        {t('choosePackage')}
       </h2>
 
       {/* Packages Grid */}
@@ -300,12 +301,12 @@ function PurchaseCoinsContent() {
                 {/* Badges */}
                 {pkg.popular && (
                   <div className="absolute top-3 right-3 z-10 px-2.5 py-1 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-bold shadow-lg">
-                    POPULAR
+                    {t('popular')}
                   </div>
                 )}
                 {pkg.bestValue && (
                   <div className="absolute top-3 right-3 z-10 px-2.5 py-1 rounded-full bg-gradient-to-r from-amber-400 to-yellow-500 text-black text-xs font-bold shadow-lg">
-                    BEST VALUE
+                    {t('bestValue')}
                   </div>
                 )}
 
@@ -320,8 +321,8 @@ function PurchaseCoinsContent() {
                       <Icon className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <p className="text-white font-bold text-sm">{pkg.label}</p>
-                      <p className="text-[#8888aa] text-xs">Package</p>
+                      <p className="text-white font-bold text-sm">{t(`packages.${pkg.label.toLowerCase()}`)}</p>
+                      <p className="text-[#8888aa] text-xs">{t('package')}</p>
                     </div>
                   </div>
 
@@ -381,7 +382,7 @@ function PurchaseCoinsContent() {
           <div className={`absolute -inset-0.5 bg-gradient-to-r ${selectedPackage.gradient} rounded-3xl blur opacity-20 -z-10`} />
           
           <div className="text-center mb-6">
-            <p className="text-[#8888aa] text-sm font-medium uppercase tracking-wider mb-3">Your Purchase</p>
+            <p className="text-[#8888aa] text-sm font-medium uppercase tracking-wider mb-3">{t('yourPurchase')}</p>
             <div className="flex items-center justify-center gap-3">
               <div className={`p-2.5 rounded-xl bg-gradient-to-br ${selectedPackage.gradient}`}>
                 <Coins className="w-6 h-6 text-white" />
@@ -396,7 +397,7 @@ function PurchaseCoinsContent() {
           <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent mb-6" />
 
           <div className="flex items-center justify-between mb-6">
-            <span className="text-[#8888aa]">Total</span>
+            <span className="text-[#8888aa]">{t('total')}</span>
             <div className="flex items-baseline gap-0.5">
               <Euro className="w-5 h-5 text-white" />
               <span className="text-2xl font-bold text-white">{selectedPackage.price}</span>
@@ -407,7 +408,7 @@ function PurchaseCoinsContent() {
           {stripeConfigured === false ? (
             <div className="flex items-center justify-center gap-2 py-4 px-6 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400">
               <AlertCircle className="w-5 h-5" />
-              <span>Payments are not configured</span>
+              <span>{t('paymentsNotConfigured')}</span>
             </div>
           ) : (
             <button
@@ -424,12 +425,12 @@ function PurchaseCoinsContent() {
                 {loading || verifying ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin" />
-                    {verifying ? 'Verifying...' : 'Redirecting...'}
+                    {verifying ? t('verifying') : t('redirecting')}
                   </>
                 ) : (
                   <>
                     <CreditCard className="w-5 h-5" />
-                    Pay with Card
+                    {t('payWithCard')}
                   </>
                 )}
               </span>
@@ -439,15 +440,15 @@ function PurchaseCoinsContent() {
           <div className="flex items-center justify-center gap-6 mt-6 text-[#8888aa] text-xs">
             <div className="flex items-center gap-1.5">
               <Shield className="w-3.5 h-3.5" />
-              <span>Secure</span>
+              <span>{t('secure')}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5" />
-              <span>Instant</span>
+              <span>{t('instant')}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <CheckCircle2 className="w-3.5 h-3.5" />
-              <span>Verified</span>
+              <span>{t('verified')}</span>
             </div>
           </div>
         </div>
@@ -465,30 +466,30 @@ function PurchaseCoinsContent() {
         }}
       >
         <h2 className="text-center text-2xl md:text-3xl font-bold text-white mb-4">
-          What can you do with coins?
+          {t('whatCanYouDo')}
         </h2>
         <p className="text-center text-[#8888aa] mb-10 max-w-xl mx-auto">
-          Use your coins to unlock amazing features and build your collection
+          {t('coinsUsageDesc')}
         </p>
         
         <div className="grid gap-6 md:grid-cols-3">
           {[
             { 
               icon: Package, 
-              title: 'Open Packs', 
-              description: 'Pull cards from various TCG sets including Magic, Pokemon, and more',
+              title: t('features.openPacks'), 
+              description: t('features.openPacksDesc'),
               gradient: 'from-blue-500 to-cyan-500'
             },
             { 
               icon: Swords, 
-              title: 'Join Battles', 
-              description: 'Compete against other players in exciting pack battles',
+              title: t('features.joinBattles'), 
+              description: t('features.joinBattlesDesc'),
               gradient: 'from-purple-500 to-pink-500'
             },
             { 
               icon: TrendingUp, 
-              title: 'Win Real Cards', 
-              description: 'Checkout your winnings and receive physical cards delivered to you',
+              title: t('features.winRealCards'), 
+              description: t('features.winRealCardsDesc'),
               gradient: 'from-[#9333EA] to-[#9333EA]'
             },
           ].map((item) => {
@@ -513,7 +514,7 @@ function PurchaseCoinsContent() {
       <div className="text-center mt-16">
         <div className="inline-flex items-center gap-2 text-[#8888aa] text-sm">
           <Shield className="w-4 h-4" />
-          <span>Secure payments processed via Stripe</span>
+          <span>{t('stripeSecure')}</span>
         </div>
       </div>
     </>

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Coins, Package, Truck, CheckCircle, ArrowLeft, MapPin, Euro, Wallet } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 type CartItem = {
   id: string;
@@ -45,6 +46,9 @@ const SHIPPING_COST_EUROS = 5.00;
 const SHIPPING_COST_COINS = 5.00;
 
 export function CheckoutClient({ items, total, userEmail, userName, upsellCartItems }: CheckoutClientProps) {
+  const t = useTranslations('checkout');
+  const tCart = useTranslations('cart');
+  const tCommon = useTranslations('common');
   const router = useRouter();
   const { addToast } = useToast();
   const [loading, setLoading] = useState(false);
@@ -90,8 +94,8 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
     // Check if user has enough coins for shipping with coins
     if (shippingMethod === 'COINS' && userCoins !== null && userCoins < SHIPPING_COST_COINS) {
       addToast({
-        title: 'Insufficient Coins',
-        description: `You need ${SHIPPING_COST_COINS.toFixed(2)} coins for shipping but only have ${userCoins.toFixed(2)}`,
+        title: t('insufficientCoins'),
+        description: t('insufficientCoinsDesc', { needed: SHIPPING_COST_COINS.toFixed(2), balance: userCoins.toFixed(2) }),
         variant: 'destructive',
       });
       return;
@@ -114,8 +118,8 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
 
       if (!res.ok) {
         addToast({
-          title: 'Error',
-          description: data.error || 'Failed to place order',
+          title: t('failedToOrder'),
+          description: data.error || t('failedToOrder'),
           variant: 'destructive',
         });
         return;
@@ -130,16 +134,14 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
       setOrderId(data.order.id);
       setOrderComplete(true);
       addToast({
-        title: 'Order Placed!',
-        description: shippingMethod === 'COINS' 
-          ? `Your order has been submitted. ${SHIPPING_COST_COINS.toFixed(2)} coins deducted for shipping.`
-          : 'Your order has been submitted successfully.',
+        title: t('orderPlaced'),
+        description: t('thankYou'),
       });
     } catch (error) {
       console.error('Checkout error:', error);
       addToast({
-        title: 'Error',
-        description: 'Failed to place order',
+        title: t('failedToOrder'),
+        description: t('failedToOrder'),
         variant: 'destructive',
       });
     } finally {
@@ -154,14 +156,14 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
           <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-full bg-[#C84FFF]/20">
             <CheckCircle className="w-10 h-10 text-[#E879F9]" />
           </div>
-          <h1 className="text-3xl font-bold text-white mb-3">Order Placed!</h1>
-          <p className="text-[#8888aa] mb-2">Thank you for your order.</p>
-          <p className="text-sm text-[#8888aa] mb-6">Order ID: {orderId}</p>
+          <h1 className="text-3xl font-bold text-white mb-3">{t('orderPlaced')}</h1>
+          <p className="text-[#8888aa] mb-2">{t('thankYou')}</p>
+          <p className="text-sm text-[#8888aa] mb-6">{t('orderId')} {orderId}</p>
           
           <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 mb-6 text-left">
             <div className="flex items-center gap-2 mb-3">
               <Truck className="w-5 h-5 text-[#C84FFF]" />
-              <span className="font-semibold text-white">Shipping Information</span>
+              <span className="font-semibold text-white">{t('shippingInfo')}</span>
             </div>
             <div className="text-sm text-[#8888aa] space-y-1">
               <p>{formData.shippingName}</p>
@@ -176,13 +178,13 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
               href="/collection"
               className="px-6 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl transition-all hover:scale-105"
             >
-              Back to Collection
+              {t('backToCollection')}
             </Link>
             <Link
               href="/boxes"
               className="px-6 py-3 bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-white font-semibold rounded-xl transition-all hover:bg-white/10"
             >
-              Open More Boxes
+              {t('openMoreBoxes')}
             </Link>
           </div>
         </div>
@@ -196,17 +198,17 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
       <div className="mb-8">
         <Link href="/cart" className="inline-flex items-center gap-2 text-[#8888aa] hover:text-white transition-colors mb-4">
           <ArrowLeft className="w-4 h-4" />
-          Back to Cart
+          {t('backToCart')}
         </Link>
         <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm ml-4">
           <Package className="w-4 h-4 text-[#C84FFF]" />
-          <span className="text-[#f0f0f5]">Checkout</span>
+          <span className="text-[#f0f0f5]">{t('badge')}</span>
         </div>
         <h1 className="text-4xl md:text-5xl font-bold mb-3">
-          <span className="text-white">Complete </span>
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C84FFF] to-[#C84FFF]">Order</span>
+          <span className="text-white">{t('title').split(' ').slice(0, -1).join(' ')} </span>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C84FFF] to-[#C84FFF]">{t('title').split(' ').slice(-1)[0]}</span>
         </h1>
-        <p className="text-[#8888aa] text-lg">Enter your shipping details to receive your cards</p>
+        <p className="text-[#8888aa] text-lg">{t('subtitle')}</p>
       </div>
 
       <form onSubmit={handleSubmit}>
@@ -216,12 +218,12 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
             <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6">
               <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                 <MapPin className="w-5 h-5 text-[#C84FFF]" />
-                Shipping Address
+                {t('shippingAddress')}
               </h2>
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="sm:col-span-2">
-                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Full Name *</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">{t('fullName')}</label>
                   <input
                     type="text"
                     name="shippingName"
@@ -234,7 +236,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Email *</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">{t('email')}</label>
                   <input
                     type="email"
                     name="shippingEmail"
@@ -247,7 +249,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Street Address *</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">{t('streetAddress')}</label>
                   <input
                     type="text"
                     name="shippingAddress"
@@ -260,7 +262,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">City *</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">{t('city')}</label>
                   <input
                     type="text"
                     name="shippingCity"
@@ -273,7 +275,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">ZIP / Postal Code *</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">{t('zipCode')}</label>
                   <input
                     type="text"
                     name="shippingZip"
@@ -286,7 +288,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Country *</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">{t('country')}</label>
                   <select
                     name="shippingCountry"
                     value={formData.shippingCountry}
@@ -294,31 +296,31 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                     required
                     className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.3)] transition-colors"
                   >
-                    <option value="">Select Country</option>
-                    <option value="Germany">Germany</option>
-                    <option value="Austria">Austria</option>
-                    <option value="Switzerland">Switzerland</option>
-                    <option value="United States">United States</option>
-                    <option value="United Kingdom">United Kingdom</option>
-                    <option value="France">France</option>
-                    <option value="Netherlands">Netherlands</option>
-                    <option value="Belgium">Belgium</option>
-                    <option value="Italy">Italy</option>
-                    <option value="Spain">Spain</option>
-                    <option value="Canada">Canada</option>
-                    <option value="Australia">Australia</option>
+                    <option value="">{t('selectCountry')}</option>
+                    <option value="Germany">{t('countries.DE')}</option>
+                    <option value="Austria">{t('countries.AT')}</option>
+                    <option value="Switzerland">{t('countries.CH')}</option>
+                    <option value="United States">{t('countries.US')}</option>
+                    <option value="United Kingdom">{t('countries.GB')}</option>
+                    <option value="France">{t('countries.FR')}</option>
+                    <option value="Netherlands">{t('countries.NL')}</option>
+                    <option value="Belgium">{t('countries.BE')}</option>
+                    <option value="Italy">{t('countries.IT')}</option>
+                    <option value="Spain">{t('countries.ES')}</option>
+                    <option value="Canada">{t('countries.CA')}</option>
+                    <option value="Australia">{t('countries.AU')}</option>
                   </select>
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">Order Notes (Optional)</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5] mb-2">{t('orderNotes')}</label>
                   <textarea
                     name="notes"
                     value={formData.notes}
                     onChange={handleInputChange}
                     rows={3}
                     className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.3)] transition-colors resize-none"
-                    placeholder="Any special instructions for your order..."
+                    placeholder={t('orderNotesPlaceholder')}
                   />
                 </div>
               </div>
@@ -328,9 +330,9 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
             <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6">
               <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                 <Truck className="w-5 h-5 text-[#E879F9]" />
-                Shipping Payment
+                {t('shippingPayment')}
               </h2>
-              <p className="text-[#8888aa] text-sm mb-4">Choose how you want to pay for shipping</p>
+              <p className="text-[#8888aa] text-sm mb-4">{t('choosePayment')}</p>
               
               <div className="grid gap-4 sm:grid-cols-2">
                 {/* Pay with Coins */}
@@ -353,14 +355,14 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                       <Coins className={`w-6 h-6 ${shippingMethod === 'COINS' ? 'text-amber-400' : 'text-[#8888aa]'}`} />
                     </div>
                     <div>
-                      <p className="font-semibold text-white">Pay with Coins</p>
-                      <p className="text-2xl font-bold text-amber-400">{SHIPPING_COST_COINS.toFixed(2)} <span className="text-sm font-normal">coins</span></p>
+                      <p className="font-semibold text-white">{t('payWithCoins')}</p>
+                      <p className="text-2xl font-bold text-amber-400">{SHIPPING_COST_COINS.toFixed(2)} <span className="text-sm font-normal">{tCommon('coins').toLowerCase()}</span></p>
                     </div>
                   </div>
                   {userCoins !== null && (
                     <p className={`text-sm ${userCoins >= SHIPPING_COST_COINS ? 'text-[#8888aa]' : 'text-red-400'}`}>
-                      Your balance: {userCoins.toFixed(2)} coins
-                      {userCoins < SHIPPING_COST_COINS && ' (insufficient)'}
+                      {t('yourBalance')}: {userCoins.toFixed(2)} {tCommon('coins').toLowerCase()}
+                      {userCoins < SHIPPING_COST_COINS && ` ${t('insufficient')}`}
                     </p>
                   )}
                 </button>
@@ -385,18 +387,18 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                       <Euro className={`w-6 h-6 ${shippingMethod === 'EUROS' ? 'text-[#E879F9]' : 'text-[#8888aa]'}`} />
                     </div>
                     <div>
-                      <p className="font-semibold text-white">Pay with Euros</p>
+                      <p className="font-semibold text-white">{t('payWithEuros')}</p>
                       <p className="text-2xl font-bold text-[#E879F9]">{SHIPPING_COST_EUROS.toFixed(2)} <span className="text-sm font-normal">€</span></p>
                     </div>
                   </div>
-                  <p className="text-sm text-[#8888aa]">Pay via PayPal or Credit Card</p>
+                  <p className="text-sm text-[#8888aa]">{t('payViaPaypal')}</p>
                 </button>
               </div>
             </div>
 
             {/* Items Preview */}
             <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6">
-              <h2 className="text-xl font-bold text-white mb-4">Order Items ({items.length})</h2>
+              <h2 className="text-xl font-bold text-white mb-4">{t('orderItems', { count: items.length })}</h2>
               <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
                 {items.map((item) => {
                   if (!item.pull.card) return null;
@@ -418,17 +420,17 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
           {/* Order Summary Sidebar */}
           <div className="lg:col-span-1">
             <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 sticky top-4">
-              <h3 className="text-lg font-bold text-white mb-4">Order Summary</h3>
+              <h3 className="text-lg font-bold text-white mb-4">{tCart('orderSummary')}</h3>
               
               <div className="space-y-3 mb-6">
                 {items.length > 0 && (
                   <>
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-[#8888aa]">Items</span>
-                      <span className="text-white">{items.length} cards</span>
+                      <span className="text-[#8888aa]">{t('items')}</span>
+                      <span className="text-white">{items.length}</span>
                     </div>
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-[#8888aa]">Card Value</span>
+                      <span className="text-[#8888aa]">{t('cardValue')}</span>
                       <div className="flex items-center gap-1">
                         <Coins className="h-4 w-4 text-amber-400" />
                         <span className="text-white">{total.toFixed(2)}</span>
@@ -443,14 +445,14 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                         <span className="text-[#8888aa]">{ui.upsellItem.name} x{ui.quantity}</span>
                         <span className={ui.payWithCoins ? 'text-yellow-400' : 'text-amber-400'}>
                           {ui.payWithCoins
-                            ? `${(ui.upsellItem.coinPrice * ui.quantity).toFixed(2)} coins`
+                            ? `${(ui.upsellItem.coinPrice * ui.quantity).toFixed(2)} ${tCommon('coins').toLowerCase()}`
                             : `${(ui.upsellItem.price * ui.quantity).toFixed(2)} €`}
                         </span>
                       </div>
                     ))}
                     {upsellCartItems.filter(ui => !ui.payWithCoins).length > 0 && (
                       <div className="flex items-center justify-between text-sm font-medium">
-                        <span className="text-[#f0f0f5]">Add-ons (EUR)</span>
+                        <span className="text-[#f0f0f5]">{tCart('addOnsEUR')}</span>
                         <span className="text-amber-400">
                           {upsellCartItems.filter(ui => !ui.payWithCoins).reduce((s, ui) => s + ui.upsellItem.price * ui.quantity, 0).toFixed(2)} €
                         </span>
@@ -458,21 +460,21 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                     )}
                     {upsellCartItems.filter(ui => ui.payWithCoins).length > 0 && (
                       <div className="flex items-center justify-between text-sm font-medium">
-                        <span className="text-[#f0f0f5]">Add-ons (Coins)</span>
+                        <span className="text-[#f0f0f5]">{tCart('addOnsCoins')}</span>
                         <span className="text-yellow-400">
-                          {upsellCartItems.filter(ui => ui.payWithCoins).reduce((s, ui) => s + ui.upsellItem.coinPrice * ui.quantity, 0).toFixed(2)} coins
+                          {upsellCartItems.filter(ui => ui.payWithCoins).reduce((s, ui) => s + ui.upsellItem.coinPrice * ui.quantity, 0).toFixed(2)} {tCommon('coins').toLowerCase()}
                         </span>
                       </div>
                     )}
                   </>
                 )}
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-[#8888aa]">Shipping</span>
+                  <span className="text-[#8888aa]">{tCart('shipping')}</span>
                   <div className="flex items-center gap-1">
                     {shippingMethod === 'COINS' ? (
                       <>
                         <Coins className="h-4 w-4 text-amber-400" />
-                        <span className="text-amber-400 font-medium">{SHIPPING_COST_COINS.toFixed(2)} coins</span>
+                        <span className="text-amber-400 font-medium">{SHIPPING_COST_COINS.toFixed(2)} {tCommon('coins').toLowerCase()}</span>
                       </>
                     ) : (
                       <>
@@ -485,19 +487,19 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                 <div className="h-px bg-[rgba(255,255,255,0.06)]" />
                 {items.length > 0 && (
                   <div className="flex items-center justify-between">
-                    <span className="font-semibold text-white">Total</span>
-                    <span className="text-xl font-bold text-white">{items.length} Cards</span>
+                    <span className="font-semibold text-white">{t('items')}</span>
+                    <span className="text-xl font-bold text-white">{items.length}</span>
                   </div>
                 )}
                 {shippingMethod === 'COINS' && (
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-[#8888aa]">Coins to deduct</span>
+                    <span className="text-[#8888aa]">{t('coinsToDeduct')}</span>
                     <span className="text-amber-400 font-semibold">{SHIPPING_COST_COINS.toFixed(2)}</span>
                   </div>
                 )}
                 {upsellCartItems.filter(ui => ui.payWithCoins).length > 0 && (
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-[#8888aa]">Add-ons coins to deduct</span>
+                    <span className="text-[#8888aa]">{t('coinsToDeduct')}</span>
                     <span className="text-yellow-400 font-semibold">
                       {upsellCartItems.filter(ui => ui.payWithCoins).reduce((s, ui) => s + ui.upsellItem.coinPrice * ui.quantity, 0).toFixed(2)}
                     </span>
@@ -505,7 +507,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                 )}
                 {upsellCartItems.filter(ui => !ui.payWithCoins).length > 0 && (
                   <div className="flex items-center justify-between">
-                    <span className="text-[#8888aa]">EUR Total</span>
+                    <span className="text-[#8888aa]">{t('eurTotal')}</span>
                     <span className="text-xl font-bold text-amber-400">
                       {(upsellCartItems.filter(ui => !ui.payWithCoins).reduce((s, ui) => s + ui.upsellItem.price * ui.quantity, 0) + (shippingMethod === 'EUROS' ? SHIPPING_COST_EUROS : 0)).toFixed(2)} €
                     </span>
@@ -525,24 +527,24 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                 {loading ? (
                   <>
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Processing...
+                    {t('placeOrder')}...
                   </>
                 ) : shippingMethod === 'COINS' ? (
                   <>
                     <Coins className="h-5 w-5" />
-                    Place Order ({SHIPPING_COST_COINS.toFixed(2)} coins)
+                    {t('placeOrderCoins', { coins: SHIPPING_COST_COINS.toFixed(2) })}
                   </>
                 ) : (
                   <>
                     <Euro className="h-5 w-5" />
-                    Pay {SHIPPING_COST_EUROS.toFixed(2)} € & Place Order
+                    {t('payAndOrder', { amount: SHIPPING_COST_EUROS.toFixed(2) })}
                   </>
                 )}
               </button>
 
               <div className="mt-4 flex items-center justify-center gap-2 text-sm text-[#8888aa]">
                 <Truck className="h-4 w-4" />
-                <span>Real cards shipped to you</span>
+                <span>{t('realCardsShipped')}</span>
               </div>
             </div>
           </div>

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Trophy, Crown, Coins, Swords, Clock } from 'lucide-react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 type LeaderboardEntry = {
   rank: number;
@@ -33,6 +34,7 @@ type LeaderboardData = {
 };
 
 export function LeaderboardClient() {
+  const t = useTranslations('leaderboard');
   const [data, setData] = useState<LeaderboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState<'current' | 'previous'>('current');
@@ -107,14 +109,13 @@ export function LeaderboardClient() {
         <div className="mb-10 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-[#1a1a4a] shadow-md text-sm border border-amber-500/20">
             <Trophy className="w-4 h-4 text-amber-400" />
-            <span className="text-[#f0f0f5]">Battle Rankings</span>
+            <span className="text-[#f0f0f5]">{t('badge')}</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-3">
-            <span className="text-white">Battle </span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400">Leaderboard</span>
+            <span className="text-white">{t('title')} </span>
           </h1>
           <p className="text-[#8888aa] text-lg mb-6">
-            Top 10 players each month win coin prizes!
+            {t('subtitle')}
           </p>
 
           {/* Period Toggle */}
@@ -127,7 +128,7 @@ export function LeaderboardClient() {
                   : 'text-[#8888aa] hover:text-white'
               }`}
             >
-              This Month
+              {t('thisMonth')}
             </button>
             <button
               onClick={() => setPeriod('previous')}
@@ -137,7 +138,7 @@ export function LeaderboardClient() {
                   : 'text-[#8888aa] hover:text-white'
               }`}
             >
-              Last Month
+              {t('lastMonth')}
             </button>
           </div>
 
@@ -145,7 +146,7 @@ export function LeaderboardClient() {
           {period === 'current' && (
             <div className="flex items-center justify-center gap-3 text-sm">
               <Clock className="w-4 h-4 text-amber-400" />
-              <span className="text-[#8888aa]">Resets in:</span>
+              <span className="text-[#8888aa]">{t('resetsIn')}</span>
               <span className="font-mono font-bold text-white">
                 {countdown.days}d {countdown.hours}h {countdown.minutes}m {countdown.seconds}s
               </span>
@@ -156,21 +157,21 @@ export function LeaderboardClient() {
         {loading ? (
           <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
             <div className="w-12 h-12 border-4 border-amber-400/30 border-t-amber-400 rounded-full animate-spin mx-auto mb-4" />
-            <span className="text-[#8888aa]">Loading rankings...</span>
+            <span className="text-[#8888aa]">{t('loadingRankings')}</span>
           </div>
         ) : !data || data.leaderboard.length === 0 ? (
           <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
             <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-500/20">
               <Trophy className="w-10 h-10 text-amber-400" />
             </div>
-            <h2 className="text-2xl font-bold text-white mb-3">No Rankings Yet</h2>
-            <p className="text-[#8888aa] mb-6">Be the first champion of this season!</p>
+            <h2 className="text-2xl font-bold text-white mb-3">{t('noRankings')}</h2>
+            <p className="text-[#8888aa] mb-6">{t('beFirstChampion')}</p>
             <Link
               href="/battles"
               className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-semibold rounded-xl transition-all hover:scale-105"
             >
               <Swords className="w-5 h-5" />
-              Start Battling
+              {t('startBattling')}
             </Link>
           </div>
         ) : (
@@ -194,8 +195,8 @@ export function LeaderboardClient() {
                       </div>
                     </div>
                     <h3 className="font-bold text-white mb-2 truncate">{top3[1].userName}</h3>
-                    <div className="text-2xl font-black text-slate-300 mb-1">{formatNumber(top3[1].points)} <span className="text-sm text-slate-500">PTS</span></div>
-                    <div className="text-xs text-gray-500 mb-4">{top3[1].battlesWon} wins / {top3[1].battlesPlayed} battles</div>
+                    <div className="text-2xl font-black text-slate-300 mb-1">{formatNumber(top3[1].points)} <span className="text-sm text-slate-500">{t('pts')}</span></div>
+                    <div className="text-xs text-gray-500 mb-4">{t('winsSlashBattles', { wins: top3[1].battlesWon, battles: top3[1].battlesPlayed })}</div>
                     <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500/10 rounded-xl">
                       <Coins className="w-4 h-4 text-amber-400" />
                       <span className="font-bold text-amber-400">{top3[1].prize.toLocaleString()}</span>
@@ -216,7 +217,7 @@ export function LeaderboardClient() {
                     <div className="relative">
                       <Crown className="w-12 h-12 mx-auto mb-2 text-amber-400" />
                       <span className="inline-block px-3 py-1 mb-4 text-xs font-bold bg-gradient-to-r from-amber-400 to-orange-500 text-black rounded-full">
-                        CHAMPION
+                        {t('champion')}
                       </span>
                       <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 p-1 shadow-lg shadow-amber-500/30">
                         <div className="w-full h-full rounded-full bg-[#0B0B2B] flex items-center justify-center overflow-hidden">
@@ -229,9 +230,9 @@ export function LeaderboardClient() {
                       </div>
                       <h3 className="text-lg font-bold text-white mb-2 truncate">{top3[0].userName}</h3>
                       <div className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-orange-400 mb-1">
-                        {formatNumber(top3[0].points)} <span className="text-sm text-amber-500/70">PTS</span>
+                        {formatNumber(top3[0].points)} <span className="text-sm text-amber-500/70">{t('pts')}</span>
                       </div>
-                      <div className="text-xs text-[#8888aa] mb-4">{top3[0].battlesWon} wins / {top3[0].battlesPlayed} battles</div>
+                      <div className="text-xs text-[#8888aa] mb-4">{t('winsSlashBattles', { wins: top3[0].battlesWon, battles: top3[0].battlesPlayed })}</div>
                       <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-amber-500/20 rounded-xl border border-amber-500/30">
                         <Coins className="w-5 h-5 text-amber-400" />
                         <span className="text-xl font-black text-amber-400">{top3[0].prize.toLocaleString()}</span>
@@ -262,8 +263,8 @@ export function LeaderboardClient() {
                       </div>
                     </div>
                     <h3 className="font-bold text-white mb-2 truncate">{top3[2].userName}</h3>
-                    <div className="text-2xl font-black text-orange-300 mb-1">{formatNumber(top3[2].points)} <span className="text-sm text-orange-500/70">PTS</span></div>
-                    <div className="text-xs text-gray-500 mb-4">{top3[2].battlesWon} wins / {top3[2].battlesPlayed} battles</div>
+                    <div className="text-2xl font-black text-orange-300 mb-1">{formatNumber(top3[2].points)} <span className="text-sm text-orange-500/70">{t('pts')}</span></div>
+                    <div className="text-xs text-gray-500 mb-4">{t('winsSlashBattles', { wins: top3[2].battlesWon, battles: top3[2].battlesPlayed })}</div>
                     <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500/10 rounded-xl">
                       <Coins className="w-4 h-4 text-amber-400" />
                       <span className="font-bold text-amber-400">{top3[2].prize.toLocaleString()}</span>
@@ -281,7 +282,7 @@ export function LeaderboardClient() {
             {restOfLeaderboard.length > 0 && (
               <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl overflow-hidden mb-10">
                 <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.06)]">
-                  <h2 className="font-semibold text-white text-center">Full Rankings</h2>
+                  <h2 className="font-semibold text-white text-center">{t('fullRankings')}</h2>
                 </div>
                 <div className="divide-y divide-[rgba(255,255,255,0.06)]">
                   {restOfLeaderboard.map((entry) => (
@@ -300,11 +301,11 @@ export function LeaderboardClient() {
                       </div>
                       <div className="flex-1 min-w-0 text-center">
                         <h3 className="font-semibold text-white truncate">{entry.userName}</h3>
-                        <p className="text-xs text-gray-500">{entry.battlesWon} wins • {entry.battlesPlayed} battles</p>
+                        <p className="text-xs text-gray-500">{t('winsSlashBattles', { wins: entry.battlesWon, battles: entry.battlesPlayed })}</p>
                       </div>
                       <div className="text-center flex-shrink-0">
                         <span className="font-bold text-white">{formatNumber(entry.points)}</span>
-                        <span className="text-xs text-gray-500 ml-1">PTS</span>
+                        <span className="text-xs text-gray-500 ml-1">{t('pts')}</span>
                       </div>
                       <div className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-500/10 rounded-lg flex-shrink-0">
                         <Coins className="w-4 h-4 text-amber-400" />
@@ -321,14 +322,14 @@ export function LeaderboardClient() {
               <div className="inline-flex items-center justify-center w-16 h-16 mb-4 rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-500/20">
                 <Swords className="w-8 h-8 text-amber-400" />
               </div>
-              <h2 className="text-xl font-bold text-white mb-2">Ready to Compete?</h2>
-              <p className="text-[#8888aa] mb-6">Join battles to earn points and climb the leaderboard!</p>
+              <h2 className="text-xl font-bold text-white mb-2">{t('readyToCompete')}</h2>
+              <p className="text-[#8888aa] mb-6">{t('joinBattlesDesc')}</p>
               <Link
                 href="/battles"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-semibold rounded-xl transition-all hover:scale-105 shimmer"
               >
                 <Swords className="w-5 h-5" />
-                Enter Battle Arena
+                {t('enterBattleArena')}
               </Link>
             </div>
           </>

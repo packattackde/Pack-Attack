@@ -9,6 +9,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { Search, Plus, Trash2, X, Check, Loader2, Store, Package, ArrowLeft, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 type CardData = {
   id: string;
@@ -25,6 +26,8 @@ type CardData = {
 };
 
 export default function CreateShopBoxPage() {
+  const t = useTranslations('shopDashboard.createBox');
+  const tc = useTranslations('common');
   const router = useRouter();
   const { data: session, status } = useSession();
   const { addToast } = useToast();
@@ -62,7 +65,7 @@ export default function CreateShopBoxPage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin text-[#C84FFF] mx-auto mb-4" />
-          <p className="text-[#8888aa]">Loading...</p>
+          <p className="text-[#8888aa]">{t('loading')}</p>
         </div>
       </div>
     );
@@ -74,7 +77,7 @@ export default function CreateShopBoxPage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin text-[#C84FFF] mx-auto mb-4" />
-          <p className="text-[#8888aa]">Redirecting...</p>
+          <p className="text-[#8888aa]">{t('redirecting')}</p>
         </div>
       </div>
     );
@@ -117,8 +120,8 @@ export default function CreateShopBoxPage() {
         setSearchResults(data.cards || []);
         if (data.cards?.length === 0) {
           addToast({
-            title: 'No Results',
-            description: data.message || 'No cards found matching your search',
+            title: t('noResults'),
+            description: data.message || t('noCardsMatch'),
           });
         }
       } else {
@@ -146,8 +149,8 @@ export default function CreateShopBoxPage() {
     
     if (existingCard) {
       addToast({
-        title: 'Card already selected',
-        description: `${card.name} is already added to this box`,
+        title: t('cardAlreadySelected'),
+        description: t('cardAlreadyAdded', { name: card.name }),
         variant: 'destructive',
       });
       return;
@@ -207,8 +210,8 @@ export default function CreateShopBoxPage() {
     
     if (boxCards.length === 0) {
       addToast({
-        title: 'Error',
-        description: 'Please add at least one card to the box',
+        title: tc('error'),
+        description: t('addAtLeastOneCard'),
         variant: 'destructive',
       });
       return;
@@ -217,8 +220,8 @@ export default function CreateShopBoxPage() {
     const totalRate = calculateTotalRate();
     if (Math.abs(totalRate - 100) > 0.001) {
       addToast({
-        title: 'Error',
-        description: `Total pull rate must be exactly 100%. Current: ${totalRate.toFixed(3)}%`,
+        title: tc('error'),
+        description: t('pullRateMustBe100', { rate: totalRate.toFixed(3) }),
         variant: 'destructive',
       });
       return;
@@ -305,8 +308,8 @@ export default function CreateShopBoxPage() {
       }
 
       addToast({
-        title: 'Success',
-        description: 'Box created successfully!',
+        title: tc('success'),
+        description: t('boxCreated'),
       });
 
       router.push('/shop-dashboard/boxes');
@@ -340,21 +343,20 @@ export default function CreateShopBoxPage() {
             className="inline-flex items-center gap-2 text-[#8888aa] hover:text-white transition-colors mb-4"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Back to Dashboard</span>
+            <span>{t('backToDashboard')}</span>
           </Link>
           
           <div className="flex items-center gap-3 mb-4">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
               <Store className="w-4 h-4 text-[#E879F9]" />
-              <span className="text-[#f0f0f5]">Shop Dashboard</span>
+              <span className="text-[#f0f0f5]">{t('badge')}</span>
             </div>
           </div>
           
           <h1 className="text-3xl md:text-4xl font-bold mb-2 font-heading">
-            <span className="text-white">Create </span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C84FFF] to-[#E879F9]">New Box</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C84FFF] to-[#E879F9]">{t('title')}</span>
           </h1>
-          <p className="text-[#8888aa]">Build a custom card box with your inventory for users to open.</p>
+          <p className="text-[#8888aa]">{t('subtitle')}</p>
         </div>
 
         <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl overflow-hidden">
@@ -364,8 +366,8 @@ export default function CreateShopBoxPage() {
                 <Package className="w-5 h-5 text-[#E879F9]" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-white">Box Configuration</h2>
-                <p className="text-sm text-[#8888aa]">Set up your box details and add cards</p>
+                <h2 className="text-xl font-bold text-white">{t('configTitle')}</h2>
+                <p className="text-sm text-[#8888aa]">{t('configSubtitle')}</p>
               </div>
             </div>
           </div>
@@ -375,24 +377,24 @@ export default function CreateShopBoxPage() {
               {/* Basic Box Info */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-[#f0f0f5]">Box Name</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5]">{t('boxName')}</label>
                   <input
                     type="text"
                     required
-                    placeholder="e.g., Premium MTG Collection"
+                    placeholder={t('boxNamePlaceholder')}
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[#C84FFF] focus:ring-1 focus:ring-[#C84FFF] focus:outline-none transition-colors"
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-[#f0f0f5]">Price (coins)</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5]">{t('priceCoins')}</label>
                   <input
                     type="number"
                     step="0.01"
                     required
                     min="0.01"
-                    placeholder="e.g., 100"
+                    placeholder={t('pricePlaceholder')}
                     value={formData.price}
                     onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                     className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[#C84FFF] focus:ring-1 focus:ring-[#C84FFF] focus:outline-none transition-colors"
@@ -401,10 +403,10 @@ export default function CreateShopBoxPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="block text-sm font-medium text-[#f0f0f5]">Description</label>
+                <label className="block text-sm font-medium text-[#f0f0f5]">{t('description')}</label>
                 <textarea
                   required
-                  placeholder="Describe what makes this box special..."
+                  placeholder={t('descriptionPlaceholder')}
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[#C84FFF] focus:ring-1 focus:ring-[#C84FFF] focus:outline-none transition-colors resize-none"
@@ -414,7 +416,7 @@ export default function CreateShopBoxPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-[#f0f0f5]">Cards Per Pack</label>
+                  <label className="block text-sm font-medium text-[#f0f0f5]">{t('cardsPerPack')}</label>
                   <input
                     type="number"
                     required
@@ -433,8 +435,8 @@ export default function CreateShopBoxPage() {
                     <Sparkles className="w-5 h-5 text-cyan-400" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-white">Add Cards to Box</h3>
-                    <p className="text-sm text-[#8888aa]">Search and add cards from various TCG databases</p>
+                    <h3 className="text-lg font-semibold text-white">{t('addCardsTitle')}</h3>
+                    <p className="text-sm text-[#8888aa]">{t('addCardsSubtitle')}</p>
                   </div>
                 </div>
                 
@@ -466,7 +468,7 @@ export default function CreateShopBoxPage() {
                       <option value="default">
                         {gameOptions.find(g => g.value === selectedGame)?.defaultApi || 'Default API'}
                       </option>
-                      <option value="justtcg">JustTCG (Prices)</option>
+                      <option value="justtcg">{t('justTCGPrices')}</option>
                     </select>
                   )}
                   
@@ -479,7 +481,7 @@ export default function CreateShopBoxPage() {
                   <div className="flex-1 min-w-[200px] flex gap-2">
                     <input
                       type="text"
-                      placeholder="Search for cards..."
+                      placeholder={t('searchPlaceholder')}
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), searchCards())}
@@ -492,7 +494,7 @@ export default function CreateShopBoxPage() {
                       className="bg-gradient-to-r from-[#C84FFF] to-cyan-500 hover:from-[#9333EA] hover:to-[#7c3aed] text-white px-6"
                     >
                       <Search className="h-4 w-4 mr-2" />
-                      {searching ? 'Searching...' : 'Search'}
+                      {searching ? t('searching') : t('search')}
                     </Button>
                   </div>
                 </div>
@@ -504,7 +506,7 @@ export default function CreateShopBoxPage() {
                       <p className="text-sm text-[#8888aa]">Search Results ({searchResults.length} found) - Click to add:</p>
                       <Button type="button" variant="ghost" size="sm" onClick={clearSearch} className="text-[#8888aa] hover:text-white">
                         <X className="h-4 w-4 mr-1" />
-                        Clear
+                        {t('clear')}
                       </Button>
                     </div>
                     <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
@@ -553,12 +555,12 @@ export default function CreateShopBoxPage() {
                   <div className="space-y-4">
                     <div className="flex items-center justify-between p-4 rounded-xl bg-[#12123a]">
                       <div className="text-sm">
-                        <span className="text-[#8888aa]">Total Pull Rate: </span>
+                        <span className="text-[#8888aa]">{t('totalPullRate')}</span>
                         <span className={`font-bold ${Math.abs(totalRate - 100) < 0.001 ? 'text-[#E879F9]' : 'text-red-400'}`}>
                           {totalRate.toFixed(3)}%
                         </span>
                         {Math.abs(totalRate - 100) >= 0.001 && (
-                          <span className="text-gray-500 ml-2">(Must equal 100%)</span>
+                          <span className="text-gray-500 ml-2">{t('mustEqual100')}</span>
                         )}
                       </div>
                       <Button 
@@ -568,7 +570,7 @@ export default function CreateShopBoxPage() {
                         onClick={distributeRates}
                         className="border-[#C84FFF]/50 text-[#E879F9] hover:bg-[#C84FFF]/10"
                       >
-                        Distribute Evenly
+                        {t('distributeEvenly')}
                       </Button>
                     </div>
 
@@ -591,7 +593,7 @@ export default function CreateShopBoxPage() {
                           </div>
                           <div className="flex items-center gap-3">
                             <div className="text-center">
-                              <label className="text-[10px] text-gray-500 block mb-1">Pull Rate (%)</label>
+                              <label className="text-[10px] text-gray-500 block mb-1">{t('pullRatePercent')}</label>
                               <input
                                 type="number"
                                 step="0.001"
@@ -603,7 +605,7 @@ export default function CreateShopBoxPage() {
                               />
                             </div>
                             <div className="text-center">
-                              <label className="text-[10px] text-gray-500 block mb-1">Coin Value</label>
+                              <label className="text-[10px] text-gray-500 block mb-1">{t('coinValue')}</label>
                               <input
                                 type="number"
                                 step="0.01"
@@ -629,7 +631,7 @@ export default function CreateShopBoxPage() {
 
                     {highestCard && (
                       <div className="p-4 rounded-xl bg-gradient-to-r from-[#7c3aed]/10 to-cyan-500/10 border border-[#C84FFF]/30">
-                        <p className="text-sm text-[#8888aa] mb-3">Box Display Image (Highest Coin Value Card):</p>
+                        <p className="text-sm text-[#8888aa] mb-3">{t('boxDisplayImage')}</p>
                         <div className="flex items-center gap-4">
                           <div className="relative w-20 h-28 rounded-lg overflow-hidden ring-2 ring-[#C84FFF]/50">
                             <Image
@@ -641,7 +643,7 @@ export default function CreateShopBoxPage() {
                           </div>
                           <div>
                             <p className="font-semibold text-white">{highestCard.name}</p>
-                            <p className="text-sm text-[#E879F9]">{highestCard.coinValue} coins</p>
+                            <p className="text-sm text-[#E879F9]">{highestCard.coinValue} {t('coins')}</p>
                           </div>
                         </div>
                       </div>
@@ -659,12 +661,12 @@ export default function CreateShopBoxPage() {
                   {loading ? (
                     <>
                       <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Creating...
+                      {t('creating')}
                     </>
                   ) : (
                     <>
                       <Plus className="h-4 w-4 mr-2" />
-                      Create Box
+                      {t('createBox')}
                     </>
                   )}
                 </Button>
@@ -674,7 +676,7 @@ export default function CreateShopBoxPage() {
                   onClick={() => router.back()}
                   className="border-[rgba(255,255,255,0.06)] text-[#8888aa] hover:text-white hover:bg-[#12123a]"
                 >
-                  Cancel
+                  {t('cancel')}
                 </Button>
               </div>
             </form>

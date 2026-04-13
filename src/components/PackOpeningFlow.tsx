@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import { motion, useMotionValue, useTransform, useSpring, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import { Coins } from 'lucide-react';
 
 // ─── Types ──────────────────────────────────────────────────────────
@@ -40,12 +41,12 @@ function getRarityTier(rarity: string): RarityTier {
   return 'common';
 }
 
-const RARITY_COLORS: Record<RarityTier, { particle: string; glow: string; border: string; text: string; label: string }> = {
-  common:    { particle: '#8b8ba0', glow: 'rgba(139,139,160,0.4)',  border: '#6b7280', text: 'text-gray-300',   label: 'Common' },
-  uncommon:  { particle: '#4ade80', glow: 'rgba(74,222,128,0.5)',   border: '#4ade80', text: 'text-[#E879F9]',  label: 'Uncommon' },
-  rare:      { particle: '#60a5fa', glow: 'rgba(96,165,250,0.6)',   border: '#60a5fa', text: 'text-blue-400',   label: 'Rare' },
-  epic:      { particle: '#a78bfa', glow: 'rgba(167,139,250,0.6)',  border: '#a78bfa', text: 'text-purple-400', label: 'Epic' },
-  legendary: { particle: '#fbbf24', glow: 'rgba(251,191,36,0.7)',   border: '#fbbf24', text: 'text-amber-400',  label: 'Legendary' },
+const RARITY_COLORS: Record<RarityTier, { particle: string; glow: string; border: string; text: string; labelKey: string }> = {
+  common:    { particle: '#8b8ba0', glow: 'rgba(139,139,160,0.4)',  border: '#6b7280', text: 'text-gray-300',   labelKey: 'common' as const },
+  uncommon:  { particle: '#4ade80', glow: 'rgba(74,222,128,0.5)',   border: '#4ade80', text: 'text-[#E879F9]',  labelKey: 'uncommon' as const },
+  rare:      { particle: '#60a5fa', glow: 'rgba(96,165,250,0.6)',   border: '#60a5fa', text: 'text-blue-400',   labelKey: 'rare' as const },
+  epic:      { particle: '#a78bfa', glow: 'rgba(167,139,250,0.6)',  border: '#a78bfa', text: 'text-purple-400', labelKey: 'epic' as const },
+  legendary: { particle: '#fbbf24', glow: 'rgba(251,191,36,0.7)',   border: '#fbbf24', text: 'text-amber-400',  labelKey: 'legendary' as const },
 };
 
 const RARITY_BUILDUP_MS: Record<RarityTier, number> = {
@@ -81,6 +82,7 @@ export function PackOpeningFlow({
   onComplete,
   onSkip,
 }: PackOpeningFlowProps) {
+  const t = useTranslations('packFlow')
   // ── Main phase ──
   const [phase, setPhase] = useState<Phase>('booster');
 
@@ -471,13 +473,13 @@ export function PackOpeningFlow({
                     className="text-[15px] font-extrabold text-[#C84FFF] uppercase tracking-[3px]"
                     style={{ textShadow: '0 0 10px rgba(200,79,255,0.4)' }}
                   >
-                    PullForge
+                    {t('pullforge')}
                   </span>
                   <span className="text-[9px] text-white/40 uppercase tracking-[2px] mt-1">
                     {boxName}
                   </span>
                   <span className="absolute bottom-[18%] text-[9px] text-white/30 bg-black/30 px-3 py-0.5 rounded-full">
-                    {pulls.length} Cards
+                    {pulls.length} {t('cards')}
                   </span>
                 </div>
 
@@ -646,7 +648,7 @@ export function PackOpeningFlow({
           animate={{ opacity: [0.4, 1, 0.4] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          Swipe along the tear line &rarr;
+          {t('swipeTearLine')} &rarr;
         </motion.p>
       )}
 
@@ -703,7 +705,7 @@ export function PackOpeningFlow({
                       <div className="relative w-full h-full">
                         <Image
                           src={cardBackUrl}
-                          alt="Card back"
+                          alt={t('cardBack')}
                           fill
                           unoptimized
                           className="object-cover"
@@ -819,16 +821,16 @@ export function PackOpeningFlow({
                   {cardBackUrl ? (
                     <div className="relative w-full h-full">
                       <Image
-                        src={cardBackUrl}
-                        alt="Card back"
-                        fill
-                        unoptimized
-                        className="object-cover"
-                      />
-                    </div>
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <div className="w-20 h-20 rounded-full border-2 border-white/10 flex items-center justify-center">
+                      src={cardBackUrl}
+                      alt={t('cardBack')}
+                      fill
+                      unoptimized
+                      className="object-cover"
+                    />
+                  </div>
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <div className="w-20 h-20 rounded-full border-2 border-white/10 flex items-center justify-center">
                         <span className="text-white/20 text-3xl font-bold">PA</span>
                       </div>
                     </div>
@@ -904,7 +906,7 @@ export function PackOpeningFlow({
 
             {/* Counter */}
             <div className="absolute -top-12 text-white/50 text-sm font-medium">
-              Card {currentCardIndex + 1} of {pulls.length}
+              {t('cardOf', { current: currentCardIndex + 1, total: pulls.length })}
             </div>
 
             {/* Tap hint */}
@@ -914,7 +916,7 @@ export function PackOpeningFlow({
                 animate={{ opacity: [0.3, 0.6, 0.3] }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
-                Tap anywhere to continue
+                {t('tapToContinue')}
               </motion.p>
             )}
           </motion.div>
@@ -994,7 +996,7 @@ export function PackOpeningFlow({
                 className={`text-2xl font-black uppercase tracking-widest ${bestColors.text}`}
                 style={{ textShadow: `0 0 20px ${bestColors.glow}` }}
               >
-                Your Best Pull!
+                {t('yourBestPull')}
               </span>
             </motion.div>
 
@@ -1053,7 +1055,7 @@ export function PackOpeningFlow({
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
       >
-        Skip
+        {t('skip')}
       </motion.button>
 
       {/* ═══ CUSTOM NEON CURSOR ═══ */}

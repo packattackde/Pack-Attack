@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useToast } from '@/components/ui/use-toast';
+import { useTranslations } from 'next-intl';
 import { 
   Search, 
   Send, 

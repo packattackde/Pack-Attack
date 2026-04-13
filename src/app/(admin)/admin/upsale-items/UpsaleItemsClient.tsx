@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useToast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
+import { useTranslations } from 'next-intl';
 import {
   ShieldCheck, ArrowLeft, Plus, Trash2, Save, Edit2, X, Eye, EyeOff, Tag, ExternalLink,
 } from 'lucide-react';

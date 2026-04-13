@@ -1,7 +1,10 @@
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
 
-export default function AuthLayout({ children }: { children: React.ReactNode }) {
+export default async function AuthLayout({ children }: { children: React.ReactNode }) {
+  const t = await getTranslations('auth');
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#06061a] font-display p-4 relative overflow-hidden">
       {/* Background */}
@@ -14,10 +17,10 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <div className="relative text-center mb-8">
         <Link href="/" className="inline-block group">
           <h1 className="text-3xl font-black tracking-tight">
-            <span className="text-white group-hover:text-gray-200 transition-colors">PULL</span>
-            <span className="text-[#C84FFF]">FORGE</span>
+            <span className="text-white group-hover:text-gray-200 transition-colors">{t('layout.pullforge')}</span>
+            <span className="text-[#C84FFF]">{t('layout.forgeword')}</span>
           </h1>
-          <p className="text-[10px] text-gray-600 font-medium tracking-[0.3em] uppercase mt-1">Trading Card Battles</p>
+          <p className="text-[10px] text-gray-600 font-medium tracking-[0.3em] uppercase mt-1">{t('layout.tagline')}</p>
         </Link>
       </div>
 
@@ -30,7 +33,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <div className="relative mt-8">
         <Link href="/" className="inline-flex items-center gap-2 text-xs text-gray-600 hover:text-gray-400 transition-colors font-medium">
           <ArrowLeft className="w-3.5 h-3.5" />
-          Back to Home
+          {t('layout.backToHome')}
         </Link>
       </div>
     </div>

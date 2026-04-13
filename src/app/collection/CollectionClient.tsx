@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Coins, ShoppingCart, Package, Crown, Gem, Star, Sparkles, Search, X, ArrowUpDown, BoxIcon } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { emitCoinBalanceUpdate } from '@/lib/coin-events';
+import { useTranslations } from 'next-intl';
 
 type Pull = {
     id: string;
@@ -35,7 +36,6 @@ interface CollectionClientProps {
 
 const isSealed = (rarity: string) => rarity?.toLowerCase() === 'none';
 
-const getRarityDisplay = (rarity: string) => isSealed(rarity) ? 'Sealed' : rarity;
 
 const getRarityConfig = (rarity: string) => {
     switch (rarity?.toLowerCase()) {
@@ -81,7 +81,10 @@ const getGameConfig = (game: string) => {
 };
 
 export const CollectionClient = memo(function CollectionClient({ pulls: initialPulls }: CollectionClientProps) {
+    const t = useTranslations('collection');
+    const tCommon = useTranslations('common');
     const { addToast } = useToast();
+    const getRarityDisplay = (rarity: string) => isSealed(rarity) ? t('sealed') : rarity;
     const [pulls, setPulls] = useState<Pull[]>(initialPulls);
     const [loading, setLoading] = useState(false);
     const [mounted, setMounted] = useState(false);
@@ -212,10 +215,10 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
             });
             const data = await res.json();
             if (!res.ok) {
-                addToast({ title: 'Error', description: data.error || 'Failed to sell cards', variant: 'destructive' });
+                addToast({ title: t('failedToSell'), description: data.error || t('failedToSell'), variant: 'destructive' });
                 return;
             }
-            addToast({ title: 'Sold!', description: `Sold ${data.cardsSold} ${cardName} for ${data.coinsReceived} coins!` });
+            addToast({ title: t('soldTitle'), description: `${data.cardsSold}× ${cardName} → ${data.coinsReceived} ${tCommon('coins')}` });
             if (data.newBalance !== undefined) {
                 emitCoinBalanceUpdate({ balance: data.newBalance });
             }
@@ -223,7 +226,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
             setPulls(prev => prev.filter(p => !soldSet.has(p.id)));
             setSellAmount('1');
         } catch {
-            addToast({ title: 'Error', description: 'Failed to sell cards', variant: 'destructive' });
+            addToast({ title: t('failedToSell'), description: t('failedToSell'), variant: 'destructive' });
         } finally {
             setLoading(false);
         }
@@ -239,13 +242,13 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
             });
             const data = await res.json();
             if (!res.ok) {
-                addToast({ title: 'Error', description: data.error || 'Failed to add to cart', variant: 'destructive' });
+                addToast({ title: t('failedToAddToCart'), description: data.error || t('failedToAddToCart'), variant: 'destructive' });
                 return;
             }
-            addToast({ title: 'Success', description: 'Card added to cart!' });
+            addToast({ title: t('addedToCart'), description: t('addedToCart') });
             setPulls(prev => prev.map(p => p.id === pullId ? { ...p, cartItem: { id: 'temp' } } : p));
         } catch {
-            addToast({ title: 'Error', description: 'Failed to add to cart', variant: 'destructive' });
+            addToast({ title: t('failedToAddToCart'), description: t('failedToAddToCart'), variant: 'destructive' });
         } finally {
             setLoading(false);
         }
@@ -258,7 +261,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                 <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-5 mb-6">
                     <p className="text-xs text-[#8888aa] uppercase tracking-wider mb-3 flex items-center gap-2">
                         <Coins className="w-3.5 h-3.5 text-amber-400" />
-                        Sell all by rarity
+                        {t('sellAllByRarity')}
                     </p>
                     <div className="flex flex-wrap gap-3">
                         {sellByRarity.map(([rarity, { pullIds, totalCoins }]) => {
@@ -270,7 +273,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                                     key={rarity}
                                     onClick={() => setConfirmSell({
                                         pullIds,
-                                        cardName: `all ${label} cards`,
+                                        cardName: label,
                                         quantity: pullIds.length,
                                         totalCoins,
                                     })}
@@ -299,7 +302,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8888aa] group-focus-within:text-[#C84FFF] transition-colors" />
                             <input
                                 type="text"
-                                placeholder="Search your collection..."
+                                placeholder={t('searchPlaceholder')}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="w-full pl-12 pr-4 py-3 bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-xl text-white placeholder-[#8888aa] focus:border-[#C84FFF]/50 focus:ring-2 focus:ring-[#C84FFF]/20 transition-all"
@@ -311,7 +314,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                         onChange={(e) => setRarityFilter(e.target.value)}
                         className="px-4 py-3 bg-[#16164a] border border-[rgba(255,255,255,0.06)] rounded-xl text-white focus:border-[#C84FFF]/50 min-w-[140px]"
                     >
-                        <option value="">All Rarities</option>
+                        <option value="">{t('allRarities')}</option>
                         {availableRarities.map(rarity => (
                             <option key={rarity} value={rarity}>{getRarityDisplay(rarity)}</option>
                         ))}
@@ -321,7 +324,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                         onChange={(e) => setGameFilter(e.target.value)}
                         className="px-4 py-3 bg-[#16164a] border border-[rgba(255,255,255,0.06)] rounded-xl text-white focus:border-[#C84FFF]/50 min-w-[180px]"
                     >
-                        <option value="">All Games</option>
+                        <option value="">{t('allGames')}</option>
                         {availableGames.map(game => (
                             <option key={game} value={game}>{getGameConfig(game).label}</option>
                         ))}
@@ -333,12 +336,12 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                             onChange={(e) => setSortBy(e.target.value)}
                             className="pl-10 pr-4 py-3 bg-[#16164a] border border-[rgba(255,255,255,0.06)] rounded-xl text-white focus:border-[#C84FFF]/50 min-w-[180px]"
                         >
-                            <option value="rarity-desc">Rarity (High → Low)</option>
-                            <option value="rarity-asc">Rarity (Low → High)</option>
-                            <option value="value-desc">Value (High → Low)</option>
-                            <option value="value-asc">Value (Low → High)</option>
-                            <option value="name-asc">Name (A → Z)</option>
-                            <option value="name-desc">Name (Z → A)</option>
+                            <option value="rarity-desc">{t('sort.rarityHighLow')}</option>
+                            <option value="rarity-asc">{t('sort.rarityLowHigh')}</option>
+                            <option value="value-desc">{t('sort.valueHighLow')}</option>
+                            <option value="value-asc">{t('sort.valueLowHigh')}</option>
+                            <option value="name-asc">{t('sort.nameAZ')}</option>
+                            <option value="name-desc">{t('sort.nameZA')}</option>
                         </select>
                     </div>
                 </div>
@@ -347,10 +350,10 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
             {/* Collection Stats Bar */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                 {[
-                    { label: 'Unique Cards', value: groupedCards.length, color: 'text-white', icon: undefined as typeof Coins | undefined },
-                    { label: 'Total Value', value: filteredPulls.reduce((sum, p) => sum + (p.card?.coinValue || 0), 0).toLocaleString(), color: 'text-amber-400', icon: Coins },
-                    { label: 'Rare+', value: filteredPulls.filter(p => ['rare', 'mythic', 'legendary'].includes(p.card?.rarity.toLowerCase() || '')).length, color: 'text-purple-400', icon: Gem },
-                    { label: 'In Cart', value: filteredPulls.filter(p => p.cartItem).length, color: 'text-[#C84FFF]', icon: ShoppingCart },
+                    { label: t('uniqueCards'), value: groupedCards.length, color: 'text-white', icon: undefined as typeof Coins | undefined },
+                    { label: t('totalValue'), value: filteredPulls.reduce((sum, p) => sum + (p.card?.coinValue || 0), 0).toLocaleString(), color: 'text-amber-400', icon: Coins },
+                    { label: t('rareplus'), value: filteredPulls.filter(p => ['rare', 'mythic', 'legendary'].includes(p.card?.rarity.toLowerCase() || '')).length, color: 'text-purple-400', icon: Gem },
+                    { label: t('inCart'), value: filteredPulls.filter(p => p.cartItem).length, color: 'text-[#C84FFF]', icon: ShoppingCart },
                 ].map((stat) => {
                     const Icon = stat.icon;
                     return (
@@ -413,7 +416,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                                             {group.cartCount > 0 && (
                                                 <div className="rounded-full bg-[#C84FFF]/80 px-1.5 py-0.5 text-xs font-bold text-white flex items-center gap-0.5 backdrop-blur-sm">
                                                     <ShoppingCart className="w-2.5 h-2.5" />
-                                                    {group.count === 1 ? 'Cart' : group.cartCount}
+                                                    {group.count === 1 ? tCommon('cart') : group.cartCount}
                                                 </div>
                                             )}
                                         </div>
@@ -422,7 +425,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                                         {isSealed(group.card.rarity) ? (
                                             <div className="absolute top-2 left-2 inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold bg-[#C84FFF]/20 text-[#f0abfc] border border-[#C84FFF]/40">
                                                 <BoxIcon className="w-3 h-3" />
-                                                Sealed
+                                                {t('sealed')}
                                             </div>
                                         ) : (
                                             <div className={`absolute top-2 left-2 inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold ${rarityConfig.bg} ${rarityConfig.color} border ${rarityConfig.border}`}>
@@ -455,18 +458,18 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                     <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 mb-6">
                         <Package className="w-10 h-10 text-purple-400" />
                     </div>
-                    <h3 className="text-2xl font-bold text-white mb-3">No cards found</h3>
+                    <h3 className="text-2xl font-bold text-white mb-3">{t('noCardsFound')}</h3>
                     <p className="text-[#8888aa] mb-8 max-w-md mx-auto">
                         {searchQuery || rarityFilter || gameFilter
-                            ? 'Try adjusting your filters to see more cards'
-                            : 'Start opening packs to build your collection!'}
+                            ? t('adjustFilters')
+                            : t('startOpening')}
                     </p>
                     <Link
                         href="/boxes"
                         className="inline-flex items-center gap-2 px-8 py-4 bg-[#C84FFF] text-white font-bold rounded-xl transition-all hover:scale-105 hover:shadow-[0_0_24px_rgba(200,79,255,0.3)]"
                     >
                         <Package className="w-5 h-5" />
-                        Browse Boxes
+                        {t('browseBoxes')}
                     </Link>
                 </div>
             )}
@@ -482,7 +485,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                         <button
                             onClick={() => setZoomedCardId(null)}
                             className="absolute -top-14 right-0 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all hover:scale-110"
-                            aria-label="Close"
+                            aria-label={tCommon('close')}
                         >
                             <X className="h-6 w-6" />
                         </button>
@@ -498,7 +501,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                             />
                             {zoomedCard.count > 1 && (
                                 <div className="absolute top-3 right-3 rounded-full bg-[#C84FFF]/90 px-3 py-1 text-sm font-bold text-white shadow-lg backdrop-blur-sm">
-                                    ×{zoomedCard.count} owned
+                                    {t('owned', { count: zoomedCard.count })}
                                 </div>
                             )}
                         </div>
@@ -522,10 +525,10 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                             <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 mb-6">
                                 <Coins className="h-5 w-5 text-amber-400" />
                                 <span className="text-xl font-bold text-amber-400">{zoomedCard.card.coinValue}</span>
-                                <span className="text-amber-400/70">coins each</span>
+                                <span className="text-amber-400/70">{t('coinsEach')}</span>
                                 {zoomedCard.count > 1 && (
                                     <span className="text-amber-400/50 text-sm">
-                                        · {zoomedCard.card.coinValue * zoomedCard.availablePullIds.length} sellable
+                                        · {zoomedCard.card.coinValue * zoomedCard.availablePullIds.length} {t('sellable')}
                                     </span>
                                 )}
                             </div>
@@ -533,7 +536,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                             {zoomedCard.availablePullIds.length === 0 ? (
                                 <div className="flex items-center justify-center gap-2 px-6 py-4 bg-[#C84FFF]/10 text-[#E879F9] rounded-xl font-bold border border-[#C84FFF]/30">
                                     <ShoppingCart className="h-5 w-5" />
-                                    {zoomedCard.count > 1 ? `All ${zoomedCard.count} in Cart` : 'Already in Cart'}
+                                    {zoomedCard.count > 1 ? t('allInCart', { count: zoomedCard.count }) : t('alreadyInCart')}
                                 </div>
                             ) : (
                                 <div className="space-y-3">
@@ -543,14 +546,14 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                                         className="w-full px-6 py-3 rounded-xl font-bold text-white bg-white/10 hover:bg-white/20 border border-white/10 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
                                     >
                                         <ShoppingCart className="h-5 w-5" />
-                                        Add to Cart
+                                        {t('addToCart')}
                                         {zoomedCard.cartCount > 0 && (
-                                            <span className="text-xs font-normal text-[#8888aa]">({zoomedCard.cartCount} already in cart)</span>
+                                            <span className="text-xs font-normal text-[#8888aa]">{t('inCartCount', { count: zoomedCard.cartCount })}</span>
                                         )}
                                     </button>
 
                                     <div className="border-t border-white/10 pt-3">
-                                        <p className="text-xs text-[#8888aa] uppercase tracking-wider mb-3">Sell for coins</p>
+                                        <p className="text-xs text-[#8888aa] uppercase tracking-wider mb-3">{t('sellForCoins')}</p>
 
                                         {zoomedCard.availablePullIds.length >= 5 && (
                                             <div className="flex gap-2 mb-3">
@@ -559,8 +562,8 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                                                     disabled={loading}
                                                     className="flex-1 px-3 py-2.5 rounded-xl font-bold text-white bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/30 transition-all text-sm flex flex-col items-center gap-0.5 disabled:opacity-50"
                                                 >
-                                                    <span>Sell 5 Cards</span>
-                                                    <span className="text-amber-400 text-xs font-normal">{zoomedCard.card.coinValue * 5} coins</span>
+                                                    <span>{t('sellCards', { count: 5 })}</span>
+                                                    <span className="text-amber-400 text-xs font-normal">{zoomedCard.card.coinValue * 5} {tCommon('coins').toLowerCase()}</span>
                                                 </button>
                                                 {zoomedCard.availablePullIds.length >= 10 && (
                                                     <button
@@ -568,8 +571,8 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                                                         disabled={loading}
                                                         className="flex-1 px-3 py-2.5 rounded-xl font-bold text-white bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/30 transition-all text-sm flex flex-col items-center gap-0.5 disabled:opacity-50"
                                                     >
-                                                        <span>Sell 10 Cards</span>
-                                                        <span className="text-amber-400 text-xs font-normal">{zoomedCard.card.coinValue * 10} coins</span>
+                                                        <span>{t('sellCards', { count: 10 })}</span>
+                                                        <span className="text-amber-400 text-xs font-normal">{zoomedCard.card.coinValue * 10} {tCommon('coins').toLowerCase()}</span>
                                                     </button>
                                                 )}
                                             </div>
@@ -593,7 +596,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                                                         className="flex-1 px-4 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-bold rounded-xl transition-all hover:scale-[1.02] flex items-center justify-center gap-2 shadow-lg shadow-amber-500/25 disabled:opacity-50"
                                                     >
                                                         <Coins className="h-4 w-4" />
-                                                        Sell {parsed} · {parsed * zoomedCard.card.coinValue} coins
+                                                        {t('sellCards', { count: parsed })} · {parsed * zoomedCard.card.coinValue} {tCommon('coins').toLowerCase()}
                                                     </button>
                                                 </div>
                                             );
@@ -617,9 +620,9 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                         <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 mb-5">
                             <Coins className="w-7 h-7 text-amber-400" />
                         </div>
-                        <h3 className="text-xl font-bold text-white mb-2">Confirm Sale</h3>
+                        <h3 className="text-xl font-bold text-white mb-2">{t('confirmSale')}</h3>
                         <p className="text-[#8888aa] mb-1">
-                            Do you really want to sell{' '}
+                            {t('confirmSaleBody')}{' '}
                             <span className="text-white font-semibold">
                                 {confirmSell.quantity === 1
                                     ? confirmSell.cardName
@@ -628,14 +631,14 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                         </p>
                         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20 mt-3 mb-7">
                             <Coins className="h-4 w-4 text-amber-400" />
-                            <span className="text-lg font-bold text-amber-400">{confirmSell.totalCoins.toLocaleString()} coins</span>
+                            <span className="text-lg font-bold text-amber-400">{confirmSell.totalCoins.toLocaleString()} {tCommon('coins').toLowerCase()}</span>
                         </div>
                         <div className="flex gap-3">
                             <button
                                 onClick={() => setConfirmSell(null)}
                                 className="flex-1 px-4 py-3 rounded-xl font-bold text-gray-300 bg-white/5 hover:bg-white/10 border border-white/10 transition-all"
                             >
-                                Cancel
+                                {tCommon('cancel')}
                             </button>
                             <button
                                 onClick={() => {
@@ -646,7 +649,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                                 disabled={loading}
                                 className="flex-1 px-4 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-bold rounded-xl transition-all hover:scale-[1.02] shadow-lg shadow-amber-500/25 disabled:opacity-50"
                             >
-                                Sell Now
+                                {t('sellNow')}
                             </button>
                         </div>
                     </div>

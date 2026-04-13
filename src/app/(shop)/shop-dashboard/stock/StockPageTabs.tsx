@@ -4,8 +4,10 @@ import { useState } from 'react';
 import { Package, Upload } from 'lucide-react';
 import { StockManagerClient } from './StockManagerClient';
 import { StockImportClient } from './StockImportClient';
+import { useTranslations } from 'next-intl';
 
 export function StockPageTabs({ shopId }: { shopId: string }) {
+  const t = useTranslations('shopDashboard.stock');
   const [tab, setTab] = useState<'manage' | 'import'>('manage');
 
   return (
@@ -20,7 +22,7 @@ export function StockPageTabs({ shopId }: { shopId: string }) {
           }`}
         >
           <Package className="w-4 h-4" />
-          Manage Stock
+          {t('manageStock')}
         </button>
         <button
           onClick={() => setTab('import')}
@@ -31,7 +33,7 @@ export function StockPageTabs({ shopId }: { shopId: string }) {
           }`}
         >
           <Upload className="w-4 h-4" />
-          Import Stock
+          {t('importStock')}
         </button>
       </div>
 

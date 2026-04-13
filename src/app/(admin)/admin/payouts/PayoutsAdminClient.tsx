@@ -8,6 +8,7 @@ import {
   ChevronDown, ChevronUp, MessageSquare, Package
 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { useTranslations } from 'next-intl';
 
 type PayoutItem = {
   id: string;

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { GiMedal, GiArcheryTarget } from 'react-icons/gi';
 import { InfoTooltip } from '@/components/InfoTooltip';
 
@@ -31,6 +32,7 @@ interface AchievementsWidgetProps {
 }
 
 export default function AchievementsWidget({ className = '' }: AchievementsWidgetProps) {
+  const t = useTranslations('widgets');
   const [recentUnlocks, setRecentUnlocks] = useState<Achievement[]>([]);
   const [nextUp, setNextUp] = useState<Achievement[]>([]);
   const [loading, setLoading] = useState(true);
@@ -111,7 +113,7 @@ export default function AchievementsWidget({ className = '' }: AchievementsWidge
 
       {error && (
         <p className="text-sm text-[#8888aa] py-4 text-center">
-          Could not load achievements
+          {t('achievements.loadFailed')}
         </p>
       )}
 
@@ -121,7 +123,7 @@ export default function AchievementsWidget({ className = '' }: AchievementsWidge
           {recentUnlocks.length > 0 && (
             <div className="mb-5">
               <div className="text-[10px] font-semibold uppercase tracking-wider text-[#fbbf24] mb-3 flex items-center gap-1.5">
-<GiMedal className="w-3.5 h-3.5 text-[#C84FFF]" /> Recently Unlocked
+<GiMedal className="w-3.5 h-3.5 text-[#C84FFF]" /> {t('achievements.recentlyUnlocked')}
               </div>
               <div className="flex gap-2">
                 {recentUnlocks.map((ach) => (
@@ -133,7 +135,7 @@ export default function AchievementsWidget({ className = '' }: AchievementsWidge
                     <span className="text-[9px] text-[#f0f0f5] font-semibold text-center leading-tight line-clamp-2">
                       {ach.name}
                     </span>
-                    <span className="text-[8px] text-[#fbbf24] font-bold">✓ Unlocked</span>
+                    <span className="text-[8px] text-[#fbbf24] font-bold">✓ {t('achievements.unlocked')}</span>
                   </div>
                 ))}
               </div>
@@ -143,10 +145,10 @@ export default function AchievementsWidget({ className = '' }: AchievementsWidge
           {/* Next Up */}
           <div>
             <div className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-3 flex items-center gap-1.5">
-<GiArcheryTarget className="w-3.5 h-3.5 text-[#C84FFF]" /> Next Up
+<GiArcheryTarget className="w-3.5 h-3.5 text-[#C84FFF]" /> {t('achievements.nextUp')}
             </div>
             {nextUp.length === 0 ? (
-              <p className="text-[11px] text-[#8888aa] text-center py-3">All achievements unlocked! 🎉</p>
+              <p className="text-[11px] text-[#8888aa] text-center py-3">{t('achievements.allUnlocked')}</p>
             ) : (
               <div className="space-y-3">
                 {nextUp.map((ach) => {
@@ -170,7 +172,7 @@ export default function AchievementsWidget({ className = '' }: AchievementsWidge
                         <div className="flex justify-between mt-1">
                           <span className="text-[9px] text-[#7777a0]">{ach.progress} / {ach.target}</span>
                           {almostThere && (
-                            <span className="text-[9px] text-[#C84FFF] font-semibold">Almost there!</span>
+                            <span className="text-[9px] text-[#C84FFF] font-semibold">{t('achievements.almostThere')}</span>
                           )}
                         </div>
                       </div>
@@ -187,7 +189,7 @@ export default function AchievementsWidget({ className = '' }: AchievementsWidge
         href="/dashboard"
         className="text-[#C84FFF] text-[11px] font-semibold mt-4 inline-block hover:underline"
       >
-        All achievements →
+        {t('achievements.viewAll')}
       </Link>
     </div>
   );

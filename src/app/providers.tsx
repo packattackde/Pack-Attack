@@ -2,8 +2,34 @@
 
 import { SessionProvider } from 'next-auth/react';
 import { Component, ReactNode } from 'react';
+import { NextIntlClientProvider, useTranslations } from 'next-intl';
 
-// Custom Error Boundary to catch client-side errors
+function ErrorFallbackContent({ onReset }: { onReset: () => void }) {
+  const t = useTranslations('common');
+
+  return (
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="bg-gray-900 rounded-2xl p-8 max-w-md w-full text-center border border-[rgba(255,255,255,0.06)]">
+        <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-red-500/20 flex items-center justify-center">
+          <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+        </div>
+        <h1 className="text-2xl font-bold text-white mb-3">{t('somethingWentWrong')}</h1>
+        <p className="text-gray-400 mb-6">
+          {t('errorOccurred')}
+        </p>
+        <button
+          onClick={onReset}
+          className="w-full px-4 py-3 bg-[#C84FFF] hover:bg-[#E879F9] text-white font-semibold rounded-xl transition-all"
+        >
+          {t('tryAgain')}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 interface ErrorBoundaryState {
   hasError: boolean;
   error: Error | null;
@@ -11,6 +37,8 @@ interface ErrorBoundaryState {
 
 interface ErrorBoundaryProps {
   children: ReactNode;
+  messages: Record<string, unknown>;
+  locale: string;
 }
 
 class ClientErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
@@ -37,25 +65,9 @@ class ClientErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySta
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center p-4">
-          <div className="bg-gray-900 rounded-2xl p-8 max-w-md w-full text-center border border-[rgba(255,255,255,0.06)]">
-            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-red-500/20 flex items-center justify-center">
-              <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-              </svg>
-            </div>
-            <h1 className="text-2xl font-bold text-white mb-3">Something went wrong</h1>
-            <p className="text-gray-400 mb-6">
-              An error occurred while loading the page.
-            </p>
-            <button
-              onClick={this.handleReset}
-              className="w-full px-4 py-3 bg-[#C84FFF] hover:bg-[#E879F9] text-white font-semibold rounded-xl transition-all"
-            >
-              Try Again
-            </button>
-          </div>
-        </div>
+        <NextIntlClientProvider locale={this.props.locale} messages={this.props.messages}>
+          <ErrorFallbackContent onReset={this.handleReset} />
+        </NextIntlClientProvider>
       );
     }
 
@@ -63,18 +75,24 @@ class ClientErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySta
   }
 }
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export function Providers({
+  children,
+  messages,
+  locale,
+}: {
+  children: React.ReactNode;
+  messages: Record<string, unknown>;
+  locale: string;
+}) {
   return (
-    <ClientErrorBoundary>
+    <ClientErrorBoundary messages={messages} locale={locale}>
       <SessionProvider
-        // Reduce frequency of session refetching to minimize CLIENT_FETCH_ERROR
-        refetchInterval={5 * 60} // Refetch session every 5 minutes instead of constantly
-        refetchOnWindowFocus={false} // Don't refetch when window regains focus
-        refetchWhenOffline={false} // Don't refetch when offline
+        refetchInterval={5 * 60}
+        refetchOnWindowFocus={false}
+        refetchWhenOffline={false}
       >
         {children}
       </SessionProvider>
     </ClientErrorBoundary>
   );
 }
-

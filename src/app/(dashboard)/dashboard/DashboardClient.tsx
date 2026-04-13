@@ -60,6 +60,7 @@ import {
     Users,
     type LucideIcon,
 } from 'lucide-react';
+import {useTranslations} from 'next-intl';
 import {ConnectionsTab} from "@/app/components/connections-tab";
 import {CollectionClient} from "@/app/collection/CollectionClient";
 
@@ -179,15 +180,15 @@ type DashboardProps = {
     initialLevelInfo: LevelInfo;
 };
 
-const tabs = [
-    {id: 'overview', label: 'Overview', icon: LayoutDashboard, gradient: 'from-blue-500 to-cyan-500'},
-    {id: 'achievements', label: 'Achievements', icon: Award, gradient: 'from-amber-500 to-yellow-500'},
-    {id: 'collection', label: 'Collection', icon: Package, gradient: 'from-purple-500 to-pink-500'},
-    {id: 'orders', label: 'Orders', icon: ShoppingBag, gradient: 'from-[#9333EA] to-[#9333EA]'},
-    {id: 'statistics', label: 'Statistics', icon: BarChart3, gradient: 'from-orange-500 to-red-500'},
-    {id: 'connections', label: 'Connections', icon: Zap, gradient: 'from-orange-500 to-red-500'},
-    {id: 'settings', label: 'Settings', icon: Settings, gradient: 'from-slate-500 to-zinc-500'},
-];
+const tabDefs = [
+    {id: 'overview', icon: LayoutDashboard, gradient: 'from-blue-500 to-cyan-500'},
+    {id: 'achievements', icon: Award, gradient: 'from-amber-500 to-yellow-500'},
+    {id: 'collection', icon: Package, gradient: 'from-purple-500 to-pink-500'},
+    {id: 'orders', icon: ShoppingBag, gradient: 'from-[#9333EA] to-[#9333EA]'},
+    {id: 'statistics', icon: BarChart3, gradient: 'from-orange-500 to-red-500'},
+    {id: 'connections', icon: Zap, gradient: 'from-orange-500 to-red-500'},
+    {id: 'settings', icon: Settings, gradient: 'from-slate-500 to-zinc-500'},
+] as const;
 
 // PERFORMANCE: Wrap component in memo to prevent unnecessary re-renders
 export const DashboardClient = memo(function DashboardClient({
@@ -198,6 +199,13 @@ export const DashboardClient = memo(function DashboardClient({
                                                              }: DashboardProps) {
     const {addToast} = useToast();
     const router = useRouter();
+    const t = useTranslations('dashboard');
+    const tc = useTranslations('common');
+
+    const tabs = tabDefs.map(def => ({
+        ...def,
+        label: t(`tabs.${def.id}` as any),
+    }));
 
     const [activeTab, setActiveTab] = useState('overview');
     const [user, setUser] = useState(initialUser);
@@ -312,16 +320,16 @@ export const DashboardClient = memo(function DashboardClient({
 
             if (!res.ok) {
                 addToast({
-                    title: 'Error',
-                    description: data.error || 'Failed to claim reward',
+                    title: t('achievements.failedToClaim'),
+                    description: data.error || t('achievements.failedToClaim'),
                     variant: 'destructive',
                 });
                 return;
             }
 
             addToast({
-                title: 'Reward Claimed!',
-                description: `You received ${data.coinsAwarded} coins for "${data.achievementName}"!`,
+                title: t('achievements.claimedTitle'),
+                description: t('achievements.claimedDesc', { coins: data.coinsAwarded, name: data.achievementName }),
             });
 
             // Update user coins
@@ -334,8 +342,8 @@ export const DashboardClient = memo(function DashboardClient({
             fetchAchievements();
         } catch (error) {
             addToast({
-                title: 'Error',
-                description: 'Failed to claim reward',
+                title: t('achievements.failedToClaim'),
+                description: t('achievements.failedToClaim'),
                 variant: 'destructive',
             });
         } finally {
@@ -354,8 +362,8 @@ export const DashboardClient = memo(function DashboardClient({
 
             if (!res.ok) {
                 addToast({
-                    title: 'Error',
-                    description: data.error || 'Failed to claim rewards',
+                    title: t('achievements.failedToClaim'),
+                    description: data.error || t('achievements.failedToClaim'),
                     variant: 'destructive',
                 });
                 return;
@@ -363,8 +371,8 @@ export const DashboardClient = memo(function DashboardClient({
 
             if (data.coinsAwarded > 0) {
                 addToast({
-                    title: 'All Rewards Claimed!',
-                    description: `You received ${data.coinsAwarded} coins from ${data.achievementsClaimed} achievements!`,
+                    title: t('achievements.allClaimedTitle'),
+                    description: t('achievements.allClaimedDesc', { coins: data.coinsAwarded, count: data.achievementsClaimed }),
                 });
 
                 // Update user coins
@@ -377,14 +385,14 @@ export const DashboardClient = memo(function DashboardClient({
                 fetchAchievements();
             } else {
                 addToast({
-                    title: 'No Rewards',
-                    description: 'No unclaimed rewards available',
+                    title: t('achievements.noRewards'),
+                    description: t('achievements.noRewardsDesc'),
                 });
             }
         } catch (error) {
             addToast({
-                title: 'Error',
-                description: 'Failed to claim rewards',
+                title: t('achievements.failedToClaim'),
+                description: t('achievements.failedToClaim'),
                 variant: 'destructive',
             });
         } finally {
@@ -405,8 +413,8 @@ export const DashboardClient = memo(function DashboardClient({
 
             if (!res.ok) {
                 addToast({
-                    title: 'Error',
-                    description: data.error || 'Failed to save profile',
+                    title: t('settings.saveFailed'),
+                    description: data.error || t('settings.saveFailed'),
                     variant: 'destructive',
                 });
                 return;
@@ -414,13 +422,13 @@ export const DashboardClient = memo(function DashboardClient({
 
             setUser(data.user);
             addToast({
-                title: 'Success',
-                description: 'Profile saved successfully!',
+                title: t('settings.savedTitle'),
+                description: t('settings.savedDesc'),
             });
         } catch (error) {
             addToast({
-                title: 'Error',
-                description: 'Failed to save profile',
+                title: t('settings.saveFailed'),
+                description: t('settings.saveFailed'),
                 variant: 'destructive',
             });
         } finally {
@@ -482,7 +490,7 @@ export const DashboardClient = memo(function DashboardClient({
                     color: 'text-amber-400',
                     bg: 'bg-amber-500/10',
                     border: 'border-amber-500/30',
-                    label: 'Pending'
+                    label: t('orders.statusLabels.PENDING')
                 };
             case 'PROCESSING':
                 return {
@@ -490,7 +498,7 @@ export const DashboardClient = memo(function DashboardClient({
                     color: 'text-[#C84FFF]',
                     bg: 'bg-[rgba(200,79,255,0.1)]',
                     border: 'border-[rgba(200,79,255,0.3)]',
-                    label: 'Processing'
+                    label: t('orders.statusLabels.PROCESSING')
                 };
             case 'SHIPPED':
                 return {
@@ -498,7 +506,7 @@ export const DashboardClient = memo(function DashboardClient({
                     color: 'text-purple-400',
                     bg: 'bg-purple-500/10',
                     border: 'border-purple-500/30',
-                    label: 'Shipped'
+                    label: t('orders.statusLabels.SHIPPED')
                 };
             case 'DELIVERED':
                 return {
@@ -506,7 +514,7 @@ export const DashboardClient = memo(function DashboardClient({
                     color: 'text-[#E879F9]',
                     bg: 'bg-[#C84FFF]/10',
                     border: 'border-[#C84FFF]/30',
-                    label: 'Delivered'
+                    label: t('orders.statusLabels.DELIVERED')
                 };
             case 'CANCELLED':
                 return {
@@ -514,7 +522,7 @@ export const DashboardClient = memo(function DashboardClient({
                     color: 'text-red-400',
                     bg: 'bg-red-500/10',
                     border: 'border-red-500/30',
-                    label: 'Cancelled'
+                    label: t('orders.statusLabels.CANCELLED')
                 };
             default:
                 return {
@@ -598,17 +606,17 @@ export const DashboardClient = memo(function DashboardClient({
     const getCategoryConfig = (category: string) => {
         switch (category) {
             case 'PULLS':
-                return {label: 'Pack Opening', icon: Package, color: 'text-[#C84FFF]', bg: 'bg-[rgba(200,79,255,0.1)]'};
+                return {label: t('achievements.categories.PULLS'), icon: Package, color: 'text-[#C84FFF]', bg: 'bg-[rgba(200,79,255,0.1)]'};
             case 'BATTLES':
-                return {label: 'Battles', icon: Swords, color: 'text-purple-400', bg: 'bg-purple-500/10'};
+                return {label: t('achievements.categories.BATTLES'), icon: Swords, color: 'text-purple-400', bg: 'bg-purple-500/10'};
             case 'COLLECTION':
-                return {label: 'Collection', icon: Gem, color: 'text-pink-400', bg: 'bg-pink-500/10'};
+                return {label: t('achievements.categories.COLLECTION'), icon: Gem, color: 'text-pink-400', bg: 'bg-pink-500/10'};
             case 'ECONOMY':
-                return {label: 'Economy', icon: Coins, color: 'text-amber-400', bg: 'bg-amber-500/10'};
+                return {label: t('achievements.categories.ECONOMY'), icon: Coins, color: 'text-amber-400', bg: 'bg-amber-500/10'};
             case 'SOCIAL':
-                return {label: 'Community', icon: Users, color: 'text-[#E879F9]', bg: 'bg-[#C84FFF]/10'};
+                return {label: t('achievements.categories.COMMUNITY'), icon: Users, color: 'text-[#E879F9]', bg: 'bg-[#C84FFF]/10'};
             case 'SPECIAL':
-                return {label: 'Special', icon: Sparkles, color: 'text-orange-400', bg: 'bg-orange-500/10'};
+                return {label: t('achievements.categories.SPECIAL'), icon: Sparkles, color: 'text-orange-400', bg: 'bg-orange-500/10'};
             default:
                 return {label: category, icon: Star, color: 'text-gray-400', bg: 'bg-gray-500/10'};
         }
@@ -706,15 +714,15 @@ export const DashboardClient = memo(function DashboardClient({
                                     <div
                                         className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/20 border border-amber-500/30 text-amber-400 text-sm font-medium mb-4">
                                         <Coins className="w-4 h-4"/>
-                                        Your Balance
+                                        {t('overview.yourBalance')}
                                     </div>
                                     <div className="flex items-baseline gap-4">
                     <span className="text-5xl md:text-7xl font-bold text-white tracking-tight">
                       {user.coins.toLocaleString()}
                     </span>
-                                        <span className="text-2xl text-amber-400/80 font-medium">coins</span>
+                                        <span className="text-2xl text-amber-400/80 font-medium">{tc('coins').toLowerCase()}</span>
                                     </div>
-                                    <p className="text-[#8888aa] mt-3">Open packs, join battles, and win real cards!</p>
+                                    <p className="text-[#8888aa] mt-3">{t('overview.balanceDesc')}</p>
                                 </div>
                                 <div className="flex gap-3">
                                     <Link
@@ -724,7 +732,7 @@ export const DashboardClient = memo(function DashboardClient({
                                         <div
                                             className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"/>
                                         <Gift className="w-5 h-5 relative z-10"/>
-                                        <span className="relative z-10">Buy Coins</span>
+                                        <span className="relative z-10">{t('overview.buyCoins')}</span>
                                     </Link>
                                 </div>
                             </div>
@@ -735,28 +743,28 @@ export const DashboardClient = memo(function DashboardClient({
                     <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
                         {[
                             {
-                                label: 'Total Pulls',
+                                label: t('overview.totalPulls'),
                                 value: initialStats.pulls,
                                 icon: Package,
                                 gradient: 'from-blue-500 to-cyan-500',
                                 delay: 100
                             },
                             {
-                                label: 'Battles',
+                                label: t('overview.battlesJoined'),
                                 value: initialStats.battles,
                                 icon: Swords,
                                 gradient: 'from-purple-500 to-pink-500',
                                 delay: 150
                             },
                             {
-                                label: 'Victories',
+                                label: t('overview.victories'),
                                 value: initialStats.wins,
                                 icon: Trophy,
                                 gradient: 'from-[#C84FFF] to-[#9333EA]',
                                 delay: 200
                             },
                             {
-                                label: 'Win Rate',
+                                label: t('overview.winRate'),
                                 value: `${initialStats.battles > 0 ? Math.round((initialStats.wins / initialStats.battles) * 100) : 0}%`,
                                 icon: Target,
                                 gradient: 'from-orange-500 to-red-500',
@@ -811,9 +819,9 @@ export const DashboardClient = memo(function DashboardClient({
                                         </span>
                                     </div>
                                     <div>
-                                        <p className="text-xs text-[#C84FFF]/80 font-medium uppercase tracking-wider mb-0.5">Your Rank</p>
+                                        <p className="text-xs text-[#C84FFF]/80 font-medium uppercase tracking-wider mb-0.5">{t('overview.yourRank')}</p>
                                         <p className="text-2xl font-bold text-white">{initialLevelInfo.title}</p>
-                                        <p className="text-xs text-[#7777a0] mt-0.5">Level <span className="text-[#C84FFF] font-heading font-extrabold">{initialLevelInfo.level}</span></p>
+                                        <p className="text-xs text-[#7777a0] mt-0.5">{t('overview.level')} <span className="text-[#C84FFF] font-heading font-extrabold">{initialLevelInfo.level}</span></p>
                                     </div>
                                 </div>
 
@@ -822,7 +830,7 @@ export const DashboardClient = memo(function DashboardClient({
                                     <div className="flex items-end justify-between mb-2">
                                         <div>
                                             <span className="text-sm font-semibold text-white">{initialLevelInfo.xpInCurrentLevel.toLocaleString()} XP</span>
-                                            <span className="text-xs text-gray-500"> / {initialLevelInfo.xpForNextLevel.toLocaleString()} XP to next level</span>
+                                            <span className="text-xs text-gray-500"> / {initialLevelInfo.xpForNextLevel.toLocaleString()} {t('overview.xpToNext')}</span>
                                         </div>
                                         <span className="text-xs font-bold text-[#C84FFF] tabular-nums">{initialLevelInfo.percent}%</span>
                                     </div>
@@ -839,18 +847,18 @@ export const DashboardClient = memo(function DashboardClient({
                                     <div className="flex flex-wrap gap-3">
                                         <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.06]">
                                             <Zap className="w-3.5 h-3.5 text-[#C84FFF]"/>
-                                            <span className="text-xs text-[#7777a0]">Total XP:</span>
+                                            <span className="text-xs text-[#7777a0]">{t('overview.totalXp')}</span>
                                             <span className="text-xs font-semibold text-white">{initialLevelInfo.xp.toLocaleString()}</span>
                                         </div>
                                         <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.06]">
                                             <Coins className="w-3.5 h-3.5 text-amber-400"/>
-                                            <span className="text-xs text-[#7777a0]">Coins earned this month:</span>
+                                            <span className="text-xs text-[#7777a0]">{t('overview.monthlyCoins')}</span>
                                             <span className="text-xs font-semibold text-white">{initialLevelInfo.coinsEarnedThisMonth} / 500</span>
                                         </div>
                                         {initialLevelInfo.pendingCoins > 0 && (
                                             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/20">
                                                 <Gift className="w-3.5 h-3.5 text-amber-400"/>
-                                                <span className="text-xs font-semibold text-amber-300">+{initialLevelInfo.pendingCoins} coins next month</span>
+                                                <span className="text-xs font-semibold text-amber-300">{t('overview.monthlyBonus', { amount: initialLevelInfo.pendingCoins })}</span>
                                             </div>
                                         )}
                                     </div>
@@ -861,14 +869,14 @@ export const DashboardClient = memo(function DashboardClient({
                             <div className="mt-6 pt-5 border-t border-white/[0.06]">
                                 <p className="text-xs font-semibold text-[#8888aa] uppercase tracking-wider mb-3 flex items-center gap-2">
                                     <Sparkles className="w-3.5 h-3.5 text-[#C84FFF]"/>
-                                    How to earn XP
+                                    {t('overview.howToEarnXp')}
                                 </p>
                                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                                     {[
-                                        { icon: Package, label: 'Open packs', desc: '10 × price × qty', color: 'text-[#C84FFF]', bg: 'bg-[rgba(200,79,255,0.08)]' },
-                                        { icon: Swords, label: 'Battle', desc: '+150 XP each', color: 'text-[#C84FFF]', bg: 'bg-[rgba(200,79,255,0.08)]' },
-                                        { icon: Trophy, label: 'Win battle', desc: '+250 bonus', color: 'text-amber-400', bg: 'bg-amber-500/10' },
-                                        { icon: Coins, label: 'Sell cards', desc: '+5 XP per sale', color: 'text-[#E879F9]', bg: 'bg-[#C84FFF]/10' },
+                                        { icon: Package, label: t('overview.xpActions.openPacks'), desc: t('overview.xpActions.openPacksXp'), color: 'text-[#C84FFF]', bg: 'bg-[rgba(200,79,255,0.08)]' },
+                                        { icon: Swords, label: t('overview.xpActions.battle'), desc: t('overview.xpActions.battleXp'), color: 'text-[#C84FFF]', bg: 'bg-[rgba(200,79,255,0.08)]' },
+                                        { icon: Trophy, label: t('overview.xpActions.winBattle'), desc: t('overview.xpActions.winBattleXp'), color: 'text-amber-400', bg: 'bg-amber-500/10' },
+                                        { icon: Coins, label: t('overview.xpActions.sellCards'), desc: t('overview.xpActions.sellCardsXp'), color: 'text-[#E879F9]', bg: 'bg-[#C84FFF]/10' },
                                     ].map(item => {
                                         const Icon = item.icon;
                                         return (
@@ -903,29 +911,29 @@ export const DashboardClient = memo(function DashboardClient({
                                 <div className="p-2 rounded-lg bg-gradient-to-br from-[#C84FFF] to-[#9333EA]">
                                     <Zap className="w-5 h-5 text-black"/>
                                 </div>
-                                Quick Actions
+                                {t('overview.quickActions')}
                             </h2>
                             <div className="space-y-3">
                                 {[
                                     {
                                         href: '/battles',
                                         icon: Swords,
-                                        label: 'Join Battles',
-                                        desc: 'Compete and win',
+                                        label: t('overview.actions.joinBattles'),
+                                        desc: t('overview.actions.joinBattlesDesc'),
                                         gradient: 'from-purple-500 to-pink-500'
                                     },
                                     {
                                         href: '/boxes',
                                         icon: Package,
-                                        label: 'Open Packs',
-                                        desc: 'Pull rare cards',
+                                        label: t('overview.actions.openPacks'),
+                                        desc: t('overview.actions.openPacksDesc'),
                                         gradient: 'from-blue-500 to-cyan-500'
                                     },
                                     {
                                         href: '/cart',
                                         icon: ShoppingCart,
-                                        label: 'View Cart',
-                                        desc: 'Checkout cards',
+                                        label: t('overview.actions.viewCart'),
+                                        desc: t('overview.actions.viewCartDesc'),
                                         gradient: 'from-[#9333EA] to-[#9333EA]'
                                     },
                                 ].map((action) => {
@@ -970,7 +978,7 @@ export const DashboardClient = memo(function DashboardClient({
                                 <div className="p-2 rounded-lg bg-gradient-to-br from-[#C84FFF] to-[#9333EA]">
                                     <Sparkles className="w-5 h-5 text-black"/>
                                 </div>
-                                Recent Pulls
+                                {t('overview.recentPulls')}
                             </h2>
                             {pulls.slice(0, 4).length > 0 ? (
                                 <>
@@ -1007,7 +1015,7 @@ export const DashboardClient = memo(function DashboardClient({
                                             onClick={() => setActiveTab('collection')}
                                             className="w-full mt-4 py-3 text-sm text-[#C84FFF] hover:text-[#9333EA] bg-[#1e1e55] hover:bg-white/[0.05] rounded-xl transition-all flex items-center justify-center gap-2"
                                         >
-                                            View all {pulls.length} cards
+                                            {t('overview.viewAllCards', { count: pulls.length })}
                                             <ArrowUpRight className="w-4 h-4"/>
                                         </button>
                                     )}
@@ -1018,10 +1026,10 @@ export const DashboardClient = memo(function DashboardClient({
                                         className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#12123a]/50 mb-4">
                                         <Package className="w-8 h-8 text-gray-600"/>
                                     </div>
-                                    <p className="text-[#8888aa] mb-2">No cards yet</p>
+                                    <p className="text-[#8888aa] mb-2">{t('overview.noCardsYet')}</p>
                                     <Link href="/boxes"
                                           className="inline-flex items-center gap-1 text-[#C84FFF] hover:text-[#9333EA] text-sm">
-                                        Open some packs! <ArrowUpRight className="w-3 h-3"/>
+                                        {t('overview.openSomePacks')} <ArrowUpRight className="w-3 h-3"/>
                                     </Link>
                                 </div>
                             )}
@@ -1040,7 +1048,7 @@ export const DashboardClient = memo(function DashboardClient({
                                 <div
                                     className="absolute inset-0 rounded-full border-4 border-amber-500 border-t-transparent animate-spin"/>
                             </div>
-                            <p className="text-[#8888aa]">Loading your achievements...</p>
+                            <p className="text-[#8888aa]">{t('achievements.loading')}</p>
                         </div>
                     ) : achievements ? (
                         <>
@@ -1063,7 +1071,7 @@ export const DashboardClient = memo(function DashboardClient({
                                             <div
                                                 className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/20 border border-amber-500/30 text-amber-400 text-sm font-medium mb-4">
                                                 <Trophy className="w-4 h-4"/>
-                                                Achievement Progress
+                                                {t('achievements.progress')}
                                             </div>
                                             <div className="flex items-baseline gap-4">
                         <span className="text-5xl md:text-7xl font-bold text-white tracking-tight">
@@ -1074,7 +1082,7 @@ export const DashboardClient = memo(function DashboardClient({
                                             </div>
                                             <div className="mt-4 w-full max-w-md">
                                                 <div className="flex justify-between text-sm mb-2">
-                                                    <span className="text-[#8888aa]">Overall Progress</span>
+                                                    <span className="text-[#8888aa]">{t('achievements.overallProgress')}</span>
                                                     <span
                                                         className="text-amber-400 font-semibold">{achievements.summary.progress}%</span>
                                                 </div>
@@ -1098,13 +1106,13 @@ export const DashboardClient = memo(function DashboardClient({
                                                     <>
                                                         <div
                                                             className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin relative z-10"/>
-                                                        <span className="relative z-10">Claiming...</span>
+                                                        <span className="relative z-10">{t('achievements.claiming')}</span>
                                                     </>
                                                 ) : (
                                                     <>
                                                         <Gift className="w-5 h-5 relative z-10"/>
                                                         <span
-                                                            className="relative z-10">Claim All ({achievements.summary.unclaimedRewards} coins)</span>
+                                                            className="relative z-10">{t('achievements.claimAll', { coins: achievements.summary.unclaimedRewards })}</span>
                                                     </>
                                                 )}
                                             </button>
@@ -1165,7 +1173,7 @@ export const DashboardClient = memo(function DashboardClient({
                                     }`}
                                 >
                                     <Star className="w-4 h-4"/>
-                                    All
+                                    {tc('all')}
                                 </button>
                                 {['PULLS', 'BATTLES', 'COLLECTION', 'ECONOMY', 'SOCIAL', 'SPECIAL'].map((category) => {
                                     const config = getCategoryConfig(category);
@@ -1260,7 +1268,7 @@ export const DashboardClient = memo(function DashboardClient({
                                                 {/* Progress bar */}
                                                 <div className="mb-4">
                                                     <div className="flex justify-between text-xs mb-1.5">
-                                                        <span className="text-gray-500">Progress</span>
+                                                        <span className="text-gray-500">{t('achievements.progressLabel')}</span>
                                                         <span
                                                             className={achievement.isUnlocked ? rarityStyle.color : 'text-[#8888aa]'}>
                               {achievement.progress}/{achievement.requirement}
@@ -1296,12 +1304,12 @@ export const DashboardClient = memo(function DashboardClient({
                                                                 <>
                                                                     <div
                                                                         className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin"/>
-                                                                    Claiming...
+                                                                    {t('achievements.claiming')}
                                                                 </>
                                                             ) : (
                                                                 <>
                                                                     <Gift className="w-3.5 h-3.5"/>
-                                                                    Claim
+                                                                    {t('achievements.claim')}
                                                                 </>
                                                             )}
                                                         </button>
@@ -1309,11 +1317,11 @@ export const DashboardClient = memo(function DashboardClient({
                                                         <span
                                                             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-[#C84FFF]/10 text-[#E879F9] border border-[#C84FFF]/20">
                               <CheckCircle2 className="w-3 h-3"/>
-                              Claimed
+                              {t('achievements.claimed')}
                             </span>
                                                     ) : achievement.isUnlocked ? null : (
                                                         <span className="text-xs text-gray-500">
-                              {achievement.unlockedAt ? formatDate(achievement.unlockedAt) : 'Locked'}
+                              {achievement.unlockedAt ? formatDate(achievement.unlockedAt) : t('achievements.locked')}
                             </span>
                                                     )}
                                                 </div>
@@ -1330,16 +1338,16 @@ export const DashboardClient = memo(function DashboardClient({
                                         className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 mb-6">
                                         <Trophy className="w-10 h-10 text-amber-400"/>
                                     </div>
-                                    <h3 className="text-2xl font-bold text-white mb-3">No achievements found</h3>
+                                    <h3 className="text-2xl font-bold text-white mb-3">{t('achievements.noAchievements')}</h3>
                                     <p className="text-[#8888aa] mb-6">
-                                        Try selecting a different category
+                                        {t('achievements.tryDifferent')}
                                     </p>
                                     <button
                                         onClick={() => setAchievementCategoryFilter('ALL')}
                                         className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 text-white font-medium rounded-xl transition-all"
                                     >
                                         <Star className="w-5 h-5"/>
-                                        Show All Achievements
+                                        {t('achievements.showAll')}
                                     </button>
                                 </div>
                             )}
@@ -1347,12 +1355,12 @@ export const DashboardClient = memo(function DashboardClient({
                     ) : (
                         <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-16 text-center">
                             <Trophy className="w-16 h-16 text-gray-600 mx-auto mb-4"/>
-                            <p className="text-[#8888aa]">Unable to load achievements</p>
+                            <p className="text-[#8888aa]">{t('achievements.loadFailed')}</p>
                             <button
                                 onClick={fetchAchievements}
                                 className="mt-4 inline-flex items-center gap-2 px-6 py-3 bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 font-medium rounded-xl transition-all"
                             >
-                                Try Again
+                                {tc('tryAgain')}
                             </button>
                         </div>
                     )}
@@ -1395,7 +1403,7 @@ export const DashboardClient = memo(function DashboardClient({
                                     style={{animationDelay: `${index * 50}ms`}}
                                 >
                                     {Icon && <Icon className="w-4 h-4"/>}
-                                    {status || 'All Orders'}
+                                    {status ? getOrderStatusConfig(status).label : t('orders.allOrders')}
                                 </button>
                             );
                         })}
@@ -1409,7 +1417,7 @@ export const DashboardClient = memo(function DashboardClient({
                                 <div
                                     className="absolute inset-0 rounded-full border-4 border-purple-500 border-t-transparent animate-spin"/>
                             </div>
-                            <p className="text-[#8888aa]">Loading your orders...</p>
+                            <p className="text-[#8888aa]">{t('orders.loading')}</p>
                         </div>
                     ) : orders.length > 0 ? (
                         <div className="space-y-4">
@@ -1437,8 +1445,7 @@ export const DashboardClient = memo(function DashboardClient({
                                                             className={`font-semibold text-sm ${statusConfig.color}`}>{statusConfig.label}</span>
                                                     </div>
                                                     <div>
-                                                        <p className="text-white font-bold">Order
-                                                            #{order.id.slice(-8).toUpperCase()}</p>
+                                                        <p className="text-white font-bold">{t('orders.orderPrefix')}{order.id.slice(-8).toUpperCase()}</p>
                                                         <p className="text-gray-500 text-sm">{formatDate(order.createdAt)}</p>
                                                     </div>
                                                 </div>
@@ -1510,16 +1517,16 @@ export const DashboardClient = memo(function DashboardClient({
                                 className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-[#9333EA]/20 to-[#9333EA]/20 mb-6">
                                 <ShoppingBag className="w-10 h-10 text-[#E879F9]"/>
                             </div>
-                            <h3 className="text-2xl font-bold text-white mb-3">No orders yet</h3>
+                            <h3 className="text-2xl font-bold text-white mb-3">{t('orders.noOrders')}</h3>
                             <p className="text-[#8888aa] mb-8 max-w-md mx-auto">
-                                When you checkout cards from your collection, they'll appear here for tracking.
+                                {t('orders.noOrdersDesc')}
                             </p>
                             <button
                                 onClick={() => setActiveTab('collection')}
                                 className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#9333EA] to-[#7c3aed] hover:from-[#9333EA] hover:to-[#7c3aed] text-white font-bold rounded-xl transition-all hover:scale-105 shadow-lg shadow-[#C84FFF]/25"
                             >
                                 <Package className="w-5 h-5"/>
-                                View Collection
+                                {t('orders.viewCollection')}
                             </button>
                         </div>
                     )}
@@ -1536,7 +1543,7 @@ export const DashboardClient = memo(function DashboardClient({
                                 <div
                                     className="absolute inset-0 rounded-full border-4 border-orange-500 border-t-transparent animate-spin"/>
                             </div>
-                            <p className="text-[#8888aa]">Crunching your numbers...</p>
+                            <p className="text-[#8888aa]">{t('statistics.loading')}</p>
                         </div>
                     ) : stats ? (
                         <>
@@ -1544,28 +1551,28 @@ export const DashboardClient = memo(function DashboardClient({
                             <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
                                 {[
                                     {
-                                        label: 'Total Pulls',
+                                        label: t('statistics.totalPulls'),
                                         value: stats.totalPulls,
                                         icon: Package,
                                         gradient: 'from-blue-500 to-cyan-500',
                                         delay: 0
                                     },
                                     {
-                                        label: 'Battles Joined',
+                                        label: t('statistics.battlesJoined'),
                                         value: stats.totalBattles,
                                         icon: Swords,
                                         gradient: 'from-purple-500 to-pink-500',
                                         delay: 50
                                     },
                                     {
-                                        label: 'Victories',
+                                        label: t('statistics.victories'),
                                         value: stats.battlesWon,
                                         icon: Trophy,
                                         gradient: 'from-[#C84FFF] to-[#9333EA]',
                                         delay: 100
                                     },
                                     {
-                                        label: 'Win Rate',
+                                        label: t('statistics.winRate'),
                                         value: `${stats.winRate}%`,
                                         icon: Target,
                                         gradient: 'from-orange-500 to-red-500',
@@ -1614,30 +1621,30 @@ export const DashboardClient = memo(function DashboardClient({
                                         <div className="p-2 rounded-lg bg-gradient-to-br from-amber-500 to-orange-500">
                                             <Coins className="w-5 h-5 text-white"/>
                                         </div>
-                                        Coin Economy
+                                        {t('statistics.coinEconomy')}
                                     </h3>
                                     <div className="space-y-3">
                                         {[
                                             {
-                                                label: 'Current Balance',
+                                                label: t('statistics.currentBalance'),
                                                 value: stats.currentCoins.toLocaleString(),
                                                 color: 'text-amber-400',
                                                 icon: Coins
                                             },
                                             {
-                                                label: 'From Sales',
+                                                label: t('statistics.fromSales'),
                                                 value: `+${stats.totalCoinsEarned.toLocaleString()}`,
                                                 color: 'text-[#E879F9]',
                                                 icon: TrendingUp
                                             },
                                             {
-                                                label: 'Collection Value',
+                                                label: t('statistics.collectionValue'),
                                                 value: stats.collectionValue.toLocaleString(),
                                                 color: 'text-[#C84FFF]',
                                                 icon: Gem
                                             },
                                             {
-                                                label: 'Cards Sold',
+                                                label: t('statistics.cardsSold'),
                                                 value: stats.totalSales.toString(),
                                                 color: 'text-white',
                                                 icon: Package
@@ -1673,19 +1680,19 @@ export const DashboardClient = memo(function DashboardClient({
                                         <div className="p-2 rounded-lg bg-gradient-to-br from-[#9333EA] to-[#9333EA]">
                                             <ShoppingBag className="w-5 h-5 text-white"/>
                                         </div>
-                                        Orders Overview
+                                        {t('statistics.ordersOverview')}
                                     </h3>
                                     <div className="space-y-3">
                                         <div
                                             className="flex justify-between items-center p-4 bg-[#1e1e55] rounded-xl border border-white/[0.05]">
-                                            <span className="text-[#7777a0]">Total Orders</span>
+                                            <span className="text-[#7777a0]">{t('statistics.totalOrders')}</span>
                                             <span className="font-bold text-2xl text-white">{stats.totalOrders}</span>
                                         </div>
                                         <div
                                             className="flex justify-between items-center p-4 bg-[#1e1e55] rounded-xl border border-white/[0.05]">
                       <span className="text-[#7777a0] flex items-center gap-2">
                         <Clock className="w-4 h-4"/>
-                        Pending/Processing
+                        {t('statistics.pendingProcessing')}
                       </span>
                                             <span
                                                 className="font-bold text-lg text-amber-400">{stats.pendingOrders}</span>
@@ -1694,7 +1701,7 @@ export const DashboardClient = memo(function DashboardClient({
                                             className="flex justify-between items-center p-4 bg-[#1e1e55] rounded-xl border border-white/[0.05]">
                       <span className="text-[#7777a0] flex items-center gap-2">
                         <CheckCircle2 className="w-4 h-4"/>
-                        Completed
+                        {t('statistics.completedOrders')}
                       </span>
                                             <span
                                                 className="font-bold text-lg text-[#E879F9]">{stats.totalOrders - stats.pendingOrders}</span>
@@ -1718,33 +1725,33 @@ export const DashboardClient = memo(function DashboardClient({
                                     <div className="p-2 rounded-lg bg-gradient-to-br from-amber-500 to-yellow-500">
                                         <Award className="w-5 h-5 text-white"/>
                                     </div>
-                                    Milestones & Achievements
+                                    {t('statistics.milestones')}
                                 </h3>
                                 <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
                                     {[
                                         {
-                                            label: '100 Pulls',
+                                            label: t('statistics.milestoneLabels.pulls100'),
                                             current: stats.totalPulls,
                                             target: 100,
                                             icon: Package,
                                             gradient: 'from-blue-500 to-cyan-500'
                                         },
                                         {
-                                            label: '10 Victories',
+                                            label: t('statistics.milestoneLabels.wins10'),
                                             current: stats.battlesWon,
                                             target: 10,
                                             icon: Trophy,
                                             gradient: 'from-[#C84FFF] to-[#9333EA]'
                                         },
                                         {
-                                            label: '50 Sales',
+                                            label: t('statistics.milestoneLabels.sales50'),
                                             current: stats.totalSales,
                                             target: 50,
                                             icon: Coins,
                                             gradient: 'from-purple-500 to-pink-500'
                                         },
                                         {
-                                            label: '5 Orders',
+                                            label: t('statistics.milestoneLabels.orders5'),
                                             current: stats.totalOrders,
                                             target: 5,
                                             icon: ShoppingBag,
@@ -1791,7 +1798,7 @@ export const DashboardClient = memo(function DashboardClient({
                     ) : (
                         <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-16 text-center">
                             <BarChart3 className="w-16 h-16 text-gray-600 mx-auto mb-4"/>
-                            <p className="text-[#8888aa]">Unable to load statistics</p>
+                            <p className="text-[#8888aa]">{t('statistics.loadFailed')}</p>
                         </div>
                     )}
                 </div>
@@ -1818,21 +1825,21 @@ export const DashboardClient = memo(function DashboardClient({
                             <div className="p-2 rounded-lg bg-gradient-to-br from-[#C84FFF] to-[#9333EA]">
                                 <User className="w-5 h-5 text-black"/>
                             </div>
-                            Profile Information
+                            {t('settings.profileInfo')}
                         </h3>
                         <div className="grid gap-6 md:grid-cols-2">
                             <div>
-                                <label className="block text-sm font-medium text-gray-300 mb-2">Display Name</label>
+                                <label className="block text-sm font-medium text-gray-300 mb-2">{t('settings.displayName')}</label>
                                 <input
                                     type="text"
                                     value={profileForm.name}
                                     onChange={(e) => setProfileForm({...profileForm, name: e.target.value})}
                                     className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-[rgba(200,79,255,0.3)] focus:ring-2 focus:ring-[rgba(200,79,255,0.1)] transition-all"
-                                    placeholder="Your name"
+                                    placeholder={t('settings.displayNamePlaceholder')}
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                                <label className="block text-sm font-medium text-gray-300 mb-2">{t('settings.email')}</label>
                                 <div
                                     className="flex items-center gap-3 px-4 py-3 bg-black/20 border border-white/[0.05] rounded-xl">
                                     <Mail className="w-5 h-5 text-gray-500"/>
@@ -1841,19 +1848,19 @@ export const DashboardClient = memo(function DashboardClient({
                                         <div
                                             className="flex items-center gap-1 px-2 py-1 rounded-full bg-[#C84FFF]/10 border border-[#C84FFF]/30">
                                             <CheckCircle2 className="w-3 h-3 text-[#E879F9]"/>
-                                            <span className="text-xs text-[#E879F9] font-medium">Verified</span>
+                                            <span className="text-xs text-[#E879F9] font-medium">{t('settings.verified')}</span>
                                         </div>
                                     )}
                                 </div>
                             </div>
                             <div className="md:col-span-2">
-                                <label className="block text-sm font-medium text-gray-300 mb-2">Bio</label>
+                                <label className="block text-sm font-medium text-gray-300 mb-2">{t('settings.bio')}</label>
                                 <textarea
                                     value={profileForm.bio}
                                     onChange={(e) => setProfileForm({...profileForm, bio: e.target.value})}
                                     rows={3}
                                     className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-[rgba(200,79,255,0.3)] focus:ring-2 focus:ring-[rgba(200,79,255,0.1)] transition-all resize-none"
-                                    placeholder="Tell us about yourself..."
+                                    placeholder={t('settings.bioPlaceholder')}
                                 />
                             </div>
                         </div>
@@ -1874,23 +1881,22 @@ export const DashboardClient = memo(function DashboardClient({
                             <div className="p-2 rounded-lg bg-gradient-to-br from-[#9333EA] to-[#9333EA]">
                                 <MapPin className="w-5 h-5 text-white"/>
                             </div>
-                            Default Shipping Address
+                            {t('settings.defaultShipping')}
                         </h3>
-                        <p className="text-gray-500 text-sm mb-6">This address will be pre-filled when you checkout
-                            cards.</p>
+                        <p className="text-gray-500 text-sm mb-6">{t('settings.shippingHelper')}</p>
                         <div className="grid gap-6 md:grid-cols-2">
                             <div>
-                                <label className="block text-sm font-medium text-gray-300 mb-2">Full Name</label>
+                                <label className="block text-sm font-medium text-gray-300 mb-2">{t('settings.fullName')}</label>
                                 <input
                                     type="text"
                                     value={profileForm.shippingName}
                                     onChange={(e) => setProfileForm({...profileForm, shippingName: e.target.value})}
                                     className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-[#C84FFF]/50 focus:ring-2 focus:ring-[#C84FFF]/20 transition-all"
-                                    placeholder="John Doe"
+                                    placeholder={t('settings.placeholders.fullName')}
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-300 mb-2">Phone Number</label>
+                                <label className="block text-sm font-medium text-gray-300 mb-2">{t('settings.phone')}</label>
                                 <div className="relative">
                                     <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500"/>
                                     <input
@@ -1901,49 +1907,48 @@ export const DashboardClient = memo(function DashboardClient({
                                             shippingPhone: e.target.value
                                         })}
                                         className="w-full pl-12 pr-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-[#C84FFF]/50 focus:ring-2 focus:ring-[#C84FFF]/20 transition-all"
-                                        placeholder="+1 234 567 8900"
+                                        placeholder={t('settings.placeholders.phone')}
                                     />
                                 </div>
                             </div>
                             <div className="md:col-span-2">
-                                <label className="block text-sm font-medium text-gray-300 mb-2">Street Address</label>
+                                <label className="block text-sm font-medium text-gray-300 mb-2">{t('settings.street')}</label>
                                 <input
                                     type="text"
                                     value={profileForm.shippingAddress}
                                     onChange={(e) => setProfileForm({...profileForm, shippingAddress: e.target.value})}
                                     className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-[#C84FFF]/50 focus:ring-2 focus:ring-[#C84FFF]/20 transition-all"
-                                    placeholder="123 Main Street, Apt 4"
+                                    placeholder={t('settings.placeholders.street')}
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-300 mb-2">City</label>
+                                <label className="block text-sm font-medium text-gray-300 mb-2">{t('settings.city')}</label>
                                 <input
                                     type="text"
                                     value={profileForm.shippingCity}
                                     onChange={(e) => setProfileForm({...profileForm, shippingCity: e.target.value})}
                                     className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-[#C84FFF]/50 focus:ring-2 focus:ring-[#C84FFF]/20 transition-all"
-                                    placeholder="New York"
+                                    placeholder={t('settings.placeholders.city')}
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-300 mb-2">ZIP / Postal
-                                    Code</label>
+                                <label className="block text-sm font-medium text-gray-300 mb-2">{t('settings.zip')}</label>
                                 <input
                                     type="text"
                                     value={profileForm.shippingZip}
                                     onChange={(e) => setProfileForm({...profileForm, shippingZip: e.target.value})}
                                     className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-[#C84FFF]/50 focus:ring-2 focus:ring-[#C84FFF]/20 transition-all"
-                                    placeholder="10001"
+                                    placeholder={t('settings.placeholders.zip')}
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-300 mb-2">Country</label>
+                                <label className="block text-sm font-medium text-gray-300 mb-2">{t('settings.country')}</label>
                                 <input
                                     type="text"
                                     value={profileForm.shippingCountry}
                                     onChange={(e) => setProfileForm({...profileForm, shippingCountry: e.target.value})}
                                     className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-[#C84FFF]/50 focus:ring-2 focus:ring-[#C84FFF]/20 transition-all"
-                                    placeholder="United States"
+                                    placeholder={t('settings.placeholders.country')}
                                 />
                             </div>
                         </div>
@@ -1964,25 +1969,25 @@ export const DashboardClient = memo(function DashboardClient({
                             <div className="p-2 rounded-lg bg-gradient-to-br from-[#C84FFF] to-[#9333EA]">
                                 <Calendar className="w-5 h-5 text-black"/>
                             </div>
-                            Account Information
+                            {t('settings.accountInfo')}
                         </h3>
                         <div className="grid gap-4 md:grid-cols-2">
                             <div className="p-4 bg-[#1e1e55] rounded-xl border border-white/[0.05]">
-                                <p className="text-sm text-gray-500 mb-1">Member Since</p>
+                                <p className="text-sm text-gray-500 mb-1">{t('settings.memberSince')}</p>
                                 <p className="text-white font-semibold">{formatDate(user.createdAt)}</p>
                             </div>
                             <div className="p-4 bg-[#1e1e55] rounded-xl border border-white/[0.05]">
-                                <p className="text-sm text-gray-500 mb-1">Account Status</p>
+                                <p className="text-sm text-gray-500 mb-1">{t('settings.accountStatus')}</p>
                                 <div className="flex items-center gap-2">
                                     {user.emailVerified ? (
                                         <>
                                             <div className="w-2 h-2 rounded-full bg-[#C84FFF] animate-pulse"/>
-                                            <span className="text-[#E879F9] font-semibold">Verified & Active</span>
+                                            <span className="text-[#E879F9] font-semibold">{t('settings.verifiedActive')}</span>
                                         </>
                                     ) : (
                                         <>
                                             <div className="w-2 h-2 rounded-full bg-amber-500"/>
-                                            <span className="text-amber-400 font-semibold">Pending Verification</span>
+                                            <span className="text-amber-400 font-semibold">{t('settings.pendingVerification')}</span>
                                         </>
                                     )}
                                 </div>
@@ -2010,12 +2015,12 @@ export const DashboardClient = memo(function DashboardClient({
                                 <>
                                     <div
                                         className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin relative z-10"/>
-                                    <span className="relative z-10">Saving...</span>
+                                    <span className="relative z-10">{tc('saving')}</span>
                                 </>
                             ) : (
                                 <>
                                     <Save className="w-5 h-5 relative z-10"/>
-                                    <span className="relative z-10">Save Changes</span>
+                                    <span className="relative z-10">{t('settings.saveChanges')}</span>
                                 </>
                             )}
                         </button>

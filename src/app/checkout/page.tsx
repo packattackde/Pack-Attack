@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 import { ShoppingCart, Sparkles } from 'lucide-react';
 import { CheckoutClient } from './CheckoutClient';
+import { getTranslations } from 'next-intl/server';
 
 async function getCart() {
   const session = await getCurrentSession();
@@ -85,6 +86,7 @@ export default async function CheckoutPage() {
   const { items, total, userEmail, userName, upsellCartItems } = await getCart();
 
   if (items.length === 0 && (!upsellCartItems || upsellCartItems.length === 0)) {
+    const t = await getTranslations('checkout');
     return (
       <div className="min-h-screen font-display">
         <div className="fixed inset-0 bg-grid opacity-30" />
@@ -95,14 +97,14 @@ export default async function CheckoutPage() {
             <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[rgba(200,79,255,0.15)] to-[rgba(200,79,255,0.1)]">
               <ShoppingCart className="w-10 h-10 text-[#C84FFF]" />
             </div>
-            <h2 className="text-2xl font-bold text-white mb-3">Cart Empty</h2>
-            <p className="text-[#8888aa] mb-6">Add cards from your collection to checkout!</p>
+            <h2 className="text-2xl font-bold text-white mb-3">{t('cartEmpty')}</h2>
+            <p className="text-[#8888aa] mb-6">{t('cartEmptyDesc')}</p>
             <Link 
               href="/collection" 
               className="inline-flex items-center gap-2 px-6 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl transition-all hover:scale-105"
             >
               <Sparkles className="w-5 h-5" />
-              View Collection
+              {t('viewCollection')}
             </Link>
           </div>
         </div>

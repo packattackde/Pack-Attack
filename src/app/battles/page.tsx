@@ -3,21 +3,16 @@ import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 import { Plus, Users, Trophy, Coins, Swords, Clock, ChevronRight, Crown, Trash2 } from 'lucide-react';
 import { DeleteBattleButton, DeleteAllBattlesButton } from './components/DeleteBattleButton';
+import { getTranslations } from 'next-intl/server';
 
-const MODE_LABELS: Record<string, string> = {
-  LOWEST_CARD: '⬇️ Niedrigste',
-  HIGHEST_CARD: '⬆️ Höchste',
-  ALL_CARDS: '🃏 Alle',
-};
-
-const STATUS_CONFIG: Record<string, { label: string; color: string; dot?: boolean }> = {
-  OPEN: { label: 'Offen', color: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/20' },
-  FULL: { label: 'Voll', color: 'bg-blue-500/15 text-blue-400 border-blue-500/20' },
-  READY: { label: 'Bereit', color: 'bg-amber-500/15 text-amber-400 border-amber-500/20' },
-  ACTIVE: { label: 'Läuft', color: 'bg-[#C84FFF]/15 text-[#E879F9] border-[#C84FFF]/20', dot: true },
-  FINISHED_WIN: { label: 'Beendet', color: 'bg-[#C84FFF]/10 text-[#C84FFF]/60 border-[#C84FFF]/10' },
-  FINISHED_DRAW: { label: 'Unentschieden', color: 'bg-blue-500/10 text-blue-400/60 border-blue-500/10' },
-  CANCELLED: { label: 'Storniert', color: 'bg-red-500/10 text-red-400/60 border-red-500/10' },
+const STATUS_COLORS: Record<string, { color: string; dot?: boolean }> = {
+  OPEN: { color: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/20' },
+  FULL: { color: 'bg-blue-500/15 text-blue-400 border-blue-500/20' },
+  READY: { color: 'bg-amber-500/15 text-amber-400 border-amber-500/20' },
+  ACTIVE: { color: 'bg-[#C84FFF]/15 text-[#E879F9] border-[#C84FFF]/20', dot: true },
+  FINISHED_WIN: { color: 'bg-[#C84FFF]/10 text-[#C84FFF]/60 border-[#C84FFF]/10' },
+  FINISHED_DRAW: { color: 'bg-blue-500/10 text-blue-400/60 border-blue-500/10' },
+  CANCELLED: { color: 'bg-red-500/10 text-red-400/60 border-red-500/10' },
 };
 
 async function getBattles(isAdmin: boolean) {
@@ -56,6 +51,7 @@ export default async function BattlesPage() {
   const session = await getCurrentSession();
   const isAdmin = session?.user?.role === 'ADMIN';
   const battles = await getBattles(!!isAdmin);
+  const t = await getTranslations('battles');
 
   const activeBattles = battles.filter(b => ['OPEN', 'FULL', 'READY', 'ACTIVE'].includes(b.status));
   const completedBattles = battles.filter(b => ['FINISHED_WIN', 'FINISHED_DRAW', 'CANCELLED'].includes(b.status));
@@ -78,7 +74,7 @@ export default async function BattlesPage() {
               <span className="text-white">Box </span>
               <span className="text-[#C84FFF]">Battles</span>
             </h1>
-            <p className="text-[#8888aa] text-sm mt-1">Tritt gegen andere Spieler an und gewinne Karten</p>
+            <p className="text-[#8888aa] text-sm mt-1">{t('subtitle')}</p>
           </div>
           {session ? (
             <Link
@@ -86,14 +82,14 @@ export default async function BattlesPage() {
               className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#C84FFF] hover:bg-[#E879F9] text-white font-semibold rounded-xl transition-all hover:scale-[1.02] text-sm shrink-0"
             >
               <Plus className="w-4 h-4" />
-              Battle erstellen
+              {t('createBattle')}
             </Link>
           ) : (
             <Link
               href="/login"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-white bg-[#12123a] border border-[rgba(255,255,255,0.1)] hover:border-[rgba(255,255,255,0.2)] transition-all text-sm shrink-0"
             >
-              Anmelden
+              {t('signIn')}
             </Link>
           )}
         </div>
@@ -101,14 +97,14 @@ export default async function BattlesPage() {
         {battles.length === 0 ? (
           <div className="rounded-2xl p-12 text-center bg-[#1a1a4a] border border-[rgba(255,255,255,0.08)]">
             <Swords className="w-12 h-12 text-[#C84FFF] mx-auto mb-4" />
-            <h2 className="text-xl font-bold text-white mb-2">Keine Battles</h2>
-            <p className="text-[#8888aa] text-sm mb-6">Sei der Erste und erstelle ein Battle!</p>
+            <h2 className="text-xl font-bold text-white mb-2">{t('noBattles')}</h2>
+            <p className="text-[#8888aa] text-sm mb-6">{t('beFirst')}</p>
             <Link
               href={session ? '/battles/create' : '/login'}
               className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#C84FFF] text-white font-semibold rounded-xl text-sm"
             >
               <Plus className="w-4 h-4" />
-              {session ? 'Battle erstellen' : 'Anmelden'}
+              {session ? t('createBattle') : t('signIn')}
             </Link>
           </div>
         ) : (
@@ -118,21 +114,22 @@ export default async function BattlesPage() {
               <section>
                 <div className="flex items-center gap-2.5 mb-4">
                   <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <h2 className="text-lg font-bold text-white">Aktive Battles</h2>
+                  <h2 className="text-lg font-bold text-white">{t('activeBattles')}</h2>
                   <span className="text-xs text-[#666688] bg-[#12123a] px-2 py-0.5 rounded-full">{activeBattles.length}</span>
                 </div>
                 <div className="space-y-3">
                   {activeBattles.map((battle) => {
                     const entryFee = Number(battle.entryFee);
-                    const modeLabel = MODE_LABELS[battle.battleMode] || battle.battleMode;
-                    const status = STATUS_CONFIG[battle.status] || STATUS_CONFIG.OPEN;
+                    const modeLabel = t(`modeLabelsShort.${battle.battleMode}` as any);
+                    const statusStyle = STATUS_COLORS[battle.status] || STATUS_COLORS.OPEN;
+                    const statusLabel = t(`statusLabels.${battle.status}` as any);
                     const visibleP = getVisibleParticipants(battle);
                     const emptySlots = battle.maxParticipants - battle.participants.length;
                     const firstBox = battle.roundBoxes?.length > 0 ? battle.roundBoxes[0].box : battle.box;
                     const uniqueBoxNames = battle.roundBoxes?.length > 0
                       ? [...new Set(battle.roundBoxes.map((rb: any) => rb.box.name))]
                       : [firstBox?.name];
-                    const displayName = uniqueBoxNames.length === 1 ? uniqueBoxNames[0] : `${uniqueBoxNames.length} Boxen Mix`;
+                    const displayName = uniqueBoxNames.length === 1 ? uniqueBoxNames[0] : `${uniqueBoxNames.length} ${t('boxMix')}`;
 
                     return (
                       <Link
@@ -155,13 +152,13 @@ export default async function BattlesPage() {
                             <h3 className="font-semibold text-white text-sm truncate group-hover:text-[#C84FFF] transition-colors">
                               {displayName}
                             </h3>
-                            <span className={`shrink-0 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold border ${status.color}`}>
-                              {status.dot && <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />}
-                              {status.label}
+                            <span className={`shrink-0 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold border ${statusStyle.color}`}>
+                              {statusStyle.dot && <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />}
+                              {statusLabel}
                             </span>
                           </div>
                           <div className="flex items-center gap-3 text-xs text-[#666688]">
-                            <span>{battle.rounds} Runden</span>
+                            <span>{battle.rounds} {t('rounds')}</span>
                             <span className="text-[#444466]">·</span>
                             <span>{modeLabel}</span>
                           </div>
@@ -194,9 +191,9 @@ export default async function BattlesPage() {
                             {entryFee.toFixed(0)}
                           </div>
                           {battle.status === 'OPEN' && emptySlots > 0 ? (
-                            <span className="text-[10px] text-emerald-400 font-medium">Beitreten</span>
+                            <span className="text-[10px] text-emerald-400 font-medium">{t('join')}</span>
                           ) : (
-                            <span className="text-[10px] text-[#666688]">Ansehen</span>
+                            <span className="text-[10px] text-[#666688]">{t('view')}</span>
                           )}
                         </div>
 
@@ -213,7 +210,7 @@ export default async function BattlesPage() {
               <section>
                 <div className="flex items-center gap-2.5 mb-4">
                   <Trophy className="w-4 h-4 text-amber-400/60" />
-                  <h2 className="text-lg font-bold text-[#8888aa]">Abgeschlossen</h2>
+                  <h2 className="text-lg font-bold text-[#8888aa]">{t('completed')}</h2>
                   <span className="text-xs text-[#666688] bg-[#12123a] px-2 py-0.5 rounded-full">{completedBattles.length}</span>
                   {isAdmin && (
                     <div className="ml-auto">
@@ -224,13 +221,13 @@ export default async function BattlesPage() {
                 <div className="space-y-2">
                   {completedBattles.map((battle) => {
                     const entryFee = Number(battle.entryFee);
-                    const modeLabel = MODE_LABELS[battle.battleMode] || battle.battleMode;
+                    const modeLabel = t(`modeLabelsShort.${battle.battleMode}` as any);
                     const isDraw = battle.status === 'FINISHED_DRAW';
                     const firstBox = battle.roundBoxes?.length > 0 ? battle.roundBoxes[0].box : battle.box;
                     const uniqueBoxNames = battle.roundBoxes?.length > 0
                       ? [...new Set(battle.roundBoxes.map((rb: any) => rb.box.name))]
                       : [firstBox?.name];
-                    const displayName = uniqueBoxNames.length === 1 ? uniqueBoxNames[0] : `${uniqueBoxNames.length} Boxen Mix`;
+                    const displayName = uniqueBoxNames.length === 1 ? uniqueBoxNames[0] : `${uniqueBoxNames.length} ${t('boxMix')}`;
 
                     return (
                       <Link
@@ -247,7 +244,7 @@ export default async function BattlesPage() {
                             {displayName}
                           </h3>
                           <div className="flex items-center gap-2 text-xs text-[#444466]">
-                            <span>{battle.rounds} Runden</span>
+                            <span>{battle.rounds} {t('rounds')}</span>
                             <span>·</span>
                             <span>{modeLabel}</span>
                           </div>
@@ -255,11 +252,11 @@ export default async function BattlesPage() {
 
                         {/* Winner */}
                         {isDraw ? (
-                          <span className="text-xs text-blue-400/60 font-medium shrink-0">Unentschieden</span>
+                          <span className="text-xs text-blue-400/60 font-medium shrink-0">{t('statusLabels.FINISHED_DRAW')}</span>
                         ) : battle.winner ? (
                           <div className="hidden sm:flex items-center gap-1.5 shrink-0">
                             <Crown className="w-3 h-3 text-amber-400/60" />
-                            <span className="text-xs text-[#8888aa] font-medium">{battle.winner.name || 'Gewinner'}</span>
+                            <span className="text-xs text-[#8888aa] font-medium">{battle.winner.name || battle.winner.email}</span>
                           </div>
                         ) : null}
 

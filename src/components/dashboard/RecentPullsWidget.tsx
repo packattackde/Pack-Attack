@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import CardLightbox from './CardLightbox';
 import { GiFireGem, GiCardPlay, GiTwoCoins } from 'react-icons/gi';
 import { formatCoins } from '@/lib/format';
@@ -43,6 +44,7 @@ function getRarityBorderClass(rarity: string): string {
 }
 
 export default function RecentPullsWidget({ hits, pulls, className = '' }: RecentPullsWidgetProps) {
+  const t = useTranslations('widgets');
   const [lightboxCard, setLightboxCard] = useState<{ name: string; image: string | null; rarity: string; coinValue: number } | null>(null);
 
   return (
@@ -57,7 +59,7 @@ export default function RecentPullsWidget({ hits, pulls, className = '' }: Recen
       {hits.length > 0 && (
         <div className="mb-5">
           <div className="text-[10px] font-semibold uppercase tracking-wider text-[#fbbf24] mb-3 flex items-center gap-1.5">
-<GiFireGem className="w-3.5 h-3.5 text-[#C84FFF]" /> My Last Hits
+<GiFireGem className="w-3.5 h-3.5 text-[#C84FFF]" /> {t('recentPulls.myLastHits')}
           </div>
           <div className="flex gap-2 sm:gap-3 justify-center">
             {hits.map((hit, idx) => (
@@ -96,7 +98,7 @@ export default function RecentPullsWidget({ hits, pulls, className = '' }: Recen
       {/* Row 2: Last Pulls (any rarity) */}
       <div>
         <div className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-3 flex items-center gap-1.5">
-<GiCardPlay className="w-3.5 h-3.5 text-[#C84FFF]" /> My Last Pulls
+<GiCardPlay className="w-3.5 h-3.5 text-[#C84FFF]" /> {t('recentPulls.myLastPulls')}
         </div>
         <div className="flex gap-2">
           {pulls.map((pull, idx) => (
@@ -132,7 +134,7 @@ export default function RecentPullsWidget({ hits, pulls, className = '' }: Recen
         href="/collection"
         className="text-[#C84FFF] text-[11px] font-semibold mt-4 inline-block hover:underline"
       >
-        View collection →
+        {t('recentPulls.viewCollection')}
       </Link>
     </div>
   );

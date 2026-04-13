@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 import { Trash2, Edit } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { useTranslations } from 'next-intl';
 
 type Box = {
   id: string;
@@ -18,13 +19,15 @@ type Box = {
 };
 
 export function BoxesClient({ boxes: initialBoxes }: { boxes: Box[] }) {
+  const t = useTranslations('admin.boxesMgmt');
+  const tc = useTranslations('common');
   const router = useRouter();
   const { addToast } = useToast();
   const [boxes, setBoxes] = useState(initialBoxes);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const handleDelete = async (boxId: string, boxName: string) => {
-    if (!confirm(`Are you sure you want to delete "${boxName}"? This action cannot be undone and will delete all associated cards and pulls.`)) {
+    if (!confirm(t('confirmDelete', { name: boxName }))) {
       return;
     }
 
@@ -38,21 +41,20 @@ export function BoxesClient({ boxes: initialBoxes }: { boxes: Box[] }) {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || 'Failed to delete box');
+        throw new Error(data.error || t('failedDelete'));
       }
 
-      // Remove box from local state
       setBoxes((prevBoxes) => prevBoxes.filter((box) => box.id !== boxId));
 
       addToast({
-        title: 'Success',
-        description: 'Box deleted successfully!',
+        title: tc('success'),
+        description: t('boxDeleted'),
       });
 
       router.refresh();
     } catch (error) {
       addToast({
-        title: 'Error',
+        title: tc('error'),
         description: (error as Error).message,
         variant: 'destructive',
       });
@@ -64,9 +66,9 @@ export function BoxesClient({ boxes: initialBoxes }: { boxes: Box[] }) {
   if (boxes.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-[#8888aa] mb-4">No boxes created yet.</p>
+        <p className="text-[#8888aa] mb-4">{t('noBoxes')}</p>
         <Button asChild>
-          <Link href="/admin/boxes/create">Create Your First Box</Link>
+          <Link href="/admin/boxes/create">{t('createFirst')}</Link>
         </Button>
       </div>
     );
@@ -84,7 +86,7 @@ export function BoxesClient({ boxes: initialBoxes }: { boxes: Box[] }) {
                   ? 'bg-[#C84FFF]/20 text-[#E879F9]' 
                   : 'bg-red-500/20 text-red-500'
               }`}>
-                {box.isActive ? 'Active' : 'Inactive'}
+                {box.isActive ? t('active') : t('inactive')}
               </span>
             </div>
           </CardHeader>
@@ -92,14 +94,14 @@ export function BoxesClient({ boxes: initialBoxes }: { boxes: Box[] }) {
             <div className="space-y-2">
               <p className="text-sm text-[#8888aa]">{box.description}</p>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-[#8888aa]">Price: {box.price} coins</span>
-                <span className="text-sm text-[#8888aa]">{box.cardsPerPack} cards/pack</span>
+                <span className="text-sm text-[#8888aa]">{tc('price')}: {box.price} {t('coins')}</span>
+                <span className="text-sm text-[#8888aa]">{box.cardsPerPack} {t('cardsPerPack')}</span>
               </div>
               <div className="flex gap-2 mt-4">
                 <Button asChild variant="outline" className="flex-1">
                   <Link href={`/admin/boxes/${box.id}/edit`}>
                     <Edit className="h-4 w-4 mr-2" />
-                    Edit
+                    {tc('edit')}
                   </Link>
                 </Button>
                 <Button
@@ -109,7 +111,7 @@ export function BoxesClient({ boxes: initialBoxes }: { boxes: Box[] }) {
                   className="flex-1"
                 >
                   <Trash2 className="h-4 w-4 mr-2" />
-                  {deletingId === box.id ? 'Deleting...' : 'Delete'}
+                  {deletingId === box.id ? tc('deleting') : tc('delete')}
                 </Button>
               </div>
             </div>

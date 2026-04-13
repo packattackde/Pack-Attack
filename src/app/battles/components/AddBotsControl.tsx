@@ -4,19 +4,21 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Bot, Plus } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { useTranslations } from 'next-intl';
 
 export function AddBotsControl({ battleId, maxSlots }: { battleId: string; maxSlots: number }) {
   const router = useRouter();
   const { addToast } = useToast();
   const [count, setCount] = useState(1);
   const [submitting, setSubmitting] = useState(false);
+  const t = useTranslations('battles');
 
   const maxAddable = Math.min(maxSlots, 3);
 
   if (maxSlots <= 0) {
     return (
       <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-4 text-sm text-purple-400">
-        Alle Plätze belegt
+        {t('bots.allSlotsFull')}
       </div>
     );
   }
@@ -31,13 +33,13 @@ export function AddBotsControl({ battleId, maxSlots }: { battleId: string; maxSl
       });
       const data = await res.json();
       if (!res.ok) {
-        addToast({ title: 'Fehler', description: data.error, variant: 'destructive' });
+        addToast({ title: t('bots.addFailed'), description: data.error, variant: 'destructive' });
         return;
       }
-      addToast({ title: 'Bots hinzugefügt', description: `${data.added} Bot(s) beigetreten` });
+      addToast({ title: t('bots.addedTitle'), description: t('bots.addedDesc', { count: data.added }) });
       router.refresh();
     } catch {
-      addToast({ title: 'Fehler', description: 'Bots konnten nicht hinzugefügt werden', variant: 'destructive' });
+      addToast({ title: t('bots.addFailed'), variant: 'destructive' });
     } finally {
       setSubmitting(false);
     }
@@ -47,11 +49,11 @@ export function AddBotsControl({ battleId, maxSlots }: { battleId: string; maxSl
     <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-4">
       <div className="flex items-center gap-2 mb-3">
         <Bot className="w-4 h-4 text-purple-400" />
-        <span className="text-sm font-semibold text-purple-400">Nur Admin — Test-Bots</span>
+        <span className="text-sm font-semibold text-purple-400">{t('bots.adminTestBots')}</span>
       </div>
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2">
-          <label className="text-sm text-[#8888aa]">Anzahl:</label>
+          <label className="text-sm text-[#8888aa]">{t('bots.count')}</label>
           <input
             type="number"
             min={1}
@@ -66,9 +68,9 @@ export function AddBotsControl({ battleId, maxSlots }: { battleId: string; maxSl
           disabled={submitting}
           className="px-4 py-1.5 bg-purple-500 text-white text-sm font-semibold rounded-lg hover:bg-purple-600 transition-all disabled:opacity-50 flex items-center gap-1"
         >
-          {submitting ? 'Füge hinzu...' : <><Plus className="w-3 h-3" /> {count} Bot(s) hinzufügen</>}
+          {submitting ? t('bots.adding') : <><Plus className="w-3 h-3" /> {count} {t('bots.addBots')}</>}
         </button>
-        <span className="text-xs text-[#8888aa]">{maxSlots} Platz/Plätze frei</span>
+        <span className="text-xs text-[#8888aa]">{maxSlots} {t('bots.slotsAvailable')}</span>
       </div>
     </div>
   );
