@@ -611,19 +611,19 @@ export default function OpenBoxPage() {
       <div className="relative container pb-12 -mt-2">
         <div className="max-w-6xl mx-auto">
 
-          {/* Card Pool + Floating Control Panel */}
-          <div className="relative min-h-[600px]">
+          {/* Card Pool + Floating Control Panel — stacked via CSS Grid */}
+          <div className="grid" style={{ gridTemplateColumns: '1fr', gridTemplateRows: '1fr' }}>
 
-            {/* ---- Card Pool (base layer, visible behind the panel) ---- */}
-            <div className="rounded-2xl p-4 sm:p-6">
-              <h2 className="text-lg font-bold text-[#f0f0f5]/70 mb-2">{t('whatsInPack')} <InfoTooltip infoKey="pack.open.dropRates" /></h2>
+            {/* Layer 1: Card Pool (fills the grid cell) */}
+            <div className="rounded-2xl p-4 sm:p-6" style={{ gridArea: '1 / 1' }}>
+              <h2 className="text-lg font-bold text-[#f0f0f5]/60 mb-2">{t('whatsInPack')} <InfoTooltip infoKey="pack.open.dropRates" /></h2>
             {box.cards.length > 0 && (
-              <p className="text-sm text-[#8888aa] mb-4">{box.cards.length === 1 ? t('cardsAvailable', { count: box.cards.length }) : t('cardsAvailablePlural', { count: box.cards.length })}</p>
+              <p className="text-sm text-[#8888aa]/60 mb-4">{box.cards.length === 1 ? t('cardsAvailable', { count: box.cards.length }) : t('cardsAvailablePlural', { count: box.cards.length })}</p>
             )}
             
             {box.cards.length > 0 ? (
               <div className={`grid gap-4 ${
-                box.cards.length === 1 ? 'grid-cols-1 max-w-xs mx-auto' :
+                box.cards.length === 1 ? 'grid-cols-2 max-w-xs mx-auto' :
                 box.cards.length === 2 ? 'grid-cols-2 max-w-lg mx-auto' :
                 box.cards.length === 3 ? 'grid-cols-3 max-w-2xl mx-auto' :
                 box.cards.length <= 6 ? 'grid-cols-3 sm:grid-cols-3' :
@@ -724,9 +724,9 @@ export default function OpenBoxPage() {
             )}
             </div>
 
-            {/* ---- Floating Glassmorphism Control Panel (overlays the card grid) ---- */}
-            <div className="absolute inset-x-0 top-0 bottom-0 flex items-center justify-center pointer-events-none z-20">
-              <div className="pointer-events-auto sticky top-24 w-full max-w-md rounded-2xl p-6 bg-[#0a0a2e]/92 backdrop-blur-2xl border border-[rgba(200,79,255,0.2)] shadow-[0_8px_60px_rgba(0,0,0,0.8),0_0_50px_rgba(200,79,255,0.12)]">
+            {/* Layer 2: Floating Glassmorphism Control Panel (same grid cell, overlays cards) */}
+            <div className="flex justify-center pointer-events-none z-20 py-8" style={{ gridArea: '1 / 1' }}>
+              <div className="pointer-events-auto sticky top-20 self-start w-full max-w-md h-fit rounded-2xl p-6 bg-[#0a0a2e]/[0.94] backdrop-blur-2xl border border-[rgba(200,79,255,0.2)] shadow-[0_8px_60px_rgba(0,0,0,0.8),0_0_50px_rgba(200,79,255,0.12)]">
 
                 {/* Quantity Selection */}
                 <p className="text-sm font-semibold text-[#8888aa] text-center mb-4">{t('quantity')}</p>
