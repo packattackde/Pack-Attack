@@ -100,6 +100,13 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
   const animationPlayedRef = useRef(false);
 
+  // Slot machine state
+  const [slotPhase, setSlotPhase] = useState<'idle' | 'spinning' | 'locking' | 'done'>('idle');
+  const [lockedSlots, setLockedSlots] = useState<Set<string>>(new Set());
+  const [spinOffset, setSpinOffset] = useState(0);
+  const spinRef = useRef<number>(0);
+  const spinAnimRef = useRef<number | null>(null);
+
   const isCreator = currentUserId === battle.creatorId;
   const isParticipant = battle.participants.some(p => p.userId === currentUserId);
   const isFull = battle.participants.length >= battle.maxParticipants;
@@ -160,6 +167,23 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
     return () => clearInterval(interval);
   }, [battle.status, battle.autoStartAt, battle.id]);
 
+  // Spin animation loop
+  useEffect(() => {
+    if (slotPhase !== 'spinning' && slotPhase !== 'locking') return;
+    let running = true;
+    const animate = () => {
+      if (!running) return;
+      spinRef.current += 12;
+      setSpinOffset(spinRef.current);
+      spinAnimRef.current = requestAnimationFrame(animate);
+    };
+    spinAnimRef.current = requestAnimationFrame(animate);
+    return () => {
+      running = false;
+      if (spinAnimRef.current) cancelAnimationFrame(spinAnimRef.current);
+    };
+  }, [slotPhase]);
+
   const runRevealAnimation = useCallback((b: Battle) => {
     if (!b.pulls || b.pulls.length === 0) {
       setBattleComplete(true);
@@ -169,21 +193,60 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
     setIsDrawing(true);
     const maxRound = Math.max(...b.pulls.map(p => p.roundNumber));
     let round = 1;
-    const revealNext = () => {
+
+    const revealRoundSlotMachine = () => {
       setCurrentRevealRound(round);
-      setRevealedRounds(prev => new Set([...prev, round]));
-      round++;
-      if (round <= maxRound) {
-        setTimeout(revealNext, 2500);
-      } else {
+      setLockedSlots(new Set());
+      setSlotPhase('spinning');
+      spinRef.current = 0;
+
+      const roundPulls = (b.pulls || []).filter(p => p.roundNumber === round);
+      const participants = b.participants;
+
+      // Lock each player's slot one by one with staggered timing
+      let lockIdx = 0;
+      const lockNext = () => {
+        if (lockIdx >= participants.length) {
+          setSlotPhase('done');
+          setRevealedRounds(prev => new Set([...prev, round]));
+
+          // Pause to show round result, then move to next round
+          setTimeout(() => {
+            round++;
+            if (round <= maxRound) {
+              setTimeout(revealRoundSlotMachine, 600);
+            } else {
+              setTimeout(() => {
+                setIsDrawing(false);
+                setSlotPhase('idle');
+                setBattleComplete(true);
+                setTimeout(() => setShowWinnerReveal(true), 800);
+              }, 400);
+            }
+          }, 2000);
+          return;
+        }
+
+        setSlotPhase('locking');
+        const pid = participants[lockIdx].id;
+        const pull = roundPulls.find(p => p.participantId === pid);
+        const isHighValue = pull && pull.coinValue > 50;
+
+        // High-value cards get a longer "near miss" slowdown
+        const lockDelay = isHighValue ? 1800 : 1000;
+
         setTimeout(() => {
-          setIsDrawing(false);
-          setBattleComplete(true);
-          setTimeout(() => setShowWinnerReveal(true), 600);
-        }, 2500);
-      }
+          setLockedSlots(prev => new Set([...prev, pid]));
+          lockIdx++;
+          setTimeout(lockNext, 400);
+        }, lockDelay);
+      };
+
+      // Start locking after initial spin period
+      setTimeout(lockNext, 1500);
     };
-    setTimeout(revealNext, 1000);
+
+    setTimeout(revealRoundSlotMachine, 800);
   }, []);
 
   const handleJoin = async () => {
@@ -528,18 +591,187 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
           </div>
         )}
 
-        {/* ── Round Reveals ── */}
+        {/* ── Slot Machine Round Reveal ── */}
         {(isDrawing || battleComplete) && !showWinnerReveal && Object.keys(pullsByRound).length > 0 && (
           <div className="space-y-4 mb-6">
             <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-[#C84FFF]" /> {t('lobby.roundResults')}
             </h2>
+
+            {/* Current round: slot machine reels */}
+            {currentRevealRound > 0 && !revealedRounds.has(currentRevealRound) && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="bg-[#1a1a4a] border border-[#C84FFF]/40 rounded-2xl overflow-hidden shadow-[0_0_40px_rgba(200,79,255,0.15)]"
+              >
+                <div className="bg-[#C84FFF]/10 px-5 py-3 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#C84FFF] animate-pulse" />
+                    <span className="text-sm font-bold text-white">{t('detail.roundLabel')} {currentRevealRound}</span>
+                    {battle.roundBoxes && battle.roundBoxes.length > 0 && (() => {
+                      const rb = battle.roundBoxes!.find(r => r.roundNumber === currentRevealRound);
+                      return rb ? (
+                        <span className="text-xs text-[#8888aa] flex items-center gap-1.5">
+                          <img src={rb.box.imageUrl} alt="" className="w-4 h-4 rounded object-cover" />
+                          {rb.box.name}
+                        </span>
+                      ) : null;
+                    })()}
+                  </div>
+                  <span className="text-xs text-[#666688]">{currentRevealRound}/{battle.rounds}</span>
+                </div>
+                <div className="p-6">
+                  <div className="flex flex-col sm:flex-row items-stretch justify-center gap-4">
+                    {battle.participants.map((participant) => {
+                      const pull = (pullsByRound[currentRevealRound] || []).find(p => p.participantId === participant.id);
+                      const isLocked = lockedSlots.has(participant.id);
+                      const allImages = (battle.pulls || []).filter(p => p.itemImage).map(p => p.itemImage!);
+                      const pName = participant.user.name || t('lobby.playerFallback');
+
+                      return (
+                        <div key={participant.id} className="flex-1 max-w-[220px] mx-auto sm:mx-0">
+                          {/* Player name tag */}
+                          <div className="flex items-center justify-center gap-2 mb-3">
+                            <span className={`text-xs font-bold uppercase tracking-wider ${isLocked ? 'text-[#C84FFF]' : 'text-[#8888aa]'}`}>
+                              {pName}
+                            </span>
+                            {isLocked ? (
+                              <motion.div
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+                              >
+                                <Check className="w-4 h-4 text-emerald-400" />
+                              </motion.div>
+                            ) : (
+                              <div className="w-4 h-4 border-2 border-[#C84FFF]/40 border-t-[#C84FFF] rounded-full animate-spin" />
+                            )}
+                          </div>
+
+                          {/* Slot reel container */}
+                          <div className={`relative rounded-xl border-2 overflow-hidden transition-all duration-500 ${
+                            isLocked
+                              ? `${getRarityColor(pull?.itemRarity || null)} bg-[#12123a] shadow-[0_0_20px_rgba(200,79,255,0.2)]`
+                              : 'border-[rgba(255,255,255,0.15)] bg-[#0e0e2a]'
+                          }`} style={{ height: 280 }}>
+                            {isLocked && pull ? (
+                              /* Locked: show the actual card */
+                              <motion.div
+                                initial={{ scale: 1.1, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                                className="flex flex-col items-center justify-center h-full p-4 text-center"
+                              >
+                                {/* Lock-in flash */}
+                                <motion.div
+                                  initial={{ opacity: 0.8 }}
+                                  animate={{ opacity: 0 }}
+                                  transition={{ duration: 0.6 }}
+                                  className="absolute inset-0 bg-white/20 rounded-xl pointer-events-none"
+                                />
+                                {pull.itemImage ? (
+                                  <motion.div
+                                    initial={{ y: -10 }}
+                                    animate={{ y: 0 }}
+                                    transition={{ type: 'spring', stiffness: 200, damping: 15, delay: 0.1 }}
+                                    className="w-24 h-32 mb-3 relative"
+                                  >
+                                    <img src={pull.itemImage} alt={pull.itemName || ''} className="w-full h-full object-cover rounded-lg" />
+                                  </motion.div>
+                                ) : (
+                                  <div className="w-24 h-32 mb-3 bg-[#1a1a4a] rounded-lg flex items-center justify-center">
+                                    <span className="text-[#555577] text-2xl">?</span>
+                                  </div>
+                                )}
+                                <motion.div
+                                  initial={{ opacity: 0, y: 5 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  transition={{ delay: 0.2 }}
+                                >
+                                  <div className="text-sm text-white font-semibold truncate max-w-[180px] mb-0.5">{pull.itemName || '?'}</div>
+                                  {pull.itemRarity && (
+                                    <div className="text-[10px] text-[#8888aa] uppercase tracking-wider mb-1">{pull.itemRarity}</div>
+                                  )}
+                                </motion.div>
+                                <motion.div
+                                  initial={{ scale: 0, opacity: 0 }}
+                                  animate={{ scale: 1, opacity: 1 }}
+                                  transition={{ delay: 0.3, type: 'spring', stiffness: 300 }}
+                                  className="text-amber-400 font-bold text-lg"
+                                >
+                                  {pull.coinValue.toFixed(2)}
+                                </motion.div>
+                              </motion.div>
+                            ) : (
+                              /* Spinning: rapid vertical scroll of card images */
+                              <div className="relative w-full h-full overflow-hidden">
+                                {/* Spinning cards */}
+                                <div
+                                  className="absolute inset-0 flex flex-col items-center"
+                                  style={{ transform: `translateY(-${spinOffset % 600}px)` }}
+                                >
+                                  {Array.from({ length: 12 }).map((_, idx) => {
+                                    const img = allImages.length > 0 ? allImages[(idx + battle.participants.indexOf(participant)) % allImages.length] : null;
+                                    return (
+                                      <div key={idx} className="w-20 h-28 my-2 shrink-0 rounded-lg overflow-hidden opacity-60" style={{ filter: 'blur(2px)' }}>
+                                        {img ? (
+                                          <img src={img} alt="" className="w-full h-full object-cover" />
+                                        ) : (
+                                          <div className="w-full h-full bg-[#1a1a4a] flex items-center justify-center">
+                                            <span className="text-[#333355]">?</span>
+                                          </div>
+                                        )}
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                                {/* Gradient fade top/bottom */}
+                                <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-[#0e0e2a] to-transparent z-10 pointer-events-none" />
+                                <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#0e0e2a] to-transparent z-10 pointer-events-none" />
+                                {/* Center highlight line */}
+                                <div className="absolute inset-x-2 top-1/2 -translate-y-1/2 h-32 border-2 border-[#C84FFF]/30 rounded-lg z-20 pointer-events-none" />
+                                {/* SPINNING label */}
+                                <div className="absolute inset-0 flex items-end justify-center pb-4 z-30">
+                                  <span className="text-[10px] uppercase tracking-widest text-[#C84FFF]/60 font-bold">Spinning...</span>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Value display below reel */}
+                          <div className="mt-2 text-center h-6">
+                            {isLocked && pull && (
+                              <motion.span
+                                initial={{ opacity: 0, y: 5 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="text-sm font-bold text-amber-400"
+                              >
+                                {pull.coinValue.toFixed(2)} Coins
+                              </motion.span>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* VS divider for 2 players */}
+                  {battle.participants.length === 2 && (
+                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden sm:flex">
+                      <span className="text-[#C84FFF]/20 font-black text-2xl">{t('lobby.vs')}</span>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            )}
+
+            {/* Previously revealed rounds (collapsed summary) */}
             {Array.from({ length: battle.rounds }, (_, i) => i + 1).map((round) => {
               const roundPulls = pullsByRound[round] || [];
               const isRevealed = revealedRounds.has(round);
-              const isCurrent = currentRevealRound === round && isDrawing;
 
-              if (!isRevealed) {
+              if (!isRevealed && round !== currentRevealRound) {
                 return (
                   <div key={round} className="bg-[#0e0e2a] border border-dashed border-[rgba(255,255,255,0.05)] rounded-xl p-4 flex items-center justify-center">
                     <span className="text-[#333355] text-sm">{t('detail.roundLabel')} {round}</span>
@@ -547,83 +779,66 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                 );
               }
 
+              if (!isRevealed) return null;
+
               const roundHighest = Math.max(...roundPulls.map(p => p.coinValue));
+              const roundWinner = roundPulls.find(p => p.coinValue === roundHighest);
 
               return (
-                <AnimatePresence key={round}>
-                  <motion.div
-                    initial={{ opacity: 0, y: 30, scale: 0.97 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    transition={{ duration: 0.5, ease: 'easeOut' }}
-                    className={`bg-[#1a1a4a] border rounded-2xl overflow-hidden ${
-                      isCurrent ? 'border-[#C84FFF]/40 shadow-[0_0_25px_rgba(200,79,255,0.1)]' : 'border-[rgba(255,255,255,0.06)]'
-                    }`}
-                  >
-                    <div className={`px-5 py-2.5 flex items-center justify-between ${
-                      isCurrent ? 'bg-[#C84FFF]/5' : 'bg-[#12123a]/50'
-                    }`}>
-                      <div className="flex items-center gap-2">
-                        {isCurrent && <span className="w-2 h-2 rounded-full bg-[#C84FFF] animate-pulse" />}
-                        <span className="text-sm font-bold text-white">{t('detail.roundLabel')} {round}</span>
-                        {battle.roundBoxes && battle.roundBoxes.length > 0 && (() => {
-                          const rb = battle.roundBoxes!.find(r => r.roundNumber === round);
-                          return rb ? (
-                            <span className="text-xs text-[#8888aa] flex items-center gap-1.5">
-                              <img src={rb.box.imageUrl} alt="" className="w-4 h-4 rounded object-cover" />
-                              {rb.box.name}
-                            </span>
-                          ) : null;
-                        })()}
-                      </div>
-                      <span className="text-xs text-[#666688]">{round}/{battle.rounds}</span>
+                <motion.div
+                  key={round}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4 }}
+                  className="bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-xl overflow-hidden"
+                >
+                  <div className="px-4 py-2.5 bg-[#0e0e2a] flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold text-white">{t('detail.roundLabel')} {round}</span>
+                      {battle.roundBoxes && battle.roundBoxes.length > 0 && (() => {
+                        const rb = battle.roundBoxes!.find(r => r.roundNumber === round);
+                        return rb ? (
+                          <span className="text-[10px] text-[#8888aa] flex items-center gap-1">
+                            <img src={rb.box.imageUrl} alt="" className="w-3 h-3 rounded object-cover" />
+                            {rb.box.name}
+                          </span>
+                        ) : null;
+                      })()}
                     </div>
-                    <div className="p-5">
-                      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-                        {roundPulls.map((pull, pullIdx) => {
-                          const pName = battle.participants.find(p => p.id === pull.participantId)?.user?.name || '?';
-                          const isRoundBest = pull.coinValue === roundHighest && roundPulls.filter(p => p.coinValue === roundHighest).length === 1;
-                          const isTransferred = !!pull.transferredToUserId;
+                    <span className="text-[10px] text-[#444466]">{round}/{battle.rounds}</span>
+                  </div>
+                  <div className="px-4 py-3 flex items-center gap-3 flex-wrap">
+                    {roundPulls.map((pull) => {
+                      const pName = battle.participants.find(p => p.id === pull.participantId)?.user?.name || '?';
+                      const isRoundBest = pull.coinValue === roundHighest && roundPulls.filter(p => p.coinValue === roundHighest).length === 1;
+                      const isTransferred = !!pull.transferredToUserId;
 
-                          return (
-                            <motion.div
-                              key={pull.id}
-                              initial={{ scale: 0.5, opacity: 0, rotateY: 90 }}
-                              animate={{ scale: 1, opacity: 1, rotateY: 0 }}
-                              transition={{ delay: pullIdx * 0.15, duration: 0.5, ease: 'easeOut' }}
-                              className={`relative rounded-xl border p-4 text-center ${getRarityColor(pull.itemRarity)} ${
-                                isTransferred ? 'bg-red-500/5' : 'bg-[#12123a]'
-                              }`}
-                            >
-                              {isRoundBest && (
-                                <div className="absolute -top-2 -right-2 w-6 h-6 bg-[#C84FFF] rounded-full flex items-center justify-center">
-                                  <Star className="w-3.5 h-3.5 text-black" />
-                                </div>
-                              )}
-                              <div className="text-xs text-[#8888aa] mb-2 font-medium truncate">{pName}</div>
-                              {pull.itemImage ? (
-                                <div className="relative mx-auto w-20 h-28 mb-3">
-                                  <img src={pull.itemImage} alt={pull.itemName || ''} className="w-full h-full object-cover rounded-lg" />
-                                </div>
-                              ) : (
-                                <div className="mx-auto w-20 h-28 mb-3 bg-[#1a1a4a] rounded-lg flex items-center justify-center">
-                                  <span className="text-[#555577] text-2xl">?</span>
-                                </div>
-                              )}
-                              <div className="text-sm text-white font-semibold truncate mb-1">{pull.itemName || '?'}</div>
-                              {pull.itemRarity && (
-                                <div className="text-[10px] text-[#8888aa] mb-1 uppercase tracking-wider">{pull.itemRarity}</div>
-                              )}
-                              <div className="text-amber-400 font-bold">{pull.coinValue.toFixed(2)}</div>
-                              {isTransferred && (
-                                <div className="mt-1 text-[10px] text-red-400 font-medium">{t('detail.transferred')}</div>
-                              )}
-                            </motion.div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  </motion.div>
-                </AnimatePresence>
+                      return (
+                        <div
+                          key={pull.id}
+                          className={`flex items-center gap-2 px-3 py-2 rounded-lg border ${
+                            isRoundBest ? 'border-[#C84FFF]/40 bg-[#C84FFF]/5' : 'border-[rgba(255,255,255,0.06)] bg-[#0e0e2a]'
+                          } ${isTransferred ? 'opacity-60' : ''}`}
+                        >
+                          {pull.itemImage ? (
+                            <img src={pull.itemImage} alt="" className="w-8 h-11 rounded object-cover shrink-0" />
+                          ) : (
+                            <div className="w-8 h-11 rounded bg-[#1a1a4a] flex items-center justify-center shrink-0">
+                              <span className="text-[#555577] text-xs">?</span>
+                            </div>
+                          )}
+                          <div className="min-w-0">
+                            <div className="text-[10px] text-[#666688] truncate">{pName}</div>
+                            <div className="text-xs text-white font-medium truncate max-w-[100px]">{pull.itemName || '?'}</div>
+                            <div className={`text-xs font-bold ${isRoundBest ? 'text-[#C84FFF]' : 'text-amber-400'}`}>{pull.coinValue.toFixed(2)}</div>
+                          </div>
+                          {isRoundBest && <Star className="w-3 h-3 text-[#C84FFF] shrink-0" />}
+                          {isTransferred && <span className="text-[8px] text-red-400 shrink-0">↗</span>}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </motion.div>
               );
             })}
           </div>
