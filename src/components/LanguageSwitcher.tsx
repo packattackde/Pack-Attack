@@ -2,18 +2,20 @@
 
 import { useLocale, useTranslations } from 'next-intl';
 import { useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import { setLocale } from '@/i18n/locale';
 
 export function LanguageSwitcher() {
   const locale = useLocale();
   const t = useTranslations('language');
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   const toggle = () => {
     const next = locale === 'de' ? 'en' : 'de';
     startTransition(async () => {
       await setLocale(next);
-      window.location.reload();
+      router.refresh();
     });
   };
 
