@@ -66,6 +66,7 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [copied, setCopied] = useState(false);
   const t = useTranslations('battles');
+  const tc = useTranslations('common');
 
   const statusColor = {
     FINISHED_WIN: 'bg-[#C84FFF]/15 text-[#E879F9] border border-[#C84FFF]/20',
@@ -225,7 +226,7 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
                       </div>
                       <div className={`text-3xl font-bold mb-1 ${isWinner ? 'text-[#C84FFF]' : 'text-amber-400'}`}>{p.totalValue.toFixed(2)}</div>
                       <div className={`text-xs font-semibold mt-1 ${isWinner ? 'text-[#C84FFF]' : 'text-[#666688]'}`}>
-                        {isWinner ? <span className="flex items-center justify-center gap-1"><Crown className="w-3.5 h-3.5" /> {t('common.winner' as any)}</span> : t('common.loser' as any)}
+                        {isWinner ? <span className="flex items-center justify-center gap-1"><Crown className="w-3.5 h-3.5" /> {tc('winner')}</span> : tc('loser')}
                       </div>
                     </div>
                   );
