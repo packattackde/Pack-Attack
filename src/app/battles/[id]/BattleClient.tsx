@@ -208,23 +208,25 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
               </div>
 
               {/* Score comparison */}
-              <div className="flex items-stretch justify-center gap-3 mb-6 max-w-2xl mx-auto">
-                {sortedParticipants.map((p, i) => {
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 max-w-2xl mx-auto w-full px-2">
+                {sortedParticipants.map((p) => {
                   const isWinner = p.userId === battle.winnerId;
                   const barWidth = maxTotal > 0 ? (p.totalValue / maxTotal) * 100 : 0;
                   return (
-                    <div key={p.id} className={`flex-1 rounded-xl p-4 text-center border ${
-                      isWinner ? 'bg-[#C84FFF]/10 border-[#C84FFF]/30' : 'bg-[#12123a] border-[rgba(255,255,255,0.06)]'
+                    <div key={p.id} className={`rounded-2xl p-5 text-center border transition-all ${
+                      isWinner ? 'bg-[#C84FFF]/10 border-[#C84FFF]/30 shadow-[0_0_30px_rgba(200,79,255,0.1)]' : 'bg-[#12123a] border-[rgba(255,255,255,0.06)]'
                     }`}>
-                      <div className={`w-12 h-12 rounded-full mx-auto mb-2 flex items-center justify-center text-lg font-bold ${
-                        isWinner ? 'bg-gradient-to-br from-[#C84FFF] to-[#9333EA] text-white' : 'bg-[#1a1a4a] text-[#8888aa]'
+                      <div className={`w-14 h-14 rounded-full mx-auto mb-3 flex items-center justify-center text-xl font-bold ${
+                        isWinner ? 'bg-gradient-to-br from-[#C84FFF] to-[#9333EA] text-white shadow-[0_0_20px_rgba(200,79,255,0.3)]' : 'bg-[#1a1a4a] text-[#8888aa]'
                       }`}>{p.user.name?.[0] || '?'}</div>
-                      <div className="text-white font-medium text-sm mb-1 truncate">{p.user.name || p.user.email}</div>
-                      <div className="h-1.5 bg-[#1a1a4a] rounded-full overflow-hidden my-2 mx-2">
-                        <div className={`h-full rounded-full ${isWinner ? 'bg-[#C84FFF]' : 'bg-[#8888aa]/40'}`} style={{ width: `${barWidth}%` }} />
+                      <div className="text-white font-semibold text-sm mb-2 truncate">{p.user.name || p.user.email}</div>
+                      <div className="h-2.5 bg-[#0e0e2a] rounded-full overflow-hidden my-3 mx-4">
+                        <div className={`h-full rounded-full transition-all duration-700 ${isWinner ? 'bg-gradient-to-r from-[#C84FFF] to-[#E879F9]' : 'bg-[#8888aa]/40'}`} style={{ width: `${barWidth}%` }} />
                       </div>
-                      <div className={`text-2xl font-bold ${isWinner ? 'text-[#C84FFF]' : 'text-amber-400'}`}>{p.totalValue.toFixed(2)}</div>
-                      <div className="text-[10px] text-[#666688] mt-0.5">{isWinner ? '👑' : ''}</div>
+                      <div className={`text-3xl font-bold mb-1 ${isWinner ? 'text-[#C84FFF]' : 'text-amber-400'}`}>{p.totalValue.toFixed(2)}</div>
+                      <div className={`text-xs font-semibold mt-1 ${isWinner ? 'text-[#C84FFF]' : 'text-[#666688]'}`}>
+                        {isWinner ? <span className="flex items-center justify-center gap-1"><Crown className="w-3.5 h-3.5" /> {t('common.winner' as any)}</span> : t('common.loser' as any)}
+                      </div>
                     </div>
                   );
                 })}
@@ -298,34 +300,40 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
             </div>
 
             {/* SVG Chart */}
-            <div className="relative h-40 w-full">
-              <svg viewBox={`0 0 ${(battle.rounds + 1) * 80} 160`} className="w-full h-full" preserveAspectRatio="none">
-                {/* Grid lines */}
-                {[0, 0.25, 0.5, 0.75, 1].map((frac) => (
-                  <line key={frac} x1="0" y1={150 - frac * 140} x2={(battle.rounds + 1) * 80} y2={150 - frac * 140} stroke="rgba(255,255,255,0.04)" strokeWidth="1" />
-                ))}
+            <div className="relative w-full overflow-x-auto">
+              <div style={{ minWidth: Math.max(400, (battle.rounds + 1) * 60 + 40), height: 200 }}>
+                <svg
+                  viewBox={`0 0 ${(battle.rounds + 1) * 60 + 40} 200`}
+                  className="w-full h-full"
+                  preserveAspectRatio="xMidYMid meet"
+                >
+                  {/* Grid lines */}
+                  {[0, 0.25, 0.5, 0.75, 1].map((frac) => (
+                    <line key={frac} x1="20" y1={160 - frac * 130} x2={(battle.rounds + 1) * 60 + 20} y2={160 - frac * 130} stroke="rgba(255,255,255,0.04)" strokeWidth="1" />
+                  ))}
 
-                {/* Player lines */}
-                {battle.participants.map((p) => {
-                  const vals = cumulativeScores[p.id] || [];
-                  const points = vals.map((v, i) => `${i * 80 + 40},${150 - (v / maxCumulative) * 140}`).join(' ');
-                  return (
-                    <g key={p.id}>
-                      <polyline fill="none" stroke={participantColorMap[p.id]} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" points={points} />
-                      {vals.map((v, i) => (
-                        <circle key={i} cx={i * 80 + 40} cy={150 - (v / maxCumulative) * 140} r="4" fill={participantColorMap[p.id]} stroke="#0e0e2a" strokeWidth="2" />
-                      ))}
-                    </g>
-                  );
-                })}
+                  {/* Player lines */}
+                  {battle.participants.map((p) => {
+                    const vals = cumulativeScores[p.id] || [];
+                    const points = vals.map((v, i) => `${i * 60 + 30},${160 - (v / maxCumulative) * 130}`).join(' ');
+                    return (
+                      <g key={p.id}>
+                        <polyline fill="none" stroke={participantColorMap[p.id]} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" points={points} />
+                        {vals.map((v, i) => (
+                          <circle key={i} cx={i * 60 + 30} cy={160 - (v / maxCumulative) * 130} r="4" fill={participantColorMap[p.id]} stroke="#0e0e2a" strokeWidth="2" />
+                        ))}
+                      </g>
+                    );
+                  })}
 
-                {/* Round labels */}
-                {Array.from({ length: battle.rounds + 1 }, (_, i) => (
-                  <text key={i} x={i * 80 + 40} y="160" textAnchor="middle" fill="#444466" fontSize="10" fontFamily="inherit">
-                    {i === 0 ? t('detail.start') : `R${i}`}
-                  </text>
-                ))}
-              </svg>
+                  {/* Round labels */}
+                  {Array.from({ length: battle.rounds + 1 }, (_, i) => (
+                    <text key={i} x={i * 60 + 30} y="185" textAnchor="middle" fill="#666688" fontSize="11" fontFamily="inherit">
+                      {i === 0 ? t('detail.start') : `R${i}`}
+                    </text>
+                  ))}
+                </svg>
+              </div>
             </div>
           </div>
         )}
@@ -364,11 +372,11 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
                               )}
                               <div className="text-[10px] text-[#666688] mb-1.5 font-medium truncate">{pName}</div>
                               {pull.itemImage ? (
-                                <div className="mx-auto w-16 h-22 mb-2">
+                                <div className="mx-auto w-16 h-[88px] mb-2">
                                   <img src={pull.itemImage} alt={pull.itemName || ''} className="w-full h-full object-cover rounded-lg" />
                                 </div>
                               ) : (
-                                <div className="mx-auto w-16 h-22 mb-2 bg-[#1a1a4a] rounded-lg flex items-center justify-center">
+                                <div className="mx-auto w-16 h-[88px] mb-2 bg-[#1a1a4a] rounded-lg flex items-center justify-center">
                                   <span className="text-[#333355] text-xl">?</span>
                                 </div>
                               )}
