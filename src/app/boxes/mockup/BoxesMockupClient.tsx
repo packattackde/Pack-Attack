@@ -3,7 +3,19 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Coins, Package, Sparkles, Flame, Star } from 'lucide-react';
+import {
+  Coins,
+  Package,
+  Sparkles,
+  Flame,
+  Star,
+  Zap,
+  Swords,
+  Crown,
+  Trophy,
+  Ship,
+  Wand2,
+} from 'lucide-react';
 
 interface TopCard {
   id: string;
@@ -30,82 +42,122 @@ interface Props {
   availableGames: string[];
 }
 
-// Theme per game — background gradient the pack floats on
-function getGameTheme(game: string | undefined): {
-  bg: string;
+type Theme = {
+  // Pack primary colors (used for the wrapper itself)
+  primary: string;
+  secondary: string;
+  accent: string; // foil accent (brighter)
+  // Ambient glow behind the pack
   glow: string;
-  accent: string;
+  bgGradient: string;
   label: string;
-} {
+  Icon: React.ComponentType<{ className?: string }>;
+};
+
+// Each game's pack keeps the Pack-Attack purple DNA but shifts accent
+function getGameTheme(game: string | undefined): Theme {
   const key = (game || '').toUpperCase().replace(/-/g, '_');
-  const themes: Record<string, { bg: string; glow: string; accent: string; label: string }> = {
+  const themes: Record<string, Theme> = {
     POKEMON: {
-      bg: 'from-yellow-500/25 via-amber-600/10 to-transparent',
-      glow: 'rgba(250,204,21,0.35)',
+      primary: '#3a2a6a',
+      secondary: '#1a1040',
       accent: '#FACC15',
+      glow: 'rgba(250,204,21,0.35)',
+      bgGradient: 'from-yellow-500/15 via-amber-700/5 to-transparent',
       label: 'Pokémon',
+      Icon: Zap,
     },
     MAGIC_THE_GATHERING: {
-      bg: 'from-purple-600/30 via-indigo-700/15 to-transparent',
-      glow: 'rgba(147,51,234,0.35)',
-      accent: '#9333EA',
+      primary: '#4a2a7a',
+      secondary: '#1a0e40',
+      accent: '#C084FC',
+      glow: 'rgba(147,51,234,0.4)',
+      bgGradient: 'from-purple-700/20 via-indigo-800/10 to-transparent',
       label: 'Magic',
+      Icon: Wand2,
     },
     MAGIC: {
-      bg: 'from-purple-600/30 via-indigo-700/15 to-transparent',
-      glow: 'rgba(147,51,234,0.35)',
-      accent: '#9333EA',
+      primary: '#4a2a7a',
+      secondary: '#1a0e40',
+      accent: '#C084FC',
+      glow: 'rgba(147,51,234,0.4)',
+      bgGradient: 'from-purple-700/20 via-indigo-800/10 to-transparent',
       label: 'Magic',
+      Icon: Wand2,
     },
     YUGIOH: {
-      bg: 'from-orange-500/30 via-amber-700/15 to-transparent',
-      glow: 'rgba(249,115,22,0.35)',
-      accent: '#F97316',
+      primary: '#5a2a5a',
+      secondary: '#2a0a2a',
+      accent: '#FB923C',
+      glow: 'rgba(249,115,22,0.4)',
+      bgGradient: 'from-orange-500/15 via-amber-800/5 to-transparent',
       label: 'Yu-Gi-Oh!',
+      Icon: Crown,
     },
     ONE_PIECE: {
-      bg: 'from-red-600/30 via-rose-700/15 to-transparent',
-      glow: 'rgba(220,38,38,0.4)',
-      accent: '#DC2626',
+      primary: '#6a1f3a',
+      secondary: '#2a0a1a',
+      accent: '#F87171',
+      glow: 'rgba(220,38,38,0.45)',
+      bgGradient: 'from-red-600/20 via-rose-800/10 to-transparent',
       label: 'One Piece',
+      Icon: Ship,
     },
     ONEPIECE: {
-      bg: 'from-red-600/30 via-rose-700/15 to-transparent',
-      glow: 'rgba(220,38,38,0.4)',
-      accent: '#DC2626',
+      primary: '#6a1f3a',
+      secondary: '#2a0a1a',
+      accent: '#F87171',
+      glow: 'rgba(220,38,38,0.45)',
+      bgGradient: 'from-red-600/20 via-rose-800/10 to-transparent',
       label: 'One Piece',
+      Icon: Ship,
     },
     LORCANA: {
-      bg: 'from-indigo-500/30 via-blue-700/15 to-transparent',
-      glow: 'rgba(99,102,241,0.35)',
-      accent: '#6366F1',
+      primary: '#2a3a7a',
+      secondary: '#0a1440',
+      accent: '#818CF8',
+      glow: 'rgba(99,102,241,0.4)',
+      bgGradient: 'from-indigo-500/15 via-blue-800/5 to-transparent',
       label: 'Lorcana',
+      Icon: Sparkles,
     },
     DIGIMON: {
-      bg: 'from-cyan-500/30 via-sky-700/15 to-transparent',
-      glow: 'rgba(6,182,212,0.35)',
-      accent: '#06B6D4',
+      primary: '#1f4a6a',
+      secondary: '#061e35',
+      accent: '#22D3EE',
+      glow: 'rgba(6,182,212,0.4)',
+      bgGradient: 'from-cyan-500/15 via-sky-800/5 to-transparent',
       label: 'Digimon',
+      Icon: Flame,
     },
     SPORTS: {
-      bg: 'from-fuchsia-600/25 via-purple-700/15 to-transparent',
-      glow: 'rgba(200,79,255,0.35)',
-      accent: '#C84FFF',
+      primary: '#5a2a7a',
+      secondary: '#1f0a3a',
+      accent: '#E879F9',
+      glow: 'rgba(200,79,255,0.45)',
+      bgGradient: 'from-fuchsia-600/20 via-purple-800/10 to-transparent',
       label: 'Sports',
+      Icon: Trophy,
     },
     FLESH_AND_BLOOD: {
-      bg: 'from-rose-600/30 via-pink-700/15 to-transparent',
-      glow: 'rgba(225,29,72,0.35)',
-      accent: '#E11D48',
+      primary: '#6a2a4a',
+      secondary: '#2a0a1a',
+      accent: '#FB7185',
+      glow: 'rgba(225,29,72,0.4)',
+      bgGradient: 'from-rose-600/15 via-pink-800/5 to-transparent',
       label: 'Flesh & Blood',
+      Icon: Swords,
     },
   };
   return (
     themes[key] || {
-      bg: 'from-fuchsia-600/25 via-purple-700/15 to-transparent',
-      glow: 'rgba(200,79,255,0.35)',
-      accent: '#C84FFF',
+      primary: '#5a2a7a',
+      secondary: '#1f0a3a',
+      accent: '#E879F9',
+      glow: 'rgba(200,79,255,0.45)',
+      bgGradient: 'from-fuchsia-600/20 via-purple-800/10 to-transparent',
       label: 'TCG',
+      Icon: Sparkles,
     }
   );
 }
@@ -120,7 +172,6 @@ export default function BoxesMockupClient({ boxes, availableGames }: Props) {
 
   return (
     <>
-      {/* Game filter chips (horizontal scroll, packs.com style) */}
       <div className="mb-10 -mx-4 px-4 overflow-x-auto">
         <div className="flex gap-2 min-w-max">
           <FilterChip
@@ -146,22 +197,20 @@ export default function BoxesMockupClient({ boxes, availableGames }: Props) {
         </div>
       </div>
 
-      {/* Packs grid */}
       {filtered.length === 0 ? (
         <div className="rounded-2xl p-12 text-center bg-[#1e1e55] border border-[rgba(255,255,255,0.15)]">
           <Package className="w-10 h-10 text-[#C84FFF] mx-auto mb-4" />
           <p className="text-white font-semibold">No packs found for this game.</p>
         </div>
       ) : (
-        <div className="grid gap-6 sm:gap-8 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        <div className="grid gap-x-6 gap-y-10 sm:gap-x-8 sm:gap-y-14 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {filtered.map((box) => (
             <PackCard key={box.id} box={box} />
           ))}
         </div>
       )}
 
-      {/* Footer explainer */}
-      <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-4">
         <InfoTile
           icon={<Flame className="w-5 h-5" />}
           title="Instant rip"
@@ -224,195 +273,334 @@ function FilterChip({
 
 function PackCard({ box }: { box: Box }) {
   const theme = getGameTheme(box.games?.[0]);
-  const hasImage = Boolean(box.imageUrl);
 
   return (
-    <Link
-      href={`/open/${box.id}`}
-      className="group relative block rounded-3xl overflow-hidden transition-all duration-500 bg-[#15153d] border border-[rgba(255,255,255,0.08)] hover:border-[rgba(255,255,255,0.25)] hover:-translate-y-2 hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.6)]"
-      style={{ perspective: '1000px' }}
-    >
-      {/* Themed glow background */}
+    <div className="group relative flex flex-col items-center" style={{ perspective: '1200px' }}>
+      {/* Ambient glow behind the pack */}
       <div
-        className={`absolute inset-0 bg-gradient-to-b ${theme.bg} opacity-80 group-hover:opacity-100 transition-opacity duration-500`}
-      />
-      <div
-        className="absolute inset-x-0 top-0 h-2/3 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        className="absolute inset-x-0 top-0 h-[85%] pointer-events-none opacity-60 group-hover:opacity-100 transition-opacity duration-500 blur-2xl"
         style={{
-          background: `radial-gradient(ellipse at 50% 30%, ${theme.glow}, transparent 70%)`,
+          background: `radial-gradient(ellipse at 50% 40%, ${theme.glow}, transparent 70%)`,
         }}
       />
 
-      {/* Top badges row */}
-      <div className="absolute top-3 left-3 right-3 z-20 flex items-start justify-between gap-2">
-        <div className="flex flex-col gap-1.5">
+      {/* Badges row — floats above pack */}
+      <div className="absolute top-0 left-0 right-0 z-30 flex items-start justify-between gap-1 px-1">
+        <div className="flex flex-col gap-1">
           {box.featured && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-gradient-to-r from-amber-400 to-orange-500 text-[10px] font-bold text-black uppercase tracking-wider shadow-md">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-gradient-to-r from-amber-400 to-orange-500 text-[9px] font-black text-black uppercase tracking-wider shadow-md">
               <Sparkles className="w-3 h-3" /> Featured
             </span>
           )}
           {box.createdByShop && (
-            <span className="inline-flex px-2 py-0.5 rounded-md bg-[#0a0a2a]/70 backdrop-blur border border-white/10 text-[10px] font-bold text-white uppercase tracking-wider">
+            <span className="inline-flex px-2 py-0.5 rounded-md bg-[#0a0a2a]/80 backdrop-blur border border-white/10 text-[9px] font-black text-white uppercase tracking-wider">
               Partner
             </span>
           )}
         </div>
-        <span
-          className="inline-flex px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider backdrop-blur"
-          style={{
-            backgroundColor: `${theme.accent}22`,
-            color: theme.accent,
-            border: `1px solid ${theme.accent}55`,
-          }}
-        >
-          {theme.label}
-        </span>
       </div>
 
-      {/* THE PACK — vertical booster wrapper */}
-      <div className="relative h-[280px] sm:h-[320px] flex items-center justify-center pt-8 pb-4 px-4">
+      {/* THE PACK LINK */}
+      <Link
+        href={`/open/${box.id}`}
+        aria-label={`Open ${box.name}`}
+        className="relative block transition-transform duration-500 ease-out group-hover:-translate-y-3 group-hover:rotate-[-3deg]"
+      >
+        <BoosterPack box={box} theme={theme} />
+
         {/* Floor shadow */}
         <div
-          className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[55%] h-3 rounded-full blur-lg opacity-70 group-hover:opacity-100 group-hover:w-[65%] transition-all duration-500"
-          style={{ backgroundColor: theme.glow }}
+          className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-[70%] h-4 rounded-full blur-xl opacity-60 group-hover:opacity-90 group-hover:w-[80%] transition-all duration-500 pointer-events-none"
+          style={{ background: `radial-gradient(ellipse, ${theme.glow}, transparent 70%)` }}
         />
+      </Link>
 
-        <div
-          className="relative transition-all duration-500 ease-out group-hover:-translate-y-3 group-hover:rotate-[2deg]"
-          style={{ transformStyle: 'preserve-3d' }}
+      {/* Info below the pack (like packs.com) */}
+      <div className="mt-5 w-full text-center">
+        <h3
+          className="text-white font-extrabold text-sm sm:text-base leading-tight line-clamp-1 mb-1 group-hover:text-[#E879F9] transition-colors"
+          title={box.name}
         >
-          {/* The pack itself */}
-          <div
-            className="relative w-[140px] sm:w-[160px] aspect-[2/3] rounded-xl overflow-hidden shadow-[0_20px_40px_-10px_rgba(0,0,0,0.7)] group-hover:shadow-[0_30px_60px_-10px_rgba(0,0,0,0.8)] transition-shadow duration-500"
-            style={{
-              background: `linear-gradient(145deg, #2a2a6a, #0f0f2e)`,
-            }}
-          >
-            {hasImage ? (
-              <Image
-                src={box.imageUrl}
-                alt={box.name}
-                fill
-                className="object-cover"
-                sizes="(max-width: 640px) 140px, 160px"
-                unoptimized
-              />
-            ) : (
-              // Fallback artwork: stylized pack with game accent
-              <FallbackPackArt theme={theme} name={box.name} />
-            )}
-
-            {/* Holographic shine overlay on hover */}
-            <div
-              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-              style={{
-                background: `linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.25) 50%, transparent 70%)`,
-                mixBlendMode: 'overlay',
-              }}
-            />
-
-            {/* Edge highlight */}
-            <div className="absolute inset-0 rounded-xl ring-1 ring-white/10 pointer-events-none" />
-            <div
-              className="absolute inset-x-0 top-0 h-[18%] pointer-events-none"
-              style={{
-                background:
-                  'linear-gradient(to bottom, rgba(255,255,255,0.18), transparent)',
-              }}
-            />
-          </div>
-
-          {/* Tiny top "card peek" out of the pack on hover */}
-          {box.topCard?.imageUrlGatherer && (
-            <div
-              className="absolute -top-6 left-1/2 -translate-x-1/2 w-[58%] aspect-[5/7] rounded-md overflow-hidden border border-white/20 shadow-xl opacity-0 group-hover:opacity-100 group-hover:-translate-y-5 transition-all duration-700 ease-out pointer-events-none"
-              style={{ zIndex: -1 }}
-            >
-              <Image
-                src={box.topCard.imageUrlGatherer}
-                alt={box.topCard.name}
-                fill
-                className="object-cover"
-                sizes="100px"
-                unoptimized
-              />
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Info strip */}
-      <div className="relative z-10 px-4 pt-3 pb-4 bg-gradient-to-b from-transparent to-[#0a0a2a]/80">
-        <h3 className="text-white font-bold text-sm sm:text-base line-clamp-1 mb-0.5">
           {box.name}
         </h3>
-        <p className="text-[11px] text-[#8888aa] mb-3">
-          {box.cardsPerPack} cards · pool of {box.totalCards}
+        <p className="text-[10px] text-[#8888aa] uppercase tracking-[1.5px] mb-3 font-semibold">
+          {box.cardsPerPack} cards · {theme.label}
         </p>
 
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#0a0a2a]/70 border border-white/10">
-            <Coins className="w-3.5 h-3.5" style={{ color: theme.accent }} />
-            <span
-              className="text-sm font-extrabold"
-              style={{ color: theme.accent }}
-            >
-              {box.price.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
-            </span>
-          </div>
-          <span
-            className="inline-flex items-center px-3 py-1.5 rounded-lg text-[11px] font-extrabold uppercase tracking-wider text-white transition-all group-hover:scale-105"
-            style={{
-              backgroundColor: theme.accent,
-              boxShadow: `0 4px 20px -4px ${theme.glow}`,
-            }}
-          >
-            Rip
-          </span>
-        </div>
+        <Link
+          href={`/open/${box.id}`}
+          className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-br from-[#C84FFF] to-[#9333EA] text-white text-xs font-black uppercase tracking-wider shadow-[0_4px_16px_rgba(200,79,255,0.3)] group-hover:shadow-[0_6px_22px_rgba(200,79,255,0.5)] group-hover:scale-105 transition-all"
+        >
+          <Coins className="w-3.5 h-3.5" />
+          {box.price.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}
+          <span className="mx-1 opacity-50">·</span>
+          Rip
+        </Link>
       </div>
-    </Link>
+    </div>
   );
 }
 
-function FallbackPackArt({
-  theme,
-  name,
-}: {
-  theme: { accent: string; glow: string; label: string };
-  name: string;
-}) {
+// ------------------------------------------------------------
+// THE REAL BOOSTER PACK — pure CSS + SVG composition
+// Mimics a physical booster pack wrapper:
+//   • rounded top with perforated tear strip (foil)
+//   • shiny foil body with holographic sheen
+//   • game logo + pack name + foil art window
+//   • "BOOSTER PACK" label + card count
+//   • foil seal at bottom
+// ------------------------------------------------------------
+function BoosterPack({ box, theme }: { box: Box; theme: Theme }) {
+  const { primary, secondary, accent, Icon } = theme;
+  const hasImage = Boolean(box.imageUrl);
+
   return (
     <div
-      className="relative w-full h-full flex flex-col items-center justify-center text-center p-3"
+      className="relative w-[150px] sm:w-[170px] aspect-[5/8] rounded-[14px] overflow-hidden select-none"
       style={{
-        background: `linear-gradient(160deg, ${theme.accent}, #0a0a2a 75%)`,
+        boxShadow: `
+          0 25px 50px -12px rgba(0,0,0,0.85),
+          0 0 0 1px rgba(255,255,255,0.08) inset,
+          0 1px 0 rgba(255,255,255,0.25) inset,
+          0 -1px 0 rgba(0,0,0,0.4) inset
+        `,
       }}
     >
-      <div className="absolute inset-0 opacity-20 bg-grid" />
+      {/* ── BASE WRAPPER: deep purple gradient (Pack-Attack DNA) ── */}
       <div
-        className="absolute inset-x-0 top-0 h-1/3"
+        className="absolute inset-0"
         style={{
-          background: `radial-gradient(ellipse at center top, ${theme.glow}, transparent 70%)`,
+          background: `
+            radial-gradient(ellipse at 30% 20%, ${primary} 0%, ${secondary} 70%),
+            linear-gradient(165deg, ${primary} 0%, #0f0a2e 60%, #0a0520 100%)
+          `,
+          backgroundBlendMode: 'screen',
         }}
       />
-      <Package className="w-8 h-8 text-white/70 mb-2 relative" />
-      <div className="relative">
-        <div className="text-[9px] uppercase tracking-[2px] text-white/60 mb-1">
-          Booster Pack
-        </div>
-        <div className="text-[11px] font-bold text-white line-clamp-3 leading-tight">
-          {name}
+
+      {/* ── FOIL SHEEN: diagonal metallic highlight ── */}
+      <div
+        className="absolute inset-0 opacity-50 mix-blend-overlay pointer-events-none"
+        style={{
+          background: `linear-gradient(115deg,
+            transparent 0%,
+            rgba(255,255,255,0.0) 25%,
+            rgba(255,255,255,0.35) 45%,
+            rgba(255,255,255,0.15) 50%,
+            rgba(255,255,255,0.35) 55%,
+            rgba(255,255,255,0.0) 75%,
+            transparent 100%
+          )`,
+        }}
+      />
+
+      {/* ── HOLOGRAPHIC RAINBOW (subtle) ── */}
+      <div
+        className="absolute inset-0 opacity-20 mix-blend-screen pointer-events-none"
+        style={{
+          background: `linear-gradient(120deg,
+            transparent 10%,
+            rgba(255,0,255,0.4) 30%,
+            rgba(0,255,255,0.3) 45%,
+            rgba(255,255,0,0.3) 55%,
+            rgba(255,0,255,0.4) 70%,
+            transparent 90%
+          )`,
+        }}
+      />
+
+      {/* ── TOP TEAR STRIP (perforated foil, brighter color) ── */}
+      <div
+        className="absolute top-0 inset-x-0 h-[18%]"
+        style={{
+          background: `linear-gradient(180deg,
+            ${accent} 0%,
+            ${accent} 55%,
+            rgba(0,0,0,0.3) 60%,
+            transparent 100%
+          )`,
+        }}
+      >
+        {/* Shine on tear strip */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `linear-gradient(180deg,
+              rgba(255,255,255,0.55) 0%,
+              transparent 50%
+            )`,
+          }}
+        />
+        {/* Perforation dots */}
+        <div className="absolute left-0 right-0 top-[55%] flex items-center justify-center gap-[3px]">
+          {Array.from({ length: 18 }).map((_, i) => (
+            <div
+              key={i}
+              className="w-[2px] h-[2px] rounded-full bg-black/50"
+              style={{ boxShadow: '0 1px 0 rgba(255,255,255,0.25)' }}
+            />
+          ))}
         </div>
       </div>
-      <div className="absolute bottom-2 left-2 right-2 flex items-center justify-center">
-        <span className="text-[9px] font-bold uppercase tracking-[3px] text-white/80">
+
+      {/* ── INNER FOIL PANEL (art window) ── */}
+      <div
+        className="absolute left-[10%] right-[10%] top-[40%] aspect-[4/3] rounded-md overflow-hidden"
+        style={{
+          boxShadow: `
+            0 0 0 1px ${accent}66,
+            0 0 0 2px rgba(0,0,0,0.4),
+            0 4px 12px rgba(0,0,0,0.6),
+            0 0 18px ${accent}33 inset
+          `,
+          background: `linear-gradient(135deg, ${primary}, ${secondary})`,
+        }}
+      >
+        {hasImage ? (
+          <>
+            <Image
+              src={box.imageUrl}
+              alt=""
+              fill
+              className="object-cover opacity-75 mix-blend-luminosity"
+              sizes="140px"
+              unoptimized
+            />
+            {/* Color tint over the image so it matches game theme */}
+            <div
+              className="absolute inset-0 mix-blend-color"
+              style={{ background: accent, opacity: 0.35 }}
+            />
+          </>
+        ) : (
+          <div
+            className="w-full h-full opacity-60"
+            style={{
+              backgroundImage: `
+                radial-gradient(circle at 30% 30%, ${accent}55, transparent 50%),
+                radial-gradient(circle at 70% 70%, ${primary}, transparent 60%)
+              `,
+            }}
+          />
+        )}
+        {/* Glossy reflection on the art window */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: `linear-gradient(165deg,
+              rgba(255,255,255,0.35) 0%,
+              transparent 40%,
+              transparent 60%,
+              rgba(0,0,0,0.3) 100%
+            )`,
+          }}
+        />
+      </div>
+
+      {/* ── GAME LOGO / ICON (top center of body) ── */}
+      <div className="absolute left-0 right-0 top-[22%] flex flex-col items-center px-3 z-10">
+        <div
+          className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center"
+          style={{
+            background: `radial-gradient(circle at 30% 30%, ${accent}, ${primary})`,
+            boxShadow: `
+              0 0 12px ${accent}99,
+              0 0 0 2px rgba(0,0,0,0.3),
+              0 0 0 3px ${accent}55,
+              inset 0 -2px 4px rgba(0,0,0,0.4),
+              inset 0 2px 4px rgba(255,255,255,0.4)
+            `,
+          }}
+        >
+          <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-white drop-shadow-md" />
+        </div>
+      </div>
+
+      {/* ── PACK NAME (big foil text below art) ── */}
+      <div className="absolute left-3 right-3 top-[72%] text-center z-10">
+        <div
+          className="text-[9px] font-black uppercase tracking-[2.5px] mb-0.5"
+          style={{ color: accent, textShadow: `0 0 8px ${accent}88, 0 1px 0 rgba(0,0,0,0.6)` }}
+        >
           {theme.label}
+        </div>
+        <div
+          className="text-[11px] sm:text-[12px] font-black uppercase tracking-wider text-white line-clamp-2 leading-tight"
+          style={{ textShadow: '0 1px 2px rgba(0,0,0,0.9), 0 0 4px rgba(0,0,0,0.6)' }}
+        >
+          {box.name}
+        </div>
+      </div>
+
+      {/* ── BOTTOM FOIL LABEL ── */}
+      <div
+        className="absolute inset-x-0 bottom-0 h-[10%] flex items-center justify-between px-3"
+        style={{
+          background: `linear-gradient(0deg,
+            rgba(0,0,0,0.5) 0%,
+            transparent 100%
+          )`,
+        }}
+      >
+        <span
+          className="text-[8px] font-black uppercase tracking-[2px] text-white/80"
+          style={{ textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}
+        >
+          Booster
+        </span>
+        <span
+          className="inline-flex items-center gap-1 text-[8px] font-black uppercase tracking-[1.5px]"
+          style={{ color: accent, textShadow: `0 0 6px ${accent}88` }}
+        >
+          {box.cardsPerPack}× cards
         </span>
       </div>
+
+      {/* ── EDGE HIGHLIGHTS for realism ── */}
+      <div className="absolute inset-0 rounded-[14px] pointer-events-none ring-1 ring-white/10" />
+      <div
+        className="absolute inset-y-0 left-0 w-[2px] pointer-events-none"
+        style={{
+          background: 'linear-gradient(180deg, transparent, rgba(255,255,255,0.15), transparent)',
+        }}
+      />
+      <div
+        className="absolute inset-y-0 right-0 w-[2px] pointer-events-none"
+        style={{
+          background: 'linear-gradient(180deg, transparent, rgba(0,0,0,0.3), transparent)',
+        }}
+      />
+
+      {/* ── ANIMATED SHINE ON HOVER (travels across pack) ── */}
+      <div
+        className="absolute inset-0 pointer-events-none overflow-hidden"
+        aria-hidden
+      >
+        <div
+          className="absolute top-0 h-full w-[40%] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          style={{
+            left: '-50%',
+            background:
+              'linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.55) 50%, transparent 70%)',
+            animation: 'pack-shine 1.4s ease-in-out',
+            animationDelay: '0.15s',
+          }}
+        />
+      </div>
+
+      <style jsx>{`
+        @keyframes pack-shine {
+          0% {
+            left: -50%;
+          }
+          100% {
+            left: 110%;
+          }
+        }
+      `}</style>
     </div>
   );
 }
