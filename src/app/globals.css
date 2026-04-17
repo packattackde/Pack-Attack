@@ -37,6 +37,19 @@
   50% { opacity: 0.5; transform: scale(1.1); }
 }
 
+@keyframes pack-shine {
+  0% { left: -50%; }
+  100% { left: 110%; }
+}
+
+.pack-shine {
+  left: -50%;
+}
+
+.group:hover .pack-shine {
+  animation: pack-shine 1.4s ease-in-out 0.15s;
+}
+
 .animate-gradient { 
   animation: gradient-glow 3s ease infinite; 
   background-size: 200% 200%;

@@ -580,27 +580,13 @@ function BoosterPack({ box, theme }: { box: Box; theme: Theme }) {
         aria-hidden
       >
         <div
-          className="absolute top-0 h-full w-[40%] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          className="pack-shine absolute top-0 h-full w-[40%] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
           style={{
-            left: '-50%',
             background:
               'linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.55) 50%, transparent 70%)',
-            animation: 'pack-shine 1.4s ease-in-out',
-            animationDelay: '0.15s',
           }}
         />
       </div>
-
-      <style jsx>{`
-        @keyframes pack-shine {
-          0% {
-            left: -50%;
-          }
-          100% {
-            left: 110%;
-          }
-        }
-      `}</style>
     </div>
   );
 }
