@@ -42,9 +42,13 @@ interface BoxesClientProps {
   availableGames: string[];
 }
 
+// Unified Pack-Attack pack body — all packs share this purple/navy base
+// so they feel consistent with the site. Game identity only shows
+// through the accent color (tear strip, wordmark, set symbol, pattern, glow).
+const PACK_BG_1 = '#2A1458'; // rich Pack-Attack purple
+const PACK_BG_2 = '#0A0A2A'; // deep page-navy
+
 type Theme = {
-  bg1: string;
-  bg2: string;
   accent: string;
   accentSoft: string;
   glow: string;
@@ -58,110 +62,90 @@ function getGameTheme(game: string | undefined): Theme {
   const key = (game || '').toUpperCase().replace(/-/g, '_');
   const themes: Record<string, Theme> = {
     POKEMON: {
-      bg1: '#2B4DE8',
-      bg2: '#0a1140',
       accent: '#FFD600',
       accentSoft: '#FFE94D',
-      glow: 'rgba(255,214,0,0.4)',
+      glow: 'rgba(255,214,0,0.45)',
       wordmark: 'POKÉMON',
       tagline: 'Trading Card Game',
       Icon: Zap,
       pattern: 'burst',
     },
     MAGIC_THE_GATHERING: {
-      bg1: '#2A1458',
-      bg2: '#0a0420',
       accent: '#E0B84C',
       accentSoft: '#FFD77A',
-      glow: 'rgba(224,184,76,0.4)',
+      glow: 'rgba(224,184,76,0.45)',
       wordmark: 'MAGIC',
       tagline: 'The Gathering',
       Icon: Wand2,
       pattern: 'diamond',
     },
     MAGIC: {
-      bg1: '#2A1458',
-      bg2: '#0a0420',
       accent: '#E0B84C',
       accentSoft: '#FFD77A',
-      glow: 'rgba(224,184,76,0.4)',
+      glow: 'rgba(224,184,76,0.45)',
       wordmark: 'MAGIC',
       tagline: 'The Gathering',
       Icon: Wand2,
       pattern: 'diamond',
     },
     YUGIOH: {
-      bg1: '#6B1414',
-      bg2: '#1a0404',
       accent: '#F5A524',
       accentSoft: '#FFC66A',
-      glow: 'rgba(245,165,36,0.4)',
+      glow: 'rgba(245,165,36,0.45)',
       wordmark: 'YU-GI-OH!',
       tagline: 'Trading Card Game',
       Icon: Crown,
       pattern: 'star',
     },
     ONE_PIECE: {
-      bg1: '#C41E3A',
-      bg2: '#400a12',
-      accent: '#FFD700',
-      accentSoft: '#FFEA70',
-      glow: 'rgba(255,215,0,0.45)',
+      accent: '#FF5A5F',
+      accentSoft: '#FF8A8F',
+      glow: 'rgba(255,90,95,0.45)',
       wordmark: 'ONE PIECE',
       tagline: 'Card Game',
       Icon: Ship,
       pattern: 'wave',
     },
     ONEPIECE: {
-      bg1: '#C41E3A',
-      bg2: '#400a12',
-      accent: '#FFD700',
-      accentSoft: '#FFEA70',
-      glow: 'rgba(255,215,0,0.45)',
+      accent: '#FF5A5F',
+      accentSoft: '#FF8A8F',
+      glow: 'rgba(255,90,95,0.45)',
       wordmark: 'ONE PIECE',
       tagline: 'Card Game',
       Icon: Ship,
       pattern: 'wave',
     },
     LORCANA: {
-      bg1: '#1E3A8A',
-      bg2: '#061032',
       accent: '#A78BFA',
       accentSoft: '#C4B5FD',
-      glow: 'rgba(167,139,250,0.4)',
+      glow: 'rgba(167,139,250,0.45)',
       wordmark: 'LORCANA',
       tagline: 'Disney TCG',
       Icon: Sparkles,
       pattern: 'diamond',
     },
     DIGIMON: {
-      bg1: '#0E4A7A',
-      bg2: '#041526',
       accent: '#22D3EE',
       accentSoft: '#67E8F9',
-      glow: 'rgba(34,211,238,0.4)',
+      glow: 'rgba(34,211,238,0.45)',
       wordmark: 'DIGIMON',
       tagline: 'Card Game',
       Icon: Flame,
       pattern: 'chevron',
     },
     SPORTS: {
-      bg1: '#581C87',
-      bg2: '#1a0633',
       accent: '#E879F9',
       accentSoft: '#F0ABFC',
-      glow: 'rgba(232,121,249,0.45)',
+      glow: 'rgba(232,121,249,0.5)',
       wordmark: 'SPORTS',
       tagline: 'Premium Cards',
       Icon: Trophy,
       pattern: 'chevron',
     },
     FLESH_AND_BLOOD: {
-      bg1: '#881337',
-      bg2: '#2a050f',
       accent: '#FB7185',
       accentSoft: '#FDA4AF',
-      glow: 'rgba(251,113,133,0.4)',
+      glow: 'rgba(251,113,133,0.45)',
       wordmark: 'FLESH & BLOOD',
       tagline: 'TCG',
       Icon: Swords,
@@ -170,11 +154,9 @@ function getGameTheme(game: string | undefined): Theme {
   };
   return (
     themes[key] || {
-      bg1: '#4a1d7a',
-      bg2: '#140533',
-      accent: '#E879F9',
-      accentSoft: '#F0ABFC',
-      glow: 'rgba(232,121,249,0.45)',
+      accent: '#C84FFF',
+      accentSoft: '#E879F9',
+      glow: 'rgba(200,79,255,0.5)',
       wordmark: 'TCG',
       tagline: 'Trading Cards',
       Icon: Sparkles,
@@ -439,7 +421,7 @@ function PackCard({
 // foil-framed hero card window, set symbol, card count band.
 // ============================================================
 function BoosterPack({ box, theme }: { box: Box; theme: Theme }) {
-  const { bg1, bg2, accent, accentSoft, Icon, wordmark, tagline, pattern } = theme;
+  const { accent, accentSoft, Icon, wordmark, tagline, pattern } = theme;
   const heroImage = box.topCard?.imageUrlGatherer || box.imageUrl || null;
 
   return (
@@ -452,30 +434,40 @@ function BoosterPack({ box, theme }: { box: Box; theme: Theme }) {
         `,
       }}
     >
-      {/* Base gradient */}
+      {/* Pack-Attack base — unified purple/navy on every pack */}
       <div
         className="absolute inset-0"
-        style={{ background: `linear-gradient(170deg, ${bg1} 0%, ${bg2} 75%, #050318 100%)` }}
+        style={{
+          background: `linear-gradient(170deg, ${PACK_BG_1} 0%, ${PACK_BG_2} 70%, #050213 100%)`,
+        }}
+      />
+
+      {/* Subtle game-color tint at top (adds flavor without dominating) */}
+      <div
+        className="absolute inset-x-0 top-0 h-[55%] pointer-events-none"
+        style={{
+          background: `radial-gradient(ellipse at 50% 0%, ${accent}30, transparent 60%)`,
+        }}
       />
 
       {/* Game-specific pattern */}
       <PackPattern pattern={pattern} accent={accent} />
 
-      {/* Top-left radial highlight */}
+      {/* Top-left highlight for depth */}
       <div
-        className="absolute inset-0 opacity-40 pointer-events-none"
+        className="absolute inset-0 opacity-35 pointer-events-none"
         style={{
-          background: `radial-gradient(ellipse at 25% 15%, rgba(255,255,255,0.35), transparent 55%)`,
+          background: `radial-gradient(ellipse at 25% 15%, rgba(255,255,255,0.3), transparent 55%)`,
         }}
       />
 
       {/* Bottom darken for legibility */}
       <div
         className="absolute inset-x-0 bottom-0 h-[40%] pointer-events-none"
-        style={{ background: 'linear-gradient(0deg, rgba(0,0,0,0.7) 0%, transparent 100%)' }}
+        style={{ background: 'linear-gradient(0deg, rgba(10,10,42,0.85) 0%, transparent 100%)' }}
       />
 
-      {/* Foil tear strip */}
+      {/* Foil tear strip (the only full-width accent band) */}
       <div
         className="absolute top-0 inset-x-0 h-[5%] z-10"
         style={{
@@ -489,8 +481,15 @@ function BoosterPack({ box, theme }: { box: Box; theme: Theme }) {
         </div>
       </div>
 
+      {/* Pack-Attack micro-brand above wordmark (ties back to site) */}
+      <div
+        className="absolute left-0 right-0 top-[5.5%] z-20 text-center text-[6.5px] font-black uppercase tracking-[3px] text-white/55"
+      >
+        Pack · Attack
+      </div>
+
       {/* Wordmark */}
-      <div className="absolute inset-x-0 top-[8%] z-20 flex flex-col items-center text-center px-2">
+      <div className="absolute inset-x-0 top-[9%] z-20 flex flex-col items-center text-center px-2">
         <div
           className="w-full text-[13px] sm:text-[14px] leading-none font-black tracking-[1px] truncate"
           style={{
@@ -499,7 +498,7 @@ function BoosterPack({ box, theme }: { box: Box; theme: Theme }) {
             backgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             textShadow: `0 0 12px ${accent}55`,
-            filter: `drop-shadow(0 1px 1px rgba(0,0,0,0.5))`,
+            filter: `drop-shadow(0 1px 1px rgba(0,0,0,0.6))`,
           }}
         >
           {wordmark}
@@ -514,13 +513,13 @@ function BoosterPack({ box, theme }: { box: Box; theme: Theme }) {
 
       {/* Hero card window */}
       <div
-        className="absolute left-[12%] right-[12%] top-[23%] bottom-[30%] rounded-md overflow-hidden z-10"
+        className="absolute left-[12%] right-[12%] top-[25%] bottom-[30%] rounded-md overflow-hidden z-10"
         style={{
-          background: `linear-gradient(135deg, ${bg1}, ${bg2})`,
+          background: `linear-gradient(135deg, ${PACK_BG_1}, ${PACK_BG_2})`,
           boxShadow: `
             0 0 0 1.5px ${accent}dd,
             0 0 0 2.5px rgba(0,0,0,0.5),
-            0 0 0 3.5px ${accentSoft}66,
+            0 0 0 3.5px ${accentSoft}55,
             0 6px 14px rgba(0,0,0,0.6),
             inset 0 0 20px ${accent}22
           `,
@@ -538,7 +537,7 @@ function BoosterPack({ box, theme }: { box: Box; theme: Theme }) {
         ) : (
           <div
             className="w-full h-full flex items-center justify-center"
-            style={{ background: `radial-gradient(circle at 30% 30%, ${accent}44, ${bg2})` }}
+            style={{ background: `radial-gradient(circle at 30% 30%, ${accent}44, ${PACK_BG_2})` }}
           >
             <Icon className="w-10 h-10 text-white/40" />
           </div>
