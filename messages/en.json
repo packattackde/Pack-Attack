@@ -424,6 +424,10 @@
     "partnerBy": "By {name}",
     "cardsPerPack": "{cards} cards/pack · {total} total cards",
     "open": "Open",
+    "infoInstantRipTitle": "Instant rip",
+    "infoInstantRipDesc": "Open packs instantly with a full reveal animation.",
+    "infoSellBackTitle": "Sell back anytime",
+    "infoSellBackDesc": "Trade your hits back for coins — or ship the originals.",
     "games": {
       "POKEMON": "Pokémon",
       "MAGIC_THE_GATHERING": "Magic: The Gathering",

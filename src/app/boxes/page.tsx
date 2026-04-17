@@ -20,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 // PERFORMANCE: Use ISR with 60-second revalidation instead of force-dynamic
 // This caches the page and regenerates it every 60 seconds, reducing DB load
-export const revalidate = 60; // Revalidate every 60 seconds
+export const revalidate = 60;
 
 async function getBoxes() {
   try {
@@ -33,25 +33,23 @@ async function getBoxes() {
       ],
       include: {
         _count: {
-          select: { cards: true }
+          select: { cards: true },
         },
+        // Only need the top-value card for the pack hero art
         cards: {
           orderBy: { coinValue: 'desc' },
-          take: 3,
+          take: 1,
           select: {
             id: true,
             name: true,
             imageUrlGatherer: true,
             coinValue: true,
-          }
+          },
         },
         createdByShop: {
-          select: {
-            id: true,
-            name: true,
-          }
-        }
-      }
+          select: { id: true, name: true },
+        },
+      },
     });
   } catch {
     return [];
@@ -62,20 +60,29 @@ export default async function BoxesPage() {
   const t = await getTranslations('boxes');
   const rawBoxes = await getBoxes();
 
-  // Convert Decimal to Number for client component
-  const boxes = rawBoxes.map(box => ({
-    ...box,
+  const boxes = rawBoxes.map((box) => ({
+    id: box.id,
+    name: box.name,
+    imageUrl: box.imageUrl,
     price: Number(box.price),
-    cards: box.cards.map(card => ({
-      ...card,
-      coinValue: Number(card.coinValue),
-    })),
+    cardsPerPack: box.cardsPerPack,
+    featured: box.featured,
+    games: box.games,
+    totalCards: box._count.cards,
+    topCard: box.cards[0]
+      ? {
+          id: box.cards[0].id,
+          name: box.cards[0].name,
+          imageUrlGatherer: box.cards[0].imageUrlGatherer,
+          coinValue: Number(box.cards[0].coinValue),
+        }
+      : null,
+    createdByShop: box.createdByShop,
   }));
 
-  // Extract unique games from all boxes
-  const availableGames = [...new Set(
-    boxes.flatMap(box => box.games || [])
-  )].sort();
+  const availableGames = [
+    ...new Set(boxes.flatMap((box) => box.games || [])),
+  ].sort();
 
   return (
     <div className="min-h-screen font-display">
@@ -94,15 +101,18 @@ export default async function BoxesPage() {
           </div>
           <div className="flex flex-wrap items-center gap-2 mb-3">
             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
-              <span className="text-white">{t('title').split(' ').slice(0, -1).join(' ')} </span>
-              <span className="text-[#C84FFF]">{t('title').split(' ').slice(-1)[0]}</span>
+              <span className="text-white">
+                {t('title').split(' ').slice(0, -1).join(' ')}{' '}
+              </span>
+              <span className="text-[#C84FFF]">
+                {t('title').split(' ').slice(-1)[0]}
+              </span>
             </h1>
             <InfoTooltip infoKey="boxes.overview" />
           </div>
           <p className="text-[#8888aa] text-lg">{t('subtitle')}</p>
         </div>
 
-        {/* Client-side filterable boxes */}
         <BoxesClient boxes={boxes} availableGames={availableGames} />
       </div>
     </div>
