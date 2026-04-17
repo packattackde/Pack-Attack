@@ -434,14 +434,12 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                                             </div>
                                         )}
 
-                                        {/* Game badge */}
-                                        <div className={`absolute bottom-12 left-2 rounded-full px-2 py-0.5 text-xs font-bold ${gameConfig.bg} ${gameConfig.text}`}>
-                                            {gameConfig.label}
-                                        </div>
-
-                                        {/* Card Info */}
-                                        <div className="absolute bottom-0 left-0 right-0 p-3">
-                                            <h3 className="font-bold text-white text-sm truncate mb-0.5">{group.card.name}</h3>
+                                        {/* Card Info — game badge + name + value stacked in one panel */}
+                                        <div className="absolute bottom-0 left-0 right-0 p-3 flex flex-col gap-1">
+                                            <span className={`inline-flex self-start rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${gameConfig.bg} ${gameConfig.text} shadow-sm max-w-full`}>
+                                                <span className="truncate">{gameConfig.label}</span>
+                                            </span>
+                                            <h3 className="font-bold text-white text-sm truncate">{group.card.name}</h3>
                                             <div className="flex items-center gap-1">
                                                 <Coins className="h-3.5 w-3.5 text-amber-400" />
                                                 <span className="text-sm font-bold text-amber-400">{group.card.coinValue}</span>
