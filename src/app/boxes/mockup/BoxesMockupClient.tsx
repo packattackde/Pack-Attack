@@ -345,247 +345,194 @@ function PackCard({ box }: { box: Box }) {
 }
 
 // ------------------------------------------------------------
-// THE REAL BOOSTER PACK — pure CSS + SVG composition
-// Mimics a physical booster pack wrapper:
-//   • rounded top with perforated tear strip (foil)
-//   • shiny foil body with holographic sheen
-//   • game logo + pack name + foil art window
-//   • "BOOSTER PACK" label + card count
-//   • foil seal at bottom
+// THE REAL BOOSTER PACK — packs.com style
+// The pack IS the product image (full-bleed, no filters).
+// Thin foil overlays only at top (tear strip) and bottom (label).
+// Hover adds a subtle white shine sweep — NOT a rainbow filter.
 // ------------------------------------------------------------
 function BoosterPack({ box, theme }: { box: Box; theme: Theme }) {
-  const { primary, secondary, accent, Icon } = theme;
+  const { primary, accent, Icon } = theme;
   const hasImage = Boolean(box.imageUrl);
 
   return (
     <div
-      className="relative w-[150px] sm:w-[170px] aspect-[5/8] rounded-[14px] overflow-hidden select-none"
+      className="relative w-[150px] sm:w-[170px] aspect-[5/8] rounded-[14px] overflow-hidden select-none bg-black"
       style={{
         boxShadow: `
           0 25px 50px -12px rgba(0,0,0,0.85),
-          0 0 0 1px rgba(255,255,255,0.08) inset,
-          0 1px 0 rgba(255,255,255,0.25) inset,
-          0 -1px 0 rgba(0,0,0,0.4) inset
+          0 0 0 1px rgba(255,255,255,0.08) inset
         `,
       }}
     >
-      {/* ── BASE WRAPPER: deep purple gradient (Pack-Attack DNA) ── */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `
-            radial-gradient(ellipse at 30% 20%, ${primary} 0%, ${secondary} 70%),
-            linear-gradient(165deg, ${primary} 0%, #0f0a2e 60%, #0a0520 100%)
-          `,
-          backgroundBlendMode: 'screen',
-        }}
-      />
+      {/* ── PACK BODY = the actual product image, full bleed ── */}
+      {hasImage ? (
+        <Image
+          src={box.imageUrl}
+          alt={box.name}
+          fill
+          className="object-cover"
+          sizes="(max-width: 640px) 150px, 170px"
+          unoptimized
+          priority={false}
+        />
+      ) : (
+        <FallbackPackBody theme={theme} name={box.name} Icon={Icon} />
+      )}
 
-      {/* ── FOIL SHEEN: diagonal metallic highlight ── */}
+      {/* ── TOP TEAR STRIP: thin foil band, only occupies top ~9% ── */}
       <div
-        className="absolute inset-0 opacity-50 mix-blend-overlay pointer-events-none"
-        style={{
-          background: `linear-gradient(115deg,
-            transparent 0%,
-            rgba(255,255,255,0.0) 25%,
-            rgba(255,255,255,0.35) 45%,
-            rgba(255,255,255,0.15) 50%,
-            rgba(255,255,255,0.35) 55%,
-            rgba(255,255,255,0.0) 75%,
-            transparent 100%
-          )`,
-        }}
-      />
-
-      {/* ── HOLOGRAPHIC RAINBOW (subtle) ── */}
-      <div
-        className="absolute inset-0 opacity-20 mix-blend-screen pointer-events-none"
-        style={{
-          background: `linear-gradient(120deg,
-            transparent 10%,
-            rgba(255,0,255,0.4) 30%,
-            rgba(0,255,255,0.3) 45%,
-            rgba(255,255,0,0.3) 55%,
-            rgba(255,0,255,0.4) 70%,
-            transparent 90%
-          )`,
-        }}
-      />
-
-      {/* ── TOP TEAR STRIP (perforated foil, brighter color) ── */}
-      <div
-        className="absolute top-0 inset-x-0 h-[18%]"
+        className="absolute top-0 inset-x-0 h-[9%] z-10"
         style={{
           background: `linear-gradient(180deg,
             ${accent} 0%,
-            ${accent} 55%,
-            rgba(0,0,0,0.3) 60%,
+            ${accent} 82%,
+            rgba(0,0,0,0.35) 92%,
             transparent 100%
           )`,
         }}
       >
-        {/* Shine on tear strip */}
+        {/* Shine along tear strip */}
         <div
           className="absolute inset-0"
           style={{
             background: `linear-gradient(180deg,
-              rgba(255,255,255,0.55) 0%,
-              transparent 50%
+              rgba(255,255,255,0.45) 0%,
+              rgba(255,255,255,0.15) 40%,
+              transparent 75%
             )`,
           }}
         />
-        {/* Perforation dots */}
-        <div className="absolute left-0 right-0 top-[55%] flex items-center justify-center gap-[3px]">
-          {Array.from({ length: 18 }).map((_, i) => (
+        {/* Perforation line */}
+        <div className="absolute left-[4%] right-[4%] bottom-[12%] flex items-center justify-between">
+          {Array.from({ length: 22 }).map((_, i) => (
             <div
               key={i}
-              className="w-[2px] h-[2px] rounded-full bg-black/50"
-              style={{ boxShadow: '0 1px 0 rgba(255,255,255,0.25)' }}
+              className="w-[1.5px] h-[1.5px] rounded-full bg-black/55"
             />
           ))}
         </div>
       </div>
 
-      {/* ── INNER FOIL PANEL (art window) ── */}
+      {/* ── PACK-ATTACK EMBLEM: floating game icon in top-right corner ── */}
       <div
-        className="absolute left-[10%] right-[10%] top-[40%] aspect-[4/3] rounded-md overflow-hidden"
+        className="absolute top-[11%] right-2 z-20 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center"
         style={{
+          background: `radial-gradient(circle at 30% 30%, ${accent}, ${primary})`,
           boxShadow: `
-            0 0 0 1px ${accent}66,
-            0 0 0 2px rgba(0,0,0,0.4),
-            0 4px 12px rgba(0,0,0,0.6),
-            0 0 18px ${accent}33 inset
+            0 0 10px ${accent}aa,
+            0 0 0 2px rgba(0,0,0,0.5),
+            0 0 0 3px ${accent}66,
+            inset 0 -2px 3px rgba(0,0,0,0.4),
+            inset 0 2px 3px rgba(255,255,255,0.5)
           `,
-          background: `linear-gradient(135deg, ${primary}, ${secondary})`,
         }}
       >
-        {hasImage ? (
-          <>
-            <Image
-              src={box.imageUrl}
-              alt=""
-              fill
-              className="object-cover opacity-75 mix-blend-luminosity"
-              sizes="140px"
-              unoptimized
-            />
-            {/* Color tint over the image so it matches game theme */}
-            <div
-              className="absolute inset-0 mix-blend-color"
-              style={{ background: accent, opacity: 0.35 }}
-            />
-          </>
-        ) : (
-          <div
-            className="w-full h-full opacity-60"
-            style={{
-              backgroundImage: `
-                radial-gradient(circle at 30% 30%, ${accent}55, transparent 50%),
-                radial-gradient(circle at 70% 70%, ${primary}, transparent 60%)
-              `,
-            }}
-          />
-        )}
-        {/* Glossy reflection on the art window */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: `linear-gradient(165deg,
-              rgba(255,255,255,0.35) 0%,
-              transparent 40%,
-              transparent 60%,
-              rgba(0,0,0,0.3) 100%
-            )`,
-          }}
-        />
+        <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white drop-shadow-md" />
       </div>
 
-      {/* ── GAME LOGO / ICON (top center of body) ── */}
-      <div className="absolute left-0 right-0 top-[22%] flex flex-col items-center px-3 z-10">
-        <div
-          className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center"
-          style={{
-            background: `radial-gradient(circle at 30% 30%, ${accent}, ${primary})`,
-            boxShadow: `
-              0 0 12px ${accent}99,
-              0 0 0 2px rgba(0,0,0,0.3),
-              0 0 0 3px ${accent}55,
-              inset 0 -2px 4px rgba(0,0,0,0.4),
-              inset 0 2px 4px rgba(255,255,255,0.4)
-            `,
-          }}
-        >
-          <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-white drop-shadow-md" />
-        </div>
-      </div>
-
-      {/* ── PACK NAME (big foil text below art) ── */}
-      <div className="absolute left-3 right-3 top-[72%] text-center z-10">
-        <div
-          className="text-[9px] font-black uppercase tracking-[2.5px] mb-0.5"
-          style={{ color: accent, textShadow: `0 0 8px ${accent}88, 0 1px 0 rgba(0,0,0,0.6)` }}
-        >
-          {theme.label}
-        </div>
-        <div
-          className="text-[11px] sm:text-[12px] font-black uppercase tracking-wider text-white line-clamp-2 leading-tight"
-          style={{ textShadow: '0 1px 2px rgba(0,0,0,0.9), 0 0 4px rgba(0,0,0,0.6)' }}
-        >
-          {box.name}
-        </div>
-      </div>
-
-      {/* ── BOTTOM FOIL LABEL ── */}
+      {/* ── BOTTOM FOIL LABEL: gradient fade with name + card count ── */}
       <div
-        className="absolute inset-x-0 bottom-0 h-[10%] flex items-center justify-between px-3"
+        className="absolute inset-x-0 bottom-0 h-[38%] z-10 flex flex-col justify-end px-3 pb-3"
         style={{
-          background: `linear-gradient(0deg,
-            rgba(0,0,0,0.5) 0%,
-            transparent 100%
+          background: `linear-gradient(180deg,
+            transparent 0%,
+            rgba(0,0,0,0.0) 30%,
+            rgba(0,0,0,0.65) 60%,
+            rgba(0,0,0,0.9) 100%
           )`,
         }}
       >
-        <span
-          className="text-[8px] font-black uppercase tracking-[2px] text-white/80"
-          style={{ textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}
+        <div
+          className="text-[8px] font-black uppercase tracking-[2.5px] mb-1"
+          style={{ color: accent, textShadow: `0 0 8px ${accent}88, 0 1px 0 rgba(0,0,0,0.6)` }}
         >
-          Booster
-        </span>
-        <span
-          className="inline-flex items-center gap-1 text-[8px] font-black uppercase tracking-[1.5px]"
-          style={{ color: accent, textShadow: `0 0 6px ${accent}88` }}
+          {theme.label} · Booster
+        </div>
+        <div
+          className="text-[11px] sm:text-[12px] font-black uppercase tracking-wide text-white line-clamp-2 leading-tight mb-1"
+          style={{ textShadow: '0 1px 2px rgba(0,0,0,0.95)' }}
         >
-          {box.cardsPerPack}× cards
-        </span>
+          {box.name}
+        </div>
+        <div className="flex items-center gap-1.5 text-[8px] font-black uppercase tracking-[1.5px] text-white/75">
+          <span
+            className="inline-flex items-center px-1.5 py-[1px] rounded-sm"
+            style={{ background: `${accent}cc`, color: '#0a0520' }}
+          >
+            {box.cardsPerPack}× cards
+          </span>
+        </div>
       </div>
 
-      {/* ── EDGE HIGHLIGHTS for realism ── */}
-      <div className="absolute inset-0 rounded-[14px] pointer-events-none ring-1 ring-white/10" />
+      {/* ── EDGE HIGHLIGHTS for realism (physical pack lighting) ── */}
+      <div className="absolute inset-0 rounded-[14px] pointer-events-none ring-1 ring-white/15" />
       <div
         className="absolute inset-y-0 left-0 w-[2px] pointer-events-none"
         style={{
-          background: 'linear-gradient(180deg, transparent, rgba(255,255,255,0.15), transparent)',
+          background: 'linear-gradient(180deg, transparent, rgba(255,255,255,0.25), transparent)',
         }}
       />
       <div
         className="absolute inset-y-0 right-0 w-[2px] pointer-events-none"
         style={{
-          background: 'linear-gradient(180deg, transparent, rgba(0,0,0,0.3), transparent)',
+          background: 'linear-gradient(180deg, transparent, rgba(0,0,0,0.35), transparent)',
         }}
       />
 
-      {/* ── ANIMATED SHINE ON HOVER (travels across pack) ── */}
-      <div
-        className="absolute inset-0 pointer-events-none overflow-hidden"
-        aria-hidden
-      >
+      {/* ── HOVER SHINE: single white sweep, no rainbow ── */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-20" aria-hidden>
         <div
           className="pack-shine absolute top-0 h-full w-[40%] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
           style={{
             background:
-              'linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.55) 50%, transparent 70%)',
+              'linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.45) 50%, transparent 70%)',
           }}
         />
+      </div>
+    </div>
+  );
+}
+
+// Fallback pack body when box has no imageUrl — purple Pack-Attack gradient
+function FallbackPackBody({
+  theme,
+  name,
+  Icon,
+}: {
+  theme: Theme;
+  name: string;
+  Icon: React.ComponentType<{ className?: string }>;
+}) {
+  return (
+    <div
+      className="absolute inset-0 flex flex-col items-center justify-center px-3 text-center"
+      style={{
+        background: `
+          radial-gradient(ellipse at 30% 25%, ${theme.primary} 0%, ${theme.secondary} 75%),
+          linear-gradient(165deg, ${theme.primary} 0%, #0f0a2e 70%, #0a0520 100%)
+        `,
+      }}
+    >
+      <div
+        className="w-14 h-14 rounded-full flex items-center justify-center mb-3 mt-[-10%]"
+        style={{
+          background: `radial-gradient(circle at 30% 30%, ${theme.accent}, ${theme.primary})`,
+          boxShadow: `0 0 24px ${theme.glow}, 0 0 0 3px rgba(0,0,0,0.3), inset 0 -3px 5px rgba(0,0,0,0.4), inset 0 3px 5px rgba(255,255,255,0.3)`,
+        }}
+      >
+        <Icon className="w-7 h-7 text-white drop-shadow-md" />
+      </div>
+      <div
+        className="text-[10px] font-black uppercase tracking-[2.5px] mb-1"
+        style={{ color: theme.accent, textShadow: `0 0 8px ${theme.glow}` }}
+      >
+        {theme.label}
+      </div>
+      <div
+        className="text-[13px] font-black uppercase tracking-wider text-white line-clamp-3 leading-tight"
+        style={{ textShadow: '0 1px 2px rgba(0,0,0,0.9)' }}
+      >
+        {name}
       </div>
     </div>
   );
