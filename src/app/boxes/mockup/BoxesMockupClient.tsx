@@ -43,121 +43,158 @@ interface Props {
 }
 
 type Theme = {
-  // Pack primary colors (used for the wrapper itself)
-  primary: string;
-  secondary: string;
-  accent: string; // foil accent (brighter)
-  // Ambient glow behind the pack
+  // Pack wrapper color palette
+  bg1: string; // top/primary
+  bg2: string; // bottom/shadow
+  accent: string; // foil stripe
+  accentSoft: string;
   glow: string;
-  bgGradient: string;
+  // Typography
+  wordmark: string; // text shown big at top of pack
+  tagline: string; // small subline
+  // Icon + label
   label: string;
   Icon: React.ComponentType<{ className?: string }>;
+  // Pattern type for extra flavor
+  pattern: 'diamond' | 'wave' | 'star' | 'chevron' | 'burst' | 'grid';
 };
 
-// Each game's pack keeps the Pack-Attack purple DNA but shifts accent
 function getGameTheme(game: string | undefined): Theme {
   const key = (game || '').toUpperCase().replace(/-/g, '_');
   const themes: Record<string, Theme> = {
     POKEMON: {
-      primary: '#3a2a6a',
-      secondary: '#1a1040',
-      accent: '#FACC15',
-      glow: 'rgba(250,204,21,0.35)',
-      bgGradient: 'from-yellow-500/15 via-amber-700/5 to-transparent',
+      bg1: '#2B4DE8',
+      bg2: '#0a1140',
+      accent: '#FFD600',
+      accentSoft: '#FFE94D',
+      glow: 'rgba(255,214,0,0.4)',
+      wordmark: 'POKÉMON',
+      tagline: 'Trading Card Game',
       label: 'Pokémon',
       Icon: Zap,
+      pattern: 'burst',
     },
     MAGIC_THE_GATHERING: {
-      primary: '#4a2a7a',
-      secondary: '#1a0e40',
-      accent: '#C084FC',
-      glow: 'rgba(147,51,234,0.4)',
-      bgGradient: 'from-purple-700/20 via-indigo-800/10 to-transparent',
+      bg1: '#2A1458',
+      bg2: '#0a0420',
+      accent: '#E0B84C',
+      accentSoft: '#FFD77A',
+      glow: 'rgba(224,184,76,0.4)',
+      wordmark: 'MAGIC',
+      tagline: 'The Gathering',
       label: 'Magic',
       Icon: Wand2,
+      pattern: 'diamond',
     },
     MAGIC: {
-      primary: '#4a2a7a',
-      secondary: '#1a0e40',
-      accent: '#C084FC',
-      glow: 'rgba(147,51,234,0.4)',
-      bgGradient: 'from-purple-700/20 via-indigo-800/10 to-transparent',
+      bg1: '#2A1458',
+      bg2: '#0a0420',
+      accent: '#E0B84C',
+      accentSoft: '#FFD77A',
+      glow: 'rgba(224,184,76,0.4)',
+      wordmark: 'MAGIC',
+      tagline: 'The Gathering',
       label: 'Magic',
       Icon: Wand2,
+      pattern: 'diamond',
     },
     YUGIOH: {
-      primary: '#5a2a5a',
-      secondary: '#2a0a2a',
-      accent: '#FB923C',
-      glow: 'rgba(249,115,22,0.4)',
-      bgGradient: 'from-orange-500/15 via-amber-800/5 to-transparent',
+      bg1: '#6B1414',
+      bg2: '#1a0404',
+      accent: '#F5A524',
+      accentSoft: '#FFC66A',
+      glow: 'rgba(245,165,36,0.4)',
+      wordmark: 'YU-GI-OH!',
+      tagline: 'Trading Card Game',
       label: 'Yu-Gi-Oh!',
       Icon: Crown,
+      pattern: 'star',
     },
     ONE_PIECE: {
-      primary: '#6a1f3a',
-      secondary: '#2a0a1a',
-      accent: '#F87171',
-      glow: 'rgba(220,38,38,0.45)',
-      bgGradient: 'from-red-600/20 via-rose-800/10 to-transparent',
+      bg1: '#C41E3A',
+      bg2: '#400a12',
+      accent: '#FFD700',
+      accentSoft: '#FFEA70',
+      glow: 'rgba(255,215,0,0.45)',
+      wordmark: 'ONE PIECE',
+      tagline: 'Card Game',
       label: 'One Piece',
       Icon: Ship,
+      pattern: 'wave',
     },
     ONEPIECE: {
-      primary: '#6a1f3a',
-      secondary: '#2a0a1a',
-      accent: '#F87171',
-      glow: 'rgba(220,38,38,0.45)',
-      bgGradient: 'from-red-600/20 via-rose-800/10 to-transparent',
+      bg1: '#C41E3A',
+      bg2: '#400a12',
+      accent: '#FFD700',
+      accentSoft: '#FFEA70',
+      glow: 'rgba(255,215,0,0.45)',
+      wordmark: 'ONE PIECE',
+      tagline: 'Card Game',
       label: 'One Piece',
       Icon: Ship,
+      pattern: 'wave',
     },
     LORCANA: {
-      primary: '#2a3a7a',
-      secondary: '#0a1440',
-      accent: '#818CF8',
-      glow: 'rgba(99,102,241,0.4)',
-      bgGradient: 'from-indigo-500/15 via-blue-800/5 to-transparent',
+      bg1: '#1E3A8A',
+      bg2: '#061032',
+      accent: '#A78BFA',
+      accentSoft: '#C4B5FD',
+      glow: 'rgba(167,139,250,0.4)',
+      wordmark: 'LORCANA',
+      tagline: 'Disney TCG',
       label: 'Lorcana',
       Icon: Sparkles,
+      pattern: 'diamond',
     },
     DIGIMON: {
-      primary: '#1f4a6a',
-      secondary: '#061e35',
+      bg1: '#0E4A7A',
+      bg2: '#041526',
       accent: '#22D3EE',
-      glow: 'rgba(6,182,212,0.4)',
-      bgGradient: 'from-cyan-500/15 via-sky-800/5 to-transparent',
+      accentSoft: '#67E8F9',
+      glow: 'rgba(34,211,238,0.4)',
+      wordmark: 'DIGIMON',
+      tagline: 'Card Game',
       label: 'Digimon',
       Icon: Flame,
+      pattern: 'chevron',
     },
     SPORTS: {
-      primary: '#5a2a7a',
-      secondary: '#1f0a3a',
+      bg1: '#581C87',
+      bg2: '#1a0633',
       accent: '#E879F9',
-      glow: 'rgba(200,79,255,0.45)',
-      bgGradient: 'from-fuchsia-600/20 via-purple-800/10 to-transparent',
+      accentSoft: '#F0ABFC',
+      glow: 'rgba(232,121,249,0.45)',
+      wordmark: 'SPORTS',
+      tagline: 'Premium Cards',
       label: 'Sports',
       Icon: Trophy,
+      pattern: 'chevron',
     },
     FLESH_AND_BLOOD: {
-      primary: '#6a2a4a',
-      secondary: '#2a0a1a',
+      bg1: '#881337',
+      bg2: '#2a050f',
       accent: '#FB7185',
-      glow: 'rgba(225,29,72,0.4)',
-      bgGradient: 'from-rose-600/15 via-pink-800/5 to-transparent',
+      accentSoft: '#FDA4AF',
+      glow: 'rgba(251,113,133,0.4)',
+      wordmark: 'FLESH &amp; BLOOD',
+      tagline: 'TCG',
       label: 'Flesh & Blood',
       Icon: Swords,
+      pattern: 'star',
     },
   };
   return (
     themes[key] || {
-      primary: '#5a2a7a',
-      secondary: '#1f0a3a',
+      bg1: '#4a1d7a',
+      bg2: '#140533',
       accent: '#E879F9',
-      glow: 'rgba(200,79,255,0.45)',
-      bgGradient: 'from-fuchsia-600/20 via-purple-800/10 to-transparent',
+      accentSoft: '#F0ABFC',
+      glow: 'rgba(232,121,249,0.45)',
+      wordmark: 'TCG',
+      tagline: 'Trading Cards',
       label: 'TCG',
       Icon: Sparkles,
+      pattern: 'grid',
     }
   );
 }
@@ -203,7 +240,7 @@ export default function BoxesMockupClient({ boxes, availableGames }: Props) {
           <p className="text-white font-semibold">No packs found for this game.</p>
         </div>
       ) : (
-        <div className="grid gap-x-6 gap-y-10 sm:gap-x-8 sm:gap-y-14 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        <div className="grid gap-x-6 gap-y-12 sm:gap-x-8 sm:gap-y-16 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {filtered.map((box) => (
             <PackCard key={box.id} box={box} />
           ))}
@@ -276,7 +313,7 @@ function PackCard({ box }: { box: Box }) {
 
   return (
     <div className="group relative flex flex-col items-center" style={{ perspective: '1200px' }}>
-      {/* Ambient glow behind the pack */}
+      {/* Ambient glow */}
       <div
         className="absolute inset-x-0 top-0 h-[85%] pointer-events-none opacity-60 group-hover:opacity-100 transition-opacity duration-500 blur-2xl"
         style={{
@@ -284,7 +321,7 @@ function PackCard({ box }: { box: Box }) {
         }}
       />
 
-      {/* Badges row — floats above pack */}
+      {/* Badges */}
       <div className="absolute top-0 left-0 right-0 z-30 flex items-start justify-between gap-1 px-1">
         <div className="flex flex-col gap-1">
           {box.featured && (
@@ -300,7 +337,6 @@ function PackCard({ box }: { box: Box }) {
         </div>
       </div>
 
-      {/* THE PACK LINK */}
       <Link
         href={`/open/${box.id}`}
         aria-label={`Open ${box.name}`}
@@ -308,14 +344,13 @@ function PackCard({ box }: { box: Box }) {
       >
         <BoosterPack box={box} theme={theme} />
 
-        {/* Floor shadow */}
         <div
           className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-[70%] h-4 rounded-full blur-xl opacity-60 group-hover:opacity-90 group-hover:w-[80%] transition-all duration-500 pointer-events-none"
           style={{ background: `radial-gradient(ellipse, ${theme.glow}, transparent 70%)` }}
         />
       </Link>
 
-      {/* Info below the pack (like packs.com) */}
+      {/* Info below */}
       <div className="mt-5 w-full text-center">
         <h3
           className="text-white font-extrabold text-sm sm:text-base leading-tight line-clamp-1 mb-1 group-hover:text-[#E879F9] transition-colors"
@@ -344,148 +379,210 @@ function PackCard({ box }: { box: Box }) {
   );
 }
 
-// ------------------------------------------------------------
-// THE REAL BOOSTER PACK — packs.com style
-// The pack IS the product image (full-bleed, no filters).
-// Thin foil overlays only at top (tear strip) and bottom (label).
-// Hover adds a subtle white shine sweep — NOT a rainbow filter.
-// ------------------------------------------------------------
+// ============================================================
+// BOOSTER PACK — designed like a real product:
+//   1. Top foil strip with game wordmark (big, bold typography)
+//   2. Tagline / set type
+//   3. Featured card art in a foil-framed window
+//   4. Bottom band with expansion name + set symbol + card count
+// ============================================================
 function BoosterPack({ box, theme }: { box: Box; theme: Theme }) {
-  const { primary, accent, Icon } = theme;
-  const hasImage = Boolean(box.imageUrl);
+  const { bg1, bg2, accent, accentSoft, Icon, wordmark, tagline, pattern } = theme;
+
+  // Feature art priority: topCard image > box.imageUrl > nothing
+  const heroImage = box.topCard?.imageUrlGatherer || box.imageUrl || null;
 
   return (
     <div
-      className="relative w-[150px] sm:w-[170px] aspect-[5/8] rounded-[14px] overflow-hidden select-none bg-black"
+      className="relative w-[160px] sm:w-[180px] aspect-[5/8] rounded-[14px] overflow-hidden select-none"
       style={{
         boxShadow: `
           0 25px 50px -12px rgba(0,0,0,0.85),
-          0 0 0 1px rgba(255,255,255,0.08) inset
+          0 0 0 1px rgba(255,255,255,0.12) inset
         `,
       }}
     >
-      {/* ── PACK BODY = the actual product image, full bleed ── */}
-      {hasImage ? (
-        <Image
-          src={box.imageUrl}
-          alt={box.name}
-          fill
-          className="object-cover"
-          sizes="(max-width: 640px) 150px, 170px"
-          unoptimized
-          priority={false}
-        />
-      ) : (
-        <FallbackPackBody theme={theme} name={box.name} Icon={Icon} />
-      )}
-
-      {/* ── TOP TEAR STRIP: thin foil band, only occupies top ~9% ── */}
+      {/* ── LAYER 1: Base gradient (themed per game) ── */}
       <div
-        className="absolute top-0 inset-x-0 h-[9%] z-10"
+        className="absolute inset-0"
         style={{
-          background: `linear-gradient(180deg,
-            ${accent} 0%,
-            ${accent} 82%,
-            rgba(0,0,0,0.35) 92%,
-            transparent 100%
-          )`,
+          background: `linear-gradient(170deg, ${bg1} 0%, ${bg2} 75%, #050318 100%)`,
+        }}
+      />
+
+      {/* ── LAYER 2: Game-specific pattern overlay ── */}
+      <PackPattern pattern={pattern} accent={accent} />
+
+      {/* ── LAYER 3: Radial highlight (top-left, adds depth) ── */}
+      <div
+        className="absolute inset-0 opacity-40 pointer-events-none"
+        style={{
+          background: `radial-gradient(ellipse at 25% 15%, rgba(255,255,255,0.35), transparent 55%)`,
+        }}
+      />
+
+      {/* ── LAYER 4: Darken bottom for label legibility ── */}
+      <div
+        className="absolute inset-x-0 bottom-0 h-[40%] pointer-events-none"
+        style={{
+          background: 'linear-gradient(0deg, rgba(0,0,0,0.7) 0%, transparent 100%)',
+        }}
+      />
+
+      {/* ── TOP FOIL BAR (with perforation) ── */}
+      <div
+        className="absolute top-0 inset-x-0 h-[5%] z-10"
+        style={{
+          background: `linear-gradient(180deg, ${accentSoft} 0%, ${accent} 60%, rgba(0,0,0,0.4) 100%)`,
         }}
       >
-        {/* Shine along tear strip */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background: `linear-gradient(180deg,
-              rgba(255,255,255,0.45) 0%,
-              rgba(255,255,255,0.15) 40%,
-              transparent 75%
-            )`,
-          }}
-        />
-        {/* Perforation line */}
-        <div className="absolute left-[4%] right-[4%] bottom-[12%] flex items-center justify-between">
-          {Array.from({ length: 22 }).map((_, i) => (
-            <div
-              key={i}
-              className="w-[1.5px] h-[1.5px] rounded-full bg-black/55"
-            />
+        <div className="absolute left-[5%] right-[5%] bottom-[15%] flex items-center justify-between">
+          {Array.from({ length: 20 }).map((_, i) => (
+            <span key={i} className="w-[1.5px] h-[1.5px] rounded-full bg-black/50" />
           ))}
         </div>
       </div>
 
-      {/* ── PACK-ATTACK EMBLEM: floating game icon in top-right corner ── */}
+      {/* ── GAME WORDMARK (big foil typography) ── */}
+      <div className="absolute inset-x-0 top-[8%] z-20 flex flex-col items-center text-center px-2">
+        <div
+          className="w-full text-[13px] sm:text-[14px] leading-none font-black tracking-[1px] truncate"
+          style={{
+            background: `linear-gradient(180deg, ${accentSoft} 0%, ${accent} 65%, ${accent}aa 100%)`,
+            WebkitBackgroundClip: 'text',
+            backgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            textShadow: `0 0 12px ${accent}55`,
+            filter: `drop-shadow(0 1px 1px rgba(0,0,0,0.5))`,
+            fontStretch: 'condensed',
+          }}
+        >
+          {wordmark}
+        </div>
+        <div
+          className="text-[7.5px] font-bold uppercase tracking-[2px] mt-0.5"
+          style={{ color: `${accent}cc` }}
+        >
+          {tagline}
+        </div>
+      </div>
+
+      {/* ── HERO CARD WINDOW (foil-framed, card shows through) ── */}
       <div
-        className="absolute top-[11%] right-2 z-20 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center"
+        className="absolute left-[12%] right-[12%] top-[23%] bottom-[30%] rounded-md overflow-hidden z-10"
         style={{
-          background: `radial-gradient(circle at 30% 30%, ${accent}, ${primary})`,
+          background: `linear-gradient(135deg, ${bg1}, ${bg2})`,
           boxShadow: `
-            0 0 10px ${accent}aa,
-            0 0 0 2px rgba(0,0,0,0.5),
-            0 0 0 3px ${accent}66,
-            inset 0 -2px 3px rgba(0,0,0,0.4),
-            inset 0 2px 3px rgba(255,255,255,0.5)
+            0 0 0 1.5px ${accent}dd,
+            0 0 0 2.5px rgba(0,0,0,0.5),
+            0 0 0 3.5px ${accentSoft}66,
+            0 6px 14px rgba(0,0,0,0.6),
+            inset 0 0 20px ${accent}22
           `,
         }}
       >
-        <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white drop-shadow-md" />
+        {heroImage ? (
+          <Image
+            src={heroImage}
+            alt=""
+            fill
+            className="object-cover"
+            sizes="150px"
+            unoptimized
+          />
+        ) : (
+          <div
+            className="w-full h-full flex items-center justify-center"
+            style={{
+              background: `radial-gradient(circle at 30% 30%, ${accent}44, ${bg2})`,
+            }}
+          >
+            <Icon className="w-10 h-10 text-white/40" />
+          </div>
+        )}
+
+        {/* Glass reflection on window */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              'linear-gradient(160deg, rgba(255,255,255,0.3) 0%, transparent 35%, transparent 70%, rgba(0,0,0,0.25) 100%)',
+          }}
+        />
+
+        {/* Bottom tag inside window = hero card hint */}
+        <div className="absolute left-0 right-0 bottom-0 px-1.5 py-1 bg-gradient-to-t from-black/90 to-transparent">
+          <div className="text-[7px] font-bold uppercase tracking-[1.5px] text-white/70 text-center">
+            Featured hit
+          </div>
+        </div>
       </div>
 
-      {/* ── BOTTOM FOIL LABEL: gradient fade with name + card count ── */}
-      <div
-        className="absolute inset-x-0 bottom-0 h-[38%] z-10 flex flex-col justify-end px-3 pb-3"
-        style={{
-          background: `linear-gradient(180deg,
-            transparent 0%,
-            rgba(0,0,0,0.0) 30%,
-            rgba(0,0,0,0.65) 60%,
-            rgba(0,0,0,0.9) 100%
-          )`,
-        }}
-      >
+      {/* ── BOTTOM BAND: set symbol + name + card count ── */}
+      <div className="absolute inset-x-0 bottom-0 z-20 px-2.5 pb-2.5 pt-3">
+        {/* Expansion name */}
         <div
-          className="text-[8px] font-black uppercase tracking-[2.5px] mb-1"
-          style={{ color: accent, textShadow: `0 0 8px ${accent}88, 0 1px 0 rgba(0,0,0,0.6)` }}
-        >
-          {theme.label} · Booster
-        </div>
-        <div
-          className="text-[11px] sm:text-[12px] font-black uppercase tracking-wide text-white line-clamp-2 leading-tight mb-1"
-          style={{ textShadow: '0 1px 2px rgba(0,0,0,0.95)' }}
+          className="text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-white text-center line-clamp-2 leading-[1.15] mb-1.5"
+          style={{ textShadow: '0 1px 3px rgba(0,0,0,1), 0 0 8px rgba(0,0,0,0.8)' }}
         >
           {box.name}
         </div>
-        <div className="flex items-center gap-1.5 text-[8px] font-black uppercase tracking-[1.5px] text-white/75">
-          <span
-            className="inline-flex items-center px-1.5 py-[1px] rounded-sm"
-            style={{ background: `${accent}cc`, color: '#0a0520' }}
+
+        {/* Stats row: set symbol | card count */}
+        <div className="flex items-center justify-between gap-1.5">
+          {/* Set symbol: geometric foil diamond with game icon */}
+          <div
+            className="relative w-6 h-6 flex items-center justify-center shrink-0"
+            style={{
+              background: `linear-gradient(145deg, ${accentSoft}, ${accent})`,
+              clipPath:
+                'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+              boxShadow: `0 0 0 1px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.5)`,
+            }}
           >
-            {box.cardsPerPack}× cards
-          </span>
+            <Icon className="w-3 h-3 text-[#0a0420] drop-shadow-sm" />
+          </div>
+
+          {/* Card count pill */}
+          <div
+            className="flex-1 inline-flex items-center justify-center gap-1 px-2 py-1 rounded-sm"
+            style={{
+              background: `${accent}`,
+              boxShadow: `0 1px 0 ${accentSoft} inset, 0 -1px 0 rgba(0,0,0,0.2) inset`,
+            }}
+          >
+            <span className="text-[9px] font-black uppercase tracking-[1.5px] text-[#0a0420]">
+              {box.cardsPerPack} CARDS
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* ── EDGE HIGHLIGHTS for realism (physical pack lighting) ── */}
-      <div className="absolute inset-0 rounded-[14px] pointer-events-none ring-1 ring-white/15" />
+      {/* ── EDGE HIGHLIGHTS (physical lighting) ── */}
+      <div className="absolute inset-0 rounded-[14px] pointer-events-none ring-1 ring-white/20" />
       <div
         className="absolute inset-y-0 left-0 w-[2px] pointer-events-none"
         style={{
-          background: 'linear-gradient(180deg, transparent, rgba(255,255,255,0.25), transparent)',
+          background: 'linear-gradient(180deg, transparent, rgba(255,255,255,0.3), transparent)',
         }}
       />
       <div
         className="absolute inset-y-0 right-0 w-[2px] pointer-events-none"
         style={{
-          background: 'linear-gradient(180deg, transparent, rgba(0,0,0,0.35), transparent)',
+          background: 'linear-gradient(180deg, transparent, rgba(0,0,0,0.4), transparent)',
         }}
       />
 
-      {/* ── HOVER SHINE: single white sweep, no rainbow ── */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden z-20" aria-hidden>
+      {/* ── HOVER SHINE ── */}
+      <div
+        className="absolute inset-0 pointer-events-none overflow-hidden z-30"
+        aria-hidden
+      >
         <div
           className="pack-shine absolute top-0 h-full w-[40%] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
           style={{
             background:
-              'linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.45) 50%, transparent 70%)',
+              'linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.5) 50%, transparent 70%)',
           }}
         />
       </div>
@@ -493,49 +590,130 @@ function BoosterPack({ box, theme }: { box: Box; theme: Theme }) {
   );
 }
 
-// Fallback pack body when box has no imageUrl — purple Pack-Attack gradient
-function FallbackPackBody({
-  theme,
-  name,
-  Icon,
+// ============================================================
+// PACK BACKGROUND PATTERNS — game-specific flavor
+// ============================================================
+function PackPattern({
+  pattern,
+  accent,
 }: {
-  theme: Theme;
-  name: string;
-  Icon: React.ComponentType<{ className?: string }>;
+  pattern: Theme['pattern'];
+  accent: string;
 }) {
-  return (
-    <div
-      className="absolute inset-0 flex flex-col items-center justify-center px-3 text-center"
-      style={{
-        background: `
-          radial-gradient(ellipse at 30% 25%, ${theme.primary} 0%, ${theme.secondary} 75%),
-          linear-gradient(165deg, ${theme.primary} 0%, #0f0a2e 70%, #0a0520 100%)
-        `,
-      }}
-    >
-      <div
-        className="w-14 h-14 rounded-full flex items-center justify-center mb-3 mt-[-10%]"
-        style={{
-          background: `radial-gradient(circle at 30% 30%, ${theme.accent}, ${theme.primary})`,
-          boxShadow: `0 0 24px ${theme.glow}, 0 0 0 3px rgba(0,0,0,0.3), inset 0 -3px 5px rgba(0,0,0,0.4), inset 0 3px 5px rgba(255,255,255,0.3)`,
-        }}
+  const patterns: Record<Theme['pattern'], React.ReactNode> = {
+    wave: (
+      <svg
+        className="absolute inset-0 w-full h-full opacity-[0.12] pointer-events-none"
+        viewBox="0 0 100 160"
+        preserveAspectRatio="none"
       >
-        <Icon className="w-7 h-7 text-white drop-shadow-md" />
-      </div>
-      <div
-        className="text-[10px] font-black uppercase tracking-[2.5px] mb-1"
-        style={{ color: theme.accent, textShadow: `0 0 8px ${theme.glow}` }}
+        <defs>
+          <pattern id="wave-p" x="0" y="0" width="40" height="20" patternUnits="userSpaceOnUse">
+            <path
+              d="M 0 10 Q 10 0, 20 10 T 40 10"
+              stroke={accent}
+              strokeWidth="1"
+              fill="none"
+            />
+          </pattern>
+        </defs>
+        <rect width="100" height="160" fill="url(#wave-p)" />
+      </svg>
+    ),
+    diamond: (
+      <svg
+        className="absolute inset-0 w-full h-full opacity-[0.1] pointer-events-none"
+        viewBox="0 0 100 160"
+        preserveAspectRatio="none"
       >
-        {theme.label}
-      </div>
-      <div
-        className="text-[13px] font-black uppercase tracking-wider text-white line-clamp-3 leading-tight"
-        style={{ textShadow: '0 1px 2px rgba(0,0,0,0.9)' }}
+        <defs>
+          <pattern id="dmd-p" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse">
+            <path d="M 7 2 L 12 7 L 7 12 L 2 7 Z" fill={accent} />
+          </pattern>
+        </defs>
+        <rect width="100" height="160" fill="url(#dmd-p)" />
+      </svg>
+    ),
+    star: (
+      <svg
+        className="absolute inset-0 w-full h-full opacity-[0.12] pointer-events-none"
+        viewBox="0 0 100 160"
+        preserveAspectRatio="none"
       >
-        {name}
-      </div>
-    </div>
-  );
+        <defs>
+          <pattern id="star-p" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+            <path
+              d="M 10 2 L 12 8 L 18 8 L 13 12 L 15 18 L 10 14 L 5 18 L 7 12 L 2 8 L 8 8 Z"
+              fill={accent}
+            />
+          </pattern>
+        </defs>
+        <rect width="100" height="160" fill="url(#star-p)" />
+      </svg>
+    ),
+    chevron: (
+      <svg
+        className="absolute inset-0 w-full h-full opacity-[0.1] pointer-events-none"
+        viewBox="0 0 100 160"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <pattern id="chv-p" x="0" y="0" width="16" height="16" patternUnits="userSpaceOnUse">
+            <path
+              d="M 0 10 L 8 4 L 16 10"
+              stroke={accent}
+              strokeWidth="1.2"
+              fill="none"
+            />
+          </pattern>
+        </defs>
+        <rect width="100" height="160" fill="url(#chv-p)" />
+      </svg>
+    ),
+    burst: (
+      <svg
+        className="absolute inset-0 w-full h-full opacity-[0.14] pointer-events-none"
+        viewBox="0 0 100 160"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <radialGradient id="burst-p" cx="50%" cy="50%">
+            <stop offset="0%" stopColor={accent} stopOpacity="0.8" />
+            <stop offset="100%" stopColor={accent} stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        {Array.from({ length: 16 }).map((_, i) => {
+          const angle = (i * 360) / 16;
+          return (
+            <rect
+              key={i}
+              x="49"
+              y="0"
+              width="2"
+              height="80"
+              fill="url(#burst-p)"
+              transform={`rotate(${angle} 50 80)`}
+            />
+          );
+        })}
+      </svg>
+    ),
+    grid: (
+      <svg
+        className="absolute inset-0 w-full h-full opacity-[0.08] pointer-events-none"
+        viewBox="0 0 100 160"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <pattern id="grid-p" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
+            <path d="M 10 0 L 0 0 0 10" stroke={accent} strokeWidth="0.5" fill="none" />
+          </pattern>
+        </defs>
+        <rect width="100" height="160" fill="url(#grid-p)" />
+      </svg>
+    ),
+  };
+  return <>{patterns[pattern]}</>;
 }
 
 function InfoTile({
