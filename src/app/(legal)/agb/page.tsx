@@ -6,7 +6,7 @@ import { LEGAL_ENTITY } from '@/lib/legal-entity';
 export const metadata: Metadata = {
   title: 'Allgemeine Geschäftsbedingungen (AGB)',
   description:
-    'Allgemeine Geschäftsbedingungen für die Nutzung der Pack-Attack-Plattform und den Erwerb von Coins sowie den Versand von Trading-Card-Game-Produkten.',
+    'Allgemeine Geschäftsbedingungen für die Nutzung der PullForge-Plattform und den Erwerb von Coins sowie den Versand von Trading-Card-Game-Produkten.',
   alternates: { canonical: '/agb' },
 };
 
@@ -29,7 +29,7 @@ function DE() {
         (1) Diese Allgemeinen Geschäftsbedingungen (nachfolgend „AGB") gelten für alle
         Rechtsbeziehungen zwischen der <strong>{LEGAL_ENTITY.companyName}</strong>,{' '}
         {LEGAL_ENTITY.street}, {LEGAL_ENTITY.zip} {LEGAL_ENTITY.city} (nachfolgend
-        „Pack-Attack" oder „wir") und den Nutzern der Plattform{' '}
+        „PullForge" oder „wir") und den Nutzern der Plattform{' '}
         <a href={LEGAL_ENTITY.websiteUrl}>{LEGAL_ENTITY.websiteHost}</a> (nachfolgend
         „Nutzer" oder „Sie").
       </p>
@@ -55,7 +55,7 @@ function DE() {
 
       <h2>§ 2 Leistungsgegenstand</h2>
       <p>
-        (1) Pack-Attack betreibt eine Online-Plattform, über die Nutzer:
+        (1) PullForge betreibt eine Online-Plattform, über die Nutzer:
       </p>
       <ul>
         <li>
@@ -78,14 +78,14 @@ function DE() {
         </li>
       </ul>
       <p>
-        (2) Pack-Attack tritt bei der Vermittlung des physischen Kartenversands als{' '}
+        (2) PullForge tritt bei der Vermittlung des physischen Kartenversands als{' '}
         <strong>Plattformbetreiber und Vermittler</strong> auf. Der Kaufvertrag über die zu
         versendenden Karten kommt zwischen dem Nutzer und dem jeweiligen Partnerhändler
         zustande. Die AGB dieses Partnerhändlers werden bei der Versandanforderung
         ergänzend übermittelt.
       </p>
       <p>
-        (3) Pack-Attack ist <strong>kein Glücksspielanbieter</strong> im Sinne des
+        (3) PullForge ist <strong>kein Glücksspielanbieter</strong> im Sinne des
         Glücksspielstaatsvertrages. Der Erwerb von Coins und die Öffnung eines Packs stellen
         keinen Einsatz im Sinne eines Glücksspiels dar, da dem Nutzer stets ein konkreter,
         sofort verfügbarer digitaler Leistungsanspruch (der Inhalt des geöffneten Packs)
@@ -107,7 +107,7 @@ function DE() {
       <p>
         (3) Der Nutzer ist verpflichtet, seine Zugangsdaten geheim zu halten und vor dem
         Zugriff Dritter zu schützen. Bei begründetem Verdacht einer unbefugten Nutzung ist
-        Pack-Attack unverzüglich zu informieren.
+        PullForge unverzüglich zu informieren.
       </p>
       <p>
         (4) Pro Person ist nur ein Nutzerkonto zulässig. Mehrfachanmeldungen, die Nutzung
@@ -127,7 +127,7 @@ function DE() {
         Angebot zum Abschluss eines Kaufvertrages ab.
       </p>
       <p>
-        (3) Der Vertrag kommt zustande, sobald Pack-Attack die Annahme erklärt. Die Annahme
+        (3) Der Vertrag kommt zustande, sobald PullForge die Annahme erklärt. Die Annahme
         kann durch die Bereitstellung der Leistung (Coin-Gutschrift, Pack-Freischaltung) oder
         durch eine separate Bestellbestätigung per E-Mail erfolgen. Die automatisch
         versandte Eingangsbestätigung stellt noch keine Annahmeerklärung dar.
@@ -256,7 +256,7 @@ function DE() {
 
       <h2>§ 10 Haftung</h2>
       <p>
-        (1) Pack-Attack haftet unbeschränkt für Schäden aus der Verletzung des Lebens, des
+        (1) PullForge haftet unbeschränkt für Schäden aus der Verletzung des Lebens, des
         Körpers oder der Gesundheit, die auf einer fahrlässigen oder vorsätzlichen
         Pflichtverletzung von uns, unseren gesetzlichen Vertretern oder Erfüllungsgehilfen
         beruhen, sowie für sonstige Schäden, die auf einer vorsätzlichen oder grob
@@ -385,7 +385,7 @@ function EN() {
       <h2>§ 1 Scope, Parties, Governing Language</h2>
       <p>
         These Terms govern all legal relationships between{' '}
-        <strong>{LEGAL_ENTITY.companyName}</strong> (&quot;Pack-Attack&quot;, &quot;we&quot;) and users of the
+        <strong>{LEGAL_ENTITY.companyName}</strong> (&quot;PullForge&quot;, &quot;we&quot;) and users of the
         platform <a href={LEGAL_ENTITY.websiteUrl}>{LEGAL_ENTITY.websiteHost}</a>. Consumers
         within the meaning of these Terms are natural persons acting for purposes outside
         their trade or profession (§ 13 German Civil Code, BGB). The governing language is
@@ -394,7 +394,7 @@ function EN() {
 
       <h2>§ 2 Services</h2>
       <p>
-        Pack-Attack operates a platform on which users may (i) purchase{' '}
+        PullForge operates a platform on which users may (i) purchase{' '}
         <strong>Coins</strong> (a purely digital, closed-loop balance usable only within the
         platform), (ii) use Coins to purchase and immediately open <strong>Pack products</strong>,
         (iii) participate in competitive <strong>Battles</strong>, and (iv) request physical
@@ -402,7 +402,7 @@ function EN() {
         for Coin credit.
       </p>
       <p>
-        Pack-Attack acts as platform operator and intermediary. The contract for shipping
+        PullForge acts as platform operator and intermediary. The contract for shipping
         physical cards is concluded between the user and the respective partner retailer.
       </p>
 

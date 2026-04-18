@@ -6,7 +6,7 @@ import { LEGAL_ENTITY } from '@/lib/legal-entity';
 export const metadata: Metadata = {
   title: 'Versand & Zahlung',
   description:
-    'Informationen zu Versandgebieten, Versandkosten, Lieferzeiten und akzeptierten Zahlungsmitteln bei Pack-Attack.',
+    'Informationen zu Versandgebieten, Versandkosten, Lieferzeiten und akzeptierten Zahlungsmitteln bei PullForge.',
   alternates: { canonical: '/versand-zahlung' },
 };
 
@@ -63,7 +63,7 @@ function DE() {
 
       <h2>Versand physischer Karten</h2>
       <p>
-        Pack-Attack ist Plattformbetreiber; der Versand der tatsächlichen Karten wird von
+        PullForge ist Plattformbetreiber; der Versand der tatsächlichen Karten wird von
         einem an die Plattform angeschlossenen <strong>Partnerhändler</strong> im eigenen
         Namen und auf eigene Rechnung durchgeführt.
       </p>
@@ -175,7 +175,7 @@ function EN() {
 
       <h2>Shipping of Physical Cards</h2>
       <p>
-        Pack-Attack is the platform operator. The physical cards are shipped by a connected{' '}
+        PullForge is the platform operator. The physical cards are shipped by a connected{' '}
         <strong>partner retailer</strong> in its own name and on its own account.
       </p>
 

@@ -318,7 +318,7 @@
       "backToBattles": "Back to Battles",
       "share": "Share",
       "copied": "Copied",
-      "shareTitle": "Pack-Attack Battle",
+      "shareTitle": "PullForge Battle",
       "drawTitle": "Draw!",
       "drawShareMode": "Cards were split equally.",
       "drawEqual": "Same total value — no cards transferred.",
@@ -1955,7 +1955,7 @@
     "colService": "Service",
     "contact": "Contact",
     "odr": "EU Dispute Resolution",
-    "disclaimer": "Pack-Attack is an independent platform. All brand names are trademarks of their respective owners.",
+    "disclaimer": "PullForge is an independent platform. All brand names are trademarks of their respective owners.",
     "odrNotice": "EU Online Dispute Resolution:"
   },
   "legal": {
@@ -1973,7 +1973,7 @@
   "cookieBanner": {
     "ariaLabel": "Cookie consent",
     "title": "Cookies & privacy",
-    "body": "We only use strictly necessary cookies to run Pack-Attack (login, language, security). We never set tracking or marketing cookies without your explicit consent. Details:",
+    "body": "We only use strictly necessary cookies to run PullForge (login, language, security). We never set tracking or marketing cookies without your explicit consent. Details:",
     "privacyLinkLabel": "Privacy Policy",
     "cookiesLinkLabel": "Cookie settings",
     "acceptAll": "Accept all",

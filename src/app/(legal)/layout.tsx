@@ -6,7 +6,7 @@ import { LEGAL_ENTITY } from '@/lib/legal-entity';
 /**
  * Shared layout for all legal pages (Impressum, AGB, Widerruf, Datenschutz,
  * Versand & Zahlung, Cookies). Provides consistent typography, a "last updated"
- * banner and a "back to home" link — matches Pack-Attack dark theme.
+ * banner and a "back to home" link — matches PullForge dark theme.
  */
 export default async function LegalLayout({
   children,

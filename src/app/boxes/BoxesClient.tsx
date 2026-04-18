@@ -42,10 +42,10 @@ interface BoxesClientProps {
   availableGames: string[];
 }
 
-// Unified Pack-Attack pack body — all packs share this purple/navy base
+// Unified PullForge pack body — all packs share this purple/navy base
 // so they feel consistent with the site. Game identity only shows
 // through the accent color (tear strip, wordmark, set symbol, pattern, glow).
-const PACK_BG_1 = '#2A1458'; // rich Pack-Attack purple
+const PACK_BG_1 = '#2A1458'; // rich PullForge purple
 const PACK_BG_2 = '#0A0A2A'; // deep page-navy
 
 type Theme = {
@@ -434,7 +434,7 @@ function BoosterPack({ box, theme }: { box: Box; theme: Theme }) {
         `,
       }}
     >
-      {/* Pack-Attack base — unified purple/navy on every pack */}
+      {/* PullForge base — unified purple/navy on every pack */}
       <div
         className="absolute inset-0"
         style={{
@@ -481,11 +481,11 @@ function BoosterPack({ box, theme }: { box: Box; theme: Theme }) {
         </div>
       </div>
 
-      {/* Pack-Attack micro-brand above wordmark (ties back to site) */}
+      {/* PullForge micro-brand above wordmark (ties back to site) */}
       <div
         className="absolute left-0 right-0 top-[5.5%] z-20 text-center text-[6.5px] font-black uppercase tracking-[3px] text-white/55"
       >
-        Pack · Attack
+        Pull · Forge
       </div>
 
       {/* Wordmark */}

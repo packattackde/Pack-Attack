@@ -5,7 +5,7 @@ import { LEGAL_ENTITY, HOSTING_PROVIDER } from '@/lib/legal-entity';
 export const metadata: Metadata = {
   title: 'Impressum',
   description:
-    'Anbieterkennzeichnung nach § 5 TMG sowie § 18 Medienstaatsvertrag für Pack-Attack.',
+    'Anbieterkennzeichnung nach § 5 TMG sowie § 18 Medienstaatsvertrag für PullForge.',
   alternates: { canonical: '/impressum' },
 };
 
@@ -155,7 +155,7 @@ function DE() {
 
       <h2>Markenrechte und Produktnamen</h2>
       <p>
-        Pack-Attack ist eine unabhängige Plattform für den Handel mit Trading-Card-Game-Produkten.
+        PullForge ist eine unabhängige Plattform für den Handel mit Trading-Card-Game-Produkten.
         Genannte Markennamen und Produktbezeichnungen wie <strong>Pokémon</strong>,{' '}
         <strong>Magic: The Gathering</strong>, <strong>Yu-Gi-Oh!</strong>,{' '}
         <strong>One Piece Card Game</strong>, <strong>Disney Lorcana</strong>,{' '}
@@ -254,7 +254,7 @@ function EN() {
 
       <h2>Trademark notice</h2>
       <p>
-        Pack-Attack is an independent platform. Brand names such as{' '}
+        PullForge is an independent platform. Brand names such as{' '}
         <strong>Pokémon</strong>, <strong>Magic: The Gathering</strong>,{' '}
         <strong>Yu-Gi-Oh!</strong>, <strong>One Piece Card Game</strong>,{' '}
         <strong>Disney Lorcana</strong>, <strong>Digimon</strong> and{' '}

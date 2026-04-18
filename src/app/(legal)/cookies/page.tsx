@@ -7,7 +7,7 @@ import { CookieResetButton } from './CookieResetButton';
 export const metadata: Metadata = {
   title: 'Cookie-Einstellungen',
   description:
-    'Übersicht über die auf Pack-Attack eingesetzten Cookies und vergleichbaren Techniken, ihre Zwecke, Speicherdauer und Widerrufsmöglichkeit.',
+    'Übersicht über die auf PullForge eingesetzten Cookies und vergleichbaren Techniken, ihre Zwecke, Speicherdauer und Widerrufsmöglichkeit.',
   alternates: { canonical: '/cookies' },
 };
 
@@ -22,35 +22,35 @@ type CookieRow = {
 const COOKIES_DE: CookieRow[] = [
   {
     name: 'next-auth.session-token',
-    provider: 'Pack-Attack (1st party)',
+    provider: 'PullForge (1st party)',
     purpose: 'Sitzungs-Cookie für Login / Authentifizierung.',
     duration: '30 Tage',
     type: 'necessary',
   },
   {
     name: 'next-auth.csrf-token',
-    provider: 'Pack-Attack (1st party)',
+    provider: 'PullForge (1st party)',
     purpose: 'Schutz gegen Cross-Site-Request-Forgery bei Login-Formularen.',
     duration: 'Sitzung',
     type: 'necessary',
   },
   {
     name: 'next-auth.callback-url',
-    provider: 'Pack-Attack (1st party)',
+    provider: 'PullForge (1st party)',
     purpose: 'Merkt die nach Login anzuzeigende Seite.',
     duration: 'Sitzung',
     type: 'necessary',
   },
   {
     name: 'locale',
-    provider: 'Pack-Attack (1st party)',
+    provider: 'PullForge (1st party)',
     purpose: 'Speichert die gewählte Sprache (Deutsch / Englisch).',
     duration: '1 Jahr',
     type: 'functional',
   },
   {
     name: 'pa_consent',
-    provider: 'Pack-Attack (1st party)',
+    provider: 'PullForge (1st party)',
     purpose: 'Speichert Ihre Cookie-Einwilligungen.',
     duration: '1 Jahr',
     type: 'necessary',
@@ -60,35 +60,35 @@ const COOKIES_DE: CookieRow[] = [
 const COOKIES_EN: CookieRow[] = [
   {
     name: 'next-auth.session-token',
-    provider: 'Pack-Attack (1st party)',
+    provider: 'PullForge (1st party)',
     purpose: 'Session cookie for authentication.',
     duration: '30 days',
     type: 'necessary',
   },
   {
     name: 'next-auth.csrf-token',
-    provider: 'Pack-Attack (1st party)',
+    provider: 'PullForge (1st party)',
     purpose: 'CSRF protection for login forms.',
     duration: 'Session',
     type: 'necessary',
   },
   {
     name: 'next-auth.callback-url',
-    provider: 'Pack-Attack (1st party)',
+    provider: 'PullForge (1st party)',
     purpose: 'Remembers the page to show after login.',
     duration: 'Session',
     type: 'necessary',
   },
   {
     name: 'locale',
-    provider: 'Pack-Attack (1st party)',
+    provider: 'PullForge (1st party)',
     purpose: 'Stores the chosen language (German / English).',
     duration: '1 year',
     type: 'functional',
   },
   {
     name: 'pa_consent',
-    provider: 'Pack-Attack (1st party)',
+    provider: 'PullForge (1st party)',
     purpose: 'Stores your cookie consent choices.',
     duration: '1 year',
     type: 'necessary',
@@ -135,7 +135,7 @@ function DE() {
 
       <h2>Aktuell genutzte Cookies</h2>
       <p>
-        Pack-Attack setzt aktuell <strong>ausschließlich technisch notwendige und
+        PullForge setzt aktuell <strong>ausschließlich technisch notwendige und
         funktionale Cookies</strong> ein. Es werden keine Tracking-, Analyse- oder
         Marketing-Cookies geladen.
       </p>
@@ -207,7 +207,7 @@ function EN() {
 
       <h2>Currently used cookies</h2>
       <p>
-        Pack-Attack currently uses <strong>only strictly necessary and functional
+        PullForge currently uses <strong>only strictly necessary and functional
         cookies</strong>. No tracking, analytics or marketing cookies are loaded.
       </p>
 

@@ -1,5 +1,5 @@
 /**
- * Central legal entity data for Pack-Attack.
+ * Central legal entity data for PullForge.
  *
  * ALL legal/imprint/contact data lives here. Every legal page imports
  * from this file — so you only ever have to update company details
@@ -15,7 +15,7 @@
 
 export const LEGAL_ENTITY = {
   // --- Firma (TMG §5 Abs. 1 Nr. 1) ---
-  companyName: 'TODO: Pack-Attack GmbH',
+  companyName: 'TODO: PullForge GmbH',
   legalForm: 'GmbH' as const,
 
   // --- Anschrift (TMG §5 Abs. 1 Nr. 1 — ladungsfähig, keine Postfach-Adresse) ---
@@ -76,7 +76,9 @@ export const LEGAL_ENTITY = {
   } | null,
 
   // --- Brand / Domain ---
-  brandName: 'Pack-Attack',
+  brandName: 'PullForge',
+  // NOTE: Currently still hosted on pack-attack.de infrastructure.
+  // If you register a new domain (e.g. pullforge.de), update both values here.
   websiteUrl: 'https://pack-attack.de',
   websiteHost: 'pack-attack.de',
 
