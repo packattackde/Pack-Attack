@@ -3,6 +3,8 @@ import { Outfit, Syne } from "next/font/google";
 import { Providers } from "./providers";
 import { Navigation } from "@/components/Navigation";
 import { ChatPanel } from "@/components/ChatPanel";
+import { Footer } from "@/components/Footer";
+import { CookieConsent } from "@/components/CookieConsent";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import "./globals.css";
@@ -258,7 +260,9 @@ export default async function RootLayout({
             >
               {children}
             </main>
+            <Footer />
             <ChatPanel />
+            <CookieConsent />
           </NextIntlClientProvider>
         </Providers>
       </body>

@@ -1948,5 +1948,45 @@
       "avgResponseTime": "Durchschn. Antwortzeit",
       "loading": "Lade Analyse..."
     }
+  },
+  "footer": {
+    "tagline": "Trading-Card-Packs online öffnen. Echte Karten, echte Spannung — versendet durch unsere Partnerhändler in der gesamten EU.",
+    "colLegal": "Rechtliches",
+    "colService": "Service",
+    "contact": "Kontakt",
+    "odr": "EU-Streitbeilegung",
+    "disclaimer": "Pack-Attack ist eine unabhängige Plattform. Alle Markennamen sind Eigentum der jeweiligen Rechteinhaber.",
+    "odrNotice": "EU-Online-Streitbeilegung:"
+  },
+  "legal": {
+    "common": {
+      "backToHome": "Zurück zur Startseite",
+      "lastUpdated": "Stand",
+      "imprint": "Impressum",
+      "terms": "AGB",
+      "withdrawal": "Widerrufsbelehrung",
+      "privacy": "Datenschutz",
+      "shippingPayment": "Versand & Zahlung",
+      "cookies": "Cookie-Einstellungen"
+    }
+  },
+  "cookieBanner": {
+    "ariaLabel": "Cookie-Einwilligung",
+    "title": "Cookies & Datenschutz",
+    "body": "Wir setzen ausschließlich technisch notwendige Cookies ein, um Pack-Attack zu betreiben (Login, Sprache, Sicherheit). Tracking- oder Marketing-Cookies werden ohne Ihre ausdrückliche Einwilligung nicht gesetzt. Details:",
+    "privacyLinkLabel": "Datenschutz",
+    "cookiesLinkLabel": "Cookie-Einstellungen",
+    "acceptAll": "Alle akzeptieren",
+    "necessaryOnly": "Nur notwendige",
+    "settings": "Einstellungen",
+    "saveSelection": "Auswahl speichern",
+    "catNecessary": "Unbedingt erforderlich",
+    "catNecessaryDesc": "Login, Sprache, CSRF-Schutz, Einwilligungsstatus. Pflicht — kann nicht deaktiviert werden.",
+    "catFunctional": "Funktional",
+    "catFunctionalDesc": "Komfortfunktionen (z. B. gespeicherte Präferenzen). Aktuell nicht genutzt.",
+    "catAnalytics": "Statistik",
+    "catAnalyticsDesc": "Anonyme Nutzungsstatistiken. Aktuell nicht genutzt.",
+    "catMarketing": "Marketing",
+    "catMarketingDesc": "Personalisierte Werbung. Aktuell nicht genutzt."
   }
 }

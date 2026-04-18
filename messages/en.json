@@ -1948,5 +1948,45 @@
       "avgResponseTime": "Avg. Response Time",
       "loading": "Loading analytics..."
     }
+  },
+  "footer": {
+    "tagline": "Open trading card packs online. Real cards, real thrills — shipped by our partner retailers across the EU.",
+    "colLegal": "Legal",
+    "colService": "Service",
+    "contact": "Contact",
+    "odr": "EU Dispute Resolution",
+    "disclaimer": "Pack-Attack is an independent platform. All brand names are trademarks of their respective owners.",
+    "odrNotice": "EU Online Dispute Resolution:"
+  },
+  "legal": {
+    "common": {
+      "backToHome": "Back to home",
+      "lastUpdated": "Last updated",
+      "imprint": "Legal Notice",
+      "terms": "Terms & Conditions",
+      "withdrawal": "Right of Withdrawal",
+      "privacy": "Privacy Policy",
+      "shippingPayment": "Shipping & Payment",
+      "cookies": "Cookie Settings"
+    }
+  },
+  "cookieBanner": {
+    "ariaLabel": "Cookie consent",
+    "title": "Cookies & privacy",
+    "body": "We only use strictly necessary cookies to run Pack-Attack (login, language, security). We never set tracking or marketing cookies without your explicit consent. Details:",
+    "privacyLinkLabel": "Privacy Policy",
+    "cookiesLinkLabel": "Cookie settings",
+    "acceptAll": "Accept all",
+    "necessaryOnly": "Necessary only",
+    "settings": "Settings",
+    "saveSelection": "Save selection",
+    "catNecessary": "Strictly necessary",
+    "catNecessaryDesc": "Login, language, CSRF protection, consent state. Required — cannot be disabled.",
+    "catFunctional": "Functional",
+    "catFunctionalDesc": "Enhanced UX features (e.g. remembered preferences). Currently not used.",
+    "catAnalytics": "Analytics",
+    "catAnalyticsDesc": "Anonymous usage statistics. Currently not used.",
+    "catMarketing": "Marketing",
+    "catMarketingDesc": "Personalised advertising. Currently not used."
   }
 }
