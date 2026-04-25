@@ -88,7 +88,36 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
     pullsByRound[pull.roundNumber].push(pull);
   }
 
-  const transferredPulls = (battle.pulls || []).filter(p => p.transferredToUserId);
+  // Use DB flag if set, otherwise reconstruct from battle mode so the
+  // visualization always works — even for older battles where the
+  // `transferredToUserId` column wasn't populated.
+  const transferredPulls = useMemo(() => {
+    const flagged = (battle.pulls || []).filter(p => p.transferredToUserId);
+    if (flagged.length > 0) return flagged;
+
+    if (battle.status !== 'FINISHED_WIN' || !battle.winnerId) return [];
+    if (!['LOWEST_CARD', 'HIGHEST_CARD'].includes(battle.battleMode)) return [];
+
+    const pickLowest = battle.battleMode === 'LOWEST_CARD';
+    const losers = battle.participants.filter(p => p.userId !== battle.winnerId);
+    const reconstructed: typeof battle.pulls = [];
+
+    for (const loser of losers) {
+      const loserPulls = (battle.pulls || [])
+        .filter(p => p.participantId === loser.id)
+        .sort((a, b) =>
+          a.coinValue !== b.coinValue
+            ? a.coinValue - b.coinValue
+            : a.roundNumber - b.roundNumber
+        );
+      if (loserPulls.length === 0) continue;
+
+      const chosen = pickLowest ? loserPulls[0] : loserPulls[loserPulls.length - 1];
+      reconstructed.push({ ...chosen, transferredToUserId: battle.winnerId });
+    }
+
+    return reconstructed;
+  }, [battle.pulls, battle.participants, battle.status, battle.battleMode, battle.winnerId]);
 
   const cumulativeScores = useMemo(() => {
     const scores: Record<string, number[]> = {};

@@ -78,6 +78,34 @@ function formatTimer(ms: number): string {
   return `${m}:${s.toString().padStart(2, '0')}`;
 }
 
+/**
+ * Card-reveal timing constants (ms).
+ *
+ * These control how quickly the slot-machine round animation unfolds.
+ * Tuned to give players time to actually enjoy each card before the next
+ * reveal happens. Bump these up for more dramatic pacing, down for snappier.
+ */
+const REVEAL_TIMING = {
+  /** Pause before the very first round starts spinning. */
+  initialDelay: 1200,
+  /** Spin duration before the first card starts locking in a round. */
+  spinBeforeLock: 2200,
+  /** Lock delay for a normal card (coin value <= 50). */
+  lockDelayLow: 1500,
+  /** Lock delay for a high-value card (coin value > 50) — longer "near-miss" drama. */
+  lockDelayHigh: 2800,
+  /** Gap between each player's card being locked in a round. */
+  betweenPlayers: 700,
+  /** Admire pause AFTER all cards in a round are revealed — the main enjoyment window. */
+  admireRound: 4000,
+  /** Gap between one round finishing admire and the next round spinning up. */
+  betweenRounds: 1000,
+  /** Pause after the final round before switching to "battle complete" state. */
+  postFinalRound: 700,
+  /** Pause after battle-complete state before showing the winner reveal banner. */
+  preWinnerReveal: 1200,
+} as const;
+
 export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin }: {
   battle: Battle;
   currentUserId: string | null;
@@ -210,20 +238,20 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
           setSlotPhase('done');
           setRevealedRounds(prev => new Set([...prev, round]));
 
-          // Pause to show round result, then move to next round
+          // Admire pause — gives players time to enjoy the cards they rolled
           setTimeout(() => {
             round++;
             if (round <= maxRound) {
-              setTimeout(revealRoundSlotMachine, 600);
+              setTimeout(revealRoundSlotMachine, REVEAL_TIMING.betweenRounds);
             } else {
               setTimeout(() => {
                 setIsDrawing(false);
                 setSlotPhase('idle');
                 setBattleComplete(true);
-                setTimeout(() => setShowWinnerReveal(true), 800);
-              }, 400);
+                setTimeout(() => setShowWinnerReveal(true), REVEAL_TIMING.preWinnerReveal);
+              }, REVEAL_TIMING.postFinalRound);
             }
-          }, 2000);
+          }, REVEAL_TIMING.admireRound);
           return;
         }
 
@@ -233,20 +261,20 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
         const isHighValue = pull && pull.coinValue > 50;
 
         // High-value cards get a longer "near miss" slowdown
-        const lockDelay = isHighValue ? 1800 : 1000;
+        const lockDelay = isHighValue ? REVEAL_TIMING.lockDelayHigh : REVEAL_TIMING.lockDelayLow;
 
         setTimeout(() => {
           setLockedSlots(prev => new Set([...prev, pid]));
           lockIdx++;
-          setTimeout(lockNext, 400);
+          setTimeout(lockNext, REVEAL_TIMING.betweenPlayers);
         }, lockDelay);
       };
 
       // Start locking after initial spin period
-      setTimeout(lockNext, 1500);
+      setTimeout(lockNext, REVEAL_TIMING.spinBeforeLock);
     };
 
-    setTimeout(revealRoundSlotMachine, 800);
+    setTimeout(revealRoundSlotMachine, REVEAL_TIMING.initialDelay);
   }, []);
 
   const handleJoin = async () => {
