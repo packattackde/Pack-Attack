@@ -263,6 +263,20 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
                 })}
               </div>
 
+              {/* Card Transfer Animation — embedded directly INSIDE the winner banner
+                  so the user sees the loot moving to the winner without needing to scroll. */}
+              {battle.winnerId && transferredPulls.length > 0 && (
+                <div className="max-w-2xl mx-auto w-full px-2 mb-4">
+                  <CardTransferAnimation
+                    transferredPulls={transferredPulls}
+                    participants={battle.participants}
+                    winnerId={battle.winnerId}
+                    currentUserId={currentUserId}
+                    embedded
+                  />
+                </div>
+              )}
+
               <div className="text-center">
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#12123a] rounded-full text-xs">
                   <Zap className="w-3 h-3 text-[#C84FFF]" />
@@ -281,16 +295,6 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
             <p className="text-[#8888aa] text-sm">{t('detail.cancelledDesc')}</p>
           </div>
         ) : null}
-
-        {/* Card Transfer Animation — visual representation of loot moving to winner */}
-        {battle.status === 'FINISHED_WIN' && battle.winnerId && transferredPulls.length > 0 && (
-          <CardTransferAnimation
-            transferredPulls={transferredPulls}
-            participants={battle.participants}
-            winnerId={battle.winnerId}
-            currentUserId={currentUserId}
-          />
-        )}
 
         {/* Battle Info Bar */}
         <div className="bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-xl p-4 mb-6">
@@ -325,59 +329,227 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
           </div>
         </div>
 
-        {/* Round-by-Round Score Timeline */}
-        {battle.rounds > 0 && Object.keys(pullsByRound).length > 0 && (
-          <div className="bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-xl p-5 mb-6">
-            <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-4">{t('detail.scoreTimeline')}</h2>
+        {/* Round-by-Round Score Timeline — redesigned for readability */}
+        {battle.rounds > 0 && Object.keys(pullsByRound).length > 0 && (() => {
+          // Chart geometry (in SVG user units — scales responsively via viewBox)
+          const PAD_LEFT = 46;
+          const PAD_RIGHT = 70;
+          const PAD_TOP = 16;
+          const PAD_BOTTOM = 34;
+          const COL_W = 70;
+          const chartW = PAD_LEFT + (battle.rounds + 1) * COL_W + PAD_RIGHT;
+          const chartH = 280;
+          const plotY0 = PAD_TOP;
+          const plotY1 = chartH - PAD_BOTTOM;
+          const plotH = plotY1 - plotY0;
 
-            {/* Legend */}
-            <div className="flex items-center gap-4 mb-4 flex-wrap">
-              {battle.participants.map((p) => (
-                <div key={p.id} className="flex items-center gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: participantColorMap[p.id] }} />
-                  <span className="text-xs text-[#8888aa]">{p.user.name || p.user.email}</span>
+          // Y-axis tick values: "nice" rounded steps
+          const niceStep = (rawMax: number) => {
+            if (rawMax <= 1) return 0.25;
+            if (rawMax <= 5) return 1;
+            if (rawMax <= 20) return 5;
+            if (rawMax <= 50) return 10;
+            if (rawMax <= 200) return 25;
+            if (rawMax <= 500) return 50;
+            return Math.ceil(rawMax / 4 / 10) * 10;
+          };
+          const step = niceStep(maxCumulative);
+          const yMax = Math.max(step, Math.ceil(maxCumulative / step) * step);
+          const yTicks: number[] = [];
+          for (let v = 0; v <= yMax + 0.0001; v += step) yTicks.push(Number(v.toFixed(2)));
+
+          const xFor = (i: number) => PAD_LEFT + i * COL_W + COL_W / 2;
+          const yFor = (v: number) => plotY1 - (v / yMax) * plotH;
+
+          return (
+            <div className="bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-xl p-5 mb-6">
+              <div className="flex items-center justify-between gap-3 mb-4 flex-wrap">
+                <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider">{t('detail.scoreTimeline')}</h2>
+                <div className="text-[10px] text-[#666688] uppercase tracking-wider">
+                  {t('detail.start')} → R{battle.rounds}
                 </div>
-              ))}
-            </div>
+              </div>
 
-            {/* SVG Chart */}
-            <div className="relative w-full overflow-x-auto">
-              <div style={{ minWidth: Math.max(400, (battle.rounds + 1) * 60 + 40), height: 200 }}>
-                <svg
-                  viewBox={`0 0 ${(battle.rounds + 1) * 60 + 40} 200`}
-                  className="w-full h-full"
-                  preserveAspectRatio="xMidYMid meet"
-                >
-                  {/* Grid lines */}
-                  {[0, 0.25, 0.5, 0.75, 1].map((frac) => (
-                    <line key={frac} x1="20" y1={160 - frac * 130} x2={(battle.rounds + 1) * 60 + 20} y2={160 - frac * 130} stroke="rgba(255,255,255,0.04)" strokeWidth="1" />
-                  ))}
+              {/* Legend — shows running final score per player */}
+              <div className="flex items-center gap-4 mb-5 flex-wrap">
+                {battle.participants.map((p) => {
+                  const final = (cumulativeScores[p.id] || [0]).slice(-1)[0];
+                  const isWinner = p.userId === battle.winnerId;
+                  return (
+                    <div key={p.id} className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full shrink-0 shadow" style={{ backgroundColor: participantColorMap[p.id], boxShadow: isWinner ? `0 0 8px ${participantColorMap[p.id]}` : undefined }} />
+                      <span className={`text-xs ${isWinner ? 'text-white font-semibold' : 'text-[#c8c8d8]'}`}>
+                        {p.user.name || p.user.email}
+                      </span>
+                      <span className="text-xs font-bold tabular-nums" style={{ color: participantColorMap[p.id] }}>
+                        {final.toFixed(2)}
+                      </span>
+                      {isWinner && <Crown className="w-3 h-3 text-amber-400" />}
+                    </div>
+                  );
+                })}
+              </div>
 
-                  {/* Player lines */}
-                  {battle.participants.map((p) => {
-                    const vals = cumulativeScores[p.id] || [];
-                    const points = vals.map((v, i) => `${i * 60 + 30},${160 - (v / maxCumulative) * 130}`).join(' ');
-                    return (
-                      <g key={p.id}>
-                        <polyline fill="none" stroke={participantColorMap[p.id]} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" points={points} />
-                        {vals.map((v, i) => (
-                          <circle key={i} cx={i * 60 + 30} cy={160 - (v / maxCumulative) * 130} r="4" fill={participantColorMap[p.id]} stroke="#0e0e2a" strokeWidth="2" />
-                        ))}
-                      </g>
-                    );
-                  })}
+              {/* SVG Chart */}
+              <div className="relative w-full overflow-x-auto">
+                <div style={{ minWidth: Math.max(500, chartW), height: chartH }}>
+                  <svg
+                    viewBox={`0 0 ${chartW} ${chartH}`}
+                    className="w-full h-full"
+                    preserveAspectRatio="xMidYMid meet"
+                    role="img"
+                    aria-label={t('detail.scoreTimeline')}
+                  >
+                    {/* Y-axis gridlines + value labels */}
+                    {yTicks.map((tick) => {
+                      const y = yFor(tick);
+                      return (
+                        <g key={tick}>
+                          <line
+                            x1={PAD_LEFT}
+                            y1={y}
+                            x2={chartW - PAD_RIGHT + 20}
+                            y2={y}
+                            stroke="rgba(255,255,255,0.08)"
+                            strokeDasharray={tick === 0 ? undefined : '3 4'}
+                            strokeWidth={tick === 0 ? 1.2 : 1}
+                          />
+                          <text
+                            x={PAD_LEFT - 8}
+                            y={y + 4}
+                            textAnchor="end"
+                            fill="#8888aa"
+                            fontSize="11"
+                            fontFamily="inherit"
+                            className="tabular-nums"
+                          >
+                            {tick.toFixed(tick < 10 ? 2 : 0)}
+                          </text>
+                        </g>
+                      );
+                    })}
 
-                  {/* Round labels */}
-                  {Array.from({ length: battle.rounds + 1 }, (_, i) => (
-                    <text key={i} x={i * 60 + 30} y="185" textAnchor="middle" fill="#666688" fontSize="11" fontFamily="inherit">
-                      {i === 0 ? t('detail.start') : `R${i}`}
-                    </text>
-                  ))}
-                </svg>
+                    {/* Vertical round column markers (very subtle) */}
+                    {Array.from({ length: battle.rounds + 1 }, (_, i) => (
+                      <line
+                        key={`v-${i}`}
+                        x1={xFor(i)}
+                        y1={plotY0}
+                        x2={xFor(i)}
+                        y2={plotY1}
+                        stroke="rgba(255,255,255,0.035)"
+                        strokeWidth="1"
+                      />
+                    ))}
+
+                    {/* Player lines — area fill + line + points, winner rendered last (on top) */}
+                    {[...battle.participants]
+                      .sort((a, b) => (a.userId === battle.winnerId ? 1 : b.userId === battle.winnerId ? -1 : 0))
+                      .map((p) => {
+                        const vals = cumulativeScores[p.id] || [];
+                        const color = participantColorMap[p.id];
+                        const isWinner = p.userId === battle.winnerId;
+                        const linePts = vals.map((v, i) => `${xFor(i)},${yFor(v)}`).join(' ');
+                        // Area polygon: line points + down-to-baseline closure
+                        const areaPts =
+                          linePts +
+                          ` ${xFor(vals.length - 1)},${yFor(0)} ${xFor(0)},${yFor(0)}`;
+                        const finalVal = vals[vals.length - 1] ?? 0;
+                        const finalX = xFor(vals.length - 1);
+                        const finalY = yFor(finalVal);
+                        return (
+                          <g key={p.id} opacity={isWinner ? 1 : 0.85}>
+                            {/* Area fill */}
+                            <polygon points={areaPts} fill={color} opacity={isWinner ? 0.16 : 0.08} />
+                            {/* Main line */}
+                            <polyline
+                              fill="none"
+                              stroke={color}
+                              strokeWidth={isWinner ? 3.5 : 2.5}
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              points={linePts}
+                              style={isWinner ? { filter: `drop-shadow(0 0 4px ${color})` } : undefined}
+                            />
+                            {/* Round points */}
+                            {vals.map((v, i) => (
+                              <circle
+                                key={i}
+                                cx={xFor(i)}
+                                cy={yFor(v)}
+                                r={isWinner ? 5 : 4}
+                                fill={color}
+                                stroke="#0e0e2a"
+                                strokeWidth="2.5"
+                              />
+                            ))}
+                            {/* Final value label at end of line */}
+                            <g>
+                              <rect
+                                x={finalX + 8}
+                                y={finalY - 11}
+                                width={finalVal >= 10 ? 44 : 40}
+                                height={22}
+                                rx={4}
+                                fill={color}
+                                fillOpacity={isWinner ? 1 : 0.9}
+                              />
+                              <text
+                                x={finalX + 8 + (finalVal >= 10 ? 22 : 20)}
+                                y={finalY + 4}
+                                textAnchor="middle"
+                                fill={isWinner ? '#fff' : '#0e0e2a'}
+                                fontSize="11"
+                                fontWeight="700"
+                                fontFamily="inherit"
+                                className="tabular-nums"
+                              >
+                                {finalVal.toFixed(2)}
+                              </text>
+                            </g>
+                          </g>
+                        );
+                      })}
+
+                    {/* Round labels on X-axis */}
+                    {Array.from({ length: battle.rounds + 1 }, (_, i) => (
+                      <text
+                        key={i}
+                        x={xFor(i)}
+                        y={chartH - 10}
+                        textAnchor="middle"
+                        fill="#8888aa"
+                        fontSize="12"
+                        fontWeight="600"
+                        fontFamily="inherit"
+                      >
+                        {i === 0 ? t('detail.start') : `R${i}`}
+                      </text>
+                    ))}
+
+                    {/* Y-axis baseline */}
+                    <line
+                      x1={PAD_LEFT}
+                      y1={plotY1}
+                      x2={chartW - PAD_RIGHT + 20}
+                      y2={plotY1}
+                      stroke="rgba(255,255,255,0.25)"
+                      strokeWidth="1.5"
+                    />
+                    <line
+                      x1={PAD_LEFT}
+                      y1={plotY0}
+                      x2={PAD_LEFT}
+                      y2={plotY1}
+                      stroke="rgba(255,255,255,0.12)"
+                      strokeWidth="1"
+                    />
+                  </svg>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* Round-by-Round Card Breakdown */}
         {Object.keys(pullsByRound).length > 0 && (

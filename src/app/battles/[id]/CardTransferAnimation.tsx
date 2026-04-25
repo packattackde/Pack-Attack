@@ -39,6 +39,11 @@ interface Props {
   participants: Participant[];
   winnerId: string;
   currentUserId: string | null;
+  /**
+   * When true, the component renders without its own card border / background,
+   * so it can be embedded inside another surface (like the winner banner).
+   */
+  embedded?: boolean;
 }
 
 /**
@@ -55,6 +60,7 @@ export function CardTransferAnimation({
   participants,
   winnerId,
   currentUserId,
+  embedded = false,
 }: Props) {
   const t = useTranslations('battles.detail');
   const [flown, setFlown] = useState(false);
@@ -82,14 +88,15 @@ export function CardTransferAnimation({
   // Total coin value transferred — for the big summary number
   const totalValue = transferredPulls.reduce((sum, p) => sum + p.coinValue, 0);
 
+  const outerClass = embedded
+    ? 'relative overflow-hidden rounded-xl mb-4'
+    : 'relative overflow-hidden rounded-2xl border border-[rgba(255,255,255,0.08)] bg-gradient-to-b from-[#12123a] to-[#0e0e2a] mb-6';
+
   return (
-    <div
-      className="relative overflow-hidden rounded-2xl border border-[rgba(255,255,255,0.08)] bg-gradient-to-b from-[#12123a] to-[#0e0e2a] mb-6"
-      aria-label={t('transferAnimationAriaLabel')}
-    >
-      {/* Ambient glow layers */}
+    <div className={outerClass} aria-label={t('transferAnimationAriaLabel')}>
+      {/* Ambient glow layers (lighter when embedded, parent already has gradient) */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-60"
+        className={`absolute inset-0 pointer-events-none ${embedded ? 'opacity-40' : 'opacity-60'}`}
         style={{
           background:
             'radial-gradient(ellipse at 85% 50%, rgba(200,79,255,0.18), transparent 55%), radial-gradient(ellipse at 15% 50%, rgba(239,68,68,0.08), transparent 55%)',
@@ -97,7 +104,7 @@ export function CardTransferAnimation({
       />
 
       {/* Header */}
-      <div className="relative px-5 pt-5 pb-3 flex items-center justify-between gap-3 flex-wrap">
+      <div className={`relative ${embedded ? 'px-3 pt-3 pb-2' : 'px-5 pt-5 pb-3'} flex items-center justify-between gap-3 flex-wrap`}>
         <div>
           <h2 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-[#C84FFF]" />
@@ -120,7 +127,7 @@ export function CardTransferAnimation({
       </div>
 
       {/* Animation canvas */}
-      <div className="relative h-[240px] sm:h-[260px] px-4">
+      <div className={`relative ${embedded ? 'h-[180px] sm:h-[200px]' : 'h-[240px] sm:h-[260px]'} px-4`}>
         {/* Left column: losers */}
         <div className="absolute left-4 top-0 bottom-0 w-[26%] flex flex-col justify-center gap-3 z-10">
           {losers.map((p) => (
@@ -175,7 +182,7 @@ export function CardTransferAnimation({
               </div>
             </div>
             {/* Landing pile placeholder (cards land here visually) */}
-            <div className="h-[120px] relative rounded-md bg-black/20 border border-dashed border-[#C84FFF]/20" />
+            <div className={`${embedded ? 'h-[90px]' : 'h-[120px]'} relative rounded-md bg-black/20 border border-dashed border-[#C84FFF]/20`} />
           </div>
         </div>
 
@@ -252,8 +259,8 @@ export function CardTransferAnimation({
       </div>
 
       {/* Caption showing what arrived at winner — list of card names */}
-      <div className="relative px-5 pb-5 pt-2">
-        <div className="flex flex-wrap gap-1.5">
+      <div className={`relative ${embedded ? 'px-3 pb-3 pt-1' : 'px-5 pb-5 pt-2'}`}>
+        <div className="flex flex-wrap gap-1.5 justify-center">
           {transferredPulls.map((pull, i) => (
             <span
               key={pull.id}
