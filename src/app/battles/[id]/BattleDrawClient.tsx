@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Swords, Coins, Users, Clock, Play, Check, Shield, Trophy, Sparkles, Crown, Star, Zap, Plus } from 'lucide-react';
@@ -8,6 +8,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { AddBotsControl } from '../components/AddBotsControl';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslations } from 'next-intl';
+import { CardTransferAnimation } from './CardTransferAnimation';
 
 type Participant = {
   id: string;
@@ -333,6 +334,32 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
   const sortedByScore = [...battle.participants]
     .map(p => ({ ...p, runningTotal: participantTotals[p.id] || 0 }))
     .sort((a, b) => useLowest ? a.runningTotal - b.runningTotal : b.runningTotal - a.runningTotal);
+
+  // Transfer pulls for the live winner reveal card — uses DB flag first,
+  // falls back to reconstructing from battle mode (lowest/highest loser card).
+  // Same logic as BattleClient.tsx so the post-battle static page matches.
+  const transferredPulls = useMemo(() => {
+    const flagged = (battle.pulls || []).filter(p => p.transferredToUserId);
+    if (flagged.length > 0) return flagged;
+    if (!battle.winnerId) return [];
+    if (!['LOWEST_CARD', 'HIGHEST_CARD'].includes(battle.battleMode)) return [];
+    const pickLowest = battle.battleMode === 'LOWEST_CARD';
+    const losers = battle.participants.filter(p => p.userId !== battle.winnerId);
+    const out: BattlePull[] = [];
+    for (const loser of losers) {
+      const lp = (battle.pulls || [])
+        .filter(p => p.participantId === loser.id)
+        .sort((a, b) =>
+          a.coinValue !== b.coinValue
+            ? a.coinValue - b.coinValue
+            : a.roundNumber - b.roundNumber
+        );
+      if (!lp.length) continue;
+      const chosen = pickLowest ? lp[0] : lp[lp.length - 1];
+      out.push({ ...chosen, transferredToUserId: battle.winnerId });
+    }
+    return out;
+  }, [battle.pulls, battle.participants, battle.battleMode, battle.winnerId]);
 
   const emptySlots = battle.maxParticipants - battle.participants.length;
 
@@ -982,7 +1009,26 @@ export function BattleDrawClient({ battle: initialBattle, currentUserId, isAdmin
                       })}
                     </motion.div>
 
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }} className="text-center">
+                    {/* Card Transfer Animation — fires right after the winner announcement
+                        so the player immediately sees the loot moving to the winner. */}
+                    {battle.winnerId && transferredPulls.length > 0 && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 1.0 }}
+                        className="max-w-2xl mx-auto w-full px-2 mb-6"
+                      >
+                        <CardTransferAnimation
+                          transferredPulls={transferredPulls}
+                          participants={battle.participants}
+                          winnerId={battle.winnerId}
+                          currentUserId={currentUserId}
+                          embedded
+                        />
+                      </motion.div>
+                    )}
+
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.4 }} className="text-center">
                       <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#12123a] rounded-full text-sm">
                         <Zap className="w-4 h-4 text-[#C84FFF]" />
                         <span className="text-[#8888aa]">
