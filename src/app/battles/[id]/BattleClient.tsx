@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Swords, Coins, Trophy, Crown, RefreshCw, ArrowRightLeft, Star, Zap, Sparkles, Share2, Copy, Check } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { CardTransferAnimation } from './CardTransferAnimation';
 
 const PLAYER_COLORS = ['#C84FFF', '#3B82F6', '#F59E0B', '#10B981'];
 
@@ -251,6 +252,16 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
             <p className="text-[#8888aa] text-sm">{t('detail.cancelledDesc')}</p>
           </div>
         ) : null}
+
+        {/* Card Transfer Animation — visual representation of loot moving to winner */}
+        {battle.status === 'FINISHED_WIN' && battle.winnerId && transferredPulls.length > 0 && (
+          <CardTransferAnimation
+            transferredPulls={transferredPulls}
+            participants={battle.participants}
+            winnerId={battle.winnerId}
+            currentUserId={currentUserId}
+          />
+        )}
 
         {/* Battle Info Bar */}
         <div className="bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-xl p-4 mb-6">

@@ -339,6 +339,12 @@
       "roundLabel": "Runde",
       "transferred": "Übertragen",
       "transferredCards": "Übertragene Karten",
+      "transferAnimationAriaLabel": "Übertragene Karten von Verlierern zum Gewinner",
+      "lootCapturedByYou": "Dein Gewinn",
+      "lootCaptured": "Gewinn erbeutet",
+      "cardsMovedCount": "{count, plural, =1 {# Karte übertragen} other {# Karten übertragen}} · {value} Gesamtwert",
+      "loserShort": "Verlierer",
+      "winnerShort": "Gewinner",
       "backToLobby": "Zurück zur Lobby",
       "newBattle": "Neues Battle",
       "battle": "Battle"

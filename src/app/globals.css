@@ -50,6 +50,45 @@
   animation: pack-shine 1.4s ease-in-out 0.15s;
 }
 
+/* Battle — card transfer animation (loser → winner) */
+@keyframes winner-landing-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(200, 79, 255, 0.0); }
+  30%      { box-shadow: 0 0 0 6px rgba(200, 79, 255, 0.25); }
+  60%      { box-shadow: 0 0 0 2px rgba(200, 79, 255, 0.15); }
+}
+.winner-landing-pulse {
+  animation: winner-landing-pulse 2.4s ease-out 1.2s 2;
+}
+
+@keyframes transfer-badge-fade-in {
+  0%   { opacity: 0; transform: translateY(4px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.transfer-badge-fade {
+  opacity: 0;
+  animation: transfer-badge-fade-in 400ms ease-out forwards;
+}
+
+@keyframes motion-trail-sweep {
+  0%   { transform: translateX(-40%); }
+  100% { transform: translateX(120%); }
+}
+.motion-trail {
+  animation: motion-trail-sweep 1.2s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .winner-landing-pulse,
+  .transfer-badge-fade,
+  .motion-trail {
+    animation: none !important;
+  }
+  .transfer-badge-fade { opacity: 1 !important; }
+  .transfer-card {
+    transition: none !important;
+  }
+}
+
 .animate-gradient { 
   animation: gradient-glow 3s ease infinite; 
   background-size: 200% 200%;
