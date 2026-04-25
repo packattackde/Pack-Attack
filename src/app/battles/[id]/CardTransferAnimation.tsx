@@ -88,8 +88,10 @@ export function CardTransferAnimation({
   // Total coin value transferred — for the big summary number
   const totalValue = transferredPulls.reduce((sum, p) => sum + p.coinValue, 0);
 
+  // Embedded variant: still has its own distinct bg + glowing purple border
+  // so it clearly stands out inside the winner banner (not a blending blob).
   const outerClass = embedded
-    ? 'relative overflow-hidden rounded-xl mb-4'
+    ? 'relative overflow-hidden rounded-xl border-2 border-[#C84FFF]/40 bg-gradient-to-b from-[#1a0e3a] to-[#0a0520] shadow-[0_8px_32px_rgba(200,79,255,0.25),0_0_0_1px_rgba(200,79,255,0.15)_inset] mb-4 mt-2'
     : 'relative overflow-hidden rounded-2xl border border-[rgba(255,255,255,0.08)] bg-gradient-to-b from-[#12123a] to-[#0e0e2a] mb-6';
 
   return (
