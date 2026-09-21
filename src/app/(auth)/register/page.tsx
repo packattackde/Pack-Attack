@@ -100,7 +100,7 @@ export default function RegisterPage() {
   if (success) {
     return (
         <div className="rounded-2xl border border-white/6 bg-white/2 p-6 sm:p-8 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 mb-5 rounded-2xl bg-[#C84FFF]/10 border border-[#C84FFF]/20">
+          <div className="inline-flex items-center justify-center w-16 h-16 mb-5 rounded-2xl bg-[#ff2ea6]/10 border border-[#ff2ea6]/20">
             <CheckCircle2 className="w-8 h-8 text-[#E879F9]" />
           </div>
           <h2 className="text-xl font-bold text-white mb-2">{t('checkEmail')}</h2>
@@ -115,7 +115,7 @@ export default function RegisterPage() {
           </p>
           <Link
               href="/login"
-              className="block w-full h-11 bg-[#C84FFF] hover:bg-[#E879F9] text-white text-sm font-semibold rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-[0_0_24px_rgba(200,79,255,0.3)] items-center justify-center"
+              className="block w-full h-11 bg-[#ff2ea6] hover:bg-[#E879F9] text-white text-sm font-semibold rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-[0_0_24px_rgba(255,46,166,0.3)] items-center justify-center"
           >
             {t('goToLogin')}
           </Link>
@@ -206,7 +206,7 @@ export default function RegisterPage() {
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full h-11 pl-10 pr-4 rounded-xl bg-white/4 border border-white/8 text-sm text-white placeholder-gray-600 focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.2)] focus:bg-white/6 outline-none transition-all"
+                    className="w-full h-11 pl-10 pr-4 rounded-xl bg-white/4 border border-white/8 text-sm text-white placeholder-gray-600 focus:border-[rgba(255,46,166,0.3)] focus:ring-1 focus:ring-[rgba(255,46,166,0.2)] focus:bg-white/6 outline-none transition-all"
                     placeholder={t('namePlaceholder')}
                 />
               </div>
@@ -221,7 +221,7 @@ export default function RegisterPage() {
                     required
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full h-11 pl-10 pr-4 rounded-xl bg-white/4 border border-white/8 text-sm text-white placeholder-gray-600 focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.2)] focus:bg-white/6 outline-none transition-all"
+                    className="w-full h-11 pl-10 pr-4 rounded-xl bg-white/4 border border-white/8 text-sm text-white placeholder-gray-600 focus:border-[rgba(255,46,166,0.3)] focus:ring-1 focus:ring-[rgba(255,46,166,0.2)] focus:bg-white/6 outline-none transition-all"
                     placeholder={t('emailPlaceholder')}
                 />
               </div>
@@ -236,7 +236,7 @@ export default function RegisterPage() {
                     required
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    className="w-full h-11 pl-10 pr-11 rounded-xl bg-white/4 border border-white/8 text-sm text-white placeholder-gray-600 focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.2)] focus:bg-white/6 outline-none transition-all"
+                    className="w-full h-11 pl-10 pr-11 rounded-xl bg-white/4 border border-white/8 text-sm text-white placeholder-gray-600 focus:border-[rgba(255,46,166,0.3)] focus:ring-1 focus:ring-[rgba(255,46,166,0.2)] focus:bg-white/6 outline-none transition-all"
                     placeholder={t('createPassword')}
                 />
                 <button
@@ -262,7 +262,7 @@ export default function RegisterPage() {
             <button
                 type="submit"
                 disabled={loading || !passwordStrong}
-                className="w-full h-11 mt-1 bg-[#C84FFF] hover:bg-[#E879F9] text-white text-sm font-semibold rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-[0_0_24px_rgba(200,79,255,0.3)] disabled:opacity-40 disabled:hover:shadow-none flex items-center justify-center gap-2"
+                className="w-full h-11 mt-1 bg-[#ff2ea6] hover:bg-[#E879F9] text-white text-sm font-semibold rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-[0_0_24px_rgba(255,46,166,0.3)] disabled:opacity-40 disabled:hover:shadow-none flex items-center justify-center gap-2"
             >
               {loading ? (
                   <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
@@ -278,7 +278,7 @@ export default function RegisterPage() {
           {/* Login link */}
           <p className="mt-6 text-center text-sm text-gray-500">
             {t('hasAccount')}{' '}
-            <Link href="/login" className="text-[#C84FFF] hover:text-[#E879F9] font-medium transition-colors">
+            <Link href="/login" className="text-[#ff2ea6] hover:text-[#E879F9] font-medium transition-colors">
               {t('signInLink')}
             </Link>
           </p>

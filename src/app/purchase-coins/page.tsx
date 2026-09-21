@@ -85,8 +85,8 @@ const coinPackages: CoinPackage[] = [
     amount: 1250, 
     price: 250, 
     icon: Rocket,
-    gradient: 'from-[#9333EA] to-[#9333EA]',
-    shadowColor: 'shadow-[#C84FFF]/20',
+    gradient: 'from-[#8b5cf6] to-[#8b5cf6]',
+    shadowColor: 'shadow-[#ff2ea6]/20',
     label: 'Ultimate',
   },
 ];
@@ -218,7 +218,7 @@ function PurchaseCoinsContent() {
           transition: 'opacity 0.6s ease, transform 0.6s ease'
         }}
       >
-        <div className="inline-flex items-center gap-2 px-5 py-2.5 mb-8 rounded-full bg-[#1a1a4a] shadow-md border border-amber-500/20">
+        <div className="inline-flex items-center gap-2 px-5 py-2.5 mb-8 rounded-full bg-[#100d22] shadow-md border border-amber-500/20">
           <Sparkles className="w-5 h-5 text-amber-400" />
           <span className="text-amber-400 font-semibold">{t('badge')}</span>
         </div>
@@ -294,7 +294,7 @@ function PurchaseCoinsContent() {
             >
               <div className={`relative rounded-2xl overflow-hidden transition-all duration-300 ${
                 isSelected 
-                  ? `ring-2 ring-offset-2 ring-offset-[#06061a] ${pkg.gradient.includes('amber') ? 'ring-amber-500' : pkg.gradient.includes('purple') ? 'ring-purple-500' : pkg.gradient.includes('blue') ? 'ring-blue-500' : pkg.gradient.includes('orange') ? 'ring-orange-500' : pkg.gradient.includes('emerald') ? 'ring-[#C84FFF]' : 'ring-slate-500'}` 
+                  ? `ring-2 ring-offset-2 ring-offset-[#06061a] ${pkg.gradient.includes('amber') ? 'ring-amber-500' : pkg.gradient.includes('purple') ? 'ring-purple-500' : pkg.gradient.includes('blue') ? 'ring-blue-500' : pkg.gradient.includes('orange') ? 'ring-orange-500' : pkg.gradient.includes('emerald') ? 'ring-[#ff2ea6]' : 'ring-slate-500'}` 
                   : ''
               }`}>
                 
@@ -312,7 +312,7 @@ function PurchaseCoinsContent() {
 
                 {/* Card Background */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${pkg.gradient} opacity-[0.08] group-hover:opacity-[0.12] transition-opacity`} />
-                <div className="absolute inset-0 bg-[#0B0B2B]/90" />
+                <div className="absolute inset-0 bg-[#0c0a1c]/90" />
 
                 {/* Card Content */}
                 <div className="relative p-5">
@@ -377,7 +377,7 @@ function PurchaseCoinsContent() {
         }}
       >
         <div style={{ width: '100%', maxWidth: '28rem' }}>
-        <div className={`relative rounded-3xl bg-[#0B0B2B]/80 backdrop-blur-xl border border-white/10 p-8 shadow-2xl`}>
+        <div className={`relative rounded-3xl bg-[#0c0a1c]/80 backdrop-blur-xl border border-white/10 p-8 shadow-2xl`}>
           {/* Glow Effect */}
           <div className={`absolute -inset-0.5 bg-gradient-to-r ${selectedPackage.gradient} rounded-3xl blur opacity-20 -z-10`} />
           
@@ -490,14 +490,14 @@ function PurchaseCoinsContent() {
               icon: TrendingUp, 
               title: t('features.winRealCards'), 
               description: t('features.winRealCardsDesc'),
-              gradient: 'from-[#9333EA] to-[#9333EA]'
+              gradient: 'from-[#8b5cf6] to-[#8b5cf6]'
             },
           ].map((item) => {
             const Icon = item.icon;
             return (
               <div 
                 key={item.title}
-                className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-2xl p-6 text-center hover:bg-[#1a1a4a] transition-colors"
+                className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-2xl p-6 text-center hover:bg-[#100d22] transition-colors"
               >
                 <div className={`inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br ${item.gradient} mb-5 shadow-lg`}>
                   <Icon className="w-7 h-7 text-white" />

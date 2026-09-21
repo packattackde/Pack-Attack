@@ -48,7 +48,7 @@ export default function RecentPullsWidget({ hits, pulls, className = '' }: Recen
   const [lightboxCard, setLightboxCard] = useState<{ name: string; image: string | null; rarity: string; coinValue: number } | null>(null);
 
   return (
-    <div className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl h-full p-4 sm:p-6 ${className}`}>
+    <div className={`bg-[#100d22] border border-[rgba(255,255,255,0.1)] rounded-2xl h-full p-4 sm:p-6 ${className}`}>
       <CardLightbox
         isOpen={!!lightboxCard}
         onClose={() => setLightboxCard(null)}
@@ -59,7 +59,7 @@ export default function RecentPullsWidget({ hits, pulls, className = '' }: Recen
       {hits.length > 0 && (
         <div className="mb-5">
           <div className="text-[10px] font-semibold uppercase tracking-wider text-[#fbbf24] mb-3 flex items-center gap-1.5">
-<GiFireGem className="w-3.5 h-3.5 text-[#C84FFF]" /> {t('recentPulls.myLastHits')}
+<GiFireGem className="w-3.5 h-3.5 text-[#ff2ea6]" /> {t('recentPulls.myLastHits')}
           </div>
           <div className="flex gap-2 sm:gap-3 justify-center">
             {hits.map((hit, idx) => (
@@ -86,7 +86,7 @@ export default function RecentPullsWidget({ hits, pulls, className = '' }: Recen
                 <p className="text-[9px] text-[#f0f0f5] font-semibold truncate mt-1.5 text-center w-full max-w-[100px] sm:max-w-[120px]">
                   {hit.cardName}
                 </p>
-                <p className="text-[8px] text-[#C84FFF] font-bold flex items-center justify-center gap-1">
+                <p className="text-[8px] text-[#ff2ea6] font-bold flex items-center justify-center gap-1">
                   <GiTwoCoins className="w-3 h-3" /> {formatCoins(hit.coinValue)}
                 </p>
               </div>
@@ -98,7 +98,7 @@ export default function RecentPullsWidget({ hits, pulls, className = '' }: Recen
       {/* Row 2: Last Pulls (any rarity) */}
       <div>
         <div className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-3 flex items-center gap-1.5">
-<GiCardPlay className="w-3.5 h-3.5 text-[#C84FFF]" /> {t('recentPulls.myLastPulls')}
+<GiCardPlay className="w-3.5 h-3.5 text-[#ff2ea6]" /> {t('recentPulls.myLastPulls')}
         </div>
         <div className="flex gap-2">
           {pulls.map((pull, idx) => (
@@ -132,7 +132,7 @@ export default function RecentPullsWidget({ hits, pulls, className = '' }: Recen
 
       <Link
         href="/collection"
-        className="text-[#C84FFF] text-[11px] font-semibold mt-4 inline-block hover:underline"
+        className="text-[#ff2ea6] text-[11px] font-semibold mt-4 inline-block hover:underline"
       >
         {t('recentPulls.viewCollection')}
       </Link>

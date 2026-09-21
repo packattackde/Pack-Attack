@@ -215,7 +215,7 @@ export function PresetPreviewModal({ preset, onClose, onLoad }: PresetPreviewMod
               <Button variant="outline" onClick={onClose}>
                 Cancel
               </Button>
-              <Button onClick={onLoad} className="bg-[#C84FFF] text-white hover:bg-[#E879F9]">
+              <Button onClick={onLoad} className="bg-[#ff2ea6] text-white hover:bg-[#E879F9]">
                 <Download className="h-4 w-4 mr-2" />
                 Load Preset
               </Button>

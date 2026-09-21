@@ -341,7 +341,7 @@ export function PackOpeningFlow({
     ? `M ${tearPoints[0].x},${tearPoints[0].y}` + tearPoints.slice(1).map(p => ` L ${p.x},${p.y}`).join('')
     : '';
 
-  const tearLineColor = tearProgress < 35 ? 'rgba(200,79,255,0.4)' : tearProgress < 60 ? 'rgba(200,79,255,0.7)' : '#C84FFF';
+  const tearLineColor = tearProgress < 35 ? 'rgba(255,46,166,0.4)' : tearProgress < 60 ? 'rgba(255,46,166,0.7)' : '#ff2ea6';
 
   // ─── Card fan angles ──────────────────────────────────────────────
 
@@ -466,12 +466,12 @@ export function PackOpeningFlow({
                   className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
                   style={{ clipPath: 'url(#boosterClipPOF)' }}
                 >
-                  <span className="text-5xl mb-2" style={{ filter: 'drop-shadow(0 0 15px rgba(200,79,255,0.3))' }}>
+                  <span className="text-5xl mb-2" style={{ filter: 'drop-shadow(0 0 15px rgba(255,46,166,0.3))' }}>
                     🏴‍☠️
                   </span>
                   <span
-                    className="text-[15px] font-extrabold text-[#C84FFF] uppercase tracking-[3px]"
-                    style={{ textShadow: '0 0 10px rgba(200,79,255,0.4)' }}
+                    className="text-[15px] font-extrabold text-[#ff2ea6] uppercase tracking-[3px]"
+                    style={{ textShadow: '0 0 10px rgba(255,46,166,0.4)' }}
                   >
                     {t('pullforge')}
                   </span>
@@ -487,8 +487,8 @@ export function PackOpeningFlow({
                 <div
                   className="absolute top-[15%] right-[12%] w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-black text-black z-10"
                   style={{
-                    background: 'radial-gradient(circle at 35% 35%, #e0ff60, #C84FFF, #80cc00)',
-                    boxShadow: '0 2px 8px rgba(200,79,255,0.4)',
+                    background: 'radial-gradient(circle at 35% 35%, #e0ff60, #ff2ea6, #80cc00)',
+                    boxShadow: '0 2px 8px rgba(255,46,166,0.4)',
                   }}
                 >
                   PA
@@ -644,7 +644,7 @@ export function PackOpeningFlow({
       {/* Hint text */}
       {phase === 'booster' && boosterPhase === 'tilt' && (
         <motion.p
-          className="absolute bottom-16 text-sm text-[#C84FFF] font-semibold"
+          className="absolute bottom-16 text-sm text-[#ff2ea6] font-semibold"
           animate={{ opacity: [0.4, 1, 0.4] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
@@ -1074,11 +1074,11 @@ export function PackOpeningFlow({
           animate={{
             width: cursorPressed ? 32 : 22,
             height: cursorPressed ? 32 : 22,
-            borderColor: cursorPressed ? '#C84FFF' : 'rgba(200,79,255,0.5)',
-            backgroundColor: cursorPressed ? 'rgba(200,79,255,0.15)' : 'rgba(200,79,255,0)',
+            borderColor: cursorPressed ? '#ff2ea6' : 'rgba(255,46,166,0.5)',
+            backgroundColor: cursorPressed ? 'rgba(255,46,166,0.15)' : 'rgba(255,46,166,0)',
             boxShadow: cursorPressed
-              ? '0 0 15px rgba(200,79,255,0.4), 0 0 30px rgba(200,79,255,0.2)'
-              : '0 0 8px rgba(200,79,255,0.2)',
+              ? '0 0 15px rgba(255,46,166,0.4), 0 0 30px rgba(255,46,166,0.2)'
+              : '0 0 8px rgba(255,46,166,0.2)',
           }}
           transition={{ type: 'spring', stiffness: 400, damping: 25 }}
         />

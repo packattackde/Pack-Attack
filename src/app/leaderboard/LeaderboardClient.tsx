@@ -107,7 +107,7 @@ export function LeaderboardClient() {
       <div className="relative container py-12">
         {/* Header */}
         <div className="mb-10 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-[#1a1a4a] shadow-md text-sm border border-amber-500/20">
+          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-[#100d22] shadow-md text-sm border border-amber-500/20">
             <Trophy className="w-4 h-4 text-amber-400" />
             <span className="text-[#f0f0f5]">{t('badge')}</span>
           </div>
@@ -119,7 +119,7 @@ export function LeaderboardClient() {
           </p>
 
           {/* Period Toggle */}
-          <div className="inline-flex items-center gap-1 p-1 mb-6 rounded-xl bg-[#1a1a4a] shadow-md border border-[rgba(255,255,255,0.06)]">
+          <div className="inline-flex items-center gap-1 p-1 mb-6 rounded-xl bg-[#100d22] shadow-md border border-[rgba(255,255,255,0.06)]">
             <button
               onClick={() => setPeriod('current')}
               className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all ${
@@ -186,7 +186,7 @@ export function LeaderboardClient() {
                       <span className="text-2xl font-black text-white">2</span>
                     </div>
                     <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-slate-400 to-slate-600 p-1">
-                      <div className="w-full h-full rounded-full bg-[#0B0B2B] flex items-center justify-center overflow-hidden">
+                      <div className="w-full h-full rounded-full bg-[#0c0a1c] flex items-center justify-center overflow-hidden">
                         {top3[1].userAvatar ? (
                           <img src={top3[1].userAvatar} alt="" className="w-full h-full object-cover" />
                         ) : (
@@ -203,7 +203,7 @@ export function LeaderboardClient() {
                     </div>
                   </div>
                 ) : (
-                  <div className="bg-[#1a1a4a] shadow-md rounded-2xl p-6 text-center border border-[rgba(255,255,255,0.06)] min-h-[280px] flex items-center justify-center">
+                  <div className="bg-[#100d22] shadow-md rounded-2xl p-6 text-center border border-[rgba(255,255,255,0.06)] min-h-[280px] flex items-center justify-center">
                     <span className="text-gray-600 text-2xl">—</span>
                   </div>
                 )}
@@ -220,7 +220,7 @@ export function LeaderboardClient() {
                         {t('champion')}
                       </span>
                       <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 p-1 shadow-lg shadow-amber-500/30">
-                        <div className="w-full h-full rounded-full bg-[#0B0B2B] flex items-center justify-center overflow-hidden">
+                        <div className="w-full h-full rounded-full bg-[#0c0a1c] flex items-center justify-center overflow-hidden">
                           {top3[0].userAvatar ? (
                             <img src={top3[0].userAvatar} alt="" className="w-full h-full object-cover" />
                           ) : (
@@ -240,7 +240,7 @@ export function LeaderboardClient() {
                     </div>
                   </div>
                 ) : (
-                  <div className="bg-[#1a1a4a] shadow-md rounded-2xl p-6 text-center border border-[rgba(255,255,255,0.06)] min-h-[320px] flex items-center justify-center">
+                  <div className="bg-[#100d22] shadow-md rounded-2xl p-6 text-center border border-[rgba(255,255,255,0.06)] min-h-[320px] flex items-center justify-center">
                     <span className="text-gray-600 text-2xl">—</span>
                   </div>
                 )}
@@ -254,7 +254,7 @@ export function LeaderboardClient() {
                       <span className="text-2xl font-black text-white">3</span>
                     </div>
                     <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-orange-500 to-orange-700 p-1">
-                      <div className="w-full h-full rounded-full bg-[#0B0B2B] flex items-center justify-center overflow-hidden">
+                      <div className="w-full h-full rounded-full bg-[#0c0a1c] flex items-center justify-center overflow-hidden">
                         {top3[2].userAvatar ? (
                           <img src={top3[2].userAvatar} alt="" className="w-full h-full object-cover" />
                         ) : (
@@ -271,7 +271,7 @@ export function LeaderboardClient() {
                     </div>
                   </div>
                 ) : (
-                  <div className="bg-[#1a1a4a] shadow-md rounded-2xl p-6 text-center border border-[rgba(255,255,255,0.06)] min-h-[280px] flex items-center justify-center">
+                  <div className="bg-[#100d22] shadow-md rounded-2xl p-6 text-center border border-[rgba(255,255,255,0.06)] min-h-[280px] flex items-center justify-center">
                     <span className="text-gray-600 text-2xl">—</span>
                   </div>
                 )}
@@ -291,11 +291,11 @@ export function LeaderboardClient() {
                         <span className="font-bold text-[#8888aa]">#{entry.rank}</span>
                       </div>
                       <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 p-0.5 flex-shrink-0">
-                        <div className="w-full h-full rounded-full bg-[#0B0B2B] flex items-center justify-center overflow-hidden">
+                        <div className="w-full h-full rounded-full bg-[#0c0a1c] flex items-center justify-center overflow-hidden">
                           {entry.userAvatar ? (
                             <img src={entry.userAvatar} alt="" className="w-full h-full object-cover" />
                           ) : (
-                            <span className="text-xs font-bold text-[#C84FFF]">{getInitials(entry.userName)}</span>
+                            <span className="text-xs font-bold text-[#ff2ea6]">{getInitials(entry.userName)}</span>
                           )}
                         </div>
                       </div>

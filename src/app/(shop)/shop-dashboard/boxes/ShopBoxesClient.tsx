@@ -106,7 +106,7 @@ export function ShopBoxesClient({ boxes: initialBoxes, isAdmin }: { boxes: Box[]
         </p>
         <Link
           href="/shop-dashboard/boxes/create"
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#C84FFF] to-cyan-500 hover:from-[#9333EA] hover:to-[#7c3aed] text-white font-medium transition-all"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#ff2ea6] to-cyan-500 hover:from-[#8b5cf6] hover:to-[#7c3aed] text-white font-medium transition-all"
         >
           <Package className="w-5 h-5" />
           <span>{t('createFirst')}</span>
@@ -142,7 +142,7 @@ export function ShopBoxesClient({ boxes: initialBoxes, isAdmin }: { boxes: Box[]
             {/* Status Badge */}
             <div className={`absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium ${
               box.isActive 
-                ? 'bg-[#C84FFF]/20 text-[#E879F9] border border-[#C84FFF]/30' 
+                ? 'bg-[#ff2ea6]/20 text-[#E879F9] border border-[#ff2ea6]/30' 
                 : 'bg-red-500/20 text-red-400 border border-red-500/30'
             }`}>
               {box.isActive ? t('active') : t('inactive')}
@@ -200,7 +200,7 @@ export function ShopBoxesClient({ boxes: initialBoxes, isAdmin }: { boxes: Box[]
                 className={`flex-1 ${
                   box.isActive 
                     ? 'border-red-500/50 text-red-400 hover:bg-red-500/10' 
-                    : 'border-[#C84FFF]/50 text-[#E879F9] hover:bg-[#C84FFF]/10'
+                    : 'border-[#ff2ea6]/50 text-[#E879F9] hover:bg-[#ff2ea6]/10'
                 }`}
               >
                 {box.isActive ? (

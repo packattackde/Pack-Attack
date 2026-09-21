@@ -136,7 +136,7 @@ export function InfoTooltip({ infoKey, placement = 'inline', fallback, className
       <button
         ref={triggerRef}
         onClick={() => setOpen(!open)}
-        className="flex items-center justify-center w-[18px] h-[18px] rounded-full text-[#666688] hover:text-[#8888aa] hover:bg-[rgba(255,255,255,0.06)] transition-all duration-150 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#C84FFF]"
+        className="flex items-center justify-center w-[18px] h-[18px] rounded-full text-[#666688] hover:text-[#8888aa] hover:bg-[rgba(255,255,255,0.06)] transition-all duration-150 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#ff2ea6]"
         aria-label="More information"
       >
         <Info className="w-3.5 h-3.5" />
@@ -145,7 +145,7 @@ export function InfoTooltip({ infoKey, placement = 'inline', fallback, className
       {open && (
         <div
           ref={popoverRef}
-          className="absolute z-50 mt-1 w-80 max-w-[calc(100vw-2rem)] bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-xl shadow-xl shadow-black/30 overflow-hidden"
+          className="absolute z-50 mt-1 w-80 max-w-[calc(100vw-2rem)] bg-[#100d22] border border-[rgba(255,255,255,0.1)] rounded-xl shadow-xl shadow-black/30 overflow-hidden"
           style={{
             top: placement === 'corner' ? '100%' : undefined,
             left: placement === 'corner' ? 'auto' : '50%',
@@ -169,7 +169,7 @@ export function InfoTooltip({ infoKey, placement = 'inline', fallback, className
                   value={contentDe}
                   onChange={e => setContentDe(e.target.value)}
                   rows={4}
-                  className="w-full px-3 py-2 text-xs text-white bg-[#12123a] border border-[rgba(255,255,255,0.08)] rounded-lg focus:border-[#C84FFF]/40 focus:outline-none resize-y"
+                  className="w-full px-3 py-2 text-xs text-white bg-[#12123a] border border-[rgba(255,255,255,0.08)] rounded-lg focus:border-[#ff2ea6]/40 focus:outline-none resize-y"
                   placeholder="Markdown supported..."
                 />
               </div>
@@ -179,7 +179,7 @@ export function InfoTooltip({ infoKey, placement = 'inline', fallback, className
                   value={contentEn}
                   onChange={e => setContentEn(e.target.value)}
                   rows={4}
-                  className="w-full px-3 py-2 text-xs text-white bg-[#12123a] border border-[rgba(255,255,255,0.08)] rounded-lg focus:border-[#C84FFF]/40 focus:outline-none resize-y"
+                  className="w-full px-3 py-2 text-xs text-white bg-[#12123a] border border-[rgba(255,255,255,0.08)] rounded-lg focus:border-[#ff2ea6]/40 focus:outline-none resize-y"
                   placeholder="Markdown supported..."
                 />
               </div>
@@ -191,7 +191,7 @@ export function InfoTooltip({ infoKey, placement = 'inline', fallback, className
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="w-full flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-semibold text-white bg-[#C84FFF] hover:bg-[#E879F9] rounded-lg transition-colors disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-semibold text-white bg-[#ff2ea6] hover:bg-[#E879F9] rounded-lg transition-colors disabled:opacity-50"
               >
                 {saving ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
                 {saving ? t('saving') : t('save')}
@@ -200,7 +200,7 @@ export function InfoTooltip({ infoKey, placement = 'inline', fallback, className
           ) : (
             <div className="p-4">
               <div className="flex items-start justify-between gap-2">
-                <div className="flex-1 min-w-0 text-xs text-[#b0b0cc] leading-relaxed prose-invert prose-xs [&_p]:m-0 [&_p+p]:mt-2 [&_strong]:text-white [&_ul]:mt-1 [&_ul]:pl-4 [&_li]:mt-0.5 [&_a]:text-[#C84FFF] [&_a]:underline">
+                <div className="flex-1 min-w-0 text-xs text-[#b0b0cc] leading-relaxed prose-invert prose-xs [&_p]:m-0 [&_p+p]:mt-2 [&_strong]:text-white [&_ul]:mt-1 [&_ul]:pl-4 [&_li]:mt-0.5 [&_a]:text-[#ff2ea6] [&_a]:underline">
                   {!loaded ? (
                     <div className="flex items-center gap-2 text-[#666688]">
                       <Loader2 className="w-3 h-3 animate-spin" />
@@ -217,7 +217,7 @@ export function InfoTooltip({ infoKey, placement = 'inline', fallback, className
                 {isAdmin && loaded && (
                   <button
                     onClick={() => setEditing(true)}
-                    className="shrink-0 flex items-center justify-center w-6 h-6 rounded-md text-[#666688] hover:text-[#C84FFF] hover:bg-[rgba(200,79,255,0.1)] transition-all"
+                    className="shrink-0 flex items-center justify-center w-6 h-6 rounded-md text-[#666688] hover:text-[#ff2ea6] hover:bg-[rgba(255,46,166,0.1)] transition-all"
                     title="Edit info text"
                   >
                     <Pencil className="w-3 h-3" />

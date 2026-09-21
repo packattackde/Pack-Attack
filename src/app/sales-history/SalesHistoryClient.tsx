@@ -21,7 +21,7 @@ export function SalesHistoryClient({ sales }: { sales: Sale[] }) {
       {sales.map((sale) => (
         <div
           key={sale.id}
-          className="group bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl overflow-hidden transition-all"
+          className="group bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl overflow-hidden transition-all"
         >
           <div className="relative aspect-[63/88] w-full">
             {sale.cardImage ? (
@@ -36,7 +36,7 @@ export function SalesHistoryClient({ sales }: { sales: Sale[] }) {
                 <span className="text-gray-600 text-xs">{t('noImage')}</span>
               </div>
             )}
-            <div className="absolute top-2 right-2 rounded-full bg-[#C84FFF] p-1">
+            <div className="absolute top-2 right-2 rounded-full bg-[#ff2ea6] p-1">
               <CheckCircle2 className="h-3 w-3 text-white" />
             </div>
           </div>

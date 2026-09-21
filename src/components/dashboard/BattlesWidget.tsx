@@ -22,9 +22,9 @@ export default function BattlesWidget({ battles, className = '' }: BattlesWidget
   const displayBattles = battles.slice(0, 3);
 
   return (
-    <div className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl h-full p-4 sm:p-6 ${className}`}>
+    <div className={`bg-[#100d22] border border-[rgba(255,255,255,0.1)] rounded-2xl h-full p-4 sm:p-6 ${className}`}>
       <div className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-3 flex items-center gap-1.5">
-<GiCrossedSwords className="w-3.5 h-3.5 text-[#C84FFF]" /> {t('battles.activeBattles')}
+<GiCrossedSwords className="w-3.5 h-3.5 text-[#ff2ea6]" /> {t('battles.activeBattles')}
       </div>
 
       {displayBattles.length === 0 ? (
@@ -32,7 +32,7 @@ export default function BattlesWidget({ battles, className = '' }: BattlesWidget
           <p className="text-sm text-[#8888aa]">{t('battles.noActiveBattles')}</p>
           <Link
             href="/battles/create"
-            className="text-[#C84FFF] text-[11px] font-semibold mt-2 inline-block hover:underline"
+            className="text-[#ff2ea6] text-[11px] font-semibold mt-2 inline-block hover:underline"
           >
             {t('battles.createOne')}
           </Link>
@@ -65,7 +65,7 @@ export default function BattlesWidget({ battles, className = '' }: BattlesWidget
                     )}
                     <Link
                       href={`/battles/${battle.id}`}
-                      className={`bg-[#C84FFF] text-white text-[11px] font-bold rounded-lg px-3 py-1.5 min-h-[44px] min-w-[44px] inline-flex items-center justify-center hover:brightness-110 transition ${
+                      className={`bg-[#ff2ea6] text-white text-[11px] font-bold rounded-lg px-3 py-1.5 min-h-[44px] min-w-[44px] inline-flex items-center justify-center hover:brightness-110 transition ${
                         almostFull ? 'animate-pulse' : ''
                       }`}
                     >
@@ -79,7 +79,7 @@ export default function BattlesWidget({ battles, className = '' }: BattlesWidget
 
           <Link
             href="/battles"
-            className="text-[#C84FFF] text-[11px] font-semibold mt-4 inline-block hover:underline"
+            className="text-[#ff2ea6] text-[11px] font-semibold mt-4 inline-block hover:underline"
           >
             {t('battles.viewAll')}
           </Link>

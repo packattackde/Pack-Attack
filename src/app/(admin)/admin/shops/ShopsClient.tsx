@@ -110,22 +110,22 @@ export function ShopsClient() {
     <div className="space-y-6">
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
+        <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
           <Store className="w-5 h-5 text-orange-400 mx-auto mb-2" />
           <div className="text-2xl font-bold text-white">{totals.shops}</div>
           <div className="text-xs text-[#8888aa]">Total Shops</div>
         </div>
-        <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
-          <ShoppingCart className="w-5 h-5 text-[#C84FFF] mx-auto mb-2" />
+        <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
+          <ShoppingCart className="w-5 h-5 text-[#ff2ea6] mx-auto mb-2" />
           <div className="text-2xl font-bold text-white">{totals.orders.toLocaleString()}</div>
           <div className="text-xs text-[#8888aa]">Total Orders</div>
         </div>
-        <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
+        <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
           <AlertCircle className="w-5 h-5 text-yellow-400 mx-auto mb-2" />
           <div className="text-2xl font-bold text-white">{totals.pendingOrders.toLocaleString()}</div>
           <div className="text-xs text-yellow-400">Pending Orders</div>
         </div>
-        <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
+        <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
           <Coins className="w-5 h-5 text-[#E879F9] mx-auto mb-2" />
           <div className="text-2xl font-bold text-white">{totals.revenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
           <div className="text-xs text-[#8888aa]">Total Revenue</div>
@@ -140,7 +140,7 @@ export function ShopsClient() {
           placeholder="Search shops by name or owner..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-12 pr-4 py-3 rounded-xl bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none transition-colors"
+          className="w-full pl-12 pr-4 py-3 rounded-xl bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg text-white placeholder-gray-500 border border-[rgba(255,255,255,0.06)] focus:border-[rgba(255,46,166,0.3)] focus:outline-none transition-colors"
         />
       </div>
 
@@ -221,7 +221,7 @@ export function ShopsClient() {
                     </td>
                     <td className="px-4 py-4 text-center">
                       <span className={`px-2 py-1 rounded-lg text-xs font-medium ${
-                        shop.isActive ? 'bg-[#C84FFF]/20 text-[#E879F9]' : 'bg-gray-500/20 text-[#8888aa]'
+                        shop.isActive ? 'bg-[#ff2ea6]/20 text-[#E879F9]' : 'bg-gray-500/20 text-[#8888aa]'
                       }`}>
                         {shop.isActive ? 'Active' : 'Inactive'}
                       </span>
@@ -231,7 +231,7 @@ export function ShopsClient() {
                         <button
                           onClick={() => toggleActive(shop)}
                           disabled={toggling === shop.id}
-                          className={`p-2 rounded-lg transition-colors ${shop.isActive ? 'text-[#E879F9] hover:bg-[#C84FFF]/20' : 'text-[#8888aa] hover:bg-[#12123a]/50'}`}
+                          className={`p-2 rounded-lg transition-colors ${shop.isActive ? 'text-[#E879F9] hover:bg-[#ff2ea6]/20' : 'text-[#8888aa] hover:bg-[#12123a]/50'}`}
                           title={shop.isActive ? 'Deactivate' : 'Activate'}
                         >
                           {shop.isActive ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}

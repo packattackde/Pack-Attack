@@ -94,14 +94,14 @@ export default async function CheckoutPage() {
 
         <div className="relative container py-12">
           <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
-            <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[rgba(200,79,255,0.15)] to-[rgba(200,79,255,0.1)]">
-              <ShoppingCart className="w-10 h-10 text-[#C84FFF]" />
+            <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[rgba(255,46,166,0.15)] to-[rgba(255,46,166,0.1)]">
+              <ShoppingCart className="w-10 h-10 text-[#ff2ea6]" />
             </div>
             <h2 className="text-2xl font-bold text-white mb-3">{t('cartEmpty')}</h2>
             <p className="text-[#8888aa] mb-6">{t('cartEmptyDesc')}</p>
             <Link 
               href="/collection" 
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl transition-all hover:scale-105"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[#ff2ea6] text-white font-semibold rounded-xl transition-all hover:scale-105"
             >
               <Sparkles className="w-5 h-5" />
               {t('viewCollection')}

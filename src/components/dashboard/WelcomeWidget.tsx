@@ -28,13 +28,13 @@ export default function WelcomeWidget({
   const t = useTranslations('widgets')
   return (
     <div
-      className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl h-full p-4 sm:p-6 ${className}`}
+      className={`bg-[#100d22] border border-[rgba(255,255,255,0.1)] rounded-2xl h-full p-4 sm:p-6 ${className}`}
     >
       {/* Top row: greeting + CTA buttons */}
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>
           <h2 className="text-xl sm:text-2xl font-extrabold text-[#f0f0f5]">
-            {t('welcome.welcomeBack')} <span className="text-[#C84FFF]">{userName}</span>!
+            {t('welcome.welcomeBack')} <span className="text-[#ff2ea6]">{userName}</span>!
           </h2>
           <p className="text-sm text-[#8888aa] mt-1">{dynamicSubtitle}</p>
         </div>
@@ -42,13 +42,13 @@ export default function WelcomeWidget({
         <div className="flex flex-col sm:flex-row flex-wrap gap-2 w-full sm:w-auto">
           <Link
             href="/boxes"
-            className="min-h-[44px] flex items-center justify-center gap-2 px-4 py-2 bg-[#C84FFF] text-white font-semibold rounded-xl text-sm whitespace-nowrap hover:brightness-110 transition"
+            className="min-h-[44px] flex items-center justify-center gap-2 px-4 py-2 bg-[#ff2ea6] text-white font-semibold rounded-xl text-sm whitespace-nowrap hover:brightness-110 transition"
           >
             <GiCardboardBox className="w-4 h-4" /> {t('welcome.openBox')}
           </Link>
           <Link
             href="/battles"
-            className="min-h-[44px] flex items-center justify-center gap-2 px-4 py-2 border border-[rgba(200,79,255,0.3)] text-[#C84FFF] font-semibold rounded-xl text-sm whitespace-nowrap hover:bg-[rgba(200,79,255,0.05)] transition"
+            className="min-h-[44px] flex items-center justify-center gap-2 px-4 py-2 border border-[rgba(255,46,166,0.3)] text-[#ff2ea6] font-semibold rounded-xl text-sm whitespace-nowrap hover:bg-[rgba(255,46,166,0.05)] transition"
           >
             <GiCrossedSwords className="w-4 h-4" /> {t('welcome.joinBattle')}
           </Link>
@@ -58,10 +58,10 @@ export default function WelcomeWidget({
       {/* Level section */}
       <div className="mt-5">
         <div className="flex items-center gap-3 mb-2">
-          <span className="text-base sm:text-lg font-extrabold text-[#C84FFF]">
+          <span className="text-base sm:text-lg font-extrabold text-[#ff2ea6]">
             {t('welcome.level')} {level}
           </span>
-          <span className="text-xs font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[rgba(200,79,255,0.1)] text-[#C84FFF] border border-[rgba(200,79,255,0.2)]">
+          <span className="text-xs font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[rgba(255,46,166,0.1)] text-[#ff2ea6] border border-[rgba(255,46,166,0.2)]">
             {title}
           </span>
         </div>
@@ -69,7 +69,7 @@ export default function WelcomeWidget({
         {/* XP progress bar */}
         <div className="w-full h-[8px] bg-[rgba(255,255,255,0.06)] rounded-full overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-[#C84FFF] to-[#9333EA] rounded-full transition-all duration-500"
+            className="h-full bg-gradient-to-r from-[#ff2ea6] to-[#8b5cf6] rounded-full transition-all duration-500"
             style={{ width: `${Math.min(xpPercent, 100)}%` }}
           />
         </div>

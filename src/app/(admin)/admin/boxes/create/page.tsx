@@ -425,7 +425,7 @@ export default function CreateBoxPage() {
                   type="button"
                   variant="outline"
                   onClick={() => setShowPresetGallery(true)}
-                  className="border-[rgba(200,79,255,0.3)]/50 text-[#C84FFF] hover:bg-[rgba(200,79,255,0.08)] hover:text-[#C84FFF]"
+                  className="border-[rgba(255,46,166,0.3)]/50 text-[#ff2ea6] hover:bg-[rgba(255,46,166,0.08)] hover:text-[#ff2ea6]"
                 >
                   <FolderOpen className="h-4 w-4 mr-2" />
                   Load Preset
@@ -535,7 +535,7 @@ export default function CreateBoxPage() {
                   
                   {/* Show JustTCG badge for JustTCG-only games */}
                   {justTCGOnlyGames.includes(selectedGame) && (
-                    <span className="px-3 py-2 rounded-lg bg-[rgba(200,79,255,0.1)] border border-[rgba(200,79,255,0.3)] text-[#C84FFF] text-sm">
+                    <span className="px-3 py-2 rounded-lg bg-[rgba(255,46,166,0.1)] border border-[rgba(255,46,166,0.3)] text-[#ff2ea6] text-sm">
                       📊 JustTCG
                     </span>
                   )}
@@ -573,7 +573,7 @@ export default function CreateBoxPage() {
                             type="button"
                             onClick={() => addCardToBox(card)}
                             className={`relative aspect-[63/88] rounded-lg overflow-hidden border-2 transition-all group ${
-                              isSelected ? 'border-[#C84FFF] ring-2 ring-[#C84FFF]/50' : 'border-gray-600 hover:border-primary'
+                              isSelected ? 'border-[#ff2ea6] ring-2 ring-[#ff2ea6]/50' : 'border-gray-600 hover:border-primary'
                             }`}
                           >
                             {card.imageUrl && (
@@ -585,8 +585,8 @@ export default function CreateBoxPage() {
                               />
                             )}
                             {isSelected ? (
-                              <div className="absolute inset-0 bg-[#C84FFF]/30 flex items-center justify-center">
-                                <div className="bg-[#C84FFF] rounded-full p-1">
+                              <div className="absolute inset-0 bg-[#ff2ea6]/30 flex items-center justify-center">
+                                <div className="bg-[#ff2ea6] rounded-full p-1">
                                   <Check className="h-4 w-4 text-white" />
                                 </div>
                               </div>
@@ -621,7 +621,7 @@ export default function CreateBoxPage() {
                             <select
                               value={bulkShopId}
                               onChange={(e) => setBulkShopId(e.target.value)}
-                              className="px-2 py-1 rounded bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white text-xs focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
+                              className="px-2 py-1 rounded bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white text-xs focus:border-[rgba(255,46,166,0.3)] focus:outline-none"
                             >
                               <option value="">No Shop</option>
                               {shops.map((s) => (
@@ -690,7 +690,7 @@ export default function CreateBoxPage() {
                                 <select
                                   value={card.shopId || ''}
                                   onChange={(e) => updateCard(index, 'shopId', e.target.value || undefined)}
-                                  className="w-32 px-2 py-1 rounded bg-[#12123a] border border-gray-600 text-white text-sm focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
+                                  className="w-32 px-2 py-1 rounded bg-[#12123a] border border-gray-600 text-white text-sm focus:border-[rgba(255,46,166,0.3)] focus:outline-none"
                                 >
                                   <option value="">None</option>
                                   {shops.map((s) => (

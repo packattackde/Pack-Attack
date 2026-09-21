@@ -37,8 +37,8 @@ type Payout = {
 
 const statusConfig: Record<string, { color: string; bgColor: string; icon: React.ElementType; label: string }> = {
   REQUESTED: { color: 'text-yellow-400', bgColor: 'bg-yellow-400/10', icon: Clock, label: 'Pending' },
-  PROCESSING: { color: 'text-[#C84FFF]', bgColor: 'bg-[rgba(200,79,255,0.1)]', icon: Loader2, label: 'Approved' },
-  COMPLETED: { color: 'text-[#E879F9]', bgColor: 'bg-[#C84FFF]/10', icon: CheckCircle, label: 'Paid' },
+  PROCESSING: { color: 'text-[#ff2ea6]', bgColor: 'bg-[rgba(255,46,166,0.1)]', icon: Loader2, label: 'Approved' },
+  COMPLETED: { color: 'text-[#E879F9]', bgColor: 'bg-[#ff2ea6]/10', icon: CheckCircle, label: 'Paid' },
   REJECTED: { color: 'text-red-400', bgColor: 'bg-red-400/10', icon: XCircle, label: 'Rejected' },
 };
 
@@ -141,7 +141,7 @@ export function PayoutsClient({
       {/* Payout Overview */}
       <div className="grid md:grid-cols-3 gap-4">
         <div className="glass-strong rounded-2xl p-6 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#9333EA]/5 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#8b5cf6]/5 to-transparent" />
           <div className="relative">
             <Package className="w-8 h-8 text-[#E879F9] mb-3" />
             <div className="text-3xl font-bold text-white mb-1">{eligibleCount}</div>
@@ -152,7 +152,7 @@ export function PayoutsClient({
         </div>
 
         <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#C84FFF]/5 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#ff2ea6]/5 to-transparent" />
           <div className="relative">
             <Banknote className="w-8 h-8 text-[#E879F9] mb-3" />
             <div className="text-3xl font-bold text-white mb-1">{totalPaidEuro.toFixed(2)} €</div>
@@ -177,7 +177,7 @@ export function PayoutsClient({
             <button
               onClick={handleRequestPayout}
               disabled={requesting}
-              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[#9333EA] to-[#7c3aed] text-white font-semibold hover:from-[#9333EA] hover:to-[#7c3aed] transition-all shadow-lg shadow-[#C84FFF]/25 disabled:opacity-50 flex items-center justify-center gap-2"
+              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[#8b5cf6] to-[#7c3aed] text-white font-semibold hover:from-[#8b5cf6] hover:to-[#7c3aed] transition-all shadow-lg shadow-[#ff2ea6]/25 disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {requesting ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
@@ -199,8 +199,8 @@ export function PayoutsClient({
             onClick={() => setFilterStatus(s)}
             className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
               filterStatus === s
-                ? 'bg-gradient-to-r from-[#9333EA] to-[#7c3aed] text-white shadow-lg'
-                : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white'
+                ? 'bg-gradient-to-r from-[#8b5cf6] to-[#7c3aed] text-white shadow-lg'
+                : 'bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white'
             }`}
           >
             {s === 'ALL' ? t('all') : statusConfig[s]?.label || s}
@@ -265,8 +265,8 @@ export function PayoutsClient({
                       )}
 
                       {payout.shopMessage && (
-                        <div className="p-3 rounded-lg bg-[rgba(200,79,255,0.05)] border border-[rgba(200,79,255,0.15)] text-sm text-[#C84FFF]/80">
-                          <span className="text-[#C84FFF] font-medium flex items-center gap-1.5 mb-1">
+                        <div className="p-3 rounded-lg bg-[rgba(255,46,166,0.05)] border border-[rgba(255,46,166,0.15)] text-sm text-[#ff2ea6]/80">
+                          <span className="text-[#ff2ea6] font-medium flex items-center gap-1.5 mb-1">
                             <MessageSquare className="w-3.5 h-3.5" /> Your message:
                           </span>
                           {payout.shopMessage}
@@ -284,20 +284,20 @@ export function PayoutsClient({
                                 placeholder="Explain what was resolved or provide additional info..."
                                 rows={3}
                                 maxLength={2000}
-                                className="w-full px-3 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white text-sm focus:border-[#C84FFF] focus:outline-none resize-none placeholder:text-gray-600"
+                                className="w-full px-3 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white text-sm focus:border-[#ff2ea6] focus:outline-none resize-none placeholder:text-gray-600"
                               />
                               <div className="flex items-center gap-2">
                                 <button
                                   onClick={() => handleResubmit(payout.id)}
                                   disabled={resubmitting || !resubmitMessage.trim()}
-                                  className="px-4 py-2 rounded-xl text-sm font-medium bg-[#C84FFF]/20 text-[#E879F9] hover:bg-[#C84FFF]/30 transition-all disabled:opacity-50 flex items-center gap-2"
+                                  className="px-4 py-2 rounded-xl text-sm font-medium bg-[#ff2ea6]/20 text-[#E879F9] hover:bg-[#ff2ea6]/30 transition-all disabled:opacity-50 flex items-center gap-2"
                                 >
                                   {resubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                                   Send Resubmission
                                 </button>
                                 <button
                                   onClick={() => { setResubmitId(null); setResubmitMessage(''); }}
-                                  className="px-4 py-2 rounded-xl text-sm font-medium bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white transition-all"
+                                  className="px-4 py-2 rounded-xl text-sm font-medium bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white transition-all"
                                 >
                                   Cancel
                                 </button>
@@ -327,7 +327,7 @@ export function PayoutsClient({
                       <div className="text-sm font-medium text-[#8888aa] mb-2">{t('includedItems')}</div>
                       <div className="space-y-2 max-h-80 overflow-y-auto">
                         {payout.items.map((item) => (
-                          <div key={item.id} className="flex items-center gap-3 bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-lg p-3">
+                          <div key={item.id} className="flex items-center gap-3 bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-lg p-3">
                             {item.cardImage && (
                               <img
                                 src={item.cardImage}

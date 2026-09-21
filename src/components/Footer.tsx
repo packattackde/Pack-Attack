@@ -15,19 +15,24 @@ export async function Footer() {
   return (
     <footer
       role="contentinfo"
-      className="relative border-t border-[rgba(255,255,255,0.06)] bg-[#0a0a2a]/80 mt-20"
+      className="relative border-t border-[rgba(139,92,246,0.25)] bg-[#040310] mt-20"
     >
       <div className="container max-w-6xl py-10 sm:py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* Brand */}
+          {/* Brand — Neon District */}
           <div>
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#C84FFF] to-[#9333EA] flex items-center justify-center shadow-[0_4px_12px_rgba(200,79,255,0.3)]">
-                <Package className="w-4 h-4 text-white" />
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-9 h-9 rounded-md bg-gradient-to-br from-[#ff2ea6] to-[#b01c72] flex items-center justify-center shadow-[0_0_16px_rgba(255,46,166,0.7)] font-jp font-black text-base text-white">
+                引
               </div>
-              <span className="text-white font-extrabold text-lg tracking-tight">
-                {LEGAL_ENTITY.brandName}
-              </span>
+              <div className="leading-tight">
+                <span className="text-lg font-black font-orbitron tracking-wider text-[#eeecf7]">
+                  PULL<span className="text-[#ff2ea6] drop-shadow-[0_0_14px_rgba(255,46,166,0.7)]">FORGE</span>
+                </span>
+                <span className="block text-[0.5rem] font-jp font-normal tracking-[5px] text-[#23e6ff] drop-shadow-[0_0_8px_rgba(35,230,255,0.7)]">
+                  プルフォージ
+                </span>
+              </div>
             </div>
             <p className="text-[#8888aa] text-sm leading-relaxed mb-4 max-w-xs">
               {t('tagline')}
@@ -41,14 +46,14 @@ export async function Footer() {
 
           {/* Legal */}
           <div>
-            <h3 className="text-white font-bold text-sm uppercase tracking-wider mb-4">
+            <h3 className="text-[#23e6ff] font-orbitron font-bold text-xs uppercase tracking-[3px] mb-4">
               {t('colLegal')}
             </h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link
                   href="/impressum"
-                  className="text-[#c8c8d8] hover:text-[#C84FFF] transition-colors"
+                  className="text-[#c8c8d8] hover:text-[#ff2ea6] transition-colors"
                 >
                   {tLegal('imprint')}
                 </Link>
@@ -56,7 +61,7 @@ export async function Footer() {
               <li>
                 <Link
                   href="/agb"
-                  className="text-[#c8c8d8] hover:text-[#C84FFF] transition-colors"
+                  className="text-[#c8c8d8] hover:text-[#ff2ea6] transition-colors"
                 >
                   {tLegal('terms')}
                 </Link>
@@ -64,7 +69,7 @@ export async function Footer() {
               <li>
                 <Link
                   href="/widerruf"
-                  className="text-[#c8c8d8] hover:text-[#C84FFF] transition-colors"
+                  className="text-[#c8c8d8] hover:text-[#ff2ea6] transition-colors"
                 >
                   {tLegal('withdrawal')}
                 </Link>
@@ -72,7 +77,7 @@ export async function Footer() {
               <li>
                 <Link
                   href="/datenschutz"
-                  className="text-[#c8c8d8] hover:text-[#C84FFF] transition-colors"
+                  className="text-[#c8c8d8] hover:text-[#ff2ea6] transition-colors"
                 >
                   {tLegal('privacy')}
                 </Link>
@@ -82,14 +87,14 @@ export async function Footer() {
 
           {/* Service */}
           <div>
-            <h3 className="text-white font-bold text-sm uppercase tracking-wider mb-4">
+            <h3 className="text-[#23e6ff] font-orbitron font-bold text-xs uppercase tracking-[3px] mb-4">
               {t('colService')}
             </h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link
                   href="/versand-zahlung"
-                  className="text-[#c8c8d8] hover:text-[#C84FFF] transition-colors"
+                  className="text-[#c8c8d8] hover:text-[#ff2ea6] transition-colors"
                 >
                   {tLegal('shippingPayment')}
                 </Link>
@@ -97,7 +102,7 @@ export async function Footer() {
               <li>
                 <Link
                   href="/cookies"
-                  className="text-[#c8c8d8] hover:text-[#C84FFF] transition-colors"
+                  className="text-[#c8c8d8] hover:text-[#ff2ea6] transition-colors"
                 >
                   {tLegal('cookies')}
                 </Link>
@@ -105,7 +110,7 @@ export async function Footer() {
               <li>
                 <a
                   href={`mailto:${LEGAL_ENTITY.email}`}
-                  className="text-[#c8c8d8] hover:text-[#C84FFF] transition-colors"
+                  className="text-[#c8c8d8] hover:text-[#ff2ea6] transition-colors"
                 >
                   {t('contact')}
                 </a>
@@ -115,7 +120,7 @@ export async function Footer() {
                   href={LEGAL_ENTITY.odrUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-[#c8c8d8] hover:text-[#C84FFF] transition-colors"
+                  className="inline-flex items-center gap-1 text-[#c8c8d8] hover:text-[#ff2ea6] transition-colors"
                 >
                   {t('odr')}
                   <ExternalLink className="w-3 h-3" />
@@ -126,7 +131,7 @@ export async function Footer() {
         </div>
 
         {/* Bottom strip */}
-        <div className="mt-10 pt-6 border-t border-[rgba(255,255,255,0.06)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-[#666680]">
+        <div className="mt-10 pt-6 border-t border-[rgba(139,92,246,0.2)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-[#666680]">
           <span>{t('disclaimer')}</span>
           <span>
             {t('odrNotice')}{' '}
@@ -134,7 +139,7 @@ export async function Footer() {
               href={LEGAL_ENTITY.odrUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="underline hover:text-[#C84FFF] transition-colors"
+              className="underline hover:text-[#ff2ea6] transition-colors"
             >
               {LEGAL_ENTITY.odrUrl}
             </a>

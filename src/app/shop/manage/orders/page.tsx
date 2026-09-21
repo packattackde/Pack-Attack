@@ -56,10 +56,10 @@ type Order = {
 
 const statusColors: Record<string, string> = {
   PENDING: 'bg-yellow-500/20 text-yellow-400',
-  PAID: 'bg-[rgba(200,79,255,0.1)] text-[#C84FFF]',
+  PAID: 'bg-[rgba(255,46,166,0.1)] text-[#ff2ea6]',
   PROCESSING: 'bg-purple-500/20 text-purple-400',
   SHIPPED: 'bg-cyan-500/20 text-cyan-400',
-  DELIVERED: 'bg-[#C84FFF]/20 text-[#E879F9]',
+  DELIVERED: 'bg-[#ff2ea6]/20 text-[#E879F9]',
   CANCELLED: 'bg-red-500/20 text-red-400',
   REFUNDED: 'bg-gray-500/20 text-[#8888aa]',
 };
@@ -142,7 +142,7 @@ export default function ManageOrdersPage() {
     return (
       <div className="min-h-screen flex items-center justify-center font-display">
         <div className="text-white flex items-center gap-3">
-          <div className="w-6 h-6 border-2 border-[rgba(200,79,255,0.3)] border-t-transparent rounded-full animate-spin" />
+          <div className="w-6 h-6 border-2 border-[rgba(255,46,166,0.3)] border-t-transparent rounded-full animate-spin" />
           {t('loading')}
         </div>
       </div>
@@ -163,7 +163,7 @@ export default function ManageOrdersPage() {
 
         {/* Header */}
         <div className="flex items-center gap-3 mb-8">
-          <ShoppingBag className="w-8 h-8 text-[#C84FFF]" />
+          <ShoppingBag className="w-8 h-8 text-[#ff2ea6]" />
           <h1 className="text-3xl font-bold text-white">{t('title')}</h1>
           <span className="px-3 py-1 rounded-full bg-[#12123a] text-[#f0f0f5] text-sm">
             {t('totalCount', { count: orders.length })}
@@ -200,7 +200,7 @@ export default function ManageOrdersPage() {
                   </div>
                   <div className="flex flex-wrap items-center gap-4 sm:gap-6">
                     <div className="text-right">
-                      <p className="font-semibold text-[#C84FFF]">€{order.total.toFixed(2)}</p>
+                      <p className="font-semibold text-[#ff2ea6]">€{order.total.toFixed(2)}</p>
                       <p className="text-sm text-[#8888aa]">{order.items.length} {t('items')}</p>
                     </div>
                     <ChevronDown className={`w-5 h-5 text-[#8888aa] transition-transform ${expandedOrder === order.id ? 'rotate-180' : ''}`} />
@@ -214,7 +214,7 @@ export default function ManageOrdersPage() {
                       {/* Items */}
                       <div className="lg:col-span-2">
                         <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
-                          <Package className="w-4 h-4 text-[#C84FFF]" />
+                          <Package className="w-4 h-4 text-[#ff2ea6]" />
                           {t('items')}
                         </h3>
                         <div className="space-y-3">
@@ -255,7 +255,7 @@ export default function ManageOrdersPage() {
                           </div>
                           <div className="flex justify-between font-semibold border-t border-[rgba(255,255,255,0.06)] pt-2">
                             <span className="text-white">{t('total')}</span>
-                            <span className="text-[#C84FFF]">€{order.total.toFixed(2)}</span>
+                            <span className="text-[#ff2ea6]">€{order.total.toFixed(2)}</span>
                           </div>
                         </div>
                       </div>
@@ -265,7 +265,7 @@ export default function ManageOrdersPage() {
                         {/* Customer */}
                         <div>
                           <h3 className="font-semibold text-white mb-3 flex items-center gap-2">
-                            <User className="w-4 h-4 text-[#C84FFF]" />
+                            <User className="w-4 h-4 text-[#ff2ea6]" />
                             {t('customer')}
                           </h3>
                           <div className="p-4 rounded-xl bg-[#12123a] space-y-2">
@@ -301,10 +301,10 @@ export default function ManageOrdersPage() {
                             value={order.status}
                             onChange={(e) => updateOrderStatus(order.id, e.target.value)}
                             disabled={updating === order.id}
-                            className="w-full px-4 py-3 rounded-xl bg-[#1a1a4a] shadow-md text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none disabled:opacity-50"
+                            className="w-full px-4 py-3 rounded-xl bg-[#100d22] shadow-md text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(255,46,166,0.3)] focus:outline-none disabled:opacity-50"
                           >
                             {statusKeys.map((status) => (
-                              <option key={status} value={status} className="bg-[#0B0B2B]">
+                              <option key={status} value={status} className="bg-[#0c0a1c]">
                                 {t(`statusLabels.${status}`)}
                               </option>
                             ))}

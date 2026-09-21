@@ -72,10 +72,10 @@ const categoryConfig: Record<string, { icon: typeof Bug; label: string; color: s
 };
 
 const statusColors: Record<string, string> = {
-  OPEN: 'bg-[#C84FFF]',
+  OPEN: 'bg-[#ff2ea6]',
   CLAIMED: 'bg-indigo-500',
   IN_PROGRESS: 'bg-amber-500',
-  RESOLVED: 'bg-[#C84FFF]',
+  RESOLVED: 'bg-[#ff2ea6]',
   CLOSED: 'bg-gray-500',
 };
 
@@ -89,7 +89,7 @@ const statusLabels: Record<string, string> = {
 
 const priorityColors: Record<string, string> = {
   LOW: 'bg-gray-500',
-  MEDIUM: 'bg-[#C84FFF]',
+  MEDIUM: 'bg-[#ff2ea6]',
   HIGH: 'bg-amber-500',
   URGENT: 'bg-red-500',
 };
@@ -110,7 +110,7 @@ function formatDuration(seconds: number | null): string {
 
 function getRatingColor(avg: number | null): string {
   if (avg === null) return 'bg-gray-600';
-  if (avg >= 4) return 'bg-[#C84FFF]';
+  if (avg >= 4) return 'bg-[#ff2ea6]';
   if (avg >= 3) return 'bg-amber-500';
   if (avg >= 2) return 'bg-orange-500';
   return 'bg-red-500';
@@ -141,7 +141,7 @@ export default function FeedbackAnalyticsPage() {
   if (loading) {
     return (
       <div className="min-h-screen font-display flex items-center justify-center">
-        <div className="w-6 h-6 border-2 border-white/20 border-t-[#C84FFF] rounded-full animate-spin" />
+        <div className="w-6 h-6 border-2 border-white/20 border-t-[#ff2ea6] rounded-full animate-spin" />
       </div>
     );
   }
@@ -176,7 +176,7 @@ export default function FeedbackAnalyticsPage() {
 
         <div className="mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C84FFF] to-[#E879F9]">Feedback</span> Analytics
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ff2ea6] to-[#E879F9]">Feedback</span> Analytics
           </h1>
           <p className="text-gray-500">Insights and trends across all feedback</p>
         </div>
@@ -185,7 +185,7 @@ export default function FeedbackAnalyticsPage() {
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
           <div className="rounded-xl border border-white/[0.06] bg-[#1e1e55] p-4">
             <div className="flex items-center gap-2 mb-2">
-              <MessageSquare className="w-4 h-4 text-[#C84FFF]" />
+              <MessageSquare className="w-4 h-4 text-[#ff2ea6]" />
               <span className="text-xs text-gray-500 font-medium">Total</span>
             </div>
             <p className="text-2xl font-bold text-white">{summary.totalCount}</p>
@@ -354,7 +354,7 @@ export default function FeedbackAnalyticsPage() {
                       title={`${dateStr}: ${entry.count}`}
                     >
                       <div
-                        className="w-full rounded-t bg-[#C84FFF]/60 hover:bg-[#C84FFF]/80 transition-colors cursor-default"
+                        className="w-full rounded-t bg-[#ff2ea6]/60 hover:bg-[#ff2ea6]/80 transition-colors cursor-default"
                         style={{ height: `${Math.max(height, 2)}%` }}
                       />
                       <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 rounded bg-[#12123a] text-[10px] text-white whitespace-nowrap z-10 border border-white/10">
@@ -398,7 +398,7 @@ export default function FeedbackAnalyticsPage() {
                         </div>
                         <div className="h-2 rounded-full bg-white/[0.04] overflow-hidden">
                           <div
-                            className={`h-full rounded-full transition-all ${isWarning ? 'bg-red-500' : 'bg-[#C84FFF]'}`}
+                            className={`h-full rounded-full transition-all ${isWarning ? 'bg-red-500' : 'bg-[#ff2ea6]'}`}
                             style={{ width: `${width}%` }}
                           />
                         </div>

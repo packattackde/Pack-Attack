@@ -202,11 +202,11 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
                 <div className="group relative" style={animStyle('0.1s')}>
                     <div className={`relative h-full bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-3xl p-8 border overflow-hidden transition-all duration-500 hover:shadow-2xl ${
                         isDiscordConnected
-                            ? 'border-[#C84FFF]/20 hover:border-[#C84FFF]/40 hover:shadow-[#C84FFF]/10'
+                            ? 'border-[#ff2ea6]/20 hover:border-[#ff2ea6]/40 hover:shadow-[#ff2ea6]/10'
                             : 'border-white/[0.05] hover:border-indigo-500/30 hover:shadow-indigo-500/10'
                     }`}>
                         {isDiscordConnected && (
-                            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-[#C84FFF]/10 to-transparent rounded-bl-full" />
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-[#ff2ea6]/10 to-transparent rounded-bl-full" />
                         )}
                         {!isDiscordConnected && (
                             <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -225,7 +225,7 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
                                             </svg>
                                         </div>
                                         {isDiscordConnected && (
-                                            <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-[#C84FFF] border-2 border-gray-900 flex items-center justify-center shadow-lg">
+                                            <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-[#ff2ea6] border-2 border-gray-900 flex items-center justify-center shadow-lg">
                                                 <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
                                                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                                                 </svg>
@@ -236,10 +236,10 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
                                         <h3 className="text-2xl font-bold text-white mb-1">{t('discord')}</h3>
                                         <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border ${
                                             isDiscordConnected
-                                                ? 'bg-[#C84FFF]/10 border-[#C84FFF]/30'
+                                                ? 'bg-[#ff2ea6]/10 border-[#ff2ea6]/30'
                                                 : 'bg-gray-500/10 border-gray-500/20'
                                         }`}>
-                                            <div className={`w-2 h-2 rounded-full ${isDiscordConnected ? 'bg-[#C84FFF] animate-pulse' : 'bg-gray-500'}`} />
+                                            <div className={`w-2 h-2 rounded-full ${isDiscordConnected ? 'bg-[#ff2ea6] animate-pulse' : 'bg-gray-500'}`} />
                                             <span className={`text-xs font-semibold uppercase tracking-wider ${isDiscordConnected ? 'text-[#E879F9]' : 'text-gray-400'}`}>
                                                 {loading ? '...' : isDiscordConnected ? t('connected') : t('notConnected')}
                                             </span>
@@ -265,13 +265,13 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
 
                             {isDiscordConnected && connections.discord ? (
                                 <>
-                                    <div className="px-4 py-3 rounded-xl bg-[#C84FFF]/5 border border-[#C84FFF]/10 mb-6">
+                                    <div className="px-4 py-3 rounded-xl bg-[#ff2ea6]/5 border border-[#ff2ea6]/10 mb-6">
                                         <div className="flex items-center justify-between">
                                             <div>
                                                 <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">{t('connectedSince')}</p>
                                                 <p className="text-sm font-bold text-white">{formatDate(connections.discord.createdAt)}</p>
                                             </div>
-                                            <div className="w-10 h-10 rounded-full bg-[#C84FFF]/20 flex items-center justify-center">
+                                            <div className="w-10 h-10 rounded-full bg-[#ff2ea6]/20 flex items-center justify-center">
                                                 <CheckCircle2 className="w-5 h-5 text-[#E879F9]" />
                                             </div>
                                         </div>
@@ -325,11 +325,11 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
                 <div className="group relative" style={animStyle('0.2s')}>
                     <div className={`relative h-full bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-3xl p-8 border overflow-hidden transition-all duration-500 hover:shadow-2xl ${
                         isTwitchConnected
-                            ? 'border-[#C84FFF]/20 hover:border-[#C84FFF]/40 hover:shadow-[#C84FFF]/10'
+                            ? 'border-[#ff2ea6]/20 hover:border-[#ff2ea6]/40 hover:shadow-[#ff2ea6]/10'
                             : 'border-white/[0.05] hover:border-purple-500/30 hover:shadow-purple-500/10'
                     }`}>
                         {isTwitchConnected && (
-                            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-[#C84FFF]/10 to-transparent rounded-bl-full" />
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-[#ff2ea6]/10 to-transparent rounded-bl-full" />
                         )}
                         {!isTwitchConnected && (
                             <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -348,7 +348,7 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
                                             </svg>
                                         </div>
                                         {isTwitchConnected && (
-                                            <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-[#C84FFF] border-2 border-gray-900 flex items-center justify-center shadow-lg">
+                                            <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-[#ff2ea6] border-2 border-gray-900 flex items-center justify-center shadow-lg">
                                                 <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
                                                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                                                 </svg>
@@ -359,10 +359,10 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
                                         <h3 className="text-2xl font-bold text-white mb-1">{t('twitch')}</h3>
                                         <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border ${
                                             isTwitchConnected
-                                                ? 'bg-[#C84FFF]/10 border-[#C84FFF]/30'
+                                                ? 'bg-[#ff2ea6]/10 border-[#ff2ea6]/30'
                                                 : 'bg-gray-500/10 border-gray-500/20'
                                         }`}>
-                                            <div className={`w-2 h-2 rounded-full ${isTwitchConnected ? 'bg-[#C84FFF] animate-pulse' : 'bg-gray-500'}`} />
+                                            <div className={`w-2 h-2 rounded-full ${isTwitchConnected ? 'bg-[#ff2ea6] animate-pulse' : 'bg-gray-500'}`} />
                                             <span className={`text-xs font-semibold uppercase tracking-wider ${isTwitchConnected ? 'text-[#E879F9]' : 'text-gray-400'}`}>
                                                 {loading ? '...' : isTwitchConnected ? t('connected') : t('notConnected')}
                                             </span>
@@ -388,13 +388,13 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
 
                             {isTwitchConnected && connections.twitch ? (
                                 <>
-                                    <div className="px-4 py-3 rounded-xl bg-[#C84FFF]/5 border border-[#C84FFF]/10 mb-6">
+                                    <div className="px-4 py-3 rounded-xl bg-[#ff2ea6]/5 border border-[#ff2ea6]/10 mb-6">
                                         <div className="flex items-center justify-between">
                                             <div>
                                                 <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">{t('connectedSince')}</p>
                                                 <p className="text-sm font-bold text-white">{formatDate(connections.twitch.createdAt)}</p>
                                             </div>
-                                            <div className="w-10 h-10 rounded-full bg-[#C84FFF]/20 flex items-center justify-center">
+                                            <div className="w-10 h-10 rounded-full bg-[#ff2ea6]/20 flex items-center justify-center">
                                                 <CheckCircle2 className="w-5 h-5 text-[#E879F9]" />
                                             </div>
                                         </div>
@@ -447,13 +447,13 @@ export function ConnectionsTab({ mounted }: { mounted: boolean }) {
 
             {/* Privacy Notice */}
             <div
-                className="relative overflow-hidden rounded-2xl border border-[rgba(200,79,255,0.15)] bg-gradient-to-r from-[rgba(200,79,255,0.03)] to-[rgba(200,79,255,0.02)] p-6"
+                className="relative overflow-hidden rounded-2xl border border-[rgba(255,46,166,0.15)] bg-gradient-to-r from-[rgba(255,46,166,0.03)] to-[rgba(255,46,166,0.02)] p-6"
                 style={animStyle('0.3s')}
             >
-                <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-[rgba(200,79,255,0.08)] to-transparent rounded-bl-full" />
+                <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-[rgba(255,46,166,0.08)] to-transparent rounded-bl-full" />
                 <div className="relative flex items-start gap-4">
-                    <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-[rgba(200,79,255,0.1)] flex items-center justify-center">
-                        <Shield className="w-6 h-6 text-[#C84FFF]" />
+                    <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-[rgba(255,46,166,0.1)] flex items-center justify-center">
+                        <Shield className="w-6 h-6 text-[#ff2ea6]" />
                     </div>
                     <div>
                         <h4 className="text-lg font-bold text-white mb-2">{t('privacy')}</h4>

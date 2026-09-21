@@ -92,14 +92,14 @@ export default async function CollectionPage() {
       <div className="relative container py-12">
         {/* Header */}
         <div className="mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
-            <Layers className="w-4 h-4 text-[#C84FFF]" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
+            <Layers className="w-4 h-4 text-[#ff2ea6]" />
             <span className="text-gray-300">{t('badge')}</span>
           </div>
           <div className="flex flex-wrap items-center gap-2 mb-3">
             <h1 className="text-4xl md:text-5xl font-bold">
               <span className="text-white">{t('title').split(' ').slice(0, -1).join(' ')} </span>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C84FFF] to-[#9333EA]">{t('title').split(' ').slice(-1)[0]}</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ff2ea6] to-[#8b5cf6]">{t('title').split(' ').slice(-1)[0]}</span>
             </h1>
             <InfoTooltip infoKey="collection.overview" />
           </div>
@@ -111,7 +111,7 @@ export default async function CollectionPage() {
           <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 mb-8">
             <div className={`grid grid-cols-2 gap-4 ${(rarities['None'] || 0) > 0 ? 'md:grid-cols-5' : 'md:grid-cols-4'}`}>
               <div className="text-center">
-                <div className="text-2xl font-bold text-[#C84FFF]">{totalCards}</div>
+                <div className="text-2xl font-bold text-[#ff2ea6]">{totalCards}</div>
                 <div className="text-sm text-[#8888aa]">{t('totalCards')}</div>
               </div>
               <div className="text-center">
@@ -128,7 +128,7 @@ export default async function CollectionPage() {
               </div>
               {(rarities['None'] || 0) > 0 && (
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-[#C84FFF]">{rarities['None']}</div>
+                  <div className="text-2xl font-bold text-[#ff2ea6]">{rarities['None']}</div>
                   <div className="text-sm text-[#8888aa]">{t('sealedProducts')}</div>
                 </div>
               )}
@@ -138,14 +138,14 @@ export default async function CollectionPage() {
 
         {pullsWithCart.length === 0 ? (
           <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
-            <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[#C84FFF]/20 to-[#9333EA]/20">
-              <Package className="w-10 h-10 text-[#C84FFF]" />
+            <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[#ff2ea6]/20 to-[#8b5cf6]/20">
+              <Package className="w-10 h-10 text-[#ff2ea6]" />
             </div>
             <h2 className="text-2xl font-bold text-white mb-3">{t('empty')}</h2>
             <p className="text-[#8888aa] mb-6">{t('emptyDesc')}</p>
             <Link 
               href="/boxes" 
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl transition-all hover:scale-105 hover:shadow-[0_0_24px_rgba(200,79,255,0.3)]"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[#ff2ea6] text-white font-semibold rounded-xl transition-all hover:scale-105 hover:shadow-[0_0_24px_rgba(255,46,166,0.3)]"
             >
               <Sparkles className="w-5 h-5" />
               {t('browseBoxes')}

@@ -83,7 +83,7 @@ export function BoxesClient({ boxes: initialBoxes }: { boxes: Box[] }) {
               <CardTitle className="text-white">{box.name}</CardTitle>
               <span className={`px-2 py-1 rounded text-xs font-semibold ${
                 box.isActive 
-                  ? 'bg-[#C84FFF]/20 text-[#E879F9]' 
+                  ? 'bg-[#ff2ea6]/20 text-[#E879F9]' 
                   : 'bg-red-500/20 text-red-500'
               }`}>
                 {box.isActive ? t('active') : t('inactive')}

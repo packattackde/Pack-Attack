@@ -85,10 +85,10 @@ type Tab = 'orders' | 'stock' | 'boxes' | 'details';
 
 const statusConfig: Record<string, { color: string; bgColor: string; icon: React.ElementType; label: string }> = {
   PENDING: { color: 'text-yellow-400', bgColor: 'bg-yellow-400/10', icon: Clock, label: 'Pending' },
-  CONFIRMED: { color: 'text-[#C84FFF]', bgColor: 'bg-[rgba(200,79,255,0.1)]', icon: Check, label: 'Confirmed' },
+  CONFIRMED: { color: 'text-[#ff2ea6]', bgColor: 'bg-[rgba(255,46,166,0.1)]', icon: Check, label: 'Confirmed' },
   PROCESSING: { color: 'text-purple-400', bgColor: 'bg-purple-400/10', icon: Package, label: 'Processing' },
   SHIPPED: { color: 'text-indigo-400', bgColor: 'bg-indigo-400/10', icon: Truck, label: 'Shipped' },
-  DELIVERED: { color: 'text-[#E879F9]', bgColor: 'bg-[#C84FFF]/10', icon: CheckCircle, label: 'Delivered' },
+  DELIVERED: { color: 'text-[#E879F9]', bgColor: 'bg-[#ff2ea6]/10', icon: CheckCircle, label: 'Delivered' },
   CANCELLED: { color: 'text-red-400', bgColor: 'bg-red-400/10', icon: XCircle, label: 'Cancelled' },
 };
 
@@ -188,7 +188,7 @@ export function ShopDetailClient({
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all ${
                 activeTab === tab.id
                   ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/25'
-                  : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white'
+                  : 'bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white'
               }`}
             >
               <Icon className="w-4 h-4" />
@@ -216,7 +216,7 @@ export function ShopDetailClient({
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                   filterStatus === status
                     ? 'bg-orange-500/20 text-orange-400 ring-1 ring-orange-500/30'
-                    : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white'
+                    : 'bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white'
                 }`}
               >
                 {status === 'ALL' ? 'All' : statusConfig[status]?.label || status}
@@ -271,7 +271,7 @@ export function ShopDetailClient({
                         <div className="grid md:grid-cols-2 gap-4">
                           <div className="space-y-2">
                             <h4 className="text-sm font-medium text-[#8888aa] flex items-center gap-2"><MapPin className="w-3.5 h-3.5" /> Shipping</h4>
-                            <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-lg p-3 text-sm space-y-1">
+                            <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-lg p-3 text-sm space-y-1">
                               <p className="text-white font-medium">{order.shippingName}</p>
                               <p className="text-[#8888aa]">{order.shippingAddress}</p>
                               <p className="text-[#8888aa]">{order.shippingZip} {order.shippingCity}</p>
@@ -281,7 +281,7 @@ export function ShopDetailClient({
                           </div>
                           <div className="space-y-2">
                             <h4 className="text-sm font-medium text-[#8888aa] flex items-center gap-2"><Mail className="w-3.5 h-3.5" /> Customer</h4>
-                            <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-lg p-3 text-sm space-y-1">
+                            <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-lg p-3 text-sm space-y-1">
                               <p className="text-white">{order.user.name || 'Unknown'}</p>
                               <p className="text-[#8888aa]">{order.user.email}</p>
                               <p className="text-[#8888aa]">{order.shippingEmail}</p>
@@ -297,26 +297,26 @@ export function ShopDetailClient({
                         <div className="space-y-2">
                           <h4 className="text-sm font-medium text-[#8888aa] flex items-center gap-2"><Truck className="w-3.5 h-3.5" /> Tracking</h4>
                           {editingTracking === order.id ? (
-                            <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-lg p-3 space-y-2">
+                            <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-lg p-3 space-y-2">
                               <input
                                 value={trackingData.number}
                                 onChange={(e) => setTrackingData({ ...trackingData, number: e.target.value })}
                                 placeholder="Tracking number"
-                                className="w-full px-3 py-2 rounded-lg bg-[#12123a] text-white text-sm border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
+                                className="w-full px-3 py-2 rounded-lg bg-[#12123a] text-white text-sm border border-[rgba(255,255,255,0.06)] focus:border-[rgba(255,46,166,0.3)] focus:outline-none"
                               />
                               <input
                                 value={trackingData.url}
                                 onChange={(e) => setTrackingData({ ...trackingData, url: e.target.value })}
                                 placeholder="Tracking URL"
-                                className="w-full px-3 py-2 rounded-lg bg-[#12123a] text-white text-sm border border-[rgba(255,255,255,0.06)] focus:border-[rgba(200,79,255,0.3)] focus:outline-none"
+                                className="w-full px-3 py-2 rounded-lg bg-[#12123a] text-white text-sm border border-[rgba(255,255,255,0.06)] focus:border-[rgba(255,46,166,0.3)] focus:outline-none"
                               />
                               <div className="flex gap-2">
                                 <button onClick={() => handleTrackingSave(order.id)} className="px-3 py-1.5 rounded-lg bg-orange-600 text-white text-xs font-medium hover:bg-orange-500">Save</button>
-                                <button onClick={() => setEditingTracking(null)} className="px-3 py-1.5 rounded-lg bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] text-xs hover:text-white">Cancel</button>
+                                <button onClick={() => setEditingTracking(null)} className="px-3 py-1.5 rounded-lg bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] text-xs hover:text-white">Cancel</button>
                               </div>
                             </div>
                           ) : (
-                            <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-lg p-3 text-sm flex items-center justify-between">
+                            <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-lg p-3 text-sm flex items-center justify-between">
                               <div>
                                 {order.trackingNumber ? (
                                   <div className="flex items-center gap-2">
@@ -333,7 +333,7 @@ export function ShopDetailClient({
                               </div>
                               <button
                                 onClick={() => { setEditingTracking(order.id); setTrackingData({ number: order.trackingNumber || '', url: order.trackingUrl || '' }); }}
-                                className="px-3 py-1 rounded-lg bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-xs text-orange-400 hover:text-white"
+                                className="px-3 py-1 rounded-lg bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md text-xs text-orange-400 hover:text-white"
                               >
                                 Edit
                               </button>
@@ -355,7 +355,7 @@ export function ShopDetailClient({
                               <button
                                 onClick={() => handleStatusUpdate(order.id, 'CANCELLED')}
                                 disabled={updatingOrder === order.id}
-                                className="px-4 py-2 rounded-lg bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-red-400 text-sm font-medium hover:bg-red-500/20"
+                                className="px-4 py-2 rounded-lg bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md text-red-400 text-sm font-medium hover:bg-red-500/20"
                               >
                                 Cancel
                               </button>
@@ -424,7 +424,7 @@ export function ShopDetailClient({
                         </td>
                         <td className="px-4 py-3 text-center">
                           <span className={`px-2 py-0.5 rounded-lg text-xs font-medium ${
-                            product.isActive ? 'bg-[#C84FFF]/20 text-[#E879F9]' : 'bg-gray-500/20 text-[#8888aa]'
+                            product.isActive ? 'bg-[#ff2ea6]/20 text-[#E879F9]' : 'bg-gray-500/20 text-[#8888aa]'
                           }`}>
                             {product.isActive ? 'Active' : 'Hidden'}
                           </span>
@@ -461,7 +461,7 @@ export function ShopDetailClient({
                     )}
                     <div className="absolute top-2 right-2">
                       <span className={`px-2 py-0.5 rounded-lg text-xs font-medium ${
-                        box.isActive ? 'bg-[#C84FFF]/80 text-white' : 'bg-gray-700/80 text-[#f0f0f5]'
+                        box.isActive ? 'bg-[#ff2ea6]/80 text-white' : 'bg-gray-700/80 text-[#f0f0f5]'
                       }`}>
                         {box.isActive ? 'Active' : 'Inactive'}
                       </span>
@@ -505,7 +505,7 @@ export function ShopDetailClient({
               <div>
                 <label className="text-xs text-gray-500 block mb-1">Status</label>
                 <span className={`px-2 py-1 rounded-lg text-xs font-medium ${
-                  shop.isActive ? 'bg-[#C84FFF]/20 text-[#E879F9]' : 'bg-red-500/20 text-red-400'
+                  shop.isActive ? 'bg-[#ff2ea6]/20 text-[#E879F9]' : 'bg-red-500/20 text-red-400'
                 }`}>
                   {shop.isActive ? 'Active' : 'Inactive'}
                 </span>
@@ -519,7 +519,7 @@ export function ShopDetailClient({
 
           <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 space-y-4">
             <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-              <User className="w-5 h-5 text-[#C84FFF]" /> Owner Information
+              <User className="w-5 h-5 text-[#ff2ea6]" /> Owner Information
             </h3>
             <div className="space-y-3">
               <div>

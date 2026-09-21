@@ -111,7 +111,7 @@ const statusConfig: Record<string, { icon: typeof Clock; label: string; color: s
 
 const priorityConfig: Record<string, { label: string; color: string; dot: string }> = {
   LOW: { label: 'Low', color: 'gray', dot: 'bg-gray-400' },
-  MEDIUM: { label: 'Medium', color: 'blue', dot: 'bg-[#C84FFF]' },
+  MEDIUM: { label: 'Medium', color: 'blue', dot: 'bg-[#ff2ea6]' },
   HIGH: { label: 'High', color: 'amber', dot: 'bg-amber-400' },
   URGENT: { label: 'Urgent', color: 'red', dot: 'bg-red-400 animate-pulse' },
 };
@@ -430,7 +430,7 @@ export default function AdminFeedbackPage() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
           <div>
             <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C84FFF] to-[#E879F9]">Feedback</span> Management
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ff2ea6] to-[#E879F9]">Feedback</span> Management
             </h1>
             <p className="text-gray-500">{total} {activeTab === 'archive' ? 'archived' : 'active'} ticket{total !== 1 ? 's' : ''}</p>
           </div>
@@ -446,7 +446,7 @@ export default function AdminFeedbackPage() {
             onClick={() => switchTab('active')}
             className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               activeTab === 'active'
-                ? 'bg-[#C84FFF]/15 text-[#E879F9] border border-[#C84FFF]/30'
+                ? 'bg-[#ff2ea6]/15 text-[#E879F9] border border-[#ff2ea6]/30'
                 : 'bg-white/[0.04] text-[#8888aa] border border-white/[0.08] hover:bg-white/[0.08] hover:text-[#f0f0f5]'
             }`}
           >
@@ -454,7 +454,7 @@ export default function AdminFeedbackPage() {
             Active
             {activeCount > 0 && (
               <span className={`px-1.5 py-0.5 rounded-full text-[11px] font-bold ${
-                activeTab === 'active' ? 'bg-[#C84FFF]/25 text-[#f0abfc]' : 'bg-white/[0.08] text-gray-500'
+                activeTab === 'active' ? 'bg-[#ff2ea6]/25 text-[#f0abfc]' : 'bg-white/[0.08] text-gray-500'
               }`}>{activeCount}</span>
             )}
           </button>
@@ -485,11 +485,11 @@ export default function AdminFeedbackPage() {
 
           <div className="relative flex-1 min-w-[200px] max-w-sm">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500 pointer-events-none" />
-            <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search feedback..." className="w-full h-9 pl-10 pr-3 rounded-lg bg-white/4 border border-white/8 text-sm text-[#f0f0f5] placeholder-gray-600 focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.2)] outline-none transition-all" />
+            <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search feedback..." className="w-full h-9 pl-10 pr-3 rounded-lg bg-white/4 border border-white/8 text-sm text-[#f0f0f5] placeholder-gray-600 focus:border-[rgba(255,46,166,0.3)] focus:ring-1 focus:ring-[rgba(255,46,166,0.2)] outline-none transition-all" />
           </div>
 
           {activeTab === 'active' && (
-            <select value={filterStatus} onChange={(e) => { setFilterStatus(e.target.value); setPage(1); }} className="h-9 px-3 rounded-lg bg-white/4 border border-white/8 text-sm text-[#f0f0f5] focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.2)] outline-none transition-all [&>option]:bg-[#0B0B2B] [&>option]:text-gray-100">
+            <select value={filterStatus} onChange={(e) => { setFilterStatus(e.target.value); setPage(1); }} className="h-9 px-3 rounded-lg bg-white/4 border border-white/8 text-sm text-[#f0f0f5] focus:border-[rgba(255,46,166,0.3)] focus:ring-1 focus:ring-[rgba(255,46,166,0.2)] outline-none transition-all [&>option]:bg-[#0c0a1c] [&>option]:text-gray-100">
               <option value="">All Statuses</option>
               <option value="OPEN">Open</option>
               <option value="CLAIMED">Claimed</option>
@@ -498,7 +498,7 @@ export default function AdminFeedbackPage() {
             </select>
           )}
 
-          <select value={filterCategory} onChange={(e) => { setFilterCategory(e.target.value); setPage(1); }} className="h-9 px-3 rounded-lg bg-white/4 border border-white/8 text-sm text-[#f0f0f5] focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.2)] outline-none transition-all [&>option]:bg-[#0B0B2B] [&>option]:text-gray-100">
+          <select value={filterCategory} onChange={(e) => { setFilterCategory(e.target.value); setPage(1); }} className="h-9 px-3 rounded-lg bg-white/4 border border-white/8 text-sm text-[#f0f0f5] focus:border-[rgba(255,46,166,0.3)] focus:ring-1 focus:ring-[rgba(255,46,166,0.2)] outline-none transition-all [&>option]:bg-[#0c0a1c] [&>option]:text-gray-100">
             <option value="">All Categories</option>
             <option value="BUG_REPORT">Bug Reports</option>
             <option value="FEATURE_REQUEST">Feature Requests</option>
@@ -508,7 +508,7 @@ export default function AdminFeedbackPage() {
             <option value="SHOP_ISSUE">Shop Issues</option>
           </select>
 
-          <select value={filterPriority} onChange={(e) => { setFilterPriority(e.target.value); setPage(1); }} className="h-9 px-3 rounded-lg bg-white/4 border border-white/8 text-sm text-[#f0f0f5] focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.2)] outline-none transition-all [&>option]:bg-[#0B0B2B] [&>option]:text-gray-100">
+          <select value={filterPriority} onChange={(e) => { setFilterPriority(e.target.value); setPage(1); }} className="h-9 px-3 rounded-lg bg-white/4 border border-white/8 text-sm text-[#f0f0f5] focus:border-[rgba(255,46,166,0.3)] focus:ring-1 focus:ring-[rgba(255,46,166,0.2)] outline-none transition-all [&>option]:bg-[#0c0a1c] [&>option]:text-gray-100">
             <option value="">All Priorities</option>
             <option value="LOW">Low</option>
             <option value="MEDIUM">Medium</option>
@@ -524,7 +524,7 @@ export default function AdminFeedbackPage() {
         {/* List */}
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <div className="w-6 h-6 border-2 border-white/20 border-t-[#C84FFF] rounded-full animate-spin" />
+            <div className="w-6 h-6 border-2 border-white/20 border-t-[#ff2ea6] rounded-full animate-spin" />
           </div>
         ) : feedbacks.length === 0 ? (
           <div className="text-center py-20">
@@ -535,7 +535,7 @@ export default function AdminFeedbackPage() {
           <div className="space-y-3">
             {/* Select all */}
             <div className="flex items-center gap-3 px-4 py-2">
-              <button type="button" onClick={toggleSelectAll} className={`w-4 h-4 rounded border transition-all flex items-center justify-center ${selectedIds.size === feedbacks.length && feedbacks.length > 0 ? 'bg-[#C84FFF] border-[#C84FFF]' : 'border-white/20 hover:border-white/40'}`}>
+              <button type="button" onClick={toggleSelectAll} className={`w-4 h-4 rounded border transition-all flex items-center justify-center ${selectedIds.size === feedbacks.length && feedbacks.length > 0 ? 'bg-[#ff2ea6] border-[#ff2ea6]' : 'border-white/20 hover:border-white/40'}`}>
                 {selectedIds.size === feedbacks.length && feedbacks.length > 0 && <Check className="w-3 h-3 text-white" />}
               </button>
               <span className="text-xs text-gray-500">{selectedIds.size > 0 ? `${selectedIds.size} selected` : 'Select all'}</span>
@@ -555,13 +555,13 @@ export default function AdminFeedbackPage() {
                   key={fb.id}
                   className={`rounded-xl border transition-all duration-200 ${
                     isExpanded ? 'border-white/[0.12] bg-white/[0.04]'
-                    : isSelected ? 'border-[#C84FFF]/30 bg-[#C84FFF]/[0.03]'
+                    : isSelected ? 'border-[#ff2ea6]/30 bg-[#ff2ea6]/[0.03]'
                     : 'border-white/[0.06] bg-[#1e1e55] hover:border-white/[0.1]'
                   }`}
                 >
                   {/* ── Row header ── */}
                   <div className="flex items-center gap-3 p-4">
-                    <button type="button" onClick={(e) => { e.stopPropagation(); toggleSelect(fb.id); }} className={`shrink-0 w-4 h-4 rounded border transition-all flex items-center justify-center ${isSelected ? 'bg-[#C84FFF] border-[#C84FFF]' : 'border-white/20 hover:border-white/40'}`}>
+                    <button type="button" onClick={(e) => { e.stopPropagation(); toggleSelect(fb.id); }} className={`shrink-0 w-4 h-4 rounded border transition-all flex items-center justify-center ${isSelected ? 'bg-[#ff2ea6] border-[#ff2ea6]' : 'border-white/20 hover:border-white/40'}`}>
                       {isSelected && <Check className="w-3 h-3 text-white" />}
                     </button>
 
@@ -657,7 +657,7 @@ export default function AdminFeedbackPage() {
                                   return (
                                     <button key={key} onClick={() => updateStatus(fb.id, key)} disabled={isCurrent || updatingId === fb.id}
                                       className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                                        isCurrent ? `bg-${conf.color}-500/20 text-${conf.color}-400 border border-${conf.color}-500/30` : 'bg-[#1a1a4a] text-[#8888aa] border border-white/[0.06] hover:bg-white/[0.06] hover:text-white'
+                                        isCurrent ? `bg-${conf.color}-500/20 text-${conf.color}-400 border border-${conf.color}-500/30` : 'bg-[#100d22] text-[#8888aa] border border-white/[0.06] hover:bg-white/[0.06] hover:text-white'
                                       } disabled:opacity-50`}>
                                       <Icon className="w-3 h-3" />{conf.label}
                                     </button>
@@ -703,7 +703,7 @@ export default function AdminFeedbackPage() {
                                 {/* Assign row */}
                                 <div className="flex items-center gap-3">
                                   <span className="text-xs text-gray-500 w-16 shrink-0">Assigned:</span>
-                                  <select value={fb.assignedToId || ''} onChange={(e) => assignAdmin(fb.id, e.target.value || null)} className="h-8 px-2 rounded-lg bg-white/4 border border-white/8 text-xs text-[#f0f0f5] focus:border-[#C84FFF]/40 outline-none transition-all [&>option]:bg-[#0B0B2B] [&>option]:text-gray-100">
+                                  <select value={fb.assignedToId || ''} onChange={(e) => assignAdmin(fb.id, e.target.value || null)} className="h-8 px-2 rounded-lg bg-white/4 border border-white/8 text-xs text-[#f0f0f5] focus:border-[#ff2ea6]/40 outline-none transition-all [&>option]:bg-[#0c0a1c] [&>option]:text-gray-100">
                                     <option value="">Unassigned</option>
                                     {adminUsers.map((admin) => <option key={admin.id} value={admin.id}>{admin.name || admin.email}</option>)}
                                   </select>
@@ -720,13 +720,13 @@ export default function AdminFeedbackPage() {
                               <div className="flex flex-wrap items-center gap-3">
                                 <div className="flex items-center gap-2">
                                   <span className="text-xs text-gray-500">Category:</span>
-                                  <select value={fb.category} onChange={(e) => reassignCategory(fb.id, e.target.value)} className="h-8 px-2 rounded-lg bg-white/4 border border-white/8 text-xs text-[#f0f0f5] focus:border-[#C84FFF]/40 outline-none transition-all [&>option]:bg-[#0B0B2B] [&>option]:text-gray-100">
+                                  <select value={fb.category} onChange={(e) => reassignCategory(fb.id, e.target.value)} className="h-8 px-2 rounded-lg bg-white/4 border border-white/8 text-xs text-[#f0f0f5] focus:border-[#ff2ea6]/40 outline-none transition-all [&>option]:bg-[#0c0a1c] [&>option]:text-gray-100">
                                     {Object.entries(categoryConfig).map(([key, conf]) => <option key={key} value={key}>{conf.label}</option>)}
                                   </select>
                                 </div>
                                 <div className="flex items-center gap-2">
                                   <span className="text-xs text-gray-500">Priority:</span>
-                                  <select value={fb.priority} onChange={(e) => updatePriority(fb.id, e.target.value)} className="h-8 px-2 rounded-lg bg-white/4 border border-white/8 text-xs text-[#f0f0f5] focus:border-[#C84FFF]/40 outline-none transition-all [&>option]:bg-[#0B0B2B] [&>option]:text-gray-100">
+                                  <select value={fb.priority} onChange={(e) => updatePriority(fb.id, e.target.value)} className="h-8 px-2 rounded-lg bg-white/4 border border-white/8 text-xs text-[#f0f0f5] focus:border-[#ff2ea6]/40 outline-none transition-all [&>option]:bg-[#0c0a1c] [&>option]:text-gray-100">
                                     {Object.entries(priorityConfig).map(([key, conf]) => <option key={key} value={key}>{conf.label}</option>)}
                                   </select>
                                 </div>
@@ -768,7 +768,7 @@ export default function AdminFeedbackPage() {
                               <textarea
                                 value={editingNotes[fb.id] ?? fb.adminNotes ?? ''}
                                 onChange={(e) => handleNotesChange(fb.id, e.target.value)}
-                                className="w-full px-3 py-2 rounded-lg bg-[#1a1a4a] border border-white/[0.06] text-sm text-[#f0f0f5] placeholder-gray-600 focus:border-[#C84FFF]/30 focus:ring-1 focus:ring-[#C84FFF]/15 outline-none transition-all resize-y min-h-[60px]"
+                                className="w-full px-3 py-2 rounded-lg bg-[#100d22] border border-white/[0.06] text-sm text-[#f0f0f5] placeholder-gray-600 focus:border-[#ff2ea6]/30 focus:ring-1 focus:ring-[#ff2ea6]/15 outline-none transition-all resize-y min-h-[60px]"
                                 placeholder="Internal notes (auto-saves)..."
                                 rows={2}
                               />
@@ -786,12 +786,12 @@ export default function AdminFeedbackPage() {
 
                         {loadingMessages === fb.id ? (
                           <div className="flex items-center justify-center py-6">
-                            <div className="w-4 h-4 border-2 border-white/20 border-t-[#C84FFF] rounded-full animate-spin" />
+                            <div className="w-4 h-4 border-2 border-white/20 border-t-[#ff2ea6] rounded-full animate-spin" />
                           </div>
                         ) : fb.messages && fb.messages.length > 0 ? (
                           <div className="space-y-3 mb-4 max-h-80 overflow-y-auto pr-1">
                             {fb.messages.map((msg) => (
-                              <div key={msg.id} className={`rounded-lg p-3 text-sm ${msg.isAdmin ? 'bg-indigo-500/[0.07] border border-indigo-500/15 ml-4' : 'bg-[#1a1a4a] border border-white/[0.06] mr-4'}`}>
+                              <div key={msg.id} className={`rounded-lg p-3 text-sm ${msg.isAdmin ? 'bg-indigo-500/[0.07] border border-indigo-500/15 ml-4' : 'bg-[#100d22] border border-white/[0.06] mr-4'}`}>
                                 <div className="flex items-center gap-2 mb-1.5">
                                   <span className={`text-xs font-semibold ${msg.isAdmin ? 'text-indigo-400' : 'text-[#f0f0f5]'}`}>
                                     {msg.isAdmin && <Shield className="w-3 h-3 inline mr-1" />}
@@ -813,10 +813,10 @@ export default function AdminFeedbackPage() {
                               onKeyDown={(e) => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); sendMessage(fb.id); } }}
                               placeholder="Type a message to the user..."
                               rows={2}
-                              className="flex-1 min-h-[40px] max-h-[200px] px-3 py-2.5 rounded-lg bg-white/4 border border-white/8 text-sm text-white placeholder-gray-600 focus:border-[#C84FFF]/40 focus:ring-1 focus:ring-[#C84FFF]/20 outline-none transition-all resize-none" maxLength={2000} />
+                              className="flex-1 min-h-[40px] max-h-[200px] px-3 py-2.5 rounded-lg bg-white/4 border border-white/8 text-sm text-white placeholder-gray-600 focus:border-[#ff2ea6]/40 focus:ring-1 focus:ring-[#ff2ea6]/20 outline-none transition-all resize-none" maxLength={2000} />
                             <button onClick={() => sendMessage(fb.id)} disabled={!newMessage.trim() || sendingMessage}
-                              className="flex items-center justify-center w-10 h-10 shrink-0 rounded-lg bg-[#C84FFF]/15 text-[#E879F9] border border-[#C84FFF]/20 hover:bg-[#C84FFF]/25 transition-all disabled:opacity-40 disabled:cursor-not-allowed">
-                              {sendingMessage ? <div className="w-4 h-4 border-2 border-[#C84FFF]/30 border-t-[#C84FFF] rounded-full animate-spin" /> : <Send className="w-4 h-4" />}
+                              className="flex items-center justify-center w-10 h-10 shrink-0 rounded-lg bg-[#ff2ea6]/15 text-[#E879F9] border border-[#ff2ea6]/20 hover:bg-[#ff2ea6]/25 transition-all disabled:opacity-40 disabled:cursor-not-allowed">
+                              {sendingMessage ? <div className="w-4 h-4 border-2 border-[#ff2ea6]/30 border-t-[#ff2ea6] rounded-full animate-spin" /> : <Send className="w-4 h-4" />}
                             </button>
                           </div>
                           <span className="text-[10px] text-gray-600 pl-1">Ctrl + Enter to send</span>
@@ -837,7 +837,7 @@ export default function AdminFeedbackPage() {
                           <div className="mt-3">
                             {loadingActivity === fb.id ? (
                               <div className="flex items-center justify-center py-4">
-                                <div className="w-4 h-4 border-2 border-white/20 border-t-[#C84FFF] rounded-full animate-spin" />
+                                <div className="w-4 h-4 border-2 border-white/20 border-t-[#ff2ea6] rounded-full animate-spin" />
                               </div>
                             ) : fb.activities && fb.activities.length > 0 ? (
                               <div className="space-y-0 ml-2 border-l border-white/[0.06]">
@@ -871,7 +871,7 @@ export default function AdminFeedbackPage() {
             <span className="text-sm font-medium text-white">{selectedIds.size} selected</span>
             <div className="w-px h-6 bg-white/10" />
 
-            <select value={bulkAction} onChange={(e) => { setBulkAction(e.target.value); setBulkValue(''); }} className="h-8 px-2 rounded-lg bg-white/[0.06] border border-white/10 text-xs text-[#f0f0f5] outline-none [&>option]:bg-[#0B0B2B] [&>option]:text-gray-100">
+            <select value={bulkAction} onChange={(e) => { setBulkAction(e.target.value); setBulkValue(''); }} className="h-8 px-2 rounded-lg bg-white/[0.06] border border-white/10 text-xs text-[#f0f0f5] outline-none [&>option]:bg-[#0c0a1c] [&>option]:text-gray-100">
               <option value="">Choose action...</option>
               <option value="update_status">Change Status</option>
               <option value="reassign_category">Change Category</option>
@@ -880,33 +880,33 @@ export default function AdminFeedbackPage() {
             </select>
 
             {bulkAction === 'update_status' && (
-              <select value={bulkValue} onChange={(e) => setBulkValue(e.target.value)} className="h-8 px-2 rounded-lg bg-white/[0.06] border border-white/10 text-xs text-[#f0f0f5] outline-none [&>option]:bg-[#0B0B2B] [&>option]:text-gray-100">
+              <select value={bulkValue} onChange={(e) => setBulkValue(e.target.value)} className="h-8 px-2 rounded-lg bg-white/[0.06] border border-white/10 text-xs text-[#f0f0f5] outline-none [&>option]:bg-[#0c0a1c] [&>option]:text-gray-100">
                 <option value="">Select status...</option>
                 {Object.entries(statusConfig).map(([key, conf]) => <option key={key} value={key}>{conf.label}</option>)}
               </select>
             )}
             {bulkAction === 'reassign_category' && (
-              <select value={bulkValue} onChange={(e) => setBulkValue(e.target.value)} className="h-8 px-2 rounded-lg bg-white/[0.06] border border-white/10 text-xs text-[#f0f0f5] outline-none [&>option]:bg-[#0B0B2B] [&>option]:text-gray-100">
+              <select value={bulkValue} onChange={(e) => setBulkValue(e.target.value)} className="h-8 px-2 rounded-lg bg-white/[0.06] border border-white/10 text-xs text-[#f0f0f5] outline-none [&>option]:bg-[#0c0a1c] [&>option]:text-gray-100">
                 <option value="">Select category...</option>
                 {Object.entries(categoryConfig).map(([key, conf]) => <option key={key} value={key}>{conf.label}</option>)}
               </select>
             )}
             {bulkAction === 'update_priority' && (
-              <select value={bulkValue} onChange={(e) => setBulkValue(e.target.value)} className="h-8 px-2 rounded-lg bg-white/[0.06] border border-white/10 text-xs text-[#f0f0f5] outline-none [&>option]:bg-[#0B0B2B] [&>option]:text-gray-100">
+              <select value={bulkValue} onChange={(e) => setBulkValue(e.target.value)} className="h-8 px-2 rounded-lg bg-white/[0.06] border border-white/10 text-xs text-[#f0f0f5] outline-none [&>option]:bg-[#0c0a1c] [&>option]:text-gray-100">
                 <option value="">Select priority...</option>
                 {Object.entries(priorityConfig).map(([key, conf]) => <option key={key} value={key}>{conf.label}</option>)}
               </select>
             )}
             {bulkAction === 'assign' && (
-              <select value={bulkValue} onChange={(e) => setBulkValue(e.target.value)} className="h-8 px-2 rounded-lg bg-white/[0.06] border border-white/10 text-xs text-[#f0f0f5] outline-none [&>option]:bg-[#0B0B2B] [&>option]:text-gray-100">
+              <select value={bulkValue} onChange={(e) => setBulkValue(e.target.value)} className="h-8 px-2 rounded-lg bg-white/[0.06] border border-white/10 text-xs text-[#f0f0f5] outline-none [&>option]:bg-[#0c0a1c] [&>option]:text-gray-100">
                 <option value="">Select admin...</option>
                 {adminUsers.map((admin) => <option key={admin.id} value={admin.id}>{admin.name || admin.email}</option>)}
               </select>
             )}
 
             <button onClick={executeBulkAction} disabled={!bulkAction || !bulkValue || bulkProcessing}
-              className="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg bg-[#C84FFF]/20 text-[#E879F9] border border-[#C84FFF]/30 text-xs font-medium hover:bg-[#C84FFF]/30 transition-all disabled:opacity-40 disabled:cursor-not-allowed">
-              {bulkProcessing ? <div className="w-3 h-3 border-2 border-[#C84FFF]/30 border-t-[#C84FFF] rounded-full animate-spin" /> : <Check className="w-3 h-3" />}
+              className="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg bg-[#ff2ea6]/20 text-[#E879F9] border border-[#ff2ea6]/30 text-xs font-medium hover:bg-[#ff2ea6]/30 transition-all disabled:opacity-40 disabled:cursor-not-allowed">
+              {bulkProcessing ? <div className="w-3 h-3 border-2 border-[#ff2ea6]/30 border-t-[#ff2ea6] rounded-full animate-spin" /> : <Check className="w-3 h-3" />}
               Apply
             </button>
 

@@ -216,7 +216,7 @@ export default function FeedbackHistoryPage() {
   if (sessionStatus === 'loading') {
     return (
       <div className="min-h-screen font-display flex items-center justify-center">
-        <div className="w-6 h-6 border-2 border-white/20 border-t-[#C84FFF] rounded-full animate-spin" />
+        <div className="w-6 h-6 border-2 border-white/20 border-t-[#ff2ea6] rounded-full animate-spin" />
       </div>
     );
   }
@@ -232,7 +232,7 @@ export default function FeedbackHistoryPage() {
           <p className="text-gray-500 mb-6">{t('history.signInRequiredDesc')}</p>
           <Link
             href="/login"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r bg-[#C84FFF] text-white font-semibold text-sm rounded-xl transition-all hover:shadow-lg hover:shadow-[0_0_24px_rgba(200,79,255,0.3)]"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r bg-[#ff2ea6] text-white font-semibold text-sm rounded-xl transition-all hover:shadow-lg hover:shadow-[0_0_24px_rgba(255,46,166,0.3)]"
           >
             {t('history.signIn')}
           </Link>
@@ -283,7 +283,7 @@ export default function FeedbackHistoryPage() {
             {/* New Feedback */}
             <Link
               href="/feedback"
-              className="inline-flex items-center gap-1.5 h-9 px-3 rounded-lg bg-[rgba(200,79,255,0.1)] text-[#C84FFF] border border-[rgba(200,79,255,0.3)]/20 hover:bg-[rgba(200,79,255,0.15)] text-sm font-medium transition-all"
+              className="inline-flex items-center gap-1.5 h-9 px-3 rounded-lg bg-[rgba(255,46,166,0.1)] text-[#ff2ea6] border border-[rgba(255,46,166,0.3)]/20 hover:bg-[rgba(255,46,166,0.15)] text-sm font-medium transition-all"
             >
               <Plus className="w-3.5 h-3.5" />
               {t('history.new')}
@@ -294,7 +294,7 @@ export default function FeedbackHistoryPage() {
         {/* Feedback List */}
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <div className="w-6 h-6 border-2 border-white/20 border-t-[#C84FFF] rounded-full animate-spin" />
+            <div className="w-6 h-6 border-2 border-white/20 border-t-[#ff2ea6] rounded-full animate-spin" />
           </div>
         ) : feedbacks.length === 0 ? (
           <div className="text-center py-20">
@@ -303,7 +303,7 @@ export default function FeedbackHistoryPage() {
             <p className="text-gray-600 text-sm mb-6">{t('history.noFeedbackDesc')}</p>
             <Link
               href="/feedback"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r bg-[#C84FFF] text-white font-semibold text-sm rounded-xl transition-all hover:shadow-lg hover:shadow-[0_0_24px_rgba(200,79,255,0.3)]"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r bg-[#ff2ea6] text-white font-semibold text-sm rounded-xl transition-all hover:shadow-lg hover:shadow-[0_0_24px_rgba(255,46,166,0.3)]"
             >
               <Plus className="w-4 h-4" />
               {t('submitFeedback')}
@@ -392,7 +392,7 @@ export default function FeedbackHistoryPage() {
                               <button
                                 type="button"
                                 onClick={() => { setEditingId(fb.id); setEditMessage(fb.message); }}
-                                className="inline-flex items-center gap-1 text-[10px] text-gray-500 hover:text-[#C84FFF] transition-colors"
+                                className="inline-flex items-center gap-1 text-[10px] text-gray-500 hover:text-[#ff2ea6] transition-colors"
                               >
                                 <Pencil className="w-3 h-3" />
                                 {t('history.edit')}
@@ -412,7 +412,7 @@ export default function FeedbackHistoryPage() {
                               value={editMessage}
                               onChange={(e) => setEditMessage(e.target.value.slice(0, 5000))}
                               rows={5}
-                              className="w-full px-3 py-2 rounded-lg bg-white/4 border border-[rgba(200,79,255,0.3)]/30 text-sm text-white placeholder-gray-600 focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.2)] outline-none transition-all resize-y min-h-[100px]"
+                              className="w-full px-3 py-2 rounded-lg bg-white/4 border border-[rgba(255,46,166,0.3)]/30 text-sm text-white placeholder-gray-600 focus:border-[rgba(255,46,166,0.3)] focus:ring-1 focus:ring-[rgba(255,46,166,0.2)] outline-none transition-all resize-y min-h-[100px]"
                             />
                             <div className="flex items-center justify-end gap-2 mt-2">
                               <button
@@ -427,10 +427,10 @@ export default function FeedbackHistoryPage() {
                                 type="button"
                                 onClick={() => saveEdit(fb.id)}
                                 disabled={!editMessage.trim() || savingEdit || editMessage.trim() === fb.message}
-                                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium text-[#C84FFF] bg-[rgba(200,79,255,0.1)] border border-[rgba(200,79,255,0.3)]/20 hover:bg-[rgba(200,79,255,0.15)] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium text-[#ff2ea6] bg-[rgba(255,46,166,0.1)] border border-[rgba(255,46,166,0.3)]/20 hover:bg-[rgba(255,46,166,0.15)] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                               >
                                 {savingEdit ? (
-                                  <div className="w-3 h-3 border-2 border-[#C84FFF]/30 border-t-[#C84FFF] rounded-full animate-spin" />
+                                  <div className="w-3 h-3 border-2 border-[#ff2ea6]/30 border-t-[#ff2ea6] rounded-full animate-spin" />
                                 ) : (
                                   <Save className="w-3 h-3" />
                                 )}
@@ -457,7 +457,7 @@ export default function FeedbackHistoryPage() {
 
                         {loadingMessages === fb.id ? (
                           <div className="flex items-center justify-center py-6">
-                            <div className="w-4 h-4 border-2 border-white/20 border-t-[#C84FFF] rounded-full animate-spin" />
+                            <div className="w-4 h-4 border-2 border-white/20 border-t-[#ff2ea6] rounded-full animate-spin" />
                           </div>
                         ) : fb.messages && fb.messages.length > 0 ? (
                           <div className="space-y-3 mb-4 max-h-80 overflow-y-auto pr-1">
@@ -467,7 +467,7 @@ export default function FeedbackHistoryPage() {
                                 className={`rounded-lg p-3 text-sm ${
                                   msg.isAdmin
                                     ? 'bg-indigo-500/[0.07] border border-indigo-500/15 ml-4'
-                                    : 'bg-[#1a1a4a] border border-white/[0.06] mr-4'
+                                    : 'bg-[#100d22] border border-white/[0.06] mr-4'
                                 }`}
                               >
                                 <div className="flex items-center gap-2 mb-1.5">
@@ -499,16 +499,16 @@ export default function FeedbackHistoryPage() {
                                 }
                               }}
                               placeholder={t('history.typeMessage')}
-                              className="flex-1 h-10 px-3 rounded-lg bg-white/4 border border-white/8 text-sm text-white placeholder-gray-600 focus:border-[#C84FFF]/40 focus:ring-1 focus:ring-[#C84FFF]/20 outline-none transition-all"
+                              className="flex-1 h-10 px-3 rounded-lg bg-white/4 border border-white/8 text-sm text-white placeholder-gray-600 focus:border-[#ff2ea6]/40 focus:ring-1 focus:ring-[#ff2ea6]/20 outline-none transition-all"
                               maxLength={2000}
                             />
                             <button
                               onClick={() => sendMessage(fb.id)}
                               disabled={!newMessage.trim() || sendingMessage}
-                              className="flex items-center justify-center w-10 h-10 rounded-lg bg-[#C84FFF]/15 text-[#E879F9] border border-[#C84FFF]/20 hover:bg-[#C84FFF]/25 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                              className="flex items-center justify-center w-10 h-10 rounded-lg bg-[#ff2ea6]/15 text-[#E879F9] border border-[#ff2ea6]/20 hover:bg-[#ff2ea6]/25 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                             >
                               {sendingMessage ? (
-                                <div className="w-4 h-4 border-2 border-[#C84FFF]/30 border-t-[#C84FFF] rounded-full animate-spin" />
+                                <div className="w-4 h-4 border-2 border-[#ff2ea6]/30 border-t-[#ff2ea6] rounded-full animate-spin" />
                               ) : (
                                 <Send className="w-4 h-4" />
                               )}

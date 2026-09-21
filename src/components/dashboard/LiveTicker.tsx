@@ -216,7 +216,7 @@ export default function LiveTicker({ className }: LiveTickerProps) {
 
   return (
     <div
-      className={`bg-[#0B0B2B] border border-[rgba(255,255,255,0.06)] rounded-xl h-12 sm:h-14 overflow-hidden relative ${className ?? ''}`}
+      className={`bg-[#0c0a1c] border border-[rgba(255,255,255,0.06)] rounded-xl h-12 sm:h-14 overflow-hidden relative ${className ?? ''}`}
     >
       {/* Pulse animation keyframes + ticker scroll */}
       <style>{`
@@ -234,8 +234,8 @@ export default function LiveTicker({ className }: LiveTickerProps) {
         }
         @keyframes ticker-new-item {
           0% { opacity: 0; transform: scale(0.7) translateX(-20px); filter: brightness(2.5); }
-          20% { opacity: 1; transform: scale(1.1) translateX(0); filter: brightness(2); box-shadow: 0 0 25px rgba(200,79,255,0.5); }
-          50% { transform: scale(1.02); filter: brightness(1.3); box-shadow: 0 0 15px rgba(200,79,255,0.3); }
+          20% { opacity: 1; transform: scale(1.1) translateX(0); filter: brightness(2); box-shadow: 0 0 25px rgba(255,46,166,0.5); }
+          50% { transform: scale(1.02); filter: brightness(1.3); box-shadow: 0 0 15px rgba(255,46,166,0.3); }
           100% { transform: scale(1); filter: brightness(1); box-shadow: none; }
         }
         .ticker-item-new {
@@ -274,7 +274,7 @@ export default function LiveTicker({ className }: LiveTickerProps) {
 
       <div className="flex items-center h-full">
         {/* LIVE indicator */}
-        <div className="flex items-center gap-2 px-3 sm:px-4 shrink-0 z-10 bg-[#0B0B2B]">
+        <div className="flex items-center gap-2 px-3 sm:px-4 shrink-0 z-10 bg-[#0c0a1c]">
           <div
             className="w-[6px] h-[6px] bg-red-500 rounded-full"
             style={{
@@ -377,7 +377,7 @@ export default function LiveTicker({ className }: LiveTickerProps) {
                     </div>
 
                     {/* Open CTA */}
-                    <span className="text-[8px] text-[#C84FFF] font-semibold shrink-0 ml-1">
+                    <span className="text-[8px] text-[#ff2ea6] font-semibold shrink-0 ml-1">
                       {t('liveTicker.open')}
                     </span>
                   </Link>

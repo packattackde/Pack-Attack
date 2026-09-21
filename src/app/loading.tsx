@@ -13,10 +13,10 @@ export default function Loading() {
       
       <div className="relative flex flex-col items-center gap-4">
         <div className="relative">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[rgba(200,79,255,0.1)] to-[rgba(200,79,255,0.08)] flex items-center justify-center">
-            <Package className="w-8 h-8 text-[#C84FFF] animate-pulse" />
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[rgba(255,46,166,0.1)] to-[rgba(255,46,166,0.08)] flex items-center justify-center">
+            <Package className="w-8 h-8 text-[#ff2ea6] animate-pulse" />
           </div>
-          <div className="absolute inset-0 rounded-2xl border-2 border-[rgba(200,79,255,0.3)] animate-ping" />
+          <div className="absolute inset-0 rounded-2xl border-2 border-[rgba(255,46,166,0.3)] animate-ping" />
         </div>
         <p className="text-gray-400 font-medium">{t('loading')}</p>
       </div>

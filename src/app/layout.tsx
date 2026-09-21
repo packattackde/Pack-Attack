@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Outfit, Syne } from "next/font/google";
+import { Outfit, Syne, Orbitron, Rajdhani, Noto_Sans_JP } from "next/font/google";
 import { Providers } from "./providers";
 import { Navigation } from "@/components/Navigation";
 import { ChatPanel } from "@/components/ChatPanel";
@@ -26,6 +26,30 @@ const syne = Syne({
   preload: true,
 });
 
+const orbitron = Orbitron({
+  subsets: ["latin"],
+  weight: ["500", "700", "900"],
+  display: "swap",
+  variable: "--font-orbitron",
+  preload: true,
+});
+
+const rajdhani = Rajdhani({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-rajdhani",
+  preload: true,
+});
+
+const notoSansJP = Noto_Sans_JP({
+  subsets: ["latin"],
+  weight: ["400", "700", "900"],
+  display: "swap",
+  variable: "--font-noto-jp",
+  preload: false,
+});
+
 /**
  * Viewport configuration optimized for all devices
  * - Mobile phones (iOS, Android)
@@ -41,8 +65,8 @@ export const viewport: Viewport = {
   userScalable: true,
   // Theme color for browser chrome - matches dark theme
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#0B0B2B" },
-    { media: "(prefers-color-scheme: dark)", color: "#0B0B2B" },
+    { media: "(prefers-color-scheme: light)", color: "#05040c" },
+    { media: "(prefers-color-scheme: dark)", color: "#05040c" },
   ],
   // Support notched devices (iPhone X+, Android with cutouts)
   viewportFit: "cover",
@@ -150,11 +174,11 @@ export const metadata: Metadata = {
     // Android Chrome
     "mobile-web-app-capable": "yes",
     // Microsoft Edge/IE
-    "msapplication-TileColor": "#030712",
+    "msapplication-TileColor": "#05040c",
     "msapplication-tap-highlight": "no",
     "msapplication-config": "/browserconfig.xml",
     // Samsung Internet
-    "theme-color": "#030712",
+    "theme-color": "#05040c",
     // UC Browser
     "screen-orientation": "portrait",
     // Opera Mini
@@ -192,7 +216,7 @@ export default async function RootLayout({
   const t = await getTranslations('common');
 
   return (
-    <html lang={locale} suppressHydrationWarning className={`scroll-smooth ${outfit.variable} ${syne.variable}`}>
+    <html lang={locale} suppressHydrationWarning className={`scroll-smooth ${outfit.variable} ${syne.variable} ${orbitron.variable} ${rajdhani.variable} ${notoSansJP.variable}`}>
       <head>
         {/* Preconnect to card image CDNs for faster loading */}
         <link rel="preconnect" href="https://cards.scryfall.io" crossOrigin="anonymous" />
@@ -226,7 +250,7 @@ export default async function RootLayout({
         <link rel="manifest" href="/manifest.json" />
         
         {/* Safari pinned tab icon */}
-        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#3b82f6" />
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#ff2ea6" />
         
         {/* Microsoft browserconfig for tiles */}
         <meta name="msapplication-config" content="/browserconfig.xml" />
@@ -249,7 +273,7 @@ export default async function RootLayout({
           <NextIntlClientProvider locale={locale} messages={messages}>
             <a 
               href="#main-content" 
-              className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#C84FFF] focus:text-white focus:rounded-lg"
+              className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#ff2ea6] focus:text-white focus:rounded-lg"
             >
               {t('skipToContent')}
             </a>

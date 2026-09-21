@@ -153,16 +153,16 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
     return (
       <div className="max-w-2xl mx-auto">
         <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-8 text-center">
-          <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-full bg-[#C84FFF]/20">
+          <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-full bg-[#ff2ea6]/20">
             <CheckCircle className="w-10 h-10 text-[#E879F9]" />
           </div>
           <h1 className="text-3xl font-bold text-white mb-3">{t('orderPlaced')}</h1>
           <p className="text-[#8888aa] mb-2">{t('thankYou')}</p>
           <p className="text-sm text-[#8888aa] mb-6">{t('orderId')} {orderId}</p>
           
-          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 mb-6 text-left">
+          <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 mb-6 text-left">
             <div className="flex items-center gap-2 mb-3">
-              <Truck className="w-5 h-5 text-[#C84FFF]" />
+              <Truck className="w-5 h-5 text-[#ff2ea6]" />
               <span className="font-semibold text-white">{t('shippingInfo')}</span>
             </div>
             <div className="text-sm text-[#8888aa] space-y-1">
@@ -176,13 +176,13 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               href="/collection"
-              className="px-6 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl transition-all hover:scale-105"
+              className="px-6 py-3 bg-[#ff2ea6] text-white font-semibold rounded-xl transition-all hover:scale-105"
             >
               {t('backToCollection')}
             </Link>
             <Link
               href="/boxes"
-              className="px-6 py-3 bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-white font-semibold rounded-xl transition-all hover:bg-white/10"
+              className="px-6 py-3 bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md text-white font-semibold rounded-xl transition-all hover:bg-white/10"
             >
               {t('openMoreBoxes')}
             </Link>
@@ -200,13 +200,13 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
           <ArrowLeft className="w-4 h-4" />
           {t('backToCart')}
         </Link>
-        <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm ml-4">
-          <Package className="w-4 h-4 text-[#C84FFF]" />
+        <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md text-sm ml-4">
+          <Package className="w-4 h-4 text-[#ff2ea6]" />
           <span className="text-[#f0f0f5]">{t('badge')}</span>
         </div>
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3">
           <span className="text-white">{t('title').split(' ').slice(0, -1).join(' ')} </span>
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C84FFF] to-[#C84FFF]">{t('title').split(' ').slice(-1)[0]}</span>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ff2ea6] to-[#ff2ea6]">{t('title').split(' ').slice(-1)[0]}</span>
         </h1>
         <p className="text-[#8888aa] text-lg">{t('subtitle')}</p>
       </div>
@@ -217,7 +217,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6">
               <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-[#C84FFF]" />
+                <MapPin className="w-5 h-5 text-[#ff2ea6]" />
                 {t('shippingAddress')}
               </h2>
 
@@ -230,7 +230,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                     value={formData.shippingName}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.3)] transition-colors"
+                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[rgba(255,46,166,0.3)] focus:ring-1 focus:ring-[rgba(255,46,166,0.3)] transition-colors"
                     placeholder="John Doe"
                   />
                 </div>
@@ -243,7 +243,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                     value={formData.shippingEmail}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.3)] transition-colors"
+                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[rgba(255,46,166,0.3)] focus:ring-1 focus:ring-[rgba(255,46,166,0.3)] transition-colors"
                     placeholder="john@example.com"
                   />
                 </div>
@@ -256,7 +256,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                     value={formData.shippingAddress}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.3)] transition-colors"
+                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[rgba(255,46,166,0.3)] focus:ring-1 focus:ring-[rgba(255,46,166,0.3)] transition-colors"
                     placeholder="123 Main Street, Apt 4"
                   />
                 </div>
@@ -269,7 +269,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                     value={formData.shippingCity}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.3)] transition-colors"
+                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[rgba(255,46,166,0.3)] focus:ring-1 focus:ring-[rgba(255,46,166,0.3)] transition-colors"
                     placeholder="New York"
                   />
                 </div>
@@ -282,7 +282,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                     value={formData.shippingZip}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.3)] transition-colors"
+                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[rgba(255,46,166,0.3)] focus:ring-1 focus:ring-[rgba(255,46,166,0.3)] transition-colors"
                     placeholder="10001"
                   />
                 </div>
@@ -294,7 +294,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                     value={formData.shippingCountry}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.3)] transition-colors"
+                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white focus:border-[rgba(255,46,166,0.3)] focus:ring-1 focus:ring-[rgba(255,46,166,0.3)] transition-colors"
                   >
                     <option value="">{t('selectCountry')}</option>
                     <option value="Germany">{t('countries.DE')}</option>
@@ -319,7 +319,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                     value={formData.notes}
                     onChange={handleInputChange}
                     rows={3}
-                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.3)] transition-colors resize-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white placeholder-gray-500 focus:border-[rgba(255,46,166,0.3)] focus:ring-1 focus:ring-[rgba(255,46,166,0.3)] transition-colors resize-none"
                     placeholder={t('orderNotesPlaceholder')}
                   />
                 </div>
@@ -373,7 +373,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                   onClick={() => setShippingMethod('EUROS')}
                   className={`relative p-4 rounded-xl border-2 transition-all text-left ${
                     shippingMethod === 'EUROS'
-                      ? 'border-[#C84FFF] bg-[#C84FFF]/10'
+                      ? 'border-[#ff2ea6] bg-[#ff2ea6]/10'
                       : 'border-[rgba(255,255,255,0.06)] bg-[#12123a]/60 hover:border-[rgba(255,255,255,0.1)]'
                   }`}
                 >
@@ -383,7 +383,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                     </div>
                   )}
                   <div className="flex items-center gap-3 mb-2">
-                    <div className={`p-2 rounded-lg ${shippingMethod === 'EUROS' ? 'bg-[#C84FFF]/20' : 'bg-[#12123a]'}`}>
+                    <div className={`p-2 rounded-lg ${shippingMethod === 'EUROS' ? 'bg-[#ff2ea6]/20' : 'bg-[#12123a]'}`}>
                       <Euro className={`w-6 h-6 ${shippingMethod === 'EUROS' ? 'text-[#E879F9]' : 'text-[#8888aa]'}`} />
                     </div>
                     <div>
@@ -521,7 +521,7 @@ export function CheckoutClient({ items, total, userEmail, userName, upsellCartIt
                 className={`w-full py-4 text-white font-semibold rounded-xl transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2 ${
                   shippingMethod === 'COINS'
                     ? 'bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500'
-                    : 'bg-gradient-to-r from-[#9333EA] to-[#7c3aed] hover:from-[#C84FFF] hover:to-[#9333EA]'
+                    : 'bg-gradient-to-r from-[#8b5cf6] to-[#7c3aed] hover:from-[#ff2ea6] hover:to-[#8b5cf6]'
                 }`}
               >
                 {loading ? (

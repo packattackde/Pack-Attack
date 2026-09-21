@@ -64,7 +64,7 @@ export function CompletedBattleCard({ battle, isAdmin, visibleParticipants }: {
     <>
       <Link
         href={`/battles/${battle.id}`}
-        className="group relative bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-lg rounded-2xl p-7 hover:-translate-y-1.5 hover:border-[rgba(200,79,255,0.3)] hover:shadow-[0_8px_30px_rgba(200,79,255,0.1)] transition-all duration-300"
+        className="group relative bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-lg rounded-2xl p-7 hover:-translate-y-1.5 hover:border-[rgba(255,46,166,0.3)] hover:shadow-[0_8px_30px_rgba(255,46,166,0.1)] transition-all duration-300"
       >
         {isAdmin && (
           <button
@@ -82,13 +82,13 @@ export function CompletedBattleCard({ battle, isAdmin, visibleParticipants }: {
             <span className="text-[#8888aa]">{t(`winConditionLabels.${battle.winCondition}` as any)}</span>
           </div>
           <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-            isDraw ? 'bg-blue-500/20 text-blue-400' : 'bg-[#C84FFF]/20 text-[#E879F9]'
+            isDraw ? 'bg-blue-500/20 text-blue-400' : 'bg-[#ff2ea6]/20 text-[#E879F9]'
           }`}>
             {isDraw ? t('statusLabels.FINISHED_DRAW') : t('statusLabels.FINISHED_WIN')}
           </span>
         </div>
 
-        <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-[#C84FFF] transition-colors line-clamp-1">
+        <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-[#ff2ea6] transition-colors line-clamp-1">
           {battle.box.name}
         </h3>
 
@@ -96,8 +96,8 @@ export function CompletedBattleCard({ battle, isAdmin, visibleParticipants }: {
           <p className="text-sm text-blue-400 mb-4">{t('completedCard.drawLabel')}</p>
         ) : battle.winner ? (
           <div className="flex items-center gap-2 mb-4">
-            <Crown className="w-4 h-4 text-[#C84FFF]" />
-            <span className="text-sm text-[#C84FFF] font-medium">{battle.winner.name || battle.winner.email}</span>
+            <Crown className="w-4 h-4 text-[#ff2ea6]" />
+            <span className="text-sm text-[#ff2ea6] font-medium">{battle.winner.name || battle.winner.email}</span>
           </div>
         ) : null}
 
@@ -105,7 +105,7 @@ export function CompletedBattleCard({ battle, isAdmin, visibleParticipants }: {
           {visibleParticipants.slice(0, 4).map((p: any, i: number) => (
             <div
               key={p.id}
-              className="w-8 h-8 rounded-full bg-gradient-to-br from-[#C84FFF] to-[#9333EA] flex items-center justify-center text-xs font-bold text-white"
+              className="w-8 h-8 rounded-full bg-gradient-to-br from-[#ff2ea6] to-[#8b5cf6] flex items-center justify-center text-xs font-bold text-white"
               style={{ marginLeft: i > 0 ? '-6px' : '0' }}
             >
               {p.user.name?.[0] || '?'}
@@ -116,7 +116,7 @@ export function CompletedBattleCard({ battle, isAdmin, visibleParticipants }: {
 
         <div className="flex items-center justify-between pt-4 border-t border-[rgba(255,255,255,0.1)]">
           <span className="text-sm text-[#8888aa]">{battle.rounds} {t('rounds')}</span>
-          <span className="text-[#C84FFF] text-sm font-medium group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+          <span className="text-[#ff2ea6] text-sm font-medium group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
             {t('completedCard.results')} <ChevronRight className="w-4 h-4" />
           </span>
         </div>
@@ -125,7 +125,7 @@ export function CompletedBattleCard({ battle, isAdmin, visibleParticipants }: {
       {/* Delete Modal */}
       {showDeleteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setShowDeleteModal(false)}>
-          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] rounded-2xl p-6 max-w-sm w-full mx-4" onClick={e => e.stopPropagation()}>
+          <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] rounded-2xl p-6 max-w-sm w-full mx-4" onClick={e => e.stopPropagation()}>
             <h3 className="text-lg font-bold text-white mb-2">{t('completedCard.deleteTitle')}</h3>
             <p className="text-sm text-[#8888aa] mb-6">
               {t('completedCard.deleteConfirm', { id: battle.id.slice(-6) })}

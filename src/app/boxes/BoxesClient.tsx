@@ -154,9 +154,9 @@ function getGameTheme(game: string | undefined): Theme {
   };
   return (
     themes[key] || {
-      accent: '#C84FFF',
+      accent: '#ff2ea6',
       accentSoft: '#E879F9',
-      glow: 'rgba(200,79,255,0.5)',
+      glow: 'rgba(255,46,166,0.5)',
       wordmark: 'TCG',
       tagline: 'Trading Cards',
       Icon: Sparkles,
@@ -239,7 +239,7 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
         {selectedGame !== 'all' && (
           <button
             onClick={() => setSelectedGame('all')}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[rgba(200,79,255,0.1)] text-[#C84FFF] text-xs font-semibold hover:bg-[rgba(200,79,255,0.2)] transition-colors"
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[rgba(255,46,166,0.1)] text-[#ff2ea6] text-xs font-semibold hover:bg-[rgba(255,46,166,0.2)] transition-colors"
           >
             <span>{getGameDisplayName(selectedGame)}</span>
             <span aria-hidden>✕</span>
@@ -251,8 +251,8 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
       {/* Packs grid */}
       {filteredBoxes.length === 0 ? (
         <div className="rounded-2xl p-8 sm:p-12 text-center bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg">
-          <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 mb-4 sm:mb-6 rounded-2xl bg-gradient-to-br from-[rgba(200,79,255,0.15)] to-[rgba(200,79,255,0.1)]">
-            <Package className="w-8 h-8 sm:w-10 sm:h-10 text-[#C84FFF]" />
+          <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 mb-4 sm:mb-6 rounded-2xl bg-gradient-to-br from-[rgba(255,46,166,0.15)] to-[rgba(255,46,166,0.1)]">
+            <Package className="w-8 h-8 sm:w-10 sm:h-10 text-[#ff2ea6]" />
           </div>
           <h2 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-3">
             {t('noBoxes')}
@@ -262,7 +262,7 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
           </p>
           <button
             onClick={() => setSelectedGame('all')}
-            className="inline-flex items-center gap-2 px-6 py-4 bg-gradient-to-r from-[#C84FFF] to-[#E879F9] text-white font-semibold rounded-xl transition-all active:scale-95 touch-target min-h-[52px]"
+            className="inline-flex items-center gap-2 px-6 py-4 bg-gradient-to-r from-[#ff2ea6] to-[#E879F9] text-white font-semibold rounded-xl transition-all active:scale-95 touch-target min-h-[52px]"
           >
             <Sparkles className="w-5 h-5" />
             {t('showAllBoxes')}
@@ -311,8 +311,8 @@ function FilterChip({
       onClick={onClick}
       className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all border ${
         active
-          ? 'bg-white text-[#0a0a2a] border-white shadow-[0_4px_20px_rgba(255,255,255,0.2)]'
-          : 'bg-[#1a1a4a] text-[#f0f0f5] border-[rgba(255,255,255,0.12)] hover:border-[rgba(255,255,255,0.3)]'
+          ? 'bg-white text-[#05040c] border-white shadow-[0_4px_20px_rgba(255,255,255,0.2)]'
+          : 'bg-[#100d22] text-[#f0f0f5] border-[rgba(255,255,255,0.12)] hover:border-[rgba(255,255,255,0.3)]'
       }`}
     >
       {accent && !active && (
@@ -324,7 +324,7 @@ function FilterChip({
       {label}
       <span
         className={`text-[11px] px-1.5 py-0.5 rounded-full ${
-          active ? 'bg-[#0a0a2a]/10 text-[#0a0a2a]' : 'bg-[#0a0a2a]/60 text-[#8888aa]'
+          active ? 'bg-[#05040c]/10 text-[#05040c]' : 'bg-[#05040c]/60 text-[#8888aa]'
         }`}
       >
         {count}
@@ -365,7 +365,7 @@ function PackCard({
           )}
           {box.createdByShop && (
             <span
-              className="inline-flex px-2 py-0.5 rounded-md bg-[#0a0a2a]/80 backdrop-blur border border-white/10 text-[9px] font-black text-white uppercase tracking-wider"
+              className="inline-flex px-2 py-0.5 rounded-md bg-[#05040c]/80 backdrop-blur border border-white/10 text-[9px] font-black text-white uppercase tracking-wider"
               title={t('partnerBy', { name: box.createdByShop.name })}
             >
               {t('partnerShop').replace(/^[🏪\s]+/, '')}
@@ -401,7 +401,7 @@ function PackCard({
 
         <Link
           href={`/open/${box.id}`}
-          className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-br from-[#C84FFF] to-[#9333EA] text-white text-xs font-black uppercase tracking-wider shadow-[0_4px_16px_rgba(200,79,255,0.3)] group-hover:shadow-[0_6px_22px_rgba(200,79,255,0.5)] group-hover:scale-105 transition-all"
+          className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-br from-[#ff2ea6] to-[#8b5cf6] text-white text-xs font-black uppercase tracking-wider shadow-[0_4px_16px_rgba(255,46,166,0.3)] group-hover:shadow-[0_6px_22px_rgba(255,46,166,0.5)] group-hover:scale-105 transition-all"
         >
           <Coins className="w-3.5 h-3.5" />
           {box.price.toLocaleString(undefined, {
@@ -740,7 +740,7 @@ function InfoTile({
 }) {
   return (
     <div className="p-5 rounded-2xl bg-[#15153d] border border-[rgba(255,255,255,0.08)]">
-      <div className="w-10 h-10 rounded-xl bg-[rgba(200,79,255,0.15)] text-[#C84FFF] flex items-center justify-center mb-3">
+      <div className="w-10 h-10 rounded-xl bg-[rgba(255,46,166,0.15)] text-[#ff2ea6] flex items-center justify-center mb-3">
         {icon}
       </div>
       <h4 className="text-white font-bold mb-1">{title}</h4>

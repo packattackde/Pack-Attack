@@ -147,7 +147,7 @@ function UserActionMenu({
         <MoreVertical className="w-3 h-3" />
       </button>
       {open && (
-        <div className="absolute left-0 top-6 z-50 w-44 py-1 rounded-lg bg-[#0B0B2B] border border-white/[0.1] shadow-xl shadow-black/40">
+        <div className="absolute left-0 top-6 z-50 w-44 py-1 rounded-lg bg-[#0c0a1c] border border-white/[0.1] shadow-xl shadow-black/40">
           <button onClick={() => handleTimeout('1h')} className="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-[#f0f0f5] hover:bg-white/[0.06] hover:text-yellow-400 transition-colors">
             <Clock className="w-3.5 h-3.5" /> Timeout 1 hour
           </button>
@@ -481,7 +481,7 @@ export default function ChatManagementClient() {
                               Deleted
                             </span>
                           ) : (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-[#C84FFF]/10 text-[10px] font-medium text-[#E879F9]">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-[#ff2ea6]/10 text-[10px] font-medium text-[#E879F9]">
                               Active
                             </span>
                           )}

@@ -412,10 +412,10 @@ export const RARITY_CONFIG = {
   },
   UNCOMMON: {
     color: 'text-[#E879F9]',
-    bg: 'bg-[#C84FFF]/10',
-    border: 'border-[#C84FFF]/30',
-    gradient: 'from-[#C84FFF] to-[#9333EA]',
-    glow: 'shadow-[#C84FFF]/20',
+    bg: 'bg-[#ff2ea6]/10',
+    border: 'border-[#ff2ea6]/30',
+    gradient: 'from-[#ff2ea6] to-[#8b5cf6]',
+    glow: 'shadow-[#ff2ea6]/20',
   },
   RARE: {
     color: 'text-blue-400',
@@ -445,8 +445,8 @@ export const CATEGORY_CONFIG = {
   PULLS: {
     label: 'Pack Opening',
     icon: 'Package',
-    color: 'text-[#C84FFF]',
-    bg: 'bg-[rgba(200,79,255,0.1)]',
+    color: 'text-[#ff2ea6]',
+    bg: 'bg-[rgba(255,46,166,0.1)]',
   },
   BATTLES: {
     label: 'Battles',
@@ -470,7 +470,7 @@ export const CATEGORY_CONFIG = {
     label: 'Community',
     icon: 'Users',
     color: 'text-[#E879F9]',
-    bg: 'bg-[#C84FFF]/10',
+    bg: 'bg-[#ff2ea6]/10',
   },
   SPECIAL: {
     label: 'Special',

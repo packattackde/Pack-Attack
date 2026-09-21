@@ -93,9 +93,9 @@ export default async function BoxesPage() {
       <div className="relative container py-14 sm:py-16">
         {/* Header */}
         <div className="mb-12">
-          <div className="inline-flex items-center gap-2.5 px-4 py-2 mb-5 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] text-sm shadow-md">
-            <div className="flex items-center justify-center w-5 h-5 rounded-full bg-[rgba(200,79,255,0.15)]">
-              <Package className="w-3 h-3 text-[#C84FFF]" />
+          <div className="inline-flex items-center gap-2.5 px-4 py-2 mb-5 rounded-full bg-[#100d22] border border-[rgba(255,255,255,0.12)] text-sm shadow-md">
+            <div className="flex items-center justify-center w-5 h-5 rounded-full bg-[rgba(255,46,166,0.15)]">
+              <Package className="w-3 h-3 text-[#ff2ea6]" />
             </div>
             <span className="text-[#f0f0f5] font-medium">{t('badge')}</span>
           </div>
@@ -104,7 +104,7 @@ export default async function BoxesPage() {
               <span className="text-white">
                 {t('title').split(' ').slice(0, -1).join(' ')}{' '}
               </span>
-              <span className="text-[#C84FFF]">
+              <span className="text-[#ff2ea6]">
                 {t('title').split(' ').slice(-1)[0]}
               </span>
             </h1>

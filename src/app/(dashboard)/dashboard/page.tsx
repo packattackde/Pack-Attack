@@ -110,12 +110,12 @@ export default async function UserDashboard() {
       <div className="relative container py-8 md:py-12">
         {/* Welcome Header */}
         <div className="mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
-            <Sparkles className="w-4 h-4 text-[#C84FFF]" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
+            <Sparkles className="w-4 h-4 text-[#ff2ea6]" />
             <span className="text-gray-300">Dashboard</span>
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
-            Welcome back, <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C84FFF] to-[#9333EA]">{user.name || 'Player'}</span>!
+            Welcome back, <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ff2ea6] to-[#8b5cf6]">{user.name || 'Player'}</span>!
           </h1>
           <p className="text-[#8888aa]">Manage your collection, track orders, and view your stats</p>
         </div>

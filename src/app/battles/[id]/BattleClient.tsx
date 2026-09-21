@@ -7,7 +7,7 @@ import { ArrowLeft, Swords, Coins, Trophy, Crown, RefreshCw, ArrowRightLeft, Sta
 import { useTranslations } from 'next-intl';
 import { CardTransferAnimation } from './CardTransferAnimation';
 
-const PLAYER_COLORS = ['#C84FFF', '#3B82F6', '#F59E0B', '#10B981'];
+const PLAYER_COLORS = ['#ff2ea6', '#3B82F6', '#F59E0B', '#10B981'];
 
 function getRarityColor(rarity: string | null): string {
   if (!rarity) return 'border-[rgba(255,255,255,0.08)]';
@@ -19,7 +19,7 @@ function getRarityColor(rarity: string | null): string {
   if (r.includes('rare') || r.includes('holo'))
     return 'border-blue-400/40';
   if (r.includes('uncommon'))
-    return 'border-[#C84FFF]/30';
+    return 'border-[#ff2ea6]/30';
   return 'border-[rgba(255,255,255,0.08)]';
 }
 
@@ -70,7 +70,7 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
   const tc = useTranslations('common');
 
   const statusColor = {
-    FINISHED_WIN: 'bg-[#C84FFF]/15 text-[#E879F9] border border-[#C84FFF]/20',
+    FINISHED_WIN: 'bg-[#ff2ea6]/15 text-[#E879F9] border border-[#ff2ea6]/20',
     FINISHED_DRAW: 'bg-blue-500/15 text-blue-400 border border-blue-500/20',
     CANCELLED: 'bg-red-500/15 text-red-400 border border-red-500/20',
   }[battle.status] || 'bg-gray-500/20 text-gray-400';
@@ -209,16 +209,16 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
           </div>
         ) : battle.status === 'FINISHED_WIN' && battle.winner ? (
           <div className="relative overflow-hidden rounded-2xl mb-6">
-            <div className="absolute inset-0 bg-gradient-to-b from-[#C84FFF]/8 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#ff2ea6]/8 via-transparent to-transparent" />
             <div className={`relative border rounded-2xl p-8 ${
-              battle.winnerId === currentUserId ? 'border-[#C84FFF]/40 bg-[#C84FFF]/5' : 'border-[rgba(255,255,255,0.08)] bg-[#1a1a4a]/80'
+              battle.winnerId === currentUserId ? 'border-[#ff2ea6]/40 bg-[#ff2ea6]/5' : 'border-[rgba(255,255,255,0.08)] bg-[#100d22]/80'
             }`}>
               <div className="flex justify-center mb-5">
                 <div className="relative">
                   <div className="w-20 h-20 rounded-full bg-gradient-to-br from-amber-400 via-yellow-300 to-amber-500 flex items-center justify-center shadow-[0_0_40px_rgba(251,191,36,0.3)]">
                     <Trophy className="w-10 h-10 text-black" />
                   </div>
-                  <div className="absolute -top-1 -right-1 w-7 h-7 bg-[#C84FFF] rounded-full flex items-center justify-center">
+                  <div className="absolute -top-1 -right-1 w-7 h-7 bg-[#ff2ea6] rounded-full flex items-center justify-center">
                     <Crown className="w-3.5 h-3.5 text-black" />
                   </div>
                 </div>
@@ -227,7 +227,7 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
               <div className="text-center mb-6">
                 {battle.winnerId === currentUserId ? (
                   <>
-                    <h1 className="text-3xl font-bold text-[#C84FFF] mb-1">{t('detail.youWon')}</h1>
+                    <h1 className="text-3xl font-bold text-[#ff2ea6] mb-1">{t('detail.youWon')}</h1>
                     <p className="text-[#8888aa]">{t('detail.congrats')}</p>
                   </>
                 ) : (
@@ -245,17 +245,17 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
                   const barWidth = maxTotal > 0 ? (p.totalValue / maxTotal) * 100 : 0;
                   return (
                     <div key={p.id} className={`rounded-2xl p-5 text-center border transition-all ${
-                      isWinner ? 'bg-[#C84FFF]/10 border-[#C84FFF]/30 shadow-[0_0_30px_rgba(200,79,255,0.1)]' : 'bg-[#12123a] border-[rgba(255,255,255,0.06)]'
+                      isWinner ? 'bg-[#ff2ea6]/10 border-[#ff2ea6]/30 shadow-[0_0_30px_rgba(255,46,166,0.1)]' : 'bg-[#12123a] border-[rgba(255,255,255,0.06)]'
                     }`}>
                       <div className={`w-14 h-14 rounded-full mx-auto mb-3 flex items-center justify-center text-xl font-bold ${
-                        isWinner ? 'bg-gradient-to-br from-[#C84FFF] to-[#9333EA] text-white shadow-[0_0_20px_rgba(200,79,255,0.3)]' : 'bg-[#1a1a4a] text-[#8888aa]'
+                        isWinner ? 'bg-gradient-to-br from-[#ff2ea6] to-[#8b5cf6] text-white shadow-[0_0_20px_rgba(255,46,166,0.3)]' : 'bg-[#100d22] text-[#8888aa]'
                       }`}>{p.user.name?.[0] || '?'}</div>
                       <div className="text-white font-semibold text-sm mb-2 truncate">{p.user.name || p.user.email}</div>
                       <div className="h-2.5 bg-[#0e0e2a] rounded-full overflow-hidden my-3 mx-4">
-                        <div className={`h-full rounded-full transition-all duration-700 ${isWinner ? 'bg-gradient-to-r from-[#C84FFF] to-[#E879F9]' : 'bg-[#8888aa]/40'}`} style={{ width: `${barWidth}%` }} />
+                        <div className={`h-full rounded-full transition-all duration-700 ${isWinner ? 'bg-gradient-to-r from-[#ff2ea6] to-[#E879F9]' : 'bg-[#8888aa]/40'}`} style={{ width: `${barWidth}%` }} />
                       </div>
-                      <div className={`text-3xl font-bold mb-1 ${isWinner ? 'text-[#C84FFF]' : 'text-amber-400'}`}>{p.totalValue.toFixed(2)}</div>
-                      <div className={`text-xs font-semibold mt-1 ${isWinner ? 'text-[#C84FFF]' : 'text-[#666688]'}`}>
+                      <div className={`text-3xl font-bold mb-1 ${isWinner ? 'text-[#ff2ea6]' : 'text-amber-400'}`}>{p.totalValue.toFixed(2)}</div>
+                      <div className={`text-xs font-semibold mt-1 ${isWinner ? 'text-[#ff2ea6]' : 'text-[#666688]'}`}>
                         {isWinner ? <span className="flex items-center justify-center gap-1"><Crown className="w-3.5 h-3.5" /> {tc('winner')}</span> : tc('loser')}
                       </div>
                     </div>
@@ -279,7 +279,7 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
 
               <div className="text-center">
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#12123a] rounded-full text-xs">
-                  <Zap className="w-3 h-3 text-[#C84FFF]" />
+                  <Zap className="w-3 h-3 text-[#ff2ea6]" />
                   <span className="text-[#8888aa]">
                     {battle.battleMode === 'LOWEST_CARD' && t('detail.lowestTransferred')}
                     {battle.battleMode === 'HIGHEST_CARD' && t('detail.highestTransferred')}
@@ -300,7 +300,7 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
         <div className="bg-[#12123a] border border-[rgba(255,255,255,0.06)] rounded-xl p-4 mb-6">
           <div className="flex items-center gap-3 mb-3">
             {battle.box?.imageUrl && (
-              <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 bg-[#1a1a4a]">
+              <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 bg-[#100d22]">
                 <img src={battle.box.imageUrl} alt="" className="w-full h-full object-cover" />
               </div>
             )}
@@ -555,7 +555,7 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
         {Object.keys(pullsByRound).length > 0 && (
           <div className="mb-6">
             <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-3 flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-[#C84FFF]" /> {t('detail.roundOverview')}
+              <Sparkles className="w-4 h-4 text-[#ff2ea6]" /> {t('detail.roundOverview')}
             </h2>
             <div className="space-y-3">
               {Array.from({ length: battle.rounds }, (_, i) => i + 1).map((round) => {
@@ -579,7 +579,7 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
                           return (
                             <div key={pull.id} className={`relative rounded-xl border p-3 text-center ${getRarityColor(pull.itemRarity)} ${isTransferred ? 'bg-red-500/5' : 'bg-[#0e0e2a]'}`}>
                               {isRoundBest && (
-                                <div className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-[#C84FFF] rounded-full flex items-center justify-center">
+                                <div className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-[#ff2ea6] rounded-full flex items-center justify-center">
                                   <Star className="w-3 h-3 text-black" />
                                 </div>
                               )}
@@ -589,7 +589,7 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
                                   <img src={pull.itemImage} alt={pull.itemName || ''} className="w-full h-full object-cover rounded-lg" />
                                 </div>
                               ) : (
-                                <div className="mx-auto w-16 h-[88px] mb-2 bg-[#1a1a4a] rounded-lg flex items-center justify-center">
+                                <div className="mx-auto w-16 h-[88px] mb-2 bg-[#100d22] rounded-lg flex items-center justify-center">
                                   <span className="text-[#333355] text-xl">?</span>
                                 </div>
                               )}
@@ -630,7 +630,7 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
                     {pull.itemImage ? (
                       <img src={pull.itemImage} alt={pull.itemName || ''} className="w-10 h-10 rounded-lg object-cover shrink-0" />
                     ) : (
-                      <div className="w-10 h-10 rounded-lg bg-[#1a1a4a] flex items-center justify-center shrink-0">
+                      <div className="w-10 h-10 rounded-lg bg-[#100d22] flex items-center justify-center shrink-0">
                         <span className="text-[#333355] text-sm">?</span>
                       </div>
                     )}
@@ -640,7 +640,7 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
                       <div className="text-[10px] text-[#666688] flex items-center gap-1">
                         <span className="text-red-400">{fromPlayer?.user?.name || '?'}</span>
                         <span>→</span>
-                        <span className="text-[#C84FFF]">{toPlayer?.user?.name || '?'}</span>
+                        <span className="text-[#ff2ea6]">{toPlayer?.user?.name || '?'}</span>
                       </div>
                     </div>
                   </div>
@@ -652,10 +652,10 @@ export function BattleClient({ battle, currentUserId, isAdmin }: {
 
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-3 justify-center px-2">
-          <Link href="/battles" className="px-5 py-2.5 bg-[#12123a] text-white font-semibold rounded-xl hover:bg-[#1a1a4a] transition-all border border-[rgba(255,255,255,0.08)] text-sm">
+          <Link href="/battles" className="px-5 py-2.5 bg-[#12123a] text-white font-semibold rounded-xl hover:bg-[#100d22] transition-all border border-[rgba(255,255,255,0.08)] text-sm">
             {t('detail.backToLobby')}
           </Link>
-          <Link href="/battles/create" className="px-5 py-2.5 bg-[#C84FFF] text-white font-semibold rounded-xl hover:bg-[#E879F9] transition-all text-sm">
+          <Link href="/battles/create" className="px-5 py-2.5 bg-[#ff2ea6] text-white font-semibold rounded-xl hover:bg-[#E879F9] transition-all text-sm">
             {t('detail.newBattle')}
           </Link>
         </div>

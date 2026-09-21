@@ -51,8 +51,8 @@ function VerifyEmailContent() {
     <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-8 text-center">
       {status === 'loading' && (
         <>
-          <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[rgba(200,79,255,0.1)] to-purple-500/20">
-            <Loader2 className="w-10 h-10 text-[#C84FFF] animate-spin" />
+          <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[rgba(255,46,166,0.1)] to-purple-500/20">
+            <Loader2 className="w-10 h-10 text-[#ff2ea6] animate-spin" />
           </div>
           <h2 className="text-2xl font-bold text-white mb-2">{t('verify.verifying')}</h2>
           <p className="text-[#8888aa]">{t('verify.verifyingDesc')}</p>
@@ -61,7 +61,7 @@ function VerifyEmailContent() {
 
       {status === 'success' && (
         <>
-          <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[#C84FFF]/20 to-[#9333EA]/20">
+          <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[#ff2ea6]/20 to-[#8b5cf6]/20">
             <CheckCircle2 className="w-10 h-10 text-[#E879F9]" />
           </div>
           <h2 className="text-2xl font-bold text-white mb-2">{t('verify.verified')}</h2>
@@ -69,7 +69,7 @@ function VerifyEmailContent() {
           <div className="space-y-3">
             <Link
               href="/login"
-              className="block w-full py-4 bg-[#C84FFF] hover:bg-[#E879F9] text-white font-semibold rounded-xl transition-all hover:scale-[1.02]"
+              className="block w-full py-4 bg-[#ff2ea6] hover:bg-[#E879F9] text-white font-semibold rounded-xl transition-all hover:scale-[1.02]"
             >
               {t('verify.signInToAccount')}
             </Link>
@@ -85,14 +85,14 @@ function VerifyEmailContent() {
 
       {status === 'already-verified' && (
         <>
-          <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[rgba(200,79,255,0.1)] to-purple-500/20">
-            <CheckCircle2 className="w-10 h-10 text-[#C84FFF]" />
+          <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[rgba(255,46,166,0.1)] to-purple-500/20">
+            <CheckCircle2 className="w-10 h-10 text-[#ff2ea6]" />
           </div>
           <h2 className="text-2xl font-bold text-white mb-2">{t('verify.alreadyVerified')}</h2>
           <p className="text-[#8888aa] mb-6">{t('verify.alreadyVerifiedMsg')}</p>
           <Link
             href="/login"
-            className="block w-full py-4 bg-[#C84FFF] hover:bg-[#E879F9] text-white font-semibold rounded-xl transition-all hover:scale-[1.02]"
+            className="block w-full py-4 bg-[#ff2ea6] hover:bg-[#E879F9] text-white font-semibold rounded-xl transition-all hover:scale-[1.02]"
           >
             {t('verify.signInToAccount')}
           </Link>
@@ -142,8 +142,8 @@ function LoadingState() {
 
   return (
     <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-8 text-center">
-      <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[rgba(200,79,255,0.1)] to-purple-500/20">
-        <Loader2 className="w-10 h-10 text-[#C84FFF] animate-spin" />
+      <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[rgba(255,46,166,0.1)] to-purple-500/20">
+        <Loader2 className="w-10 h-10 text-[#ff2ea6] animate-spin" />
       </div>
       <h2 className="text-2xl font-bold text-white mb-2">{t('verify.verifying')}</h2>
       <p className="text-[#8888aa]">{t('verify.pleaseWait')}</p>
@@ -155,7 +155,7 @@ export default function VerifyEmailPage() {
   const t = useTranslations('auth');
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#06061a] via-[#0B0B2B] to-[#06061a] font-display p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#06061a] via-[#0c0a1c] to-[#06061a] font-display p-4">
       {/* Background effects */}
       <div className="absolute inset-0 bg-grid opacity-30" />
       <div className="absolute inset-0 radial-gradient" />
@@ -166,7 +166,7 @@ export default function VerifyEmailPage() {
           <Link href="/" className="inline-block">
             <h1 className="text-3xl font-bold">
               <span className="text-white">PACK </span>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C84FFF] to-[#E879F9]">ATTACK</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ff2ea6] to-[#E879F9]">ATTACK</span>
             </h1>
           </Link>
         </div>

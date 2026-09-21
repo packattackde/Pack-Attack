@@ -225,12 +225,12 @@ export function SavePresetModal({ isOpen, onClose, boxData, boxCards, onSaved }:
             />
           </div>
 
-          <div className="p-4 rounded-xl bg-[rgba(200,79,255,0.1)] border border-[rgba(200,79,255,0.3)]">
+          <div className="p-4 rounded-xl bg-[rgba(255,46,166,0.1)] border border-[rgba(255,46,166,0.3)]">
             <div className="flex items-start gap-3">
-              <Sparkles className="h-5 w-5 text-[#C84FFF] flex-shrink-0 mt-0.5" />
+              <Sparkles className="h-5 w-5 text-[#ff2ea6] flex-shrink-0 mt-0.5" />
               <div className="text-sm">
-                <p className="text-[#C84FFF] font-medium">What gets saved:</p>
-                <ul className="text-[#C84FFF]/70 mt-1 space-y-1">
+                <p className="text-[#ff2ea6] font-medium">What gets saved:</p>
+                <ul className="text-[#ff2ea6]/70 mt-1 space-y-1">
                   <li>• Box name, description, price, and cards per pack</li>
                   <li>• All {boxCards.length} cards with their pull rates and coin values</li>
                   <li>• Game type: {games.map(g => g.replace(/_/g, ' ')).join(', ')}</li>

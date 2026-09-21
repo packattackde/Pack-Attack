@@ -176,7 +176,7 @@ export default function ShopCartPage() {
     return (
       <div className="min-h-screen flex items-center justify-center font-display">
         <div className="text-white flex items-center gap-3">
-          <div className="w-6 h-6 border-2 border-[rgba(200,79,255,0.3)] border-t-transparent rounded-full animate-spin" />
+          <div className="w-6 h-6 border-2 border-[rgba(255,46,166,0.3)] border-t-transparent rounded-full animate-spin" />
           {t('title')}...
         </div>
       </div>
@@ -199,10 +199,10 @@ export default function ShopCartPage() {
         </Link>
 
         <div className="flex items-center gap-3 mb-8">
-          <ShoppingCart className="w-8 h-8 text-[#C84FFF]" />
+          <ShoppingCart className="w-8 h-8 text-[#ff2ea6]" />
           <h1 className="text-3xl font-bold text-white">{t('title')}</h1>
           {cart && cart.itemCount > 0 && (
-            <span className="px-3 py-1 rounded-full bg-[rgba(200,79,255,0.15)] text-[#C84FFF] text-sm">
+            <span className="px-3 py-1 rounded-full bg-[rgba(255,46,166,0.15)] text-[#ff2ea6] text-sm">
               {cart.itemCount} {t('items')}
             </span>
           )}
@@ -215,7 +215,7 @@ export default function ShopCartPage() {
             <p className="text-[#8888aa] mb-6">{t('emptyDesc')}</p>
             <Link
               href="/shop"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl hover:brightness-110 transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[#ff2ea6] text-white font-semibold rounded-xl hover:brightness-110 transition-all"
             >
               <Package className="w-5 h-5" />
               {t('browseProducts')}
@@ -234,7 +234,7 @@ export default function ShopCartPage() {
                   <div key={shopId} className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl overflow-hidden">
                     {/* Shop Header */}
                     <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.06)]/50 flex items-center gap-2">
-                      <Store className="w-4 h-4 text-[#C84FFF]" />
+                      <Store className="w-4 h-4 text-[#ff2ea6]" />
                       <span className="font-semibold text-white">{shopName}</span>
                     </div>
 
@@ -263,11 +263,11 @@ export default function ShopCartPage() {
                           {/* Info */}
                           <div className="flex-1 min-w-0">
                             <Link href={`/shop/product/${item.product.id}`}>
-                              <h3 className="font-semibold text-white hover:text-[#C84FFF] transition-colors truncate">
+                              <h3 className="font-semibold text-white hover:text-[#ff2ea6] transition-colors truncate">
                                 {item.product.name}
                               </h3>
                             </Link>
-                            <p className="text-[#C84FFF] font-semibold mt-1">
+                            <p className="text-[#ff2ea6] font-semibold mt-1">
                               €{item.product.price.toFixed(2)}
                             </p>
 
@@ -277,7 +277,7 @@ export default function ShopCartPage() {
                                 <button
                                   onClick={() => updateQuantity(item.id, item.quantity - 1)}
                                   disabled={updating === item.id || item.quantity <= 1}
-                                  className="p-1.5 rounded-lg bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md hover:bg-white/10 transition-colors disabled:opacity-50"
+                                  className="p-1.5 rounded-lg bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md hover:bg-white/10 transition-colors disabled:opacity-50"
                                 >
                                   <Minus className="w-4 h-4 text-white" />
                                 </button>
@@ -287,7 +287,7 @@ export default function ShopCartPage() {
                                 <button
                                   onClick={() => updateQuantity(item.id, item.quantity + 1)}
                                   disabled={updating === item.id || item.quantity >= item.product.stock}
-                                  className="p-1.5 rounded-lg bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md hover:bg-white/10 transition-colors disabled:opacity-50"
+                                  className="p-1.5 rounded-lg bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md hover:bg-white/10 transition-colors disabled:opacity-50"
                                 >
                                   <Plus className="w-4 h-4 text-white" />
                                 </button>
@@ -345,13 +345,13 @@ export default function ShopCartPage() {
                 <div className="border-t border-[rgba(255,255,255,0.06)] pt-4 mb-6">
                   <div className="flex justify-between">
                     <span className="text-lg font-semibold text-white">{t('total')}</span>
-                    <span className="text-2xl font-bold text-[#C84FFF]">€{cart.total.toFixed(2)}</span>
+                    <span className="text-2xl font-bold text-[#ff2ea6]">€{cart.total.toFixed(2)}</span>
                   </div>
                 </div>
 
                 <Link
                   href="/shop/checkout"
-                  className="w-full py-4 bg-[#C84FFF] text-white font-semibold rounded-xl hover:brightness-110 transition-all flex items-center justify-center gap-2"
+                  className="w-full py-4 bg-[#ff2ea6] text-white font-semibold rounded-xl hover:brightness-110 transition-all flex items-center justify-center gap-2"
                 >
                   <CreditCard className="w-5 h-5" />
                   {t('proceedToCheckout')}
@@ -359,7 +359,7 @@ export default function ShopCartPage() {
 
                 <Link
                   href="/shop"
-                  className="w-full mt-3 py-3 bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#f0f0f5] font-medium rounded-xl hover:bg-white/10 transition-colors flex items-center justify-center gap-2"
+                  className="w-full mt-3 py-3 bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md text-[#f0f0f5] font-medium rounded-xl hover:bg-white/10 transition-colors flex items-center justify-center gap-2"
                 >
                   {t('continueShopping')}
                 </Link>

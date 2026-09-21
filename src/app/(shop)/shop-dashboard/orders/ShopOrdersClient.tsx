@@ -43,10 +43,10 @@ type Order = {
 
 const statusConfig: Record<string, { color: string; bgColor: string; icon: React.ElementType; label: string }> = {
   PENDING: { color: 'text-yellow-400', bgColor: 'bg-yellow-400/10', icon: Clock, label: 'Pending' },
-  CONFIRMED: { color: 'text-[#C84FFF]', bgColor: 'bg-[rgba(200,79,255,0.1)]', icon: Check, label: 'Confirmed' },
+  CONFIRMED: { color: 'text-[#ff2ea6]', bgColor: 'bg-[rgba(255,46,166,0.1)]', icon: Check, label: 'Confirmed' },
   PROCESSING: { color: 'text-purple-400', bgColor: 'bg-purple-400/10', icon: Package, label: 'Processing' },
   SHIPPED: { color: 'text-indigo-400', bgColor: 'bg-indigo-400/10', icon: Truck, label: 'Shipped' },
-  DELIVERED: { color: 'text-[#E879F9]', bgColor: 'bg-[#C84FFF]/10', icon: CheckCircle, label: 'Delivered' },
+  DELIVERED: { color: 'text-[#E879F9]', bgColor: 'bg-[#ff2ea6]/10', icon: CheckCircle, label: 'Delivered' },
   CANCELLED: { color: 'text-red-400', bgColor: 'bg-red-400/10', icon: XCircle, label: 'Cancelled' },
 };
 
@@ -190,8 +190,8 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
             onClick={() => setFilterStatus(status)}
             className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
               filterStatus === status
-                ? 'bg-gradient-to-r from-[#9333EA] to-[#7c3aed] text-white shadow-lg'
-                : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white hover:bg-[#12123a]'
+                ? 'bg-gradient-to-r from-[#8b5cf6] to-[#7c3aed] text-white shadow-lg'
+                : 'bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white hover:bg-[#12123a]'
             }`}
           >
             {status === 'ALL' ? t('allOrders') : statusConfig[status]?.label || status}
@@ -285,7 +285,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                   <div className="border-t border-[rgba(255,255,255,0.06)] p-5 space-y-5">
                     <div className="grid md:grid-cols-2 gap-4">
                       {/* Customer Info */}
-                      <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
+                      <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                         <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
                           <User className="w-4 h-4 text-[#E879F9]" />
                           {t('customer')}
@@ -300,7 +300,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                       </div>
 
                       {/* Shipping Info */}
-                      <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
+                      <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                         <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
                           <MapPin className="w-4 h-4 text-[#E879F9]" />
                           {t('shippingAddress')}
@@ -322,7 +322,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                     </div>
 
                     {/* Card Details */}
-                    <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
+                    <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                       <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
                         <Package className="w-4 h-4 text-[#E879F9]" />
                         {t('orderItem')}
@@ -355,14 +355,14 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
 
                     {/* Customer Notes */}
                     {order.notes && (
-                      <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
+                      <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                         <h4 className="font-semibold text-white mb-2">{t('customerNotes')}</h4>
                         <p className="text-sm text-[#8888aa]">{order.notes}</p>
                       </div>
                     )}
 
                     {/* Tracking Info */}
-                    <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
+                    <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                       <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
                         <Truck className="w-4 h-4 text-[#E879F9]" />
                         {t('trackingInfo')}
@@ -375,21 +375,21 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                             placeholder={t('trackingNumber')}
                             value={trackingData.number}
                             onChange={(e) => setTrackingData({ ...trackingData, number: e.target.value })}
-                            className="w-full px-3 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white text-sm focus:border-[#C84FFF] focus:outline-none"
+                            className="w-full px-3 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white text-sm focus:border-[#ff2ea6] focus:outline-none"
                           />
                           <input
                             type="text"
                             placeholder={t('trackingUrlOptional')}
                             value={trackingData.url}
                             onChange={(e) => setTrackingData({ ...trackingData, url: e.target.value })}
-                            className="w-full px-3 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white text-sm focus:border-[#C84FFF] focus:outline-none"
+                            className="w-full px-3 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white text-sm focus:border-[#ff2ea6] focus:outline-none"
                           />
                           <div className="flex gap-2">
                             <Button
                               size="sm"
                               onClick={() => handleTrackingUpdate(order.id)}
                               disabled={updatingOrder === order.id}
-                              className="bg-[#C84FFF] hover:bg-[#9333EA]"
+                              className="bg-[#ff2ea6] hover:bg-[#8b5cf6]"
                             >
                               <Check className="w-4 h-4 mr-1" />
                               Save
@@ -442,7 +442,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                           size="sm"
                           variant="outline"
                           onClick={() => setEditingTracking(order.id)}
-                          className="border-[#C84FFF]/50 text-[#E879F9] hover:bg-[#C84FFF]/10"
+                          className="border-[#ff2ea6]/50 text-[#E879F9] hover:bg-[#ff2ea6]/10"
                         >
                           <Truck className="w-4 h-4 mr-2" />
                           {t('addTracking')}
@@ -451,7 +451,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                     </div>
 
                     {/* Shop Notes */}
-                    <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
+                    <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                       <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
                         <MessageSquare className="w-4 h-4 text-[#E879F9]" />
                         {t('internalNotes')}
@@ -464,14 +464,14 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                             value={shopNotes}
                             onChange={(e) => setShopNotes(e.target.value)}
                             rows={3}
-                            className="w-full px-3 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white text-sm focus:border-[#C84FFF] focus:outline-none resize-none"
+                            className="w-full px-3 py-2 rounded-lg bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white text-sm focus:border-[#ff2ea6] focus:outline-none resize-none"
                           />
                           <div className="flex gap-2">
                             <Button
                               size="sm"
                               onClick={() => handleNotesUpdate(order.id)}
                               disabled={updatingOrder === order.id}
-                              className="bg-[#C84FFF] hover:bg-[#9333EA]"
+                              className="bg-[#ff2ea6] hover:bg-[#8b5cf6]"
                             >
                               <Check className="w-4 h-4 mr-1" />
                               Save
@@ -532,7 +532,7 @@ export function ShopOrdersClient({ orders: initialOrders, isAdmin }: { orders: O
                               className={`px-4 py-2 rounded-xl text-sm font-medium transition-all disabled:opacity-50 flex items-center gap-2 ${
                                 order.status === s
                                   ? `${cfg.bgColor} ${cfg.color} ring-2 ring-offset-2 ring-offset-gray-900 ring-current`
-                                  : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md hover:bg-white/10 text-[#8888aa]'
+                                  : 'bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md hover:bg-white/10 text-[#8888aa]'
                               }`}
                             >
                               <StatusIcon className="w-4 h-4" />

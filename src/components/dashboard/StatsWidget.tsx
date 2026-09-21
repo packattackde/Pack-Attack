@@ -49,10 +49,10 @@ export default function StatsWidget({
 
   return (
     <div
-      className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl h-full p-4 sm:p-6 ${className}`}
+      className={`bg-[#100d22] border border-[rgba(255,255,255,0.1)] rounded-2xl h-full p-4 sm:p-6 ${className}`}
     >
       <p className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-3 flex items-center gap-1.5">
-        <GiChart className="w-3.5 h-3.5 text-[#C84FFF] shrink-0" /> {t('stats.myStats')}
+        <GiChart className="w-3.5 h-3.5 text-[#ff2ea6] shrink-0" /> {t('stats.myStats')}
         <InfoTooltip infoKey="dashboard.stats" />
       </p>
 
@@ -60,7 +60,7 @@ export default function StatsWidget({
         <StatCard
           value={animatedPacks.toLocaleString()}
           label={t('stats.packsOpened')}
-          colorClass="text-[#C84FFF]"
+          colorClass="text-[#ff2ea6]"
         />
         <StatCard
           value={animatedBattles.toLocaleString()}

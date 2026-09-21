@@ -58,7 +58,7 @@ export default async function SalesHistoryPage() {
       <div className="relative container py-12">
         {/* Header */}
         <div className="mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
+          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
             <Receipt className="w-4 h-4 text-[#E879F9]" />
             <span className="text-[#f0f0f5]">{t('badge')}</span>
           </div>
@@ -73,7 +73,7 @@ export default async function SalesHistoryPage() {
           <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 mb-8">
             <div className="grid grid-cols-2 gap-4">
               <div className="text-center">
-                <div className="inline-flex items-center justify-center w-12 h-12 mb-3 rounded-xl bg-[#C84FFF]/20">
+                <div className="inline-flex items-center justify-center w-12 h-12 mb-3 rounded-xl bg-[#ff2ea6]/20">
                   <TrendingUp className="w-6 h-6 text-[#E879F9]" />
                 </div>
                 <div className="text-2xl font-bold text-white">{totalSales}</div>
@@ -92,14 +92,14 @@ export default async function SalesHistoryPage() {
 
         {sales.length === 0 ? (
           <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
-            <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[#C84FFF]/20 to-[#9333EA]/20">
+            <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[#ff2ea6]/20 to-[#8b5cf6]/20">
               <Receipt className="w-10 h-10 text-[#E879F9]" />
             </div>
             <h2 className="text-2xl font-bold text-white mb-3">{t('noSales')}</h2>
             <p className="text-[#8888aa] mb-6">{t('noSalesDesc')}</p>
             <Link 
               href="/collection" 
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r bg-[#C84FFF] text-white font-semibold rounded-xl transition-all hover:scale-105"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r bg-[#ff2ea6] text-white font-semibold rounded-xl transition-all hover:scale-105"
             >
               <Sparkles className="w-5 h-5" />
               {t('viewCollection')}

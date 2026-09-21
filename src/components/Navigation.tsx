@@ -211,16 +211,21 @@ export function Navigation() {
   }, [session, feedbackCount]);
 
   return (
-    <nav ref={navRef} className="relative z-50 h-[72px] border-b border-[rgba(200,79,255,0.08)] shadow-[0_1px_0_rgba(200,79,255,0.06)] bg-[#0B0B2B]" id="main-navigation">
+    <nav ref={navRef} className="relative z-50 h-[72px] border-b border-[rgba(139,92,246,0.25)] bg-[linear-gradient(180deg,rgba(5,4,12,0.97),rgba(5,4,12,0.8))] backdrop-blur-[10px]" id="main-navigation">
       <div className="container flex h-[72px] items-center gap-8">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 shrink-0 touch-target group">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[rgba(200,79,255,0.15)] border border-[rgba(200,79,255,0.25)] group-hover:bg-[rgba(200,79,255,0.25)] transition-colors">
-            <Package className="h-4 w-4 text-[#C84FFF]" />
+        {/* Logo — Neon District hanko stamp */}
+        <Link href="/" className="flex items-center gap-3 shrink-0 touch-target group">
+          <div className="flex h-9 w-9 items-center justify-center rounded-md font-jp font-black text-base text-white bg-gradient-to-br from-[#ff2ea6] to-[#b01c72] shadow-[0_0_16px_rgba(255,46,166,0.7)] group-hover:shadow-[0_0_24px_rgba(255,46,166,0.9)] transition-shadow">
+            引
           </div>
-          <span className="text-lg font-bold font-heading bg-gradient-to-r from-[#C84FFF] to-[#9333EA] bg-clip-text text-transparent">
-            PullForge
-          </span>
+          <div className="leading-tight">
+            <span className="text-lg font-black font-orbitron tracking-wider text-[#eeecf7]">
+              PULL<span className="text-[#ff2ea6] drop-shadow-[0_0_14px_rgba(255,46,166,0.7)]">FORGE</span>
+            </span>
+            <span className="block text-[0.55rem] font-jp font-normal tracking-[6px] text-[#23e6ff] drop-shadow-[0_0_8px_rgba(35,230,255,0.7)]">
+              プルフォージ
+            </span>
+          </div>
         </Link>
 
         {/* Desktop Navigation Links */}
@@ -237,13 +242,13 @@ export function Navigation() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 touch-target ${
+                className={`relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold tracking-wide uppercase transition-all duration-150 touch-target ${
                   isActive
-                    ? 'bg-[rgba(200,79,255,0.08)] text-[#C84FFF] shadow-sm'
-                    : 'text-[#8888aa] hover:text-[#f0f0f5] hover:bg-[rgba(255,255,255,0.04)]'
+                    ? 'bg-[rgba(255,46,166,0.08)] text-[#23e6ff] shadow-sm shadow-[rgba(35,230,255,0.15)]'
+                    : 'text-[#9a94b8] hover:text-[#23e6ff] hover:bg-[rgba(35,230,255,0.04)] hover:drop-shadow-[0_0_6px_rgba(35,230,255,0.4)]'
                 }`}
               >
-                <link.icon className={`h-4 w-4 ${isActive ? 'text-[#C84FFF]' : ''}`} />
+                <link.icon className={`h-4 w-4 ${isActive ? 'text-[#23e6ff]' : ''}`} />
                 <span>{link.label}</span>
                 {link.badge && link.badge > 0 ? (
                   <span className="flex items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white min-w-[18px] h-[18px] px-1">
@@ -258,7 +263,7 @@ export function Navigation() {
         {/* Desktop Right Side */}
         <div className="hidden md:flex items-center gap-3 shrink-0">
           {status === 'loading' ? (
-            <div className="h-10 w-24 animate-pulse rounded-lg bg-[#1a1a4a]" />
+            <div className="h-10 w-24 animate-pulse rounded-lg bg-[#100d22]" />
           ) : session ? (
             <>
               {/* Coin Balance */}
@@ -274,14 +279,14 @@ export function Navigation() {
               {/* Level Badge */}
               {levelData && (
                 <Link href="/dashboard" title={`Level ${levelData.level} — ${levelData.title}`}>
-                  <div className="flex items-center gap-1.5 h-10 px-3 rounded-xl bg-[rgba(200,79,255,0.08)] border border-[rgba(200,79,255,0.2)] hover:bg-[rgba(200,79,255,0.15)] transition-all duration-150 relative overflow-hidden">
+                  <div className="flex items-center gap-1.5 h-10 px-3 rounded-xl bg-[rgba(255,46,166,0.08)] border border-[rgba(255,46,166,0.2)] hover:bg-[rgba(255,46,166,0.15)] transition-all duration-150 relative overflow-hidden">
                     {/* XP fill bar */}
                     <div
-                      className="absolute inset-0 bg-[#C84FFF] origin-left transition-transform duration-500"
+                      className="absolute inset-0 bg-[#ff2ea6] origin-left transition-transform duration-500"
                       style={{ transform: `scaleX(${levelData.percent / 100})`, opacity: 0.2 }}
                     />
-                    <Zap className="h-3.5 w-3.5 text-[#C84FFF] relative z-10 shrink-0" />
-                    <span className="text-xs font-bold text-[#C84FFF] relative z-10 tabular-nums">
+                    <Zap className="h-3.5 w-3.5 text-[#ff2ea6] relative z-10 shrink-0" />
+                    <span className="text-xs font-bold text-[#ff2ea6] relative z-10 tabular-nums">
                       {levelData.level}
                     </span>
                   </div>
@@ -293,7 +298,7 @@ export function Navigation() {
                 <div className="flex items-center justify-center h-10 w-10 rounded-xl hover:bg-white/[0.06] transition-colors">
                   <ShoppingCart className="h-4 w-4 text-[#8888aa]" />
                   {cartCount > 0 && (
-                    <span className="absolute -top-0.5 -right-0.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-[#C84FFF] text-[10px] font-bold text-white min-w-[18px] h-[18px] px-1">
+                    <span className="absolute -top-0.5 -right-0.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-[#ff2ea6] text-[10px] font-bold text-white min-w-[18px] h-[18px] px-1">
                       {cartCount}
                     </span>
                   )}
@@ -302,8 +307,8 @@ export function Navigation() {
 
               {/* User Profile */}
               <Link href="/dashboard" className="hidden lg:flex items-center gap-2 h-10 px-3.5 rounded-xl hover:bg-white/[0.06] transition-colors">
-                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[rgba(200,79,255,0.15)]">
-                  <User className="h-3.5 w-3.5 text-[#C84FFF]" />
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[rgba(255,46,166,0.15)]">
+                  <User className="h-3.5 w-3.5 text-[#ff2ea6]" />
                 </div>
                 <span className="text-sm text-[#f0f0f5] max-w-[100px] truncate">{session.user.name || session.user.email}</span>
               </Link>
@@ -328,7 +333,7 @@ export function Navigation() {
                   {t('signIn')}
                 </Link>
               </Button>
-              <Button asChild size="sm" className="bg-[#C84FFF] hover:bg-[#A855F7] text-white font-bold rounded-xl shadow-lg shadow-[rgba(200,79,255,0.25)]">
+              <Button asChild size="sm" className="bg-gradient-to-r from-[#ff2ea6] to-[#ff6ec4] hover:from-[#ff5bbc] hover:to-[#ff8bd6] text-[#14041f] font-bold font-orbitron tracking-wider rounded-xl shadow-lg shadow-[rgba(255,46,166,0.4)] [clip-path:polygon(8px_0,100%_0,calc(100%-8px)_100%,0_100%)]">
                 <Link href="/register">{t('getStarted')}</Link>
               </Button>
             </div>
@@ -350,7 +355,7 @@ export function Navigation() {
               <Link href="/cart" className="relative flex items-center justify-center h-9 w-9 touch-target">
                 <ShoppingCart className="h-5 w-5 text-[#8888aa]" />
                 {cartCount > 0 && (
-                  <span className="absolute top-0 right-0 flex items-center justify-center rounded-full bg-[#C84FFF] text-[10px] font-bold text-white min-w-[16px] h-[16px] px-1">
+                  <span className="absolute top-0 right-0 flex items-center justify-center rounded-full bg-[#ff2ea6] text-[10px] font-bold text-white min-w-[16px] h-[16px] px-1">
                     {cartCount}
                   </span>
                 )}
@@ -378,7 +383,7 @@ export function Navigation() {
       {/* Mobile Menu */}
       <div
         id="mobile-menu"
-        className={`md:hidden fixed inset-x-0 bottom-0 z-40 bg-[#0B0B2B]/98 backdrop-blur-xl transform transition-transform duration-300 ease-in-out ${
+        className={`md:hidden fixed inset-x-0 bottom-0 z-40 bg-[#0c0a1c]/98 backdrop-blur-xl transform transition-transform duration-300 ease-in-out ${
           mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
         style={{
@@ -404,12 +409,12 @@ export function Navigation() {
                   href={link.href}
                   className={`flex items-center gap-3 px-5 py-4 rounded-xl text-[15px] font-medium transition-all touch-target min-h-[52px] ${
                     isActive
-                      ? 'bg-[rgba(200,79,255,0.1)] text-[#C84FFF]'
+                      ? 'bg-[rgba(255,46,166,0.1)] text-[#ff2ea6]'
                       : 'text-[#f0f0f5] active:bg-white/[0.06]'
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  <link.icon className={`h-5 w-5 shrink-0 ${isActive ? 'text-[#C84FFF]' : 'text-[#7777a0]'}`} />
+                  <link.icon className={`h-5 w-5 shrink-0 ${isActive ? 'text-[#ff2ea6]' : 'text-[#7777a0]'}`} />
                   <span>{link.label}</span>
                   {link.badge && link.badge > 0 ? (
                     <span className="ml-auto flex items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white min-w-[18px] h-[18px] px-1">
@@ -424,7 +429,7 @@ export function Navigation() {
           {/* User Section */}
           <div className="border-t border-white/[0.06] px-3 py-4 space-y-3 safe-area-padding-bottom">
             {status === 'loading' ? (
-              <div className="h-14 animate-pulse rounded-xl bg-[#1a1a4a]" />
+              <div className="h-14 animate-pulse rounded-xl bg-[#100d22]" />
             ) : session ? (
               <>
                 <Link
@@ -432,8 +437,8 @@ export function Navigation() {
                   className="flex items-center gap-3 px-4 py-3.5 rounded-xl bg-white/[0.04] active:bg-white/[0.08] transition-colors touch-target min-h-[60px]"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  <div className="w-10 h-10 rounded-full bg-[rgba(200,79,255,0.15)] flex items-center justify-center shrink-0">
-                    <User className="h-5 w-5 text-[#C84FFF]" />
+                  <div className="w-10 h-10 rounded-full bg-[rgba(255,46,166,0.15)] flex items-center justify-center shrink-0">
+                    <User className="h-5 w-5 text-[#ff2ea6]" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
@@ -441,7 +446,7 @@ export function Navigation() {
                         {session.user.name || 'User'}
                       </p>
                       {levelData && (
-                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-[rgba(200,79,255,0.15)] border border-[rgba(200,79,255,0.25)] text-[10px] font-bold text-[#C84FFF] shrink-0">
+                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-[rgba(255,46,166,0.15)] border border-[rgba(255,46,166,0.25)] text-[10px] font-bold text-[#ff2ea6] shrink-0">
                           <Zap className="h-2.5 w-2.5" />
                           {levelData.level}
                         </span>
@@ -453,7 +458,7 @@ export function Navigation() {
                     {levelData && (
                       <div className="mt-1.5 h-1 w-full bg-white/10 rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-gradient-to-r from-[#C84FFF] to-[#9333EA] rounded-full transition-all duration-500"
+                          className="h-full bg-gradient-to-r from-[#ff2ea6] to-[#8b5cf6] rounded-full transition-all duration-500"
                           style={{ width: `${levelData.percent}%` }}
                         />
                       </div>
@@ -479,7 +484,7 @@ export function Navigation() {
                 <div className="flex justify-center mb-2">
                   <LanguageSwitcher />
                 </div>
-                <Button asChild className="w-full py-3 min-h-[48px] touch-target bg-[#C84FFF] hover:bg-[#A855F7] text-white shadow-lg shadow-[rgba(200,79,255,0.25)]">
+                <Button asChild className="w-full py-3 min-h-[48px] touch-target bg-[#ff2ea6] hover:bg-[#8b5cf6] text-white shadow-lg shadow-[rgba(255,46,166,0.25)]">
                   <Link href="/register" onClick={() => setMobileMenuOpen(false)}>
                     {t('getStarted')}
                   </Link>

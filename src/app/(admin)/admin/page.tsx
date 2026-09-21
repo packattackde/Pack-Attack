@@ -40,7 +40,7 @@ export default async function AdminDashboard() {
       <div className="relative container py-12">
         {/* Header */}
         <div className="mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
+          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
             <ShieldCheck className="w-4 h-4 text-purple-400" />
             <span className="text-[#f0f0f5]">Admin Panel</span>
           </div>
@@ -53,37 +53,37 @@ export default async function AdminDashboard() {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 mb-10">
-          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
-            <Package className="w-6 h-6 text-[#C84FFF] mx-auto mb-2" />
+          <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
+            <Package className="w-6 h-6 text-[#ff2ea6] mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{boxCount}</div>
             <div className="text-xs text-[#8888aa]">Boxes</div>
           </div>
-          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
+          <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
             <Swords className="w-6 h-6 text-purple-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{battleCount}</div>
             <div className="text-xs text-[#8888aa]">Battles</div>
           </div>
-          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
+          <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
             <Users className="w-6 h-6 text-cyan-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{userCount}</div>
             <div className="text-xs text-[#8888aa]">Users</div>
           </div>
-          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
+          <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
             <Store className="w-6 h-6 text-orange-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{shopCount}</div>
             <div className="text-xs text-[#8888aa]">Shops</div>
           </div>
-          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
+          <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
             <TrendingUp className="w-6 h-6 text-[#E879F9] mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{verifiedCount}</div>
             <div className="text-xs text-[#8888aa]">Verified</div>
           </div>
-          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
+          <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
             <Mail className="w-6 h-6 text-pink-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{emailCount}</div>
             <div className="text-xs text-[#8888aa]">Emails Sent</div>
           </div>
-          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
+          <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
             <Coins className="w-6 h-6 text-amber-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{Number(totalCoins._sum.coins || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
             <div className="text-xs text-[#8888aa]">Total Coins</div>
@@ -92,13 +92,13 @@ export default async function AdminDashboard() {
 
         {/* Management Cards */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <Link href="/admin/orders" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-[#C84FFF]/50 transition-all group relative">
+          <Link href="/admin/orders" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-[#ff2ea6]/50 transition-all group relative">
             {pendingOrders > 0 && (
               <div className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-xs font-bold text-white">
                 {pendingOrders}
               </div>
             )}
-            <div className="inline-flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-gradient-to-br from-[#C84FFF]/20 to-[#9333EA]/20">
+            <div className="inline-flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-gradient-to-br from-[#ff2ea6]/20 to-[#8b5cf6]/20">
               <ShoppingCart className="w-6 h-6 text-[#E879F9]" />
             </div>
             <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#E879F9] transition-colors">Order Management</h3>
@@ -113,16 +113,16 @@ export default async function AdminDashboard() {
             <p className="text-[#8888aa] text-sm">Oversee card supplier shops, stock, and orders.</p>
           </Link>
 
-          <Link href="/admin/boxes" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-[rgba(200,79,255,0.3)] transition-all group">
-            <div className="inline-flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-gradient-to-br from-[rgba(200,79,255,0.1)] to-cyan-500/20">
-              <Package className="w-6 h-6 text-[#C84FFF]" />
+          <Link href="/admin/boxes" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-[rgba(255,46,166,0.3)] transition-all group">
+            <div className="inline-flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-gradient-to-br from-[rgba(255,46,166,0.1)] to-cyan-500/20">
+              <Package className="w-6 h-6 text-[#ff2ea6]" />
             </div>
-            <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#C84FFF] transition-colors">Box Management</h3>
+            <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#ff2ea6] transition-colors">Box Management</h3>
             <p className="text-[#8888aa] text-sm">Create and manage boxes for users to open.</p>
           </Link>
 
           <Link href="/admin/users" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-cyan-500/50 transition-all group">
-            <div className="inline-flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-gradient-to-br from-cyan-500/20 to-[#9333EA]/20">
+            <div className="inline-flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-gradient-to-br from-cyan-500/20 to-[#8b5cf6]/20">
               <Users className="w-6 h-6 text-cyan-400" />
             </div>
             <h3 className="text-xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">User Management</h3>
@@ -153,17 +153,17 @@ export default async function AdminDashboard() {
             <p className="text-[#8888aa] text-sm">Manage add-on products shown in cart.</p>
           </Link>
 
-          <Link href="/admin/payouts" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-[#C84FFF]/50 transition-all group">
-            <div className="inline-flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-gradient-to-br from-[#9333EA]/20 to-[#9333EA]/20">
+          <Link href="/admin/payouts" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-[#ff2ea6]/50 transition-all group">
+            <div className="inline-flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-gradient-to-br from-[#8b5cf6]/20 to-[#8b5cf6]/20">
               <Wallet className="w-6 h-6 text-[#E879F9]" />
             </div>
             <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#E879F9] transition-colors">Shop Payouts</h3>
             <p className="text-[#8888aa] text-sm">Process payout requests from shop owners. 5 coins = 1 EUR.</p>
           </Link>
 
-          <Link href="/admin/feedback" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-[#C84FFF]/50 transition-all group relative">
+          <Link href="/admin/feedback" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-[#ff2ea6]/50 transition-all group relative">
             {openFeedbackCount > 0 && (
-              <div className="absolute -top-2 -right-2 w-6 h-6 bg-[#C84FFF] rounded-full flex items-center justify-center text-xs font-bold text-white">
+              <div className="absolute -top-2 -right-2 w-6 h-6 bg-[#ff2ea6] rounded-full flex items-center justify-center text-xs font-bold text-white">
                 {openFeedbackCount}
               </div>
             )}

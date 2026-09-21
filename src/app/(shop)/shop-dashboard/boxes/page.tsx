@@ -78,7 +78,7 @@ export default async function ShopBoxesPage() {
           
           <div className="flex items-center justify-between mb-4">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm mb-3">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md text-sm mb-3">
                 <Store className="w-4 h-4 text-cyan-400" />
                 <span className="text-[#f0f0f5]">{isAdmin ? 'Admin View' : shop?.name || 'Shop Dashboard'}</span>
               </div>
@@ -92,7 +92,7 @@ export default async function ShopBoxesPage() {
             
             <Link
               href="/shop-dashboard/boxes/create"
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-[#C84FFF] to-cyan-500 hover:from-[#9333EA] hover:to-[#7c3aed] text-white font-medium transition-all shadow-lg shadow-[#C84FFF]/25 hover:shadow-[#C84FFF]/40"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-[#ff2ea6] to-cyan-500 hover:from-[#8b5cf6] hover:to-[#7c3aed] text-white font-medium transition-all shadow-lg shadow-[#ff2ea6]/25 hover:shadow-[#ff2ea6]/40"
             >
               <Plus className="w-5 h-5" />
               <span>Create New Box</span>

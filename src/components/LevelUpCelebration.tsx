@@ -57,7 +57,7 @@ export function LevelUpCelebration({ level, title, visible, onClose }: LevelUpCe
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className="font-heading text-7xl font-extrabold text-[#C84FFF] drop-shadow-[0_0_30px_rgba(200,79,255,0.4)]"
+              className="font-heading text-7xl font-extrabold text-[#ff2ea6] drop-shadow-[0_0_30px_rgba(255,46,166,0.4)]"
             >
               {level}
             </motion.p>

@@ -46,7 +46,7 @@ const COMMON_TIER: RarityTier = {
 const UNCOMMON_TIER: RarityTier = {
   border: 'border-[#E879F9]',
   shadow: '',
-  bg: 'bg-[#C84FFF]/20',
+  bg: 'bg-[#ff2ea6]/20',
   text: 'text-[#E879F9]',
   animation: '',
   lindwurm: 'lindwurm-uncommon',
@@ -181,7 +181,7 @@ const getRarityGlow = (rarity: string | undefined): RarityTier => {
 const TIER_ORDER = ['lindwurm-common', 'lindwurm-uncommon', 'lindwurm-rare', 'lindwurm-epic', 'lindwurm-legendary'] as const;
 const TIER_META: Record<string, { label: string; labelKey: string; btnClass: string }> = {
   'lindwurm-common':    { label: 'Commons',     labelKey: 'rarities.commons',     btnClass: 'border-gray-500/60 text-gray-300 hover:bg-gray-500/10' },
-  'lindwurm-uncommon':  { label: 'Uncommons',   labelKey: 'rarities.uncommons',   btnClass: 'border-[#C84FFF]/60 text-[#E879F9] hover:bg-[#C84FFF]/10' },
+  'lindwurm-uncommon':  { label: 'Uncommons',   labelKey: 'rarities.uncommons',   btnClass: 'border-[#ff2ea6]/60 text-[#E879F9] hover:bg-[#ff2ea6]/10' },
   'lindwurm-rare':      { label: 'Rares',       labelKey: 'rarities.rares',       btnClass: 'border-blue-500/60 text-blue-400 hover:bg-blue-500/10' },
   'lindwurm-epic':      { label: 'Epics',       labelKey: 'rarities.epics',       btnClass: 'border-purple-500/60 text-purple-400 hover:bg-purple-500/10' },
   'lindwurm-legendary': { label: 'Legendaries', labelKey: 'rarities.legendaries', btnClass: 'border-amber-500/60 text-amber-400 hover:bg-amber-500/10' },
@@ -204,7 +204,7 @@ function CardBack({ url }: { url?: string | null }) {
 
   if (!useFallback) {
     return (
-      <div className="absolute inset-0 rounded-xl overflow-hidden border border-[rgba(200,79,255,0.15)]">
+      <div className="absolute inset-0 rounded-xl overflow-hidden border border-[rgba(255,46,166,0.15)]">
         <Image
           src={src}
           alt="Card back"
@@ -218,12 +218,12 @@ function CardBack({ url }: { url?: string | null }) {
   }
   return (
     <div
-      className="absolute inset-0 rounded-xl overflow-hidden border border-[rgba(200,79,255,0.15)]"
+      className="absolute inset-0 rounded-xl overflow-hidden border border-[rgba(255,46,166,0.15)]"
       style={{ background: 'linear-gradient(135deg, #1e3a5f 0%, #0f172a 50%, #1e3a5f 100%)' }}
     >
-      <div className="absolute inset-2 rounded-lg border border-[rgba(200,79,255,0.15)] flex items-center justify-center">
-        <div className="w-10 h-10 rounded-md border border-[rgba(200,79,255,0.1)] flex items-center justify-center">
-          <Sparkles className="w-4 h-4 text-[rgba(200,79,255,0.4)]" />
+      <div className="absolute inset-2 rounded-lg border border-[rgba(255,46,166,0.15)] flex items-center justify-center">
+        <div className="w-10 h-10 rounded-md border border-[rgba(255,46,166,0.1)] flex items-center justify-center">
+          <Sparkles className="w-4 h-4 text-[rgba(255,46,166,0.4)]" />
         </div>
       </div>
     </div>
@@ -512,7 +512,7 @@ export default function OpenBoxPage() {
     return (
       <div className="min-h-screen flex items-center justify-center font-display">
         <div className="text-[#f0f0f5] flex items-center gap-3">
-          <div className="w-6 h-6 border-2 border-[#C84FFF] border-t-transparent rounded-full animate-spin" />
+          <div className="w-6 h-6 border-2 border-[#ff2ea6] border-t-transparent rounded-full animate-spin" />
           {t('loadingPack')}
         </div>
       </div>
@@ -558,7 +558,7 @@ export default function OpenBoxPage() {
           </div>
         )}
         {!box.imageUrl && (
-          <div className="absolute inset-0 z-0 bg-gradient-to-b from-[#1a1a4a] to-[#06061a]" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-[#100d22] to-[#06061a]" />
         )}
 
         <div className="relative z-10 container pt-8 pb-6">
@@ -572,7 +572,7 @@ export default function OpenBoxPage() {
           <div className="flex flex-col items-center text-center">
             {/* Floating box image */}
             <div className="relative w-40 h-40 sm:w-52 sm:h-52 mb-6 animate-float">
-              <div className="absolute inset-0 rounded-2xl bg-[#C84FFF]/20 blur-3xl scale-150" />
+              <div className="absolute inset-0 rounded-2xl bg-[#ff2ea6]/20 blur-3xl scale-150" />
               <div className="relative w-full h-full rounded-2xl overflow-hidden border border-[rgba(255,255,255,0.15)] shadow-2xl">
                 {box.imageUrl ? (
                   <Image src={box.imageUrl} alt={box.name} fill className="object-cover" unoptimized />
@@ -713,7 +713,7 @@ export default function OpenBoxPage() {
                   </div>
 
                   {/* Center: Static control panel */}
-                  <div className="w-[400px] flex-shrink-0 rounded-2xl p-6 bg-[#0a0a2e]/[0.94] backdrop-blur-2xl border border-[rgba(200,79,255,0.2)] shadow-[0_8px_60px_rgba(0,0,0,0.8),0_0_50px_rgba(200,79,255,0.12)]">
+                  <div className="w-[400px] flex-shrink-0 rounded-2xl p-6 bg-[#0a0a2e]/[0.94] backdrop-blur-2xl border border-[rgba(255,46,166,0.2)] shadow-[0_8px_60px_rgba(0,0,0,0.8),0_0_50px_rgba(255,46,166,0.12)]">
                     <p className="text-sm font-semibold text-[#8888aa] text-center mb-4">{t('quantity')}</p>
                     <div className="flex justify-center gap-3 mb-5">
                       {[1, 2, 3, 4].map((qty) => (
@@ -723,8 +723,8 @@ export default function OpenBoxPage() {
                           onClick={() => setQuantity(qty)}
                           className={`w-12 h-12 rounded-full text-lg font-bold transition-all duration-200 ${
                             quantity === qty
-                              ? 'bg-[#C84FFF] text-white shadow-[0_0_20px_rgba(200,79,255,0.4)] scale-110 ring-2 ring-[#C84FFF]/50 ring-offset-2 ring-offset-[#0a0a2e]'
-                              : 'bg-[#1e1e55] text-[#8888aa] border border-[rgba(255,255,255,0.1)] hover:border-[rgba(200,79,255,0.3)] hover:text-[#f0f0f5]'
+                              ? 'bg-[#ff2ea6] text-white shadow-[0_0_20px_rgba(255,46,166,0.4)] scale-110 ring-2 ring-[#ff2ea6]/50 ring-offset-2 ring-offset-[#0a0a2e]'
+                              : 'bg-[#1e1e55] text-[#8888aa] border border-[rgba(255,255,255,0.1)] hover:border-[rgba(255,46,166,0.3)] hover:text-[#f0f0f5]'
                           }`}
                         >
                           {qty}
@@ -734,7 +734,7 @@ export default function OpenBoxPage() {
                     <div className="h-px bg-gradient-to-r from-transparent via-[rgba(255,255,255,0.08)] to-transparent mb-4" />
                     <div className="text-center mb-2">
                       <p className="text-[#f0f0f5] text-lg font-semibold">
-                        {quantity} &times; {box.price.toFixed(2)} = <span className="text-[#C84FFF]">{totalCost.toFixed(2)}</span> <span className="text-sm text-[#8888aa]">coins</span>
+                        {quantity} &times; {box.price.toFixed(2)} = <span className="text-[#ff2ea6]">{totalCost.toFixed(2)}</span> <span className="text-sm text-[#8888aa]">coins</span>
                       </p>
                     </div>
                     {userCoins !== null && (
@@ -747,7 +747,7 @@ export default function OpenBoxPage() {
                     <button
                       onClick={() => setShowConfirm(true)}
                       disabled={opening || isAutoOpening || (userCoins !== null && userCoins < totalCost)}
-                      className="w-full py-4 bg-gradient-to-r from-[#C84FFF] to-[#9333EA] hover:from-[#E879F9] hover:to-[#C84FFF] text-white font-bold text-base rounded-xl transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2.5 shimmer shadow-[0_0_30px_rgba(200,79,255,0.35)]"
+                      className="w-full py-4 bg-gradient-to-r from-[#ff2ea6] to-[#8b5cf6] hover:from-[#E879F9] hover:to-[#ff2ea6] text-white font-bold text-base rounded-xl transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2.5 shimmer shadow-[0_0_30px_rgba(255,46,166,0.35)]"
                     >
                       {opening ? (
                         <><div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />{t('opening')}</>
@@ -800,7 +800,7 @@ export default function OpenBoxPage() {
                 {/* Mobile/Tablet: Panel on top, cards below */}
                 <div className="lg:hidden space-y-6">
                   {/* Control panel */}
-                  <div className="rounded-2xl p-6 bg-[#0a0a2e]/[0.94] backdrop-blur-2xl border border-[rgba(200,79,255,0.2)] shadow-[0_8px_60px_rgba(0,0,0,0.8),0_0_50px_rgba(200,79,255,0.12)]">
+                  <div className="rounded-2xl p-6 bg-[#0a0a2e]/[0.94] backdrop-blur-2xl border border-[rgba(255,46,166,0.2)] shadow-[0_8px_60px_rgba(0,0,0,0.8),0_0_50px_rgba(255,46,166,0.12)]">
                     <p className="text-sm font-semibold text-[#8888aa] text-center mb-4">{t('quantity')}</p>
                     <div className="flex justify-center gap-3 mb-5">
                       {[1, 2, 3, 4].map((qty) => (
@@ -810,8 +810,8 @@ export default function OpenBoxPage() {
                           onClick={() => setQuantity(qty)}
                           className={`w-12 h-12 rounded-full text-lg font-bold transition-all duration-200 ${
                             quantity === qty
-                              ? 'bg-[#C84FFF] text-white shadow-[0_0_20px_rgba(200,79,255,0.4)] scale-110 ring-2 ring-[#C84FFF]/50 ring-offset-2 ring-offset-[#0a0a2e]'
-                              : 'bg-[#1e1e55] text-[#8888aa] border border-[rgba(255,255,255,0.1)] hover:border-[rgba(200,79,255,0.3)] hover:text-[#f0f0f5]'
+                              ? 'bg-[#ff2ea6] text-white shadow-[0_0_20px_rgba(255,46,166,0.4)] scale-110 ring-2 ring-[#ff2ea6]/50 ring-offset-2 ring-offset-[#0a0a2e]'
+                              : 'bg-[#1e1e55] text-[#8888aa] border border-[rgba(255,255,255,0.1)] hover:border-[rgba(255,46,166,0.3)] hover:text-[#f0f0f5]'
                           }`}
                         >
                           {qty}
@@ -821,7 +821,7 @@ export default function OpenBoxPage() {
                     <div className="h-px bg-gradient-to-r from-transparent via-[rgba(255,255,255,0.08)] to-transparent mb-4" />
                     <div className="text-center mb-2">
                       <p className="text-[#f0f0f5] text-lg font-semibold">
-                        {quantity} &times; {box.price.toFixed(2)} = <span className="text-[#C84FFF]">{totalCost.toFixed(2)}</span> <span className="text-sm text-[#8888aa]">coins</span>
+                        {quantity} &times; {box.price.toFixed(2)} = <span className="text-[#ff2ea6]">{totalCost.toFixed(2)}</span> <span className="text-sm text-[#8888aa]">coins</span>
                       </p>
                     </div>
                     {userCoins !== null && (
@@ -834,7 +834,7 @@ export default function OpenBoxPage() {
                     <button
                       onClick={() => setShowConfirm(true)}
                       disabled={opening || isAutoOpening || (userCoins !== null && userCoins < totalCost)}
-                      className="w-full py-4 bg-gradient-to-r from-[#C84FFF] to-[#9333EA] hover:from-[#E879F9] hover:to-[#C84FFF] text-white font-bold text-base rounded-xl transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2.5 shimmer shadow-[0_0_30px_rgba(200,79,255,0.35)]"
+                      className="w-full py-4 bg-gradient-to-r from-[#ff2ea6] to-[#8b5cf6] hover:from-[#E879F9] hover:to-[#ff2ea6] text-white font-bold text-base rounded-xl transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2.5 shimmer shadow-[0_0_30px_rgba(255,46,166,0.35)]"
                     >
                       {opening ? (
                         <><div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />{t('opening')}</>
@@ -980,7 +980,7 @@ export default function OpenBoxPage() {
                     setFeaturedPullId(null);
                     setFeaturedCardId(null);
                   }}
-                  className="px-6 py-3 bg-[#C84FFF] text-white font-semibold rounded-xl transition-all hover:scale-105 shadow-[0_0_24px_rgba(200,79,255,0.3)]"
+                  className="px-6 py-3 bg-[#ff2ea6] text-white font-semibold rounded-xl transition-all hover:scale-105 shadow-[0_0_24px_rgba(255,46,166,0.3)]"
                 >
                   {t('openMore')}
                 </button>
@@ -1256,7 +1256,7 @@ export default function OpenBoxPage() {
 
             <button
               onClick={() => setDeckPhase('idle')}
-              className="px-8 py-3 bg-[#C84FFF] hover:bg-[#E879F9] text-white font-semibold rounded-xl transition-all hover:scale-105 shadow-[0_0_24px_rgba(200,79,255,0.3)]"
+              className="px-8 py-3 bg-[#ff2ea6] hover:bg-[#E879F9] text-white font-semibold rounded-xl transition-all hover:scale-105 shadow-[0_0_24px_rgba(255,46,166,0.3)]"
             >
               {t('openPack')}
             </button>
@@ -1362,7 +1362,7 @@ export default function OpenBoxPage() {
               </button>
               <button
                 onClick={() => { setShowConfirm(false); handleOpen(); }}
-                className="flex-1 py-2.5 rounded-xl bg-[#C84FFF] hover:bg-[#E879F9] text-white font-semibold transition-all hover:scale-[1.02] flex items-center justify-center gap-2 shadow-[0_0_24px_rgba(200,79,255,0.3)]"
+                className="flex-1 py-2.5 rounded-xl bg-[#ff2ea6] hover:bg-[#E879F9] text-white font-semibold transition-all hover:scale-[1.02] flex items-center justify-center gap-2 shadow-[0_0_24px_rgba(255,46,166,0.3)]"
               >
                 <Coins className="w-4 h-4" />
                 {t('openPack')}

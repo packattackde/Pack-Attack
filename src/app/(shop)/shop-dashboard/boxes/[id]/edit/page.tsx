@@ -148,7 +148,7 @@ export default function EditShopBoxPage({ params }: { params: Promise<{ id: stri
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin text-[#C84FFF] mx-auto mb-4" />
+          <Loader2 className="h-8 w-8 animate-spin text-[#ff2ea6] mx-auto mb-4" />
           <p className="text-[#8888aa]">{t('loadingBox')}</p>
         </div>
       </div>
@@ -177,7 +177,7 @@ export default function EditShopBoxPage({ params }: { params: Promise<{ id: stri
           </Link>
           
           <div className="flex items-center gap-3 mb-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
               <Store className="w-4 h-4 text-cyan-400" />
               <span className="text-[#f0f0f5]">{t('badge')}</span>
             </div>

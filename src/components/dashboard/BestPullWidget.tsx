@@ -48,9 +48,9 @@ export default function BestPullWidget({
   // Empty state — no pulls today
   if (isEmpty || !cardName) {
     return (
-      <div className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl h-full p-4 sm:p-6 ${className}`}>
+      <div className={`bg-[#100d22] border border-[rgba(255,255,255,0.1)] rounded-2xl h-full p-4 sm:p-6 ${className}`}>
         <div className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-4 flex items-center gap-1.5">
-<GiTrophyCup className="w-3.5 h-3.5 text-[#C84FFF]" /> {t('bestPull.todaysBestPull')}
+<GiTrophyCup className="w-3.5 h-3.5 text-[#ff2ea6]" /> {t('bestPull.todaysBestPull')}
         </div>
         <div className="flex flex-col items-center text-center py-4">
           <GiCardPickup className="w-10 h-10 text-[#7777a0] mb-3" />
@@ -58,7 +58,7 @@ export default function BestPullWidget({
           <p className="text-[12px] text-[#8888aa] mb-5">{t('bestPull.beFirst')}</p>
           <Link
             href="/boxes"
-            className="min-h-[44px] inline-flex items-center gap-2 px-6 py-3 bg-[#C84FFF] text-white text-sm font-bold rounded-xl shadow-[0_0_15px_rgba(200,79,255,0.2)] hover:shadow-[0_0_25px_rgba(200,79,255,0.35)] hover:scale-105 transition-all"
+            className="min-h-[44px] inline-flex items-center gap-2 px-6 py-3 bg-[#ff2ea6] text-white text-sm font-bold rounded-xl shadow-[0_0_15px_rgba(255,46,166,0.2)] hover:shadow-[0_0_25px_rgba(255,46,166,0.35)] hover:scale-105 transition-all"
           >
             <GiCardboardBox className="w-4 h-4" /> {t('bestPull.openBox')}
           </Link>
@@ -70,13 +70,13 @@ export default function BestPullWidget({
   return (
     <>
       <div
-        className={`bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl h-full p-4 sm:p-6 relative overflow-hidden ${className}`}
+        className={`bg-[#100d22] border border-[rgba(255,255,255,0.1)] rounded-2xl h-full p-4 sm:p-6 relative overflow-hidden ${className}`}
         style={{
-          background: `linear-gradient(135deg, #1a1a4a 0%, ${glowColor}08 50%, #1a1a4a 100%)`,
+          background: `linear-gradient(135deg, #100d22 0%, ${glowColor}08 50%, #100d22 100%)`,
         }}
       >
         <p className="text-[10px] font-semibold uppercase tracking-wider text-[#7777a0] mb-3">
-<GiTrophyCup className="w-3.5 h-3.5 text-[#C84FFF]" /> {t('bestPull.todaysBestPull')}
+<GiTrophyCup className="w-3.5 h-3.5 text-[#ff2ea6]" /> {t('bestPull.todaysBestPull')}
         </p>
 
         <div className="flex flex-row gap-4 items-start">
@@ -117,11 +117,11 @@ export default function BestPullWidget({
             >
               {rarity}
             </span>
-            <p className="text-[#C84FFF] font-extrabold mt-2 text-xl sm:text-2xl">
-            <span className="inline-flex items-center gap-1.5"><GiTwoCoins className="w-5 h-5 text-[#C84FFF]" /> {formatCoins(coinValue ?? 0)}</span>
+            <p className="text-[#ff2ea6] font-extrabold mt-2 text-xl sm:text-2xl">
+            <span className="inline-flex items-center gap-1.5"><GiTwoCoins className="w-5 h-5 text-[#ff2ea6]" /> {formatCoins(coinValue ?? 0)}</span>
             </p>
             <div className="flex items-center gap-2 mt-2 px-2.5 py-1.5 rounded-lg bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.08)] w-fit">
-              <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#C84FFF] to-[#9333EA] flex items-center justify-center text-[9px] font-bold text-white">
+              <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#ff2ea6] to-[#8b5cf6] flex items-center justify-center text-[9px] font-bold text-white">
                 {(pullerName ?? '?')[0]?.toUpperCase()}
               </div>
               <span className="text-xs font-semibold text-[#f0f0f5]">{pullerName}</span>
@@ -131,7 +131,7 @@ export default function BestPullWidget({
 
         <Link
           href={`/open/${boxId}`}
-          className="min-h-[44px] mt-4 flex items-center justify-center gap-2 w-full px-4 py-3 font-bold rounded-xl text-sm text-black bg-[#C84FFF] hover:brightness-110 transition shadow-[0_0_12px_rgba(200,79,255,0.3)]"
+          className="min-h-[44px] mt-4 flex items-center justify-center gap-2 w-full px-4 py-3 font-bold rounded-xl text-sm text-black bg-[#ff2ea6] hover:brightness-110 transition shadow-[0_0_12px_rgba(255,46,166,0.3)]"
         >
           <GiCardboardBox className="w-4 h-4" /> {t('bestPull.openThisBox')}
         </Link>

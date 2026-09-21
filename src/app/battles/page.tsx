@@ -9,8 +9,8 @@ const STATUS_COLORS: Record<string, { color: string; dot?: boolean }> = {
   OPEN: { color: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/20' },
   FULL: { color: 'bg-blue-500/15 text-blue-400 border-blue-500/20' },
   READY: { color: 'bg-amber-500/15 text-amber-400 border-amber-500/20' },
-  ACTIVE: { color: 'bg-[#C84FFF]/15 text-[#E879F9] border-[#C84FFF]/20', dot: true },
-  FINISHED_WIN: { color: 'bg-[#C84FFF]/10 text-[#C84FFF]/60 border-[#C84FFF]/10' },
+  ACTIVE: { color: 'bg-[#ff2ea6]/15 text-[#E879F9] border-[#ff2ea6]/20', dot: true },
+  FINISHED_WIN: { color: 'bg-[#ff2ea6]/10 text-[#ff2ea6]/60 border-[#ff2ea6]/10' },
   FINISHED_DRAW: { color: 'bg-blue-500/10 text-blue-400/60 border-blue-500/10' },
   CANCELLED: { color: 'bg-red-500/10 text-red-400/60 border-red-500/10' },
 };
@@ -72,14 +72,14 @@ export default async function BattlesPage() {
           <div>
             <h1 className="text-3xl md:text-4xl font-bold">
               <span className="text-white">Box </span>
-              <span className="text-[#C84FFF]">Battles</span>
+              <span className="text-[#ff2ea6]">Battles</span>
             </h1>
             <p className="text-[#8888aa] text-sm mt-1">{t('subtitle')}</p>
           </div>
           {session ? (
             <Link
               href="/battles/create"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#C84FFF] hover:bg-[#E879F9] text-white font-semibold rounded-xl transition-all hover:scale-[1.02] text-sm shrink-0"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#ff2ea6] hover:bg-[#E879F9] text-white font-semibold rounded-xl transition-all hover:scale-[1.02] text-sm shrink-0"
             >
               <Plus className="w-4 h-4" />
               {t('createBattle')}
@@ -95,13 +95,13 @@ export default async function BattlesPage() {
         </div>
 
         {battles.length === 0 ? (
-          <div className="rounded-2xl p-12 text-center bg-[#1a1a4a] border border-[rgba(255,255,255,0.08)]">
-            <Swords className="w-12 h-12 text-[#C84FFF] mx-auto mb-4" />
+          <div className="rounded-2xl p-12 text-center bg-[#100d22] border border-[rgba(255,255,255,0.08)]">
+            <Swords className="w-12 h-12 text-[#ff2ea6] mx-auto mb-4" />
             <h2 className="text-xl font-bold text-white mb-2">{t('noBattles')}</h2>
             <p className="text-[#8888aa] text-sm mb-6">{t('beFirst')}</p>
             <Link
               href={session ? '/battles/create' : '/login'}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#C84FFF] text-white font-semibold rounded-xl text-sm"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#ff2ea6] text-white font-semibold rounded-xl text-sm"
             >
               <Plus className="w-4 h-4" />
               {session ? t('createBattle') : t('signIn')}
@@ -135,21 +135,21 @@ export default async function BattlesPage() {
                       <Link
                         key={battle.id}
                         href={`/battles/${battle.id}`}
-                        className={`group flex items-center gap-4 bg-[#12123a] border rounded-xl p-4 hover:border-[rgba(200,79,255,0.3)] transition-all duration-200 ${
+                        className={`group flex items-center gap-4 bg-[#12123a] border rounded-xl p-4 hover:border-[rgba(255,46,166,0.3)] transition-all duration-200 ${
                           battle.status === 'OPEN'
                             ? 'border-emerald-500/15 hover:bg-[#12123a]/80'
-                            : 'border-[rgba(255,255,255,0.06)] hover:bg-[#1a1a4a]'
+                            : 'border-[rgba(255,255,255,0.06)] hover:bg-[#100d22]'
                         }`}
                       >
                         {/* Box thumbnail */}
-                        <div className="w-14 h-14 rounded-lg overflow-hidden shrink-0 bg-[#1a1a4a]">
+                        <div className="w-14 h-14 rounded-lg overflow-hidden shrink-0 bg-[#100d22]">
                           {firstBox?.imageUrl && <img src={firstBox.imageUrl} alt="" className="w-full h-full object-cover" />}
                         </div>
 
                         {/* Info */}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
-                            <h3 className="font-semibold text-white text-sm truncate group-hover:text-[#C84FFF] transition-colors">
+                            <h3 className="font-semibold text-white text-sm truncate group-hover:text-[#ff2ea6] transition-colors">
                               {displayName}
                             </h3>
                             <span className={`shrink-0 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold border ${statusStyle.color}`}>
@@ -169,7 +169,7 @@ export default async function BattlesPage() {
                           {visibleP.slice(0, 4).map((p: any) => (
                             <div
                               key={p.id}
-                              className="w-8 h-8 rounded-full bg-gradient-to-br from-[#C84FFF] to-[#7C3AED] flex items-center justify-center text-[10px] font-bold text-white"
+                              className="w-8 h-8 rounded-full bg-gradient-to-br from-[#ff2ea6] to-[#7C3AED] flex items-center justify-center text-[10px] font-bold text-white"
                             >
                               {p.user.name?.[0]?.toUpperCase() || '?'}
                             </div>
@@ -197,7 +197,7 @@ export default async function BattlesPage() {
                           )}
                         </div>
 
-                        <ChevronRight className="w-4 h-4 text-[#444466] group-hover:text-[#C84FFF] transition-colors shrink-0" />
+                        <ChevronRight className="w-4 h-4 text-[#444466] group-hover:text-[#ff2ea6] transition-colors shrink-0" />
                       </Link>
                     );
                   })}
@@ -235,7 +235,7 @@ export default async function BattlesPage() {
                         href={`/battles/${battle.id}`}
                         className="group flex items-center gap-4 bg-[#0e0e2a] border border-[rgba(255,255,255,0.04)] rounded-xl p-3.5 hover:border-[rgba(255,255,255,0.1)] hover:bg-[#12123a] transition-all duration-200"
                       >
-                        <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 bg-[#1a1a4a] opacity-60">
+                        <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 bg-[#100d22] opacity-60">
                           {firstBox?.imageUrl && <img src={firstBox.imageUrl} alt="" className="w-full h-full object-cover" />}
                         </div>
 

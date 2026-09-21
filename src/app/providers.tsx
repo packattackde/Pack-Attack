@@ -21,7 +21,7 @@ function ErrorFallbackContent({ onReset }: { onReset: () => void }) {
         </p>
         <button
           onClick={onReset}
-          className="w-full px-4 py-3 bg-[#C84FFF] hover:bg-[#E879F9] text-white font-semibold rounded-xl transition-all"
+          className="w-full px-4 py-3 bg-[#ff2ea6] hover:bg-[#E879F9] text-white font-semibold rounded-xl transition-all"
         >
           {t('tryAgain')}
         </button>

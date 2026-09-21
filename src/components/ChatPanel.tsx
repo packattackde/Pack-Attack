@@ -539,7 +539,7 @@ export function ChatPanel() {
               <span className="text-sm font-semibold text-white">{t('chat')}</span>
               {connected && (
                 <span className="flex items-center gap-1 text-[10px] text-[#E879F9]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#C84FFF] animate-pulse" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#ff2ea6] animate-pulse" />
                   {t('live')}
                 </span>
               )}
@@ -626,7 +626,7 @@ export function ChatPanel() {
                           ? 'text-red-400'
                           : msg.user.isTwitch
                             ? 'text-purple-400'
-                            : 'text-[#C84FFF]'
+                            : 'text-[#ff2ea6]'
                       }`}
                     >
                       {msg.user.name}

@@ -62,7 +62,7 @@ export default function CardLightbox({ isOpen, onClose, card }: CardLightboxProp
           onClick={onClose}
         >
           <motion.div
-            className="relative bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl p-6 max-w-sm w-full"
+            className="relative bg-[#100d22] border border-[rgba(255,255,255,0.1)] rounded-2xl p-6 max-w-sm w-full"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
@@ -117,7 +117,7 @@ export default function CardLightbox({ isOpen, onClose, card }: CardLightboxProp
                 {card.rarity}
               </span>
 
-              <p className="text-[#C84FFF] font-extrabold text-3xl flex items-center justify-center gap-2">
+              <p className="text-[#ff2ea6] font-extrabold text-3xl flex items-center justify-center gap-2">
                 <GiTwoCoins className="w-7 h-7" /> {formatCoins(card.coinValue)}
               </p>
             </div>
@@ -127,7 +127,7 @@ export default function CardLightbox({ isOpen, onClose, card }: CardLightboxProp
               {card.boxId && (
                 <Link
                   href={`/open/${card.boxId}`}
-                  className="block w-full text-center px-4 py-3 font-bold rounded-xl text-sm text-black bg-[#C84FFF] hover:brightness-110 transition shadow-[0_0_12px_rgba(200,79,255,0.3)]"
+                  className="block w-full text-center px-4 py-3 font-bold rounded-xl text-sm text-black bg-[#ff2ea6] hover:brightness-110 transition shadow-[0_0_12px_rgba(255,46,166,0.3)]"
                 >
                   <span className="flex items-center justify-center gap-2"><GiCardboardBox className="w-4 h-4" /> {t('cardLightbox.openThisBox')}</span>
                 </Link>

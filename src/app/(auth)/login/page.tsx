@@ -97,8 +97,8 @@ export default function LoginPage() {
       <div className="rounded-2xl border border-white/[0.06] bg-[#1e1e55] backdrop-blur-sm p-6 sm:p-8 shadow-2xl shadow-black/40">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-[rgba(200,79,255,0.1)] ring-1 ring-[rgba(200,79,255,0.2)] mb-4">
-            <Gamepad2 className="w-6 h-6 text-[#C84FFF]" />
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-[rgba(255,46,166,0.1)] ring-1 ring-[rgba(255,46,166,0.2)] mb-4">
+            <Gamepad2 className="w-6 h-6 text-[#ff2ea6]" />
           </div>
           <h2 className="text-2xl font-bold text-white mb-1">{t('welcomeBack')}</h2>
           <p className="text-sm text-gray-500">{t('signInToContinue')}</p>
@@ -162,7 +162,7 @@ export default function LoginPage() {
                 required
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full h-11 pl-10 pr-4 rounded-xl bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder-gray-600 focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.2)] focus:bg-white/[0.06] outline-none transition-all"
+                className="w-full h-11 pl-10 pr-4 rounded-xl bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder-gray-600 focus:border-[rgba(255,46,166,0.3)] focus:ring-1 focus:ring-[rgba(255,46,166,0.2)] focus:bg-white/[0.06] outline-none transition-all"
                 placeholder={t('emailPlaceholder')}
               />
             </div>
@@ -171,7 +171,7 @@ export default function LoginPage() {
           <div>
             <div className="flex items-center justify-between mb-1.5 ml-1">
               <label className="text-xs font-medium text-[#8888aa]">{t('password')}</label>
-              <button type="button" className="text-[11px] text-[#C84FFF]/70 hover:text-[#C84FFF] transition-colors">
+              <button type="button" className="text-[11px] text-[#ff2ea6]/70 hover:text-[#ff2ea6] transition-colors">
                 {t('forgotPassword')}
               </button>
             </div>
@@ -182,7 +182,7 @@ export default function LoginPage() {
                 required
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="w-full h-11 pl-10 pr-11 rounded-xl bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder-gray-600 focus:border-[rgba(200,79,255,0.3)] focus:ring-1 focus:ring-[rgba(200,79,255,0.2)] focus:bg-white/[0.06] outline-none transition-all"
+                className="w-full h-11 pl-10 pr-11 rounded-xl bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder-gray-600 focus:border-[rgba(255,46,166,0.3)] focus:ring-1 focus:ring-[rgba(255,46,166,0.2)] focus:bg-white/[0.06] outline-none transition-all"
                 placeholder={t('passwordPlaceholder')}
               />
               <button
@@ -198,7 +198,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full h-11 mt-2 bg-[#C84FFF] hover:bg-[#E879F9] text-white text-sm font-semibold rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-[0_0_24px_rgba(200,79,255,0.3)] disabled:opacity-50 disabled:hover:shadow-none flex items-center justify-center gap-2"
+            className="w-full h-11 mt-2 bg-[#ff2ea6] hover:bg-[#E879F9] text-white text-sm font-semibold rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-[0_0_24px_rgba(255,46,166,0.3)] disabled:opacity-50 disabled:hover:shadow-none flex items-center justify-center gap-2"
           >
             {loading ? (
               <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
@@ -214,7 +214,7 @@ export default function LoginPage() {
         {/* Register link */}
         <p className="mt-6 text-center text-sm text-gray-500">
           {t('noAccount')}{' '}
-          <Link href="/register" className="text-[#C84FFF] hover:text-[#E879F9] font-medium transition-colors">
+          <Link href="/register" className="text-[#ff2ea6] hover:text-[#E879F9] font-medium transition-colors">
             {t('createOne')}
           </Link>
         </p>

@@ -11,7 +11,7 @@ function getRarityGlow(rarity: string | null): string {
     return 'rgba(251,191,36,0.6)';
   if (r.includes('epic') || r.includes('ultra')) return 'rgba(168,85,247,0.5)';
   if (r.includes('rare') || r.includes('holo')) return 'rgba(59,130,246,0.45)';
-  if (r.includes('uncommon')) return 'rgba(200,79,255,0.4)';
+  if (r.includes('uncommon')) return 'rgba(255,46,166,0.4)';
   return 'rgba(255,255,255,0.15)';
 }
 
@@ -91,7 +91,7 @@ export function CardTransferAnimation({
   // Embedded variant: still has its own distinct bg + glowing purple border
   // so it clearly stands out inside the winner banner (not a blending blob).
   const outerClass = embedded
-    ? 'relative overflow-hidden rounded-xl border-2 border-[#C84FFF]/40 bg-gradient-to-b from-[#1a0e3a] to-[#0a0520] shadow-[0_8px_32px_rgba(200,79,255,0.25),0_0_0_1px_rgba(200,79,255,0.15)_inset] mb-4 mt-2'
+    ? 'relative overflow-hidden rounded-xl border-2 border-[#ff2ea6]/40 bg-gradient-to-b from-[#1a0e3a] to-[#0a0520] shadow-[0_8px_32px_rgba(255,46,166,0.25),0_0_0_1px_rgba(255,46,166,0.15)_inset] mb-4 mt-2'
     : 'relative overflow-hidden rounded-2xl border border-[rgba(255,255,255,0.08)] bg-gradient-to-b from-[#12123a] to-[#0e0e2a] mb-6';
 
   return (
@@ -101,7 +101,7 @@ export function CardTransferAnimation({
         className={`absolute inset-0 pointer-events-none ${embedded ? 'opacity-40' : 'opacity-60'}`}
         style={{
           background:
-            'radial-gradient(ellipse at 85% 50%, rgba(200,79,255,0.18), transparent 55%), radial-gradient(ellipse at 15% 50%, rgba(239,68,68,0.08), transparent 55%)',
+            'radial-gradient(ellipse at 85% 50%, rgba(255,46,166,0.18), transparent 55%), radial-gradient(ellipse at 15% 50%, rgba(239,68,68,0.08), transparent 55%)',
         }}
       />
 
@@ -109,7 +109,7 @@ export function CardTransferAnimation({
       <div className={`relative ${embedded ? 'px-3 pt-3 pb-2' : 'px-5 pt-5 pb-3'} flex items-center justify-between gap-3 flex-wrap`}>
         <div>
           <h2 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-[#C84FFF]" />
+            <Sparkles className="w-4 h-4 text-[#ff2ea6]" />
             {isCurrentWinner ? t('lootCapturedByYou') : t('lootCaptured')}
           </h2>
           <p className="text-xs text-[#8888aa] mt-0.5">
@@ -135,7 +135,7 @@ export function CardTransferAnimation({
           {losers.map((p) => (
             <div
               key={p.id}
-              className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-[#1a1a4a]/70 border border-red-500/20 backdrop-blur-sm"
+              className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-[#100d22]/70 border border-red-500/20 backdrop-blur-sm"
             >
               <div className="w-7 h-7 rounded-full bg-gradient-to-br from-red-500/60 to-red-700/60 flex items-center justify-center text-white text-xs font-bold shrink-0">
                 {p.user.name?.[0]?.toUpperCase() || '?'}
@@ -154,15 +154,15 @@ export function CardTransferAnimation({
 
         {/* Middle arrow / path */}
         <div className="absolute left-[32%] right-[32%] top-1/2 -translate-y-1/2 flex items-center pointer-events-none z-0">
-          <div className="flex-1 h-px bg-gradient-to-r from-red-500/40 via-[#C84FFF]/50 to-amber-400/60" />
-          <ArrowRight className="w-5 h-5 text-[#C84FFF] mx-1 drop-shadow-[0_0_8px_rgba(200,79,255,0.6)]" />
-          <div className="flex-1 h-px bg-gradient-to-r from-[#C84FFF]/50 via-amber-400/60 to-amber-400/80" />
+          <div className="flex-1 h-px bg-gradient-to-r from-red-500/40 via-[#ff2ea6]/50 to-amber-400/60" />
+          <ArrowRight className="w-5 h-5 text-[#ff2ea6] mx-1 drop-shadow-[0_0_8px_rgba(255,46,166,0.6)]" />
+          <div className="flex-1 h-px bg-gradient-to-r from-[#ff2ea6]/50 via-amber-400/60 to-amber-400/80" />
         </div>
 
         {/* Right column: winner */}
         <div className="absolute right-4 top-1/2 -translate-y-1/2 w-[30%] z-10">
           <div
-            className={`relative rounded-xl p-3 border bg-gradient-to-br from-[#C84FFF]/20 to-[#9333EA]/10 border-[#C84FFF]/40 ${
+            className={`relative rounded-xl p-3 border bg-gradient-to-br from-[#ff2ea6]/20 to-[#8b5cf6]/10 border-[#ff2ea6]/40 ${
               flown ? 'winner-landing-pulse' : ''
             }`}
           >
@@ -172,19 +172,19 @@ export function CardTransferAnimation({
                 <div className="w-9 h-9 rounded-full bg-gradient-to-br from-amber-300 via-yellow-400 to-amber-500 flex items-center justify-center shadow-[0_0_18px_rgba(251,191,36,0.4)]">
                   <Trophy className="w-4 h-4 text-black" />
                 </div>
-                <Crown className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 text-[#C84FFF] drop-shadow-[0_0_6px_rgba(200,79,255,0.8)]" />
+                <Crown className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 text-[#ff2ea6] drop-shadow-[0_0_6px_rgba(255,46,166,0.8)]" />
               </div>
               <div className="min-w-0 flex-1">
                 <div className="text-xs font-bold text-white truncate">
                   {winner?.user.name || winner?.user.email || '—'}
                 </div>
-                <div className="text-[10px] text-[#C84FFF] uppercase tracking-wider font-medium">
+                <div className="text-[10px] text-[#ff2ea6] uppercase tracking-wider font-medium">
                   {t('winnerShort')}
                 </div>
               </div>
             </div>
             {/* Landing pile placeholder (cards land here visually) */}
-            <div className={`${embedded ? 'h-[90px]' : 'h-[120px]'} relative rounded-md bg-black/20 border border-dashed border-[#C84FFF]/20`} />
+            <div className={`${embedded ? 'h-[90px]' : 'h-[120px]'} relative rounded-md bg-black/20 border border-dashed border-[#ff2ea6]/20`} />
           </div>
         </div>
 
@@ -225,7 +225,7 @@ export function CardTransferAnimation({
                 style={{
                   borderColor: glow,
                   boxShadow: flown ? `0 0 0 1px ${glow}, 0 0 14px ${glow}` : undefined,
-                  background: '#1a1a4a',
+                  background: '#100d22',
                 }}
               >
                 {pull.itemImage ? (

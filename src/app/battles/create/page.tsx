@@ -116,7 +116,7 @@ export default function CreateBattlePage() {
     }
   };
 
-  const selectedStyle = 'border-[#C84FFF] bg-[#C84FFF]/10 shadow-[0_0_20px_rgba(200,79,255,0.12)]';
+  const selectedStyle = 'border-[#ff2ea6] bg-[#ff2ea6]/10 shadow-[0_0_20px_rgba(255,46,166,0.12)]';
   const unselectedStyle = 'border-[rgba(255,255,255,0.08)] bg-[#12123a] hover:border-[rgba(255,255,255,0.2)]';
 
   const boxCount = new Set(pickedBoxes.map(b => b.id)).size;
@@ -133,7 +133,7 @@ export default function CreateBattlePage() {
           </Link>
           <h1 className="text-3xl md:text-4xl font-bold">
             <span className="text-white">{t('create.newBattle').split(' ')[0]} </span>
-            <span className="text-[#C84FFF]">{t('create.newBattle').split(' ').slice(1).join(' ')}</span>
+            <span className="text-[#ff2ea6]">{t('create.newBattle').split(' ').slice(1).join(' ')}</span>
           </h1>
         </div>
 
@@ -161,7 +161,7 @@ export default function CreateBattlePage() {
             <section>
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider">
-                  {t('create.yourRounds')} <span className="text-[#C84FFF]">({rounds}/10)</span> <InfoTooltip infoKey="battle.create.rounds" />
+                  {t('create.yourRounds')} <span className="text-[#ff2ea6]">({rounds}/10)</span> <InfoTooltip infoKey="battle.create.rounds" />
                 </h2>
                 {rounds > 0 && (
                   <button onClick={() => setPickedBoxes([])} className="text-xs text-red-400/60 hover:text-red-400 transition-colors">
@@ -181,7 +181,7 @@ export default function CreateBattlePage() {
                   {pickedBoxes.map((box, i) => (
                     <div
                       key={`pick-${i}`}
-                      className="group relative flex items-center gap-2 pl-2 pr-1 py-1.5 rounded-lg bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] hover:border-[#C84FFF]/30 transition-all"
+                      className="group relative flex items-center gap-2 pl-2 pr-1 py-1.5 rounded-lg bg-[#100d22] border border-[rgba(255,255,255,0.1)] hover:border-[#ff2ea6]/30 transition-all"
                     >
                       <div className="w-8 h-8 rounded-md overflow-hidden shrink-0 bg-[#12123a]">
                         <img src={box.imageUrl} alt="" className="w-full h-full object-cover" />
@@ -221,13 +221,13 @@ export default function CreateBattlePage() {
                     placeholder={t('create.searchBox')}
                     value={boxSearch}
                     onChange={e => setBoxSearch(e.target.value)}
-                    className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.08)] text-sm text-white placeholder-[#666688] focus:border-[#C84FFF]/40 focus:outline-none transition-colors"
+                    className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.08)] text-sm text-white placeholder-[#666688] focus:border-[#ff2ea6]/40 focus:outline-none transition-colors"
                   />
                 </div>
                 <select
                   value={boxSort}
                   onChange={e => setBoxSort(e.target.value as typeof boxSort)}
-                  className="px-3 py-2.5 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.08)] text-sm text-[#8888aa] focus:border-[#C84FFF]/40 focus:outline-none"
+                  className="px-3 py-2.5 rounded-xl bg-[#12123a] border border-[rgba(255,255,255,0.08)] text-sm text-[#8888aa] focus:border-[#ff2ea6]/40 focus:outline-none"
                 >
                   <option value="price-asc">{t('create.priceAsc')}</option>
                   <option value="price-desc">{t('create.priceDesc')}</option>
@@ -250,7 +250,7 @@ export default function CreateBattlePage() {
                         } disabled:opacity-40 disabled:cursor-not-allowed`}
                       >
                         {pickCount > 0 && (
-                          <div className="absolute top-2 right-2 z-10 min-w-[20px] h-5 px-1 bg-[#C84FFF] rounded-full flex items-center justify-center">
+                          <div className="absolute top-2 right-2 z-10 min-w-[20px] h-5 px-1 bg-[#ff2ea6] rounded-full flex items-center justify-center">
                             <span className="text-[10px] font-bold text-black">{pickCount}x</span>
                           </div>
                         )}
@@ -272,7 +272,7 @@ export default function CreateBattlePage() {
                           </div>
                         </div>
                         <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/30 transition-all pointer-events-none">
-                          <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-[#C84FFF] rounded-full p-2">
+                          <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-[#ff2ea6] rounded-full p-2">
                             <Plus className="w-5 h-5 text-white" />
                           </div>
                         </div>
@@ -301,7 +301,7 @@ export default function CreateBattlePage() {
                           <div className="text-xs text-[#666688] mt-0.5">{opt.description}</div>
                         </div>
                         {winCondition === opt.value && (
-                          <div className="shrink-0 w-5 h-5 bg-[#C84FFF] rounded-full flex items-center justify-center">
+                          <div className="shrink-0 w-5 h-5 bg-[#ff2ea6] rounded-full flex items-center justify-center">
                             <Check className="w-3 h-3 text-black" />
                           </div>
                         )}
@@ -327,7 +327,7 @@ export default function CreateBattlePage() {
                           <div className="text-xs text-[#666688] mt-0.5">{mode.description}</div>
                         </div>
                         {battleMode === mode.value && (
-                          <div className="shrink-0 w-5 h-5 bg-[#C84FFF] rounded-full flex items-center justify-center">
+                          <div className="shrink-0 w-5 h-5 bg-[#ff2ea6] rounded-full flex items-center justify-center">
                             <Check className="w-3 h-3 text-black" />
                           </div>
                         )}
@@ -346,14 +346,14 @@ export default function CreateBattlePage() {
                   onClick={() => setPrivacy('PUBLIC')}
                   className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border transition-all ${privacy === 'PUBLIC' ? selectedStyle : unselectedStyle}`}
                 >
-                  <Eye className={`w-4 h-4 ${privacy === 'PUBLIC' ? 'text-[#C84FFF]' : 'text-[#666688]'}`} />
+                  <Eye className={`w-4 h-4 ${privacy === 'PUBLIC' ? 'text-[#ff2ea6]' : 'text-[#666688]'}`} />
                   <span className={`font-semibold text-sm ${privacy === 'PUBLIC' ? 'text-white' : 'text-[#8888aa]'}`}>{t('create.public')}</span>
                 </button>
                 <button
                   onClick={() => setPrivacy('PRIVATE')}
                   className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border transition-all ${privacy === 'PRIVATE' ? selectedStyle : unselectedStyle}`}
                 >
-                  <EyeOff className={`w-4 h-4 ${privacy === 'PRIVATE' ? 'text-[#C84FFF]' : 'text-[#666688]'}`} />
+                  <EyeOff className={`w-4 h-4 ${privacy === 'PRIVATE' ? 'text-[#ff2ea6]' : 'text-[#666688]'}`} />
                   <span className={`font-semibold text-sm ${privacy === 'PRIVATE' ? 'text-white' : 'text-[#8888aa]'}`}>{t('create.private')}</span>
                 </button>
               </div>
@@ -366,7 +366,7 @@ export default function CreateBattlePage() {
           {/* Sticky Summary Panel */}
           <div className="lg:w-80 shrink-0">
             <div className="lg:sticky lg:top-24">
-              <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.1)] rounded-2xl p-6">
+              <div className="bg-[#100d22] border border-[rgba(255,255,255,0.1)] rounded-2xl p-6">
                 <h3 className="text-sm font-semibold text-[#8888aa] uppercase tracking-wider mb-4">{t('create.summary')}</h3>
 
                 <div className="space-y-3 text-sm">
@@ -430,7 +430,7 @@ export default function CreateBattlePage() {
                 <button
                   onClick={handleSubmit}
                   disabled={loading || !canCreate}
-                  className="w-full mt-5 px-6 py-3.5 bg-[#C84FFF] text-white font-semibold rounded-xl hover:bg-[#E879F9] transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full mt-5 px-6 py-3.5 bg-[#ff2ea6] text-white font-semibold rounded-xl hover:bg-[#E879F9] transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {loading ? (
                     <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> {t('create.creating')}</>
@@ -448,7 +448,7 @@ export default function CreateBattlePage() {
         </div>
 
         {/* Mobile sticky bottom bar */}
-        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#0B0B2B]/95 backdrop-blur-lg border-t border-[rgba(255,255,255,0.08)] px-4 py-3">
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#0c0a1c]/95 backdrop-blur-lg border-t border-[rgba(255,255,255,0.08)] px-4 py-3">
           <div className="flex items-center justify-between gap-4 max-w-7xl mx-auto">
             <div>
               <div className="flex items-center gap-1 text-amber-400 font-bold">
@@ -460,7 +460,7 @@ export default function CreateBattlePage() {
             <button
               onClick={handleSubmit}
               disabled={loading || !canCreate}
-              className="px-6 py-2.5 bg-[#C84FFF] text-white font-semibold rounded-xl hover:bg-[#E879F9] transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2 text-sm"
+              className="px-6 py-2.5 bg-[#ff2ea6] text-white font-semibold rounded-xl hover:bg-[#E879F9] transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2 text-sm"
             >
               {loading ? (
                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />

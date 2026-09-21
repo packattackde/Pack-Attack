@@ -66,8 +66,8 @@ export function CookieConsent() {
       <div className="mx-auto max-w-3xl m-3 sm:m-4 rounded-2xl overflow-hidden bg-[#15153d]/95 backdrop-blur-xl border border-[rgba(255,255,255,0.12)] shadow-[0_20px_50px_rgba(0,0,0,0.6)]">
         {/* Header */}
         <div className="flex items-start gap-3 p-5 pb-4">
-          <div className="shrink-0 w-10 h-10 rounded-xl bg-[rgba(200,79,255,0.15)] flex items-center justify-center">
-            <Cookie className="w-5 h-5 text-[#C84FFF]" />
+          <div className="shrink-0 w-10 h-10 rounded-xl bg-[rgba(255,46,166,0.15)] flex items-center justify-center">
+            <Cookie className="w-5 h-5 text-[#ff2ea6]" />
           </div>
           <div className="flex-1 min-w-0">
             <h2 className="text-white font-bold text-base sm:text-lg mb-1">
@@ -77,14 +77,14 @@ export function CookieConsent() {
               {t('body')}{' '}
               <Link
                 href="/datenschutz"
-                className="underline underline-offset-2 text-[#C84FFF] hover:text-[#E879F9] transition-colors"
+                className="underline underline-offset-2 text-[#ff2ea6] hover:text-[#E879F9] transition-colors"
               >
                 {t('privacyLinkLabel')}
               </Link>{' '}
               ·{' '}
               <Link
                 href="/cookies"
-                className="underline underline-offset-2 text-[#C84FFF] hover:text-[#E879F9] transition-colors"
+                className="underline underline-offset-2 text-[#ff2ea6] hover:text-[#E879F9] transition-colors"
               >
                 {t('cookiesLinkLabel')}
               </Link>
@@ -126,7 +126,7 @@ export function CookieConsent() {
         <div className="p-4 pt-2 sm:p-5 sm:pt-2 flex flex-col sm:flex-row gap-2 border-t border-[rgba(255,255,255,0.06)]">
           <button
             onClick={handleNecessaryOnly}
-            className="px-4 py-2.5 rounded-xl text-sm font-semibold text-[#e0e0ec] bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] hover:border-[rgba(255,255,255,0.25)] transition-colors"
+            className="px-4 py-2.5 rounded-xl text-sm font-semibold text-[#e0e0ec] bg-[#100d22] border border-[rgba(255,255,255,0.12)] hover:border-[rgba(255,255,255,0.25)] transition-colors"
           >
             <ShieldCheck className="w-4 h-4 inline-block mr-1.5 -mt-0.5" />
             {t('necessaryOnly')}
@@ -134,7 +134,7 @@ export function CookieConsent() {
           {showDetails ? (
             <button
               onClick={handleSaveSelection}
-              className="px-4 py-2.5 rounded-xl text-sm font-semibold text-[#e0e0ec] bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] hover:border-[rgba(255,255,255,0.25)] transition-colors"
+              className="px-4 py-2.5 rounded-xl text-sm font-semibold text-[#e0e0ec] bg-[#100d22] border border-[rgba(255,255,255,0.12)] hover:border-[rgba(255,255,255,0.25)] transition-colors"
             >
               <Check className="w-4 h-4 inline-block mr-1.5 -mt-0.5" />
               {t('saveSelection')}
@@ -142,7 +142,7 @@ export function CookieConsent() {
           ) : (
             <button
               onClick={() => setShowDetails(true)}
-              className="px-4 py-2.5 rounded-xl text-sm font-semibold text-[#e0e0ec] bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] hover:border-[rgba(255,255,255,0.25)] transition-colors"
+              className="px-4 py-2.5 rounded-xl text-sm font-semibold text-[#e0e0ec] bg-[#100d22] border border-[rgba(255,255,255,0.12)] hover:border-[rgba(255,255,255,0.25)] transition-colors"
             >
               <Settings className="w-4 h-4 inline-block mr-1.5 -mt-0.5" />
               {t('settings')}
@@ -150,7 +150,7 @@ export function CookieConsent() {
           )}
           <button
             onClick={handleAcceptAll}
-            className="sm:ml-auto px-5 py-2.5 rounded-xl text-sm font-black uppercase tracking-wide text-white bg-gradient-to-br from-[#C84FFF] to-[#9333EA] shadow-[0_4px_16px_rgba(200,79,255,0.35)] hover:shadow-[0_6px_22px_rgba(200,79,255,0.5)] hover:scale-[1.02] transition-all"
+            className="sm:ml-auto px-5 py-2.5 rounded-xl text-sm font-black uppercase tracking-wide text-white bg-gradient-to-br from-[#ff2ea6] to-[#8b5cf6] shadow-[0_4px_16px_rgba(255,46,166,0.35)] hover:shadow-[0_6px_22px_rgba(255,46,166,0.5)] hover:scale-[1.02] transition-all"
           >
             {t('acceptAll')}
           </button>
@@ -176,7 +176,7 @@ function CategoryRow({
   return (
     <label
       className={`flex items-start gap-3 p-3 rounded-xl bg-[#0f0f2e]/60 border border-[rgba(255,255,255,0.05)] ${
-        locked ? '' : 'cursor-pointer hover:border-[rgba(200,79,255,0.3)]'
+        locked ? '' : 'cursor-pointer hover:border-[rgba(255,46,166,0.3)]'
       } transition-colors`}
     >
       <input
@@ -184,7 +184,7 @@ function CategoryRow({
         checked={checked}
         disabled={locked}
         onChange={(e) => onChange?.(e.target.checked)}
-        className="mt-1 w-4 h-4 accent-[#C84FFF] cursor-pointer disabled:cursor-default"
+        className="mt-1 w-4 h-4 accent-[#ff2ea6] cursor-pointer disabled:cursor-default"
         aria-label={label}
       />
       <div className="flex-1 min-w-0">

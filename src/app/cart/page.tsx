@@ -94,13 +94,13 @@ export default async function CartPage() {
       <div className="relative container py-12">
         {/* Header */}
         <div className="mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
-            <ShoppingCart className="w-4 h-4 text-[#C84FFF]" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md text-sm">
+            <ShoppingCart className="w-4 h-4 text-[#ff2ea6]" />
             <span className="text-[#f0f0f5]">{t('badge')}</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-3">
             <span className="text-white">{t('title').split(' ').slice(0, -1).join(' ')} </span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C84FFF] to-[#E879F9]">{t('title').split(' ').slice(-1)[0]}</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ff2ea6] to-[#E879F9]">{t('title').split(' ').slice(-1)[0]}</span>
           </h1>
           <p className="text-[#8888aa] text-lg">{t('subtitle')}</p>
         </div>

@@ -24,7 +24,7 @@ export function CookieResetButton({ label }: { label: string }) {
     <button
       onClick={handleClick}
       disabled={done}
-      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-br from-[#C84FFF] to-[#9333EA] text-white text-sm font-bold shadow-[0_4px_16px_rgba(200,79,255,0.3)] hover:shadow-[0_6px_22px_rgba(200,79,255,0.5)] hover:scale-[1.02] active:scale-100 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-br from-[#ff2ea6] to-[#8b5cf6] text-white text-sm font-bold shadow-[0_4px_16px_rgba(255,46,166,0.3)] hover:shadow-[0_6px_22px_rgba(255,46,166,0.5)] hover:scale-[1.02] active:scale-100 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
     >
       {done ? (
         <>

@@ -146,8 +146,8 @@ export function CartClient({ items, total, upsellCartItems }: Props) {
     <div className="space-y-10">
       {isEmpty ? (
         <div className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-12 text-center">
-          <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[rgba(200,79,255,0.1)] to-[rgba(200,79,255,0.08)]">
-            <ShoppingBag className="w-10 h-10 text-[#C84FFF]" />
+          <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-[rgba(255,46,166,0.1)] to-[rgba(255,46,166,0.08)]">
+            <ShoppingBag className="w-10 h-10 text-[#ff2ea6]" />
           </div>
           <h2 className="text-2xl font-bold text-white mb-3">{t('empty')}</h2>
           <p className="text-[#8888aa] mb-6">{t('emptyDesc')}</p>
@@ -160,7 +160,7 @@ export function CartClient({ items, total, upsellCartItems }: Props) {
           {items.map((item) => {
             if (!item.pull.card) return null;
             return (
-              <div key={item.id} className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
+              <div key={item.id} className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                 <div className="flex items-center gap-4">
                   <div className="relative w-24 h-36 rounded-xl overflow-hidden flex-shrink-0">
                     <Image src={item.pull.card.imageUrlGatherer} alt={item.pull.card.name} fill className="object-cover" />
@@ -187,7 +187,7 @@ export function CartClient({ items, total, upsellCartItems }: Props) {
 
           {/* Upsell cart items */}
           {upsellCartItems.map((ui) => (
-            <div key={ui.id} className="bg-[#1a1a4a] shadow-md rounded-xl p-4 border border-amber-500/20">
+            <div key={ui.id} className="bg-[#100d22] shadow-md rounded-xl p-4 border border-amber-500/20">
               <div className="flex items-center gap-4">
                 <div className="relative w-24 h-24 rounded-xl overflow-hidden flex-shrink-0 bg-[#12123a]">
                   <Image src={ui.upsellItem.imageUrl} alt={ui.upsellItem.name} fill className="object-contain p-2" />
@@ -204,7 +204,7 @@ export function CartClient({ items, total, upsellCartItems }: Props) {
                       <div className="flex items-center gap-1 bg-[#12123a] rounded-lg p-0.5">
                         <button
                           onClick={() => handleTogglePayment(ui.upsellItem.id, false)}
-                          className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium transition-all ${!ui.payWithCoins ? 'bg-[#C84FFF]/20 text-[#E879F9]' : 'text-[#8888aa] hover:text-[#f0f0f5]'}`}
+                          className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium transition-all ${!ui.payWithCoins ? 'bg-[#ff2ea6]/20 text-[#E879F9]' : 'text-[#8888aa] hover:text-[#f0f0f5]'}`}
                         >
                           <Euro className="h-3 w-3" /> EUR
                         </button>
@@ -327,7 +327,7 @@ export function CartClient({ items, total, upsellCartItems }: Props) {
             <div className="space-y-3">
               <button 
                 onClick={() => router.push('/checkout')}
-                className="w-full py-4 bg-gradient-to-r from-[#C84FFF] to-[#E879F9] hover:from-[#E879F9] hover:to-[#C84FFF] text-white font-semibold rounded-xl transition-all hover:scale-[1.02] flex items-center justify-center gap-2"
+                className="w-full py-4 bg-gradient-to-r from-[#ff2ea6] to-[#E879F9] hover:from-[#E879F9] hover:to-[#ff2ea6] text-white font-semibold rounded-xl transition-all hover:scale-[1.02] flex items-center justify-center gap-2"
               >
                 <CreditCard className="h-5 w-5" />
                 {t('proceedToCheckout')}
@@ -353,8 +353,8 @@ export function CartClient({ items, total, upsellCartItems }: Props) {
             {upsellItems.map(item => {
               const isInCart = inCartUpsellIds.has(item.id);
               return (
-                <div key={item.id} className={`bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl overflow-hidden group transition-all ${isInCart ? 'ring-2 ring-[#C84FFF]/40' : 'hover:ring-2 hover:ring-amber-500/30'}`}>
-                  <div className="relative h-52 bg-gradient-to-b from-[#12123a]/50 to-[#0B0B2B]/50">
+                <div key={item.id} className={`bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl overflow-hidden group transition-all ${isInCart ? 'ring-2 ring-[#ff2ea6]/40' : 'hover:ring-2 hover:ring-amber-500/30'}`}>
+                  <div className="relative h-52 bg-gradient-to-b from-[#12123a]/50 to-[#0c0a1c]/50">
                     <Image
                       src={item.imageUrl}
                       alt={item.name}
@@ -362,7 +362,7 @@ export function CartClient({ items, total, upsellCartItems }: Props) {
                       className="object-contain p-4 group-hover:scale-105 transition-transform duration-300"
                     />
                     {isInCart && (
-                      <div className="absolute top-3 right-3 bg-[#C84FFF] rounded-full p-1.5">
+                      <div className="absolute top-3 right-3 bg-[#ff2ea6] rounded-full p-1.5">
                         <Check className="h-4 w-4 text-white" />
                       </div>
                     )}
@@ -388,7 +388,7 @@ export function CartClient({ items, total, upsellCartItems }: Props) {
                         disabled={addingUpsell === item.id}
                         className={`inline-flex items-center gap-2 px-5 py-2.5 font-semibold rounded-xl transition-all hover:scale-105 text-sm disabled:opacity-50 ${
                           isInCart
-                            ? 'bg-[#C84FFF]/20 text-[#E879F9] border border-[#C84FFF]/30'
+                            ? 'bg-[#ff2ea6]/20 text-[#E879F9] border border-[#ff2ea6]/30'
                             : 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white'
                         }`}
                       >

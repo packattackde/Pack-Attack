@@ -165,33 +165,33 @@ export function StockManagerClient({ shopId }: { shopId: string }) {
             value={search}
             onChange={(e) => { setSearch(e.target.value); setPage(1); }}
             placeholder={t('searchProducts')}
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-gray-800/80 border border-[rgba(255,255,255,0.06)] text-white text-sm focus:ring-2 focus:ring-[#C84FFF] focus:border-transparent"
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-gray-800/80 border border-[rgba(255,255,255,0.06)] text-white text-sm focus:ring-2 focus:ring-[#ff2ea6] focus:border-transparent"
           />
         </div>
         <button
           onClick={() => setShowFilters(!showFilters)}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
             showFilters || filterGame || filterStatus
-              ? 'bg-[#C84FFF]/20 text-[#E879F9] ring-1 ring-[#C84FFF]/30'
-              : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white'
+              ? 'bg-[#ff2ea6]/20 text-[#E879F9] ring-1 ring-[#ff2ea6]/30'
+              : 'bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white'
           }`}
         >
           <SlidersHorizontal className="w-4 h-4" />
           {t('filters')}
           {(filterGame || filterStatus) && (
-            <span className="w-2 h-2 rounded-full bg-[#C84FFF]" />
+            <span className="w-2 h-2 rounded-full bg-[#ff2ea6]" />
           )}
         </button>
         <button
           onClick={() => fetchProducts()}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white transition-all"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white transition-all"
         >
           <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
         </button>
       </div>
 
       {showFilters && (
-        <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 flex flex-wrap gap-3">
+        <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 flex flex-wrap gap-3">
           <select
             value={filterGame}
             onChange={(e) => { setFilterGame(e.target.value); setPage(1); }}
@@ -260,7 +260,7 @@ export function StockManagerClient({ shopId }: { shopId: string }) {
               <div
                 key={product.id}
                 className={`bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-xl p-4 transition-all ${
-                  isEditing ? 'ring-1 ring-[#C84FFF]/50' : ''
+                  isEditing ? 'ring-1 ring-[#ff2ea6]/50' : ''
                 } ${!product.isActive ? 'opacity-60' : ''}`}
               >
                 <div className="grid grid-cols-12 gap-3 items-center">
@@ -270,7 +270,7 @@ export function StockManagerClient({ shopId }: { shopId: string }) {
                       <input
                         value={editValues.name ?? product.name}
                         onChange={(e) => setEditValues({ ...editValues, name: e.target.value })}
-                        className="w-full bg-[#12123a] border border-gray-600 text-white rounded-lg px-3 py-1.5 text-sm focus:ring-1 focus:ring-[#C84FFF]"
+                        className="w-full bg-[#12123a] border border-gray-600 text-white rounded-lg px-3 py-1.5 text-sm focus:ring-1 focus:ring-[#ff2ea6]"
                       />
                     ) : (
                       <div>
@@ -301,7 +301,7 @@ export function StockManagerClient({ shopId }: { shopId: string }) {
                         min="0"
                         value={editValues.price ?? product.price}
                         onChange={(e) => setEditValues({ ...editValues, price: parseFloat(e.target.value) || 0 })}
-                        className="w-full bg-[#12123a] border border-gray-600 text-white rounded-lg px-2 py-1.5 text-sm text-right focus:ring-1 focus:ring-[#C84FFF]"
+                        className="w-full bg-[#12123a] border border-gray-600 text-white rounded-lg px-2 py-1.5 text-sm text-right focus:ring-1 focus:ring-[#ff2ea6]"
                       />
                     ) : (
                       <span className="text-sm text-amber-400 font-medium">{product.price.toFixed(2)}€</span>
@@ -316,7 +316,7 @@ export function StockManagerClient({ shopId }: { shopId: string }) {
                         min="0"
                         value={editValues.stock ?? product.stock}
                         onChange={(e) => setEditValues({ ...editValues, stock: parseInt(e.target.value) || 0 })}
-                        className="w-20 mx-auto bg-[#12123a] border border-gray-600 text-white rounded-lg px-2 py-1.5 text-sm text-center focus:ring-1 focus:ring-[#C84FFF]"
+                        className="w-20 mx-auto bg-[#12123a] border border-gray-600 text-white rounded-lg px-2 py-1.5 text-sm text-center focus:ring-1 focus:ring-[#ff2ea6]"
                       />
                     ) : (
                       <span className={`text-sm font-medium ${product.stock === 0 ? 'text-red-400' : product.stock < 5 ? 'text-yellow-400' : 'text-[#E879F9]'}`}>
@@ -353,14 +353,14 @@ export function StockManagerClient({ shopId }: { shopId: string }) {
                         <button
                           onClick={() => handleUpdate(product.id, editValues)}
                           disabled={isUpdating}
-                          className="p-2 rounded-lg bg-[#C84FFF]/20 text-[#E879F9] hover:bg-[#C84FFF]/30 transition-colors"
+                          className="p-2 rounded-lg bg-[#ff2ea6]/20 text-[#E879F9] hover:bg-[#ff2ea6]/30 transition-colors"
                           title="Save"
                         >
                           {isUpdating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
                         </button>
                         <button
                           onClick={cancelEdit}
-                          className="p-2 rounded-lg bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white transition-colors"
+                          className="p-2 rounded-lg bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white transition-colors"
                           title="Cancel"
                         >
                           <X className="w-4 h-4" />
@@ -370,7 +370,7 @@ export function StockManagerClient({ shopId }: { shopId: string }) {
                       <>
                         <button
                           onClick={() => startEdit(product)}
-                          className="p-2 rounded-lg bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-[#E879F9] transition-colors"
+                          className="p-2 rounded-lg bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-[#E879F9] transition-colors"
                           title="Edit"
                         >
                           <Edit3 className="w-4 h-4" />
@@ -378,7 +378,7 @@ export function StockManagerClient({ shopId }: { shopId: string }) {
                         <button
                           onClick={() => handleDelete(product.id)}
                           disabled={deletingId === product.id}
-                          className="p-2 rounded-lg bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-red-400 transition-colors"
+                          className="p-2 rounded-lg bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-red-400 transition-colors"
                           title="Delete"
                         >
                           {deletingId === product.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
@@ -403,14 +403,14 @@ export function StockManagerClient({ shopId }: { shopId: string }) {
             <button
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="p-2 rounded-lg bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white disabled:opacity-30 transition-all"
+              className="p-2 rounded-lg bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white disabled:opacity-30 transition-all"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
             <button
               onClick={() => setPage(p => Math.min(totalPages, p + 1))}
               disabled={page === totalPages}
-              className="p-2 rounded-lg bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white disabled:opacity-30 transition-all"
+              className="p-2 rounded-lg bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white disabled:opacity-30 transition-all"
             >
               <ChevronRight className="w-4 h-4" />
             </button>

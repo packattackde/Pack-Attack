@@ -54,9 +54,9 @@ type Order = {
 
 const statusConfig: Record<string, { color: string; icon: React.ElementType; label: string }> = {
   PENDING: { color: 'text-yellow-400 bg-yellow-400/10', icon: Clock, label: 'Pending' },
-  PROCESSING: { color: 'text-[#C84FFF] bg-[rgba(200,79,255,0.1)]', icon: Package, label: 'Processing' },
+  PROCESSING: { color: 'text-[#ff2ea6] bg-[rgba(255,46,166,0.1)]', icon: Package, label: 'Processing' },
   SHIPPED: { color: 'text-purple-400 bg-purple-400/10', icon: Truck, label: 'Shipped' },
-  DELIVERED: { color: 'text-[#E879F9] bg-[#C84FFF]/10', icon: CheckCircle, label: 'Delivered' },
+  DELIVERED: { color: 'text-[#E879F9] bg-[#ff2ea6]/10', icon: CheckCircle, label: 'Delivered' },
   CANCELLED: { color: 'text-red-400 bg-red-400/10', icon: XCircle, label: 'Cancelled' },
 };
 
@@ -205,23 +205,23 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
     <div className="space-y-6">
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
+        <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
           <p className="text-sm text-[#8888aa]">Total Orders</p>
           <p className="text-2xl font-bold text-white">{orderStats.total}</p>
         </div>
-        <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
+        <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
           <p className="text-sm text-yellow-400">Pending</p>
           <p className="text-2xl font-bold text-white">{orderStats.pending}</p>
         </div>
-        <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
-          <p className="text-sm text-[#C84FFF]">Processing</p>
+        <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
+          <p className="text-sm text-[#ff2ea6]">Processing</p>
           <p className="text-2xl font-bold text-white">{orderStats.processing}</p>
         </div>
-        <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
+        <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
           <p className="text-sm text-purple-400">Shipped</p>
           <p className="text-2xl font-bold text-white">{orderStats.shipped}</p>
         </div>
-        <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
+        <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
           <p className="text-sm text-[#E879F9]">Delivered</p>
           <p className="text-2xl font-bold text-white">{orderStats.delivered}</p>
         </div>
@@ -235,8 +235,8 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
             onClick={() => setFilterStatus(status)}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               filterStatus === status
-                ? 'bg-[#C84FFF] text-white'
-                : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white'
+                ? 'bg-[#ff2ea6] text-white'
+                : 'bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white'
             }`}
           >
             {status === 'ALL' ? 'All Orders' : statusConfig[status]?.label || status}
@@ -310,9 +310,9 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
                   <div className="border-t border-[rgba(255,255,255,0.06)] p-4 space-y-4">
                     <div className="grid md:grid-cols-2 gap-4">
                       {/* Customer Info */}
-                      <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
+                      <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                         <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
-                          <User className="w-4 h-4 text-[#C84FFF]" />
+                          <User className="w-4 h-4 text-[#ff2ea6]" />
                           Customer
                         </h4>
                         <div className="space-y-2 text-sm">
@@ -328,9 +328,9 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
                       </div>
 
                       {/* Shipping Info */}
-                      <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
+                      <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                         <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
-                          <MapPin className="w-4 h-4 text-[#C84FFF]" />
+                          <MapPin className="w-4 h-4 text-[#ff2ea6]" />
                           Shipping Address
                         </h4>
                         <div className="space-y-1 text-sm text-[#8888aa]">
@@ -363,7 +363,7 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
                     </div>
 
                     {/* Shop Assignment */}
-                    <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
+                    <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                       <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
                         <Store className="w-4 h-4 text-purple-400" />
                         Shop Assignment
@@ -397,7 +397,7 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
                     </div>
 
                     {/* Tracking Information */}
-                    <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
+                    <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                       <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
                         <Link2 className="w-4 h-4 text-[#E879F9]" />
                         Tracking Information
@@ -416,7 +416,7 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
                                 url: prev[order.id]?.url ?? order.trackingUrl ?? '' 
                               }
                             }))}
-                            className="bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white rounded-lg px-3 py-2 text-sm w-full focus:ring-2 focus:ring-[#C84FFF] focus:border-transparent"
+                            className="bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white rounded-lg px-3 py-2 text-sm w-full focus:ring-2 focus:ring-[#ff2ea6] focus:border-transparent"
                           />
                         </div>
                         <div>
@@ -432,14 +432,14 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
                                 url: e.target.value 
                               }
                             }))}
-                            className="bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white rounded-lg px-3 py-2 text-sm w-full focus:ring-2 focus:ring-[#C84FFF] focus:border-transparent"
+                            className="bg-[#12123a] border border-[rgba(255,255,255,0.06)] text-white rounded-lg px-3 py-2 text-sm w-full focus:ring-2 focus:ring-[#ff2ea6] focus:border-transparent"
                           />
                         </div>
                       </div>
                       <button
                         onClick={() => handleTrackingUpdate(order.id)}
                         disabled={updatingOrder === order.id}
-                        className="mt-3 px-4 py-2 bg-[#9333EA] hover:bg-[#7c3aed] disabled:opacity-50 text-white rounded-lg text-sm font-medium flex items-center gap-2 transition-colors"
+                        className="mt-3 px-4 py-2 bg-[#8b5cf6] hover:bg-[#7c3aed] disabled:opacity-50 text-white rounded-lg text-sm font-medium flex items-center gap-2 transition-colors"
                       >
                         <Save className="w-4 h-4" />
                         Save Tracking Info
@@ -459,7 +459,7 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
 
                     {/* Order Notes */}
                     {order.notes && (
-                      <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
+                      <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                         <h4 className="font-semibold text-white mb-2">Customer Notes</h4>
                         <p className="text-sm text-[#8888aa]">{order.notes}</p>
                       </div>
@@ -467,14 +467,14 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
 
                     {/* Shop Notes */}
                     {order.shopNotes && (
-                      <div className="bg-[#1a1a4a] shadow-md rounded-xl p-4 border border-purple-500/30">
+                      <div className="bg-[#100d22] shadow-md rounded-xl p-4 border border-purple-500/30">
                         <h4 className="font-semibold text-purple-400 mb-2">Shop Notes</h4>
                         <p className="text-sm text-[#8888aa]">{order.shopNotes}</p>
                       </div>
                     )}
 
                     {/* Order Items */}
-                    <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
+                    <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4">
                       <h4 className="font-semibold text-white mb-3">Order Items ({order.items.length})</h4>
                       <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2">
                         {order.items.map((item) => (
@@ -515,7 +515,7 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
                               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all disabled:opacity-50 ${
                                 order.status === s
                                   ? cfg.color + ' ring-2 ring-offset-2 ring-offset-gray-900'
-                                  : 'bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md hover:bg-white/10 text-[#8888aa]'
+                                  : 'bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md hover:bg-white/10 text-[#8888aa]'
                               }`}
                             >
                               {cfg.label}

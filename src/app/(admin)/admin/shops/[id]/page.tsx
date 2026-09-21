@@ -119,7 +119,7 @@ export default async function AdminShopDetailPage({
             Back to Shops
           </Link>
 
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md text-sm mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md text-sm mb-3">
             <ShieldCheck className="w-4 h-4 text-orange-400" />
             <span className="text-[#f0f0f5]">Admin View</span>
           </div>
@@ -134,7 +134,7 @@ export default async function AdminShopDetailPage({
                 <p className="text-[#8888aa] text-sm">
                   Owner: {shop.owner.name || 'Unnamed'} ({shop.owner.email})
                   <span className={`ml-3 px-2 py-0.5 rounded-lg text-xs font-medium ${
-                    shop.isActive ? 'bg-[#C84FFF]/20 text-[#E879F9]' : 'bg-red-500/20 text-red-400'
+                    shop.isActive ? 'bg-[#ff2ea6]/20 text-[#E879F9]' : 'bg-red-500/20 text-red-400'
                   }`}>
                     {shop.isActive ? 'Active' : 'Inactive'}
                   </span>
@@ -143,7 +143,7 @@ export default async function AdminShopDetailPage({
             </div>
             <Link
               href={`/shop-dashboard?shopId=${shop.id}`}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#9333EA] to-[#7c3aed] text-white font-medium hover:from-[#9333EA] hover:to-[#7c3aed] transition-all shadow-lg shadow-[#C84FFF]/25"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#8b5cf6] to-[#7c3aed] text-white font-medium hover:from-[#8b5cf6] hover:to-[#7c3aed] transition-all shadow-lg shadow-[#ff2ea6]/25"
             >
               <Eye className="w-4 h-4" />
               View as Shop Owner
@@ -153,37 +153,37 @@ export default async function AdminShopDetailPage({
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 mb-8">
-          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
-            <ShoppingCart className="w-5 h-5 text-[#C84FFF] mx-auto mb-2" />
+          <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
+            <ShoppingCart className="w-5 h-5 text-[#ff2ea6] mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{stats.totalOrders.toLocaleString()}</div>
             <div className="text-xs text-[#8888aa]">Total Orders</div>
           </div>
-          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
+          <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
             <Clock className="w-5 h-5 text-yellow-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{stats.pendingOrders}</div>
             <div className="text-xs text-yellow-400">Pending</div>
           </div>
-          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
+          <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
             <Coins className="w-5 h-5 text-[#E879F9] mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{stats.totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
             <div className="text-xs text-[#8888aa]">Revenue</div>
           </div>
-          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
+          <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
             <Package className="w-5 h-5 text-purple-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{stats.productCount}</div>
             <div className="text-xs text-[#8888aa]">Products</div>
           </div>
-          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
+          <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
             <Database className="w-5 h-5 text-cyan-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{stats.totalStock.toLocaleString()}</div>
             <div className="text-xs text-[#8888aa]">Stock Units</div>
           </div>
-          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
+          <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
             <Package className="w-5 h-5 text-orange-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{stats.boxCount}</div>
             <div className="text-xs text-[#8888aa]">Boxes</div>
           </div>
-          <div className="bg-[#1a1a4a] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
+          <div className="bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl p-4 text-center">
             <ClipboardList className="w-5 h-5 text-pink-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{assignedOrderCount}</div>
             <div className="text-xs text-[#8888aa]">Assigned Orders ({assignedPendingCount} pending)</div>

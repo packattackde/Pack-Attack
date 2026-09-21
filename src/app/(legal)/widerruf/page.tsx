@@ -143,7 +143,7 @@ function DE() {
         und senden Sie es zurück.)
       </p>
       <div
-        className="p-4 rounded-lg bg-[#1a1a4a] border border-[rgba(255,255,255,0.08)] text-[13px] font-mono whitespace-pre-wrap leading-6"
+        className="p-4 rounded-lg bg-[#100d22] border border-[rgba(255,255,255,0.08)] text-[13px] font-mono whitespace-pre-wrap leading-6"
         style={{ fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace' }}
       >{`An:
 ${LEGAL_ENTITY.companyName}
@@ -252,7 +252,7 @@ function EN() {
 
       <h2>Model Withdrawal Form</h2>
       <div
-        className="p-4 rounded-lg bg-[#1a1a4a] border border-[rgba(255,255,255,0.08)] text-[13px] font-mono whitespace-pre-wrap leading-6"
+        className="p-4 rounded-lg bg-[#100d22] border border-[rgba(255,255,255,0.08)] text-[13px] font-mono whitespace-pre-wrap leading-6"
         style={{ fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace' }}
       >{`To:
 ${LEGAL_ENTITY.companyName}
