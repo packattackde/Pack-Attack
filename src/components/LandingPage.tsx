@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
 
 export type LandingPull = {
   userName: string;
@@ -84,7 +83,7 @@ function HoloCard({ name, rarity, image, coinValue, rotate }: {
       </div>
       <div className="relative flex-1 my-1.5 sm:my-2 rounded-lg overflow-hidden border border-white/[0.08] bg-[#0e0b20]">
         {image ? (
-          <Image src={image} alt={name} fill sizes="160px" className="object-cover" />
+          <img src={image} alt={name} className="absolute inset-0 w-full h-full object-cover" />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center font-jp font-black text-3xl" style={{ color: accent }}>{rarity[0]?.toUpperCase()}</div>
         )}
@@ -353,7 +352,7 @@ export function LandingPage({
                 <em className="ml-2 not-italic font-orbitron text-[0.68rem] text-[#9a94b8] tracking-[2px] truncate">{box.name}</em>
               </div>
               <div className="relative aspect-video bg-[#0c0a1a]">
-                <Image src={box.imageUrl} alt={box.name} fill sizes="400px" className="object-cover" />
+                <img src={box.imageUrl} alt={box.name} className="absolute inset-0 w-full h-full object-cover" />
                 <div className="absolute bottom-2 right-2 font-orbitron text-xs px-2 py-1 rounded bg-[#ff2ea6] text-[#14041f] font-bold">{box.price.toLocaleString()} coins</div>
               </div>
             </Link>
