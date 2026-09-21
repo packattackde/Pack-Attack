@@ -28,29 +28,28 @@ function HoloCard({ kanji, name, rarity, price, accent, glow, rotate }: {
 }) {
   return (
     <div
-      className="w-[140px] h-[200px] sm:w-[158px] sm:h-[224px] rounded-xl p-2 flex flex-col relative"
+      className="relative isolate w-[104px] h-[148px] sm:w-[140px] sm:h-[200px] lg:w-[158px] lg:h-[224px] rounded-xl p-2 flex flex-col shrink-0"
       style={{
         background: 'linear-gradient(160deg, #17132c, #0b0919)',
         animation: 'landingFloatCard 5.5s ease-in-out infinite',
         transform: rotate,
+        boxShadow: `0 0 26px ${glow}`,
+        border: `2px solid ${accent}`,
       }}
     >
-      {/* border glow */}
-      <div className="absolute inset-[-2px] rounded-[14px] -z-10" style={{ background: `linear-gradient(160deg, ${accent}, ${glow})`, boxShadow: `0 0 26px ${glow}` }} />
-      {/* sheen */}
       <div className="absolute inset-0 rounded-xl pointer-events-none" style={{ background: 'linear-gradient(115deg, transparent 32%, rgba(255,255,255,0.16) 48%, transparent 60%)', backgroundSize: '260% 100%', animation: 'landingSheen 4.5s linear infinite' }} />
-      <div className="flex justify-between items-center px-2 py-1 rounded-md bg-white/5 text-[0.55rem] font-orbitron font-bold tracking-wider text-[#eeecf7]">
+      <div className="flex justify-between items-center px-1.5 sm:px-2 py-1 rounded-md bg-white/5 text-[0.45rem] sm:text-[0.55rem] font-orbitron font-bold tracking-wider text-[#eeecf7]">
         {name} <span style={{ color: accent }}>{rarity[0]}</span>
       </div>
       <div
-        className="flex-1 my-2 rounded-lg flex items-center justify-center font-jp font-black text-[2.8rem] sm:text-[3.1rem] border border-white/[0.08]"
+        className="flex-1 my-1.5 sm:my-2 rounded-lg flex items-center justify-center font-jp font-black text-[2rem] sm:text-[2.8rem] lg:text-[3.1rem] border border-white/[0.08]"
         style={{ color: accent, textShadow: `0 0 24px ${accent}`, background: `radial-gradient(circle at 50% 40%, ${glow}33, transparent 75%), linear-gradient(160deg, #0e0b20, #090716)` }}
       >
         {kanji}
       </div>
-      <div className="flex justify-between items-center text-[0.55rem] font-orbitron font-bold tracking-wider">
+      <div className="flex justify-between items-center text-[0.45rem] sm:text-[0.55rem] font-orbitron font-bold tracking-wider">
         <span style={{ color: accent, textShadow: `0 0 8px ${accent}` }}>{rarity}</span>
-        <span className="px-2 py-0.5 rounded" style={{ color: '#0b0716', background: accent, boxShadow: `0 0 12px ${glow}` }}>{price}</span>
+        <span className="px-1.5 sm:px-2 py-0.5 rounded" style={{ color: '#0b0716', background: accent, boxShadow: `0 0 12px ${glow}` }}>{price}</span>
       </div>
     </div>
   );
@@ -132,7 +131,7 @@ function LiveTicker() {
   const doubled = [...pulls, ...pulls];
   return (
     <div className="border-t border-[rgba(255,46,166,0.4)] border-b border-b-[rgba(35,230,255,0.4)] overflow-hidden py-3.5 flex items-center relative z-[2]" style={{ background: 'linear-gradient(90deg, #0a0818, #120c26, #0a0818)' }}>
-      <div className="shrink-0 px-5 font-orbitron text-[0.72rem] font-bold tracking-[3px] text-[#ff2ea6] border-r border-[rgba(255,46,166,0.4)] drop-shadow-[0_0_10px_rgba(255,46,166,0.7)] whitespace-nowrap">
+      <div className="shrink-0 px-3 sm:px-5 font-orbitron text-[0.62rem] sm:text-[0.72rem] font-bold tracking-[2px] sm:tracking-[3px] text-[#ff2ea6] border-r border-[rgba(255,46,166,0.4)] drop-shadow-[0_0_10px_rgba(255,46,166,0.7)] whitespace-nowrap">
         <span className="animate-pulse">●</span>&nbsp;LIVE PULLS
       </div>
       <div className="flex whitespace-nowrap" style={{ animation: 'landingTickerScroll 32s linear infinite' }}>
@@ -149,7 +148,14 @@ function LiveTicker() {
 /* ─── Skyline SVG ─── */
 function Skyline() {
   return (
-    <svg className="absolute bottom-0 left-0 right-0 h-[260px] pointer-events-none opacity-90" viewBox="0 0 1440 260" preserveAspectRatio="xMidYMax slice" fill="none">
+    <svg
+      className="absolute bottom-0 left-0 w-full pointer-events-none opacity-90 z-0 hidden sm:block"
+      style={{ maxWidth: 'none', height: '260px' }}
+      viewBox="0 0 1440 260"
+      preserveAspectRatio="xMidYMax slice"
+      fill="none"
+      aria-hidden="true"
+    >
       <g opacity=".5" fill="#120e26"><rect x="0" y="120" width="90" height="140"/><rect x="110" y="80" width="70" height="180"/><rect x="200" y="140" width="110" height="120"/><rect x="330" y="60" width="60" height="200"/><rect x="1050" y="70" width="70" height="190"/><rect x="1140" y="130" width="100" height="130"/><rect x="1260" y="90" width="80" height="170"/><rect x="1360" y="140" width="80" height="120"/></g>
       <g><rect x="600" y="60" width="240" height="14" fill="#ff2ea6" opacity=".95"/><rect x="588" y="54" width="264" height="8" rx="4" fill="#ff2ea6" opacity=".6"/><rect x="618" y="94" width="204" height="8" fill="#23e6ff" opacity=".85"/><rect x="636" y="74" width="12" height="186" fill="#8b5cf6"/><rect x="792" y="74" width="12" height="186" fill="#8b5cf6"/><rect x="712" y="74" width="16" height="20" fill="#8b5cf6"/></g>
       <g fill="#1a1433"><rect x="60" y="150" width="120" height="110"/><rect x="220" y="100" width="90" height="160"/><rect x="380" y="130" width="130" height="130"/><rect x="920" y="120" width="110" height="140"/><rect x="1080" y="150" width="130" height="110"/><rect x="1240" y="110" width="110" height="150"/></g>
@@ -179,49 +185,51 @@ export function LandingPage() {
       `}} />
 
       {/* ═══ HERO ═══ */}
-      <header className="min-h-screen flex flex-col items-center justify-center text-center relative px-6 pt-32 pb-40 overflow-hidden" style={{ background: 'radial-gradient(ellipse 55% 38% at 50% -5%, rgba(255,46,166,0.20), transparent), radial-gradient(ellipse 45% 32% at 12% 90%, rgba(35,230,255,0.12), transparent), radial-gradient(ellipse 40% 30% at 88% 85%, rgba(139,92,246,0.15), transparent), linear-gradient(180deg, #05040c, #0c0a1c)' }}>
+      <header className="min-h-[100svh] max-md:min-h-0 flex flex-col items-center justify-center text-center relative px-4 sm:px-6 pt-20 sm:pt-32 pb-16 sm:pb-44 overflow-x-hidden" style={{ background: 'radial-gradient(ellipse 55% 38% at 50% -5%, rgba(255,46,166,0.20), transparent), radial-gradient(ellipse 45% 32% at 12% 90%, rgba(35,230,255,0.12), transparent), radial-gradient(ellipse 40% 30% at 88% 85%, rgba(139,92,246,0.15), transparent), linear-gradient(180deg, #05040c, #0c0a1c)' }}>
         <NeonRain />
         {/* Synthwave grid floor */}
-        <div className="absolute left-[-20%] right-[-20%] bottom-[-40px] h-[300px] pointer-events-none" style={{ background: 'linear-gradient(90deg, rgba(35,230,255,.14) 1px, transparent 1px), linear-gradient(0deg, rgba(255,46,166,.16) 1px, transparent 1px)', backgroundSize: '70px 46px', transform: 'perspective(420px) rotateX(62deg)', transformOrigin: '50% 100%', maskImage: 'linear-gradient(180deg, transparent, #000 45%)', WebkitMaskImage: 'linear-gradient(180deg, transparent, #000 45%)', animation: 'landingGridSlide 3.2s linear infinite' }} />
+        <div className="absolute left-[-20%] right-[-20%] bottom-[-40px] h-[300px] pointer-events-none hidden sm:block" style={{ background: 'linear-gradient(90deg, rgba(35,230,255,.14) 1px, transparent 1px), linear-gradient(0deg, rgba(255,46,166,.16) 1px, transparent 1px)', backgroundSize: '70px 46px', transform: 'perspective(420px) rotateX(62deg)', transformOrigin: '50% 100%', maskImage: 'linear-gradient(180deg, transparent, #000 45%)', WebkitMaskImage: 'linear-gradient(180deg, transparent, #000 45%)', animation: 'landingGridSlide 3.2s linear infinite' }} />
         {/* Moon glow */}
-        <div className="absolute bottom-[130px] left-1/2 -translate-x-1/2 w-[340px] h-[340px] rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle at 50% 42%, rgba(255,46,166,0.34), rgba(139,92,246,0.18) 48%, transparent 70%)', filter: 'blur(6px)', animation: 'landingMoonPulse 6s ease-in-out infinite' }} />
+        <div className="absolute bottom-[130px] left-1/2 -translate-x-1/2 w-[340px] h-[340px] rounded-full pointer-events-none hidden sm:block" style={{ background: 'radial-gradient(circle at 50% 42%, rgba(255,46,166,0.34), rgba(139,92,246,0.18) 48%, transparent 70%)', filter: 'blur(6px)', animation: 'landingMoonPulse 6s ease-in-out infinite' }} />
         {/* Kana side text */}
-        <div className="absolute top-36 left-[5%] hidden lg:block writing-mode-vertical-rl font-jp font-black text-[2.3rem] tracking-[14px] text-[#ff2ea6] drop-shadow-[0_0_20px_rgba(255,46,166,0.7)] select-none" style={{ writingMode: 'vertical-rl', animation: 'landingSignFlicker 7s infinite' }}>引きの鍛冶場</div>
+        <div className="absolute top-36 left-[5%] hidden lg:block font-jp font-black text-[2.3rem] tracking-[14px] text-[#ff2ea6] drop-shadow-[0_0_20px_rgba(255,46,166,0.7)] select-none" style={{ writingMode: 'vertical-rl', animation: 'landingSignFlicker 7s infinite' }}>引きの鍛冶場</div>
         <div className="absolute top-36 right-[5%] hidden lg:block font-jp font-black text-[2.3rem] tracking-[14px] text-[#23e6ff] drop-shadow-[0_0_20px_rgba(35,230,255,0.7)] select-none" style={{ writingMode: 'vertical-rl', animation: 'landingSignFlicker 7s infinite 3.4s' }}>ネオン地区</div>
 
+        <div className="relative z-10 w-full max-w-5xl mx-auto">
         {/* Badge */}
-        <div className="inline-flex items-center gap-2.5 px-5 py-2 mb-7 border border-[rgba(35,230,255,0.5)] rounded-full bg-[rgba(35,230,255,0.06)] text-sm tracking-[3px] font-semibold uppercase text-[#23e6ff] shadow-[0_0_16px_rgba(35,230,255,0.25)]">
+        <div className="inline-flex items-center gap-2.5 px-4 sm:px-5 py-2 mb-5 sm:mb-7 border border-[rgba(35,230,255,0.5)] rounded-full bg-[rgba(35,230,255,0.06)] text-[0.7rem] sm:text-sm tracking-[2px] sm:tracking-[3px] font-semibold uppercase text-[#23e6ff] shadow-[0_0_16px_rgba(35,230,255,0.25)]">
           <span className="w-2 h-2 rounded-full bg-[#ff2ea6] shadow-[0_0_10px_#ff2ea6] animate-pulse" />
           Beta — Now Live
         </div>
 
         {/* Title */}
-        <h1 className="relative font-orbitron font-black text-[clamp(3rem,9vw,6.8rem)] tracking-[5px] leading-none bg-gradient-to-b from-white via-[#ff2ea6] to-[#ff9e2c] bg-clip-text text-transparent drop-shadow-[0_0_26px_rgba(255,46,166,0.55)]">
+        <h1 className="relative font-orbitron font-black text-[clamp(2.4rem,11vw,6.8rem)] tracking-[3px] sm:tracking-[5px] leading-none bg-gradient-to-b from-white via-[#ff2ea6] to-[#ff9e2c] bg-clip-text text-transparent drop-shadow-[0_0_26px_rgba(255,46,166,0.55)]">
           PULLFORGE
-          <span className="absolute inset-0 bg-gradient-to-b from-white via-[#ff2ea6] to-[#ff9e2c] bg-clip-text text-transparent" style={{ animation: 'landingGlitchL 3.2s infinite steps(1)' }} aria-hidden="true">PULLFORGE</span>
-          <span className="absolute inset-0 bg-gradient-to-b from-white via-[#ff2ea6] to-[#ff9e2c] bg-clip-text text-transparent" style={{ animation: 'landingGlitchR 3.2s infinite steps(1)' }} aria-hidden="true">PULLFORGE</span>
+          <span className="absolute inset-0 opacity-0 bg-gradient-to-b from-white via-[#ff2ea6] to-[#ff9e2c] bg-clip-text text-transparent" style={{ animation: 'landingGlitchL 3.2s infinite steps(1)' }} aria-hidden="true">PULLFORGE</span>
+          <span className="absolute inset-0 opacity-0 bg-gradient-to-b from-white via-[#ff2ea6] to-[#ff9e2c] bg-clip-text text-transparent" style={{ animation: 'landingGlitchR 3.2s infinite steps(1)' }} aria-hidden="true">PULLFORGE</span>
         </h1>
 
-        <div className="mt-4 font-jp text-[#23e6ff] tracking-[12px] text-base drop-shadow-[0_0_14px_rgba(35,230,255,0.7)]">ネオン・ジャパン・サイバーパンク</div>
+        <div className="mt-3 sm:mt-4 font-jp text-[#23e6ff] tracking-[0.2em] sm:tracking-[0.6em] text-xs sm:text-base drop-shadow-[0_0_14px_rgba(35,230,255,0.7)] whitespace-nowrap">ネオン・ジャパン・サイバーパンク</div>
 
-        <p className="mt-5 max-w-[640px] text-[#9a94b8] text-xl leading-relaxed font-medium">
+        <p className="mt-4 sm:mt-5 max-w-[640px] mx-auto text-[#9a94b8] text-base sm:text-xl leading-relaxed font-medium px-1">
           Welcome to the <b className="text-[#eeecf7]">Neon District</b> — where collectors rip packs under electric skies, battle for the biggest pulls, and forge legendary collections. <b className="text-[#eeecf7]">Every pull is forged in neon.</b>
         </p>
 
-        <div className="mt-10 flex gap-5 flex-wrap justify-center">
-          <Link href="/register" className="font-orbitron text-base tracking-widest px-10 py-4 font-bold uppercase bg-gradient-to-r from-[#ff2ea6] to-[#ff6ec4] text-[#14041f] shadow-[0_0_26px_rgba(255,46,166,0.8)] hover:shadow-[0_0_40px_rgba(255,46,166,1)] transition-all hover:-translate-y-0.5 [clip-path:polygon(12px_0,100%_0,calc(100%-12px)_100%,0_100%)]">
+        <div className="mt-5 sm:mt-10 flex gap-3 sm:gap-5 flex-wrap justify-center">
+          <Link href="/register" className="inline-flex items-center justify-center font-orbitron text-sm sm:text-base tracking-widest !px-8 sm:!px-10 !py-3.5 sm:!py-4 font-bold uppercase bg-gradient-to-r from-[#ff2ea6] to-[#ff6ec4] text-[#14041f] shadow-[0_0_26px_rgba(255,46,166,0.8)] hover:shadow-[0_0_40px_rgba(255,46,166,1)] transition-all hover:-translate-y-0.5 rounded-sm sm:[clip-path:polygon(12px_0,100%_0,calc(100%-12px)_100%,0_100%)]">
             Enter the Forge
           </Link>
-          <Link href="/boxes" className="font-orbitron text-base tracking-widest px-10 py-4 font-bold uppercase bg-[rgba(35,230,255,0.04)] text-[#23e6ff] border-[1.5px] border-[#23e6ff] shadow-[inset_0_0_14px_rgba(35,230,255,0.22),0_0_14px_rgba(35,230,255,0.35)] hover:shadow-[inset_0_0_20px_rgba(35,230,255,0.35),0_0_24px_rgba(35,230,255,0.6)] transition-all hover:-translate-y-0.5 [clip-path:polygon(12px_0,100%_0,calc(100%-12px)_100%,0_100%)]">
+          <Link href="/boxes" className="inline-flex items-center justify-center font-orbitron text-sm sm:text-base tracking-widest !px-8 sm:!px-10 !py-3.5 sm:!py-4 font-bold uppercase bg-[rgba(35,230,255,0.04)] text-[#23e6ff] border-[1.5px] border-[#23e6ff] shadow-[inset_0_0_14px_rgba(35,230,255,0.22),0_0_14px_rgba(35,230,255,0.35)] hover:shadow-[inset_0_0_20px_rgba(35,230,255,0.35),0_0_24px_rgba(35,230,255,0.6)] transition-all hover:-translate-y-0.5 rounded-sm sm:[clip-path:polygon(12px_0,100%_0,calc(100%-12px)_100%,0_100%)]">
             Browse Boxes
           </Link>
         </div>
 
         {/* Holo Cards */}
-        <div className="mt-16 flex gap-7 justify-center" style={{ perspective: '1100px' }}>
-          <HoloCard kanji="火" name="EMBER DRAGON" rarity="MYTHIC" price="$212.40" accent="#ff9e2c" glow="rgba(255,158,44,0.55)" rotate="rotate(-9deg) translateY(10px)" />
+        <div className="relative z-20 mt-8 sm:mt-16 flex gap-3 sm:gap-7 justify-center items-end">
+          <HoloCard kanji="火" name="EMBER DRAGON" rarity="MYTHIC" price="$212.40" accent="#ff9e2c" glow="rgba(255,158,44,0.55)" rotate="rotate(-8deg) translateY(8px)" />
           <HoloCard kanji="雷" name="STORM RONIN" rarity="RARE" price="$48.90" accent="#e8b34b" glow="rgba(232,179,75,0.5)" rotate="" />
-          <HoloCard kanji="水" name="TIDE ORACLE" rarity="FOIL" price="$96.20" accent="#23e6ff" glow="rgba(35,230,255,0.5)" rotate="rotate(9deg) translateY(10px)" />
+          <HoloCard kanji="水" name="TIDE ORACLE" rarity="FOIL" price="$96.20" accent="#23e6ff" glow="rgba(35,230,255,0.5)" rotate="rotate(8deg) translateY(8px)" />
+        </div>
         </div>
 
         <Skyline />
@@ -234,7 +242,7 @@ export function LandingPage() {
       <section className="py-28 px-6">
         <div className="text-center mb-16">
           <div className="font-jp text-[#8b5cf6] tracking-[8px] text-sm drop-shadow-[0_0_12px_rgba(139,92,246,0.7)]">特徴 — FEATURES</div>
-          <h2 className="font-orbitron text-[2.5rem] tracking-wider mt-2.5 text-[#eeecf7] drop-shadow-[0_0_22px_rgba(35,230,255,0.4)]">FORGED IN NEON</h2>
+          <h2 className="font-orbitron text-[clamp(1.6rem,6vw,2.5rem)] tracking-wider mt-2.5 text-[#eeecf7] drop-shadow-[0_0_22px_rgba(35,230,255,0.4)]">FORGED IN NEON</h2>
           <p className="mt-3.5 text-[#9a94b8] text-lg max-w-[560px] mx-auto">Everything a collector needs to rip, battle, and build — in one electric district.</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-7 max-w-[1160px] mx-auto">
@@ -251,7 +259,7 @@ export function LandingPage() {
       <section className="py-28 px-6" style={{ background: 'radial-gradient(ellipse 60% 60% at 50% 50%, rgba(139,92,246,0.1), transparent), linear-gradient(180deg, #05040c 0%, #0a0718 50%, #05040c 100%)' }}>
         <div className="text-center mb-16">
           <div className="font-jp text-[#8b5cf6] tracking-[8px] text-sm drop-shadow-[0_0_12px_rgba(139,92,246,0.7)]">バトルモード — BATTLE MODES</div>
-          <h2 className="font-orbitron text-[2.5rem] tracking-wider mt-2.5 text-[#eeecf7] drop-shadow-[0_0_22px_rgba(35,230,255,0.4)]">CHOOSE YOUR DUEL</h2>
+          <h2 className="font-orbitron text-[clamp(1.6rem,6vw,2.5rem)] tracking-wider mt-2.5 text-[#eeecf7] drop-shadow-[0_0_22px_rgba(35,230,255,0.4)]">CHOOSE YOUR DUEL</h2>
           <p className="mt-3.5 text-[#9a94b8] text-lg max-w-[560px] mx-auto">Four ways to settle it. One winner under the neon lights.</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-[1160px] mx-auto">
@@ -268,7 +276,7 @@ export function LandingPage() {
       <section className="py-28 px-6">
         <div className="text-center mb-16">
           <div className="font-jp text-[#8b5cf6] tracking-[8px] text-sm drop-shadow-[0_0_12px_rgba(139,92,246,0.7)]">ギャラリー — GALLERY</div>
-          <h2 className="font-orbitron text-[2.5rem] tracking-wider mt-2.5 text-[#eeecf7] drop-shadow-[0_0_22px_rgba(35,230,255,0.4)]">SCENES FROM THE DISTRICT</h2>
+          <h2 className="font-orbitron text-[clamp(1.4rem,5vw,2.5rem)] tracking-wider mt-2.5 text-[#eeecf7] drop-shadow-[0_0_22px_rgba(35,230,255,0.4)]">SCENES FROM THE DISTRICT</h2>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-[1160px] mx-auto">
           {[
