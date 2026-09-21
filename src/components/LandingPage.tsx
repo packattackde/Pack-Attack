@@ -1,4 +1,44 @@
 import Link from 'next/link';
+import Image from 'next/image';
+
+export type LandingPull = {
+  userName: string;
+  cardName: string;
+  rarity: string;
+  coinValue: number;
+};
+
+export type LandingCard = {
+  name: string;
+  rarity: string;
+  image: string | null;
+  coinValue: number;
+};
+
+export type LandingBox = {
+  id: string;
+  name: string;
+  imageUrl: string;
+  price: number;
+};
+
+export type LandingStats = {
+  packsRipped: string;
+  battlesFought: string;
+  collectors: string;
+  liveBoxes: string;
+};
+
+function rarityTone(rarity: string): { accent: string; glow: string; cls: string } {
+  const r = rarity.toLowerCase();
+  if (r.includes('mythic') || r.includes('legendary') || r.includes('secret') || r.includes('ultra')) {
+    return { accent: '#ff9e2c', glow: 'rgba(255,158,44,0.55)', cls: 'text-[#ff9e2c] drop-shadow-[0_0_8px_rgba(255,158,44,0.6)]' };
+  }
+  if (r.includes('rare') || r.includes('foil') || r.includes('holo') || r.includes('epic')) {
+    return { accent: '#e8b34b', glow: 'rgba(232,179,75,0.5)', cls: 'text-[#e8b34b]' };
+  }
+  return { accent: '#23e6ff', glow: 'rgba(35,230,255,0.5)', cls: 'text-[#23e6ff]' };
+}
 
 /* ─── Neon District Landing Page ─────────────────────────────────────────── */
 
@@ -22,10 +62,10 @@ function NeonRain() {
   );
 }
 
-function HoloCard({ kanji, name, rarity, price, accent, glow, rotate }: {
-  kanji: string; name: string; rarity: string; price: string;
-  accent: string; glow: string; rotate: string;
+function HoloCard({ name, rarity, image, coinValue, rotate }: {
+  name: string; rarity: string; image: string | null; coinValue: number; rotate: string;
 }) {
+  const { accent, glow } = rarityTone(rarity);
   return (
     <div
       className="relative isolate w-[104px] h-[148px] sm:w-[140px] sm:h-[200px] lg:w-[158px] lg:h-[224px] rounded-xl p-2 flex flex-col shrink-0"
@@ -38,18 +78,20 @@ function HoloCard({ kanji, name, rarity, price, accent, glow, rotate }: {
       }}
     >
       <div className="absolute inset-0 rounded-xl pointer-events-none" style={{ background: 'linear-gradient(115deg, transparent 32%, rgba(255,255,255,0.16) 48%, transparent 60%)', backgroundSize: '260% 100%', animation: 'landingSheen 4.5s linear infinite' }} />
-      <div className="flex justify-between items-center px-1.5 sm:px-2 py-1 rounded-md bg-white/5 text-[0.45rem] sm:text-[0.55rem] font-orbitron font-bold tracking-wider text-[#eeecf7]">
-        {name} <span style={{ color: accent }}>{rarity[0]}</span>
+      <div className="flex justify-between items-center gap-1 px-1.5 sm:px-2 py-1 rounded-md bg-white/5 text-[0.45rem] sm:text-[0.55rem] font-orbitron font-bold tracking-wider text-[#eeecf7]">
+        <span className="truncate">{name}</span>
+        <span className="shrink-0" style={{ color: accent }}>{rarity[0]?.toUpperCase()}</span>
       </div>
-      <div
-        className="flex-1 my-1.5 sm:my-2 rounded-lg flex items-center justify-center font-jp font-black text-[2rem] sm:text-[2.8rem] lg:text-[3.1rem] border border-white/[0.08]"
-        style={{ color: accent, textShadow: `0 0 24px ${accent}`, background: `radial-gradient(circle at 50% 40%, ${glow}33, transparent 75%), linear-gradient(160deg, #0e0b20, #090716)` }}
-      >
-        {kanji}
+      <div className="relative flex-1 my-1.5 sm:my-2 rounded-lg overflow-hidden border border-white/[0.08] bg-[#0e0b20]">
+        {image ? (
+          <Image src={image} alt={name} fill sizes="160px" className="object-cover" />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center font-jp font-black text-3xl" style={{ color: accent }}>{rarity[0]?.toUpperCase()}</div>
+        )}
       </div>
       <div className="flex justify-between items-center text-[0.45rem] sm:text-[0.55rem] font-orbitron font-bold tracking-wider">
-        <span style={{ color: accent, textShadow: `0 0 8px ${accent}` }}>{rarity}</span>
-        <span className="px-1.5 sm:px-2 py-0.5 rounded" style={{ color: '#0b0716', background: accent, boxShadow: `0 0 12px ${glow}` }}>{price}</span>
+        <span className="truncate max-w-[55%]" style={{ color: accent, textShadow: `0 0 8px ${accent}` }}>{rarity}</span>
+        <span className="px-1.5 sm:px-2 py-0.5 rounded shrink-0" style={{ color: '#0b0716', background: accent, boxShadow: `0 0 12px ${glow}` }}>{coinValue.toLocaleString()}</span>
       </div>
     </div>
   );
@@ -119,25 +161,29 @@ const VaultIcon = () => <svg viewBox="0 0 24 24" className="w-[26px] h-[26px] st
 const CoinIcon = () => <svg viewBox="0 0 24 24" className="w-[26px] h-[26px] stroke-[#23e6ff] fill-none" strokeWidth={1.7} style={{ filter: 'drop-shadow(0 0 8px rgba(35,230,255,0.8))' }}><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h3.5a2 2 0 010 4H9.5"/></svg>;
 
 /* ─── Ticker ─── */
-function LiveTicker() {
-  const pulls = [
-    { user: 'Kaito_99', pull: 'The One Ring — Mythic', cls: 'text-[#ff9e2c] drop-shadow-[0_0_8px_rgba(255,158,44,0.6)]' },
-    { user: 'NeonWolf', pull: 'Sheoldred — Rare Foil', cls: 'text-[#e8b34b]' },
-    { user: 'Sakura_Rips', pull: 'Jackpot Battle (+12,400 coins)', cls: 'text-[#23e6ff]' },
-    { user: 'Db_Breaker', pull: 'Ragavan — Rare', cls: 'text-[#e8b34b]' },
-    { user: 'Ghost_in_the_Pack', pull: 'Atraxa — Mythic Showcase', cls: 'text-[#ff9e2c] drop-shadow-[0_0_8px_rgba(255,158,44,0.6)]' },
-    { user: 'TCG_Ronin', pull: 'Upside-Down Battle', cls: 'text-[#23e6ff]' },
-  ];
+function LiveTicker({ pulls }: { pulls: LandingPull[] }) {
+  if (pulls.length === 0) {
+    return (
+      <div className="border-t border-[rgba(255,46,166,0.4)] border-b border-b-[rgba(35,230,255,0.4)] overflow-hidden py-3.5 flex items-center relative z-[2]" style={{ background: 'linear-gradient(90deg, #0a0818, #120c26, #0a0818)' }}>
+        <div className="shrink-0 px-3 sm:px-5 font-orbitron text-[0.62rem] sm:text-[0.72rem] font-bold tracking-[2px] sm:tracking-[3px] text-[#ff2ea6] border-r border-[rgba(255,46,166,0.4)] drop-shadow-[0_0_10px_rgba(255,46,166,0.7)] whitespace-nowrap">
+          <span className="animate-pulse">●</span>&nbsp;LIVE PULLS
+        </div>
+        <span className="px-8 text-base tracking-wide text-[#9a94b8] font-semibold">No pulls yet — be the first to rip a pack.</span>
+      </div>
+    );
+  }
   const doubled = [...pulls, ...pulls];
   return (
     <div className="border-t border-[rgba(255,46,166,0.4)] border-b border-b-[rgba(35,230,255,0.4)] overflow-hidden py-3.5 flex items-center relative z-[2]" style={{ background: 'linear-gradient(90deg, #0a0818, #120c26, #0a0818)' }}>
       <div className="shrink-0 px-3 sm:px-5 font-orbitron text-[0.62rem] sm:text-[0.72rem] font-bold tracking-[2px] sm:tracking-[3px] text-[#ff2ea6] border-r border-[rgba(255,46,166,0.4)] drop-shadow-[0_0_10px_rgba(255,46,166,0.7)] whitespace-nowrap">
         <span className="animate-pulse">●</span>&nbsp;LIVE PULLS
       </div>
-      <div className="flex whitespace-nowrap" style={{ animation: 'landingTickerScroll 32s linear infinite' }}>
+      <div className="flex whitespace-nowrap" style={{ animation: pulls.length > 2 ? 'landingTickerScroll 32s linear infinite' : undefined }}>
         {doubled.map((p, i) => (
-          <span key={i} className="px-8 text-base tracking-wide text-[#9a94b8] font-semibold">
-            <b className="text-[#eeecf7]">{p.user}</b>{' pulled '}<b className={p.cls}>{p.pull}</b>
+          <span key={`${p.cardName}-${i}`} className="px-8 text-base tracking-wide text-[#9a94b8] font-semibold">
+            <b className="text-[#eeecf7]">{p.userName}</b>
+            {' pulled '}
+            <b className={rarityTone(p.rarity).cls}>{p.cardName}{p.rarity ? ` — ${p.rarity}` : ''}</b>
           </span>
         ))}
       </div>
@@ -168,7 +214,17 @@ function Skyline() {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════ */
-export function LandingPage() {
+export function LandingPage({
+  pulls,
+  heroCards,
+  boxes,
+  stats,
+}: {
+  pulls: LandingPull[];
+  heroCards: LandingCard[];
+  boxes: LandingBox[];
+  stats: LandingStats;
+}) {
   return (
     <div className="-mt-[72px]"> {/* offset the global nav height */}
       {/* ═══ Inline keyframes ═══ */}
@@ -224,19 +280,27 @@ export function LandingPage() {
           </Link>
         </div>
 
-        {/* Holo Cards */}
+        {heroCards.length > 0 && (
         <div className="relative z-20 mt-8 sm:mt-16 flex gap-3 sm:gap-7 justify-center items-end">
-          <HoloCard kanji="火" name="EMBER DRAGON" rarity="MYTHIC" price="$212.40" accent="#ff9e2c" glow="rgba(255,158,44,0.55)" rotate="rotate(-8deg) translateY(8px)" />
-          <HoloCard kanji="雷" name="STORM RONIN" rarity="RARE" price="$48.90" accent="#e8b34b" glow="rgba(232,179,75,0.5)" rotate="" />
-          <HoloCard kanji="水" name="TIDE ORACLE" rarity="FOIL" price="$96.20" accent="#23e6ff" glow="rgba(35,230,255,0.5)" rotate="rotate(8deg) translateY(8px)" />
+          {heroCards.map((card, i) => (
+            <HoloCard
+              key={`${card.name}-${i}`}
+              name={card.name}
+              rarity={card.rarity}
+              image={card.image}
+              coinValue={card.coinValue}
+              rotate={i === 0 ? 'rotate(-8deg) translateY(8px)' : i === heroCards.length - 1 && heroCards.length > 1 ? 'rotate(8deg) translateY(8px)' : ''}
+            />
+          ))}
         </div>
+        )}
         </div>
 
         <Skyline />
       </header>
 
       {/* ═══ LIVE TICKER ═══ */}
-      <LiveTicker />
+      <LiveTicker pulls={pulls} />
 
       {/* ═══ FEATURES ═══ */}
       <section className="py-28 px-6">
@@ -272,43 +336,42 @@ export function LandingPage() {
 
       <Divider />
 
-      {/* ═══ GALLERY ═══ */}
+      {boxes.length > 0 && (
+      <>
       <section className="py-28 px-6">
         <div className="text-center mb-16">
-          <div className="font-jp text-[#8b5cf6] tracking-[8px] text-sm drop-shadow-[0_0_12px_rgba(139,92,246,0.7)]">ギャラリー — GALLERY</div>
-          <h2 className="font-orbitron text-[clamp(1.4rem,5vw,2.5rem)] tracking-wider mt-2.5 text-[#eeecf7] drop-shadow-[0_0_22px_rgba(35,230,255,0.4)]">SCENES FROM THE DISTRICT</h2>
+          <div className="font-jp text-[#8b5cf6] tracking-[8px] text-sm drop-shadow-[0_0_12px_rgba(139,92,246,0.7)]">ボックス — BOXES</div>
+          <h2 className="font-orbitron text-[clamp(1.4rem,5vw,2.5rem)] tracking-wider mt-2.5 text-[#eeecf7] drop-shadow-[0_0_22px_rgba(35,230,255,0.4)]">LIVE IN THE DISTRICT</h2>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-[1160px] mx-auto">
-          {[
-            { jp: '開封画面', kanji: '開', label: 'PACK REVEAL' },
-            { jp: 'バトル画面', kanji: '戦', label: 'BATTLE LOBBY' },
-            { jp: '金庫画面', kanji: '庫', label: 'COLLECTION VAULT' },
-          ].map((shot) => (
-            <div key={shot.label} className="rounded-[10px] overflow-hidden border border-[rgba(139,92,246,0.4)] bg-[#0c0a1a] shadow-[0_14px_38px_rgba(0,0,0,0.55)] hover:-translate-y-1.5 hover:border-[#ff2ea6] hover:shadow-[0_0_28px_rgba(255,46,166,0.3)] transition-all">
+          {boxes.map((box) => (
+            <Link key={box.id} href={`/open/${box.id}`} className="rounded-[10px] overflow-hidden border border-[rgba(139,92,246,0.4)] bg-[#0c0a1a] shadow-[0_14px_38px_rgba(0,0,0,0.55)] hover:-translate-y-1.5 hover:border-[#ff2ea6] hover:shadow-[0_0_28px_rgba(255,46,166,0.3)] transition-all">
               <div className="flex items-center gap-1.5 px-3 py-2.5 bg-gradient-to-b from-[#191430] to-[#120e26] border-b border-[rgba(139,92,246,0.3)]">
                 <i className="w-2.5 h-2.5 rounded-full bg-[#ff2ea6] shadow-[0_0_6px_#ff2ea6]" />
                 <i className="w-2.5 h-2.5 rounded-full bg-[#e8b34b] shadow-[0_0_6px_#e8b34b]" />
                 <i className="w-2.5 h-2.5 rounded-full bg-[#23e6ff] shadow-[0_0_6px_#23e6ff]" />
-                <em className="ml-2 not-italic font-jp text-[0.68rem] text-[#9a94b8] tracking-[3px]">{shot.jp}</em>
+                <em className="ml-2 not-italic font-orbitron text-[0.68rem] text-[#9a94b8] tracking-[2px] truncate">{box.name}</em>
               </div>
-              <div className="aspect-video flex flex-col items-center justify-center gap-2.5 font-orbitron tracking-widest text-xs text-[#9a94b8]" style={{ background: 'linear-gradient(135deg, rgba(255,46,166,.08), rgba(35,230,255,.08)), repeating-linear-gradient(45deg, rgba(139,92,246,.05) 0 12px, transparent 12px 24px), #0c0a1a' }}>
-                <span className="font-jp font-black text-[1.9rem] text-[rgba(139,92,246,0.5)]">{shot.kanji}</span>
-                {shot.label} — SCREENSHOT
+              <div className="relative aspect-video bg-[#0c0a1a]">
+                <Image src={box.imageUrl} alt={box.name} fill sizes="400px" className="object-cover" />
+                <div className="absolute bottom-2 right-2 font-orbitron text-xs px-2 py-1 rounded bg-[#ff2ea6] text-[#14041f] font-bold">{box.price.toLocaleString()} coins</div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>
+      </>
+      )}
 
       <Divider />
 
       {/* ═══ STATS ═══ */}
       <section className="py-28 px-6">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-0.5 max-w-[1000px] mx-auto border border-[rgba(139,92,246,0.35)] bg-[rgba(139,92,246,0.35)] shadow-[0_0_30px_rgba(139,92,246,0.2)]">
-          <Stat num="1.2M+" label="Packs Ripped" jp="開封数" />
-          <Stat num="84K" label="Battles Fought" jp="バトル数" />
-          <Stat num="312K" label="Mythics Pulled" jp="神話レア" />
-          <Stat num="24/7" label="Live Breaks" jp="生放送" />
+          <Stat num={stats.packsRipped} label="Packs Ripped" jp="開封数" />
+          <Stat num={stats.battlesFought} label="Battles Fought" jp="バトル数" />
+          <Stat num={stats.collectors} label="Collectors" jp="収集家" />
+          <Stat num={stats.liveBoxes} label="Live Boxes" jp="ボックス" />
         </div>
       </section>
 
@@ -323,7 +386,7 @@ export function LandingPage() {
               Claim Beta Access
             </Link>
           </div>
-          <div className="mt-5 text-sm text-[#9a94b8] tracking-wide">First 1,000 collectors get <b className="text-[#e8b34b]">500 starter coins</b> — no strings, all neon.</div>
+          <div className="mt-5 text-sm text-[#9a94b8] tracking-wide">New collectors start with <b className="text-[#e8b34b]">1,000 coins</b>.</div>
         </div>
       </section>
     </div>
