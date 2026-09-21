@@ -264,6 +264,36 @@ export function LandingPage() {
 
       <Divider />
 
+      {/* ═══ GALLERY ═══ */}
+      <section className="py-28 px-6">
+        <div className="text-center mb-16">
+          <div className="font-jp text-[#8b5cf6] tracking-[8px] text-sm drop-shadow-[0_0_12px_rgba(139,92,246,0.7)]">ギャラリー — GALLERY</div>
+          <h2 className="font-orbitron text-[2.5rem] tracking-wider mt-2.5 text-[#eeecf7] drop-shadow-[0_0_22px_rgba(35,230,255,0.4)]">SCENES FROM THE DISTRICT</h2>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-[1160px] mx-auto">
+          {[
+            { jp: '開封画面', kanji: '開', label: 'PACK REVEAL' },
+            { jp: 'バトル画面', kanji: '戦', label: 'BATTLE LOBBY' },
+            { jp: '金庫画面', kanji: '庫', label: 'COLLECTION VAULT' },
+          ].map((shot) => (
+            <div key={shot.label} className="rounded-[10px] overflow-hidden border border-[rgba(139,92,246,0.4)] bg-[#0c0a1a] shadow-[0_14px_38px_rgba(0,0,0,0.55)] hover:-translate-y-1.5 hover:border-[#ff2ea6] hover:shadow-[0_0_28px_rgba(255,46,166,0.3)] transition-all">
+              <div className="flex items-center gap-1.5 px-3 py-2.5 bg-gradient-to-b from-[#191430] to-[#120e26] border-b border-[rgba(139,92,246,0.3)]">
+                <i className="w-2.5 h-2.5 rounded-full bg-[#ff2ea6] shadow-[0_0_6px_#ff2ea6]" />
+                <i className="w-2.5 h-2.5 rounded-full bg-[#e8b34b] shadow-[0_0_6px_#e8b34b]" />
+                <i className="w-2.5 h-2.5 rounded-full bg-[#23e6ff] shadow-[0_0_6px_#23e6ff]" />
+                <em className="ml-2 not-italic font-jp text-[0.68rem] text-[#9a94b8] tracking-[3px]">{shot.jp}</em>
+              </div>
+              <div className="aspect-video flex flex-col items-center justify-center gap-2.5 font-orbitron tracking-widest text-xs text-[#9a94b8]" style={{ background: 'linear-gradient(135deg, rgba(255,46,166,.08), rgba(35,230,255,.08)), repeating-linear-gradient(45deg, rgba(139,92,246,.05) 0 12px, transparent 12px 24px), #0c0a1a' }}>
+                <span className="font-jp font-black text-[1.9rem] text-[rgba(139,92,246,0.5)]">{shot.kanji}</span>
+                {shot.label} — SCREENSHOT
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <Divider />
+
       {/* ═══ STATS ═══ */}
       <section className="py-28 px-6">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-0.5 max-w-[1000px] mx-auto border border-[rgba(139,92,246,0.35)] bg-[rgba(139,92,246,0.35)] shadow-[0_0_30px_rgba(139,92,246,0.2)]">

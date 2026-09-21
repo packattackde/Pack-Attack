@@ -1,12 +1,12 @@
-import { redirect } from 'next/navigation';
-import { getCurrentSession } from '@/lib/auth';
+import type { Metadata } from 'next';
 import { LandingPage } from '@/components/LandingPage';
 
-export const dynamic = 'force-dynamic';
+export const metadata: Metadata = {
+  title: 'PullForge — Neon District',
+  description:
+    'Welcome to the Neon District. Rip packs, battle for the biggest pulls, and forge legendary collections. Every pull is forged in neon.',
+};
 
-export default async function Home() {
-  const session = await getCurrentSession();
-  if (session?.user?.email) redirect('/dashboard');
-
+export default function Home() {
   return <LandingPage />;
 }
