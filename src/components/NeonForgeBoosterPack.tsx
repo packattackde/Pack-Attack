@@ -5,11 +5,8 @@ import Image from 'next/image';
 import {
   BoosterPackPattern,
   BoosterPackTheme,
-  BOOSTER_PATH,
-  BOOSTER_VIEWBOX,
   PACK_BG_1,
   PACK_BG_2,
-  boosterClipId,
   getBoosterPackTheme,
 } from '@/lib/booster-pack-theme';
 
@@ -25,12 +22,51 @@ type NeonForgeBoosterPackProps = {
   tearProgress?: number;
   idSuffix?: string;
   className?: string;
-  /** Holo / specular overlays (opening flow) — clipped to pack shape */
   overlay?: ReactNode;
 };
 
-/** Rip seam — just below top crimp + foil band */
-export const PACK_TEAR_SEAM_TOP = '11.5%';
+/** Foil seam — below top crimp decoration */
+export const PACK_TEAR_SEAM_TOP = '8.5%';
+
+function TopCrimp({ accent }: { accent: string }) {
+  return (
+    <svg
+      className="pointer-events-none absolute inset-x-0 top-0 z-30 h-[6%] min-h-[18px] w-full"
+      viewBox="0 0 180 18"
+      preserveAspectRatio="none"
+      aria-hidden
+    >
+      <path
+        d="M0,18 L0,10 L6,14 L12,8 L18,14 L24,8 L30,14 L36,8 L42,14 L48,8 L54,14 L60,8 L66,14 L72,8 L78,14 L84,8 L90,14 L96,8 L102,14 L108,8 L114,14 L120,8 L126,14 L132,8 L138,14 L144,8 L150,14 L156,8 L162,14 L168,8 L174,14 L180,8 L180,18 Z"
+        fill={accent}
+        opacity="0.95"
+      />
+      <path
+        d="M0,18 L0,10 L6,14 L12,8 L18,14 L24,8 L30,14 L36,8 L42,14 L48,8 L54,14 L60,8 L66,14 L72,8 L78,14 L84,8 L90,14 L96,8 L102,14 L108,8 L114,14 L120,8 L126,14 L132,8 L138,14 L144,8 L150,14 L156,8 L162,14 L168,8 L174,14 L180,8 L180,18 Z"
+        fill="none"
+        stroke="rgba(0,0,0,0.35)"
+        strokeWidth="0.5"
+      />
+    </svg>
+  );
+}
+
+function BottomCrimp({ accent }: { accent: string }) {
+  return (
+    <svg
+      className="pointer-events-none absolute inset-x-0 bottom-0 z-30 h-[5%] min-h-[14px] w-full"
+      viewBox="0 0 180 14"
+      preserveAspectRatio="none"
+      aria-hidden
+    >
+      <path
+        d="M0,0 L6,6 L12,0 L18,6 L24,0 L30,6 L36,0 L42,6 L48,0 L54,6 L60,0 L66,6 L72,0 L78,6 L84,0 L90,6 L96,0 L102,6 L108,0 L114,6 L120,0 L126,6 L132,0 L138,6 L144,0 L150,6 L156,0 L162,6 L168,0 L174,6 L180,0 L180,14 L0,14 Z"
+        fill={accent}
+        opacity="0.85"
+      />
+    </svg>
+  );
+}
 
 function PackPattern({
   pattern,
@@ -129,122 +165,64 @@ export function NeonForgeBoosterPack({
   const theme = themeProp ?? getBoosterPackTheme(game);
   const { accent, accentSoft, Icon, wordmark, tagline, pattern } = theme;
   const isOpening = variant === 'opening';
-  const clipId = boosterClipId(idSuffix);
-  const widthClass = isOpening ? 'w-full max-w-[min(290px,88vw)]' : 'w-[160px] sm:w-[180px]';
+  const widthClass = isOpening ? 'w-full max-w-[min(280px,88vw)]' : 'w-[160px] sm:w-[180px]';
 
   return (
     <div
-      className={`relative select-none ${widthClass} ${className}`}
+      className={`relative aspect-[5/8] select-none ${widthClass} ${className}`}
       style={{
-        aspectRatio: `${BOOSTER_VIEWBOX.w}/${BOOSTER_VIEWBOX.h}`,
-        filter: revealGlow ? `drop-shadow(0 0 28px ${accent}) drop-shadow(0 0 12px rgba(35,230,255,0.35))` : undefined,
+        filter: revealGlow ? `drop-shadow(0 0 24px ${accent})` : undefined,
       }}
     >
-      <svg
-        viewBox={`0 0 ${BOOSTER_VIEWBOX.w} ${BOOSTER_VIEWBOX.h}`}
-        className="absolute inset-0 h-full w-full overflow-visible drop-shadow-[0_20px_40px_rgba(0,0,0,0.75)]"
-        aria-hidden
-      >
-        <defs>
-          <clipPath id={clipId} clipPathUnits="userSpaceOnUse">
-            <path d={BOOSTER_PATH} />
-          </clipPath>
-          <linearGradient id={`pack-body-${idSuffix}`} x1="0" y1="0" x2="0.85" y2="1">
-            <stop offset="0%" stopColor="#1a1238" />
-            <stop offset="35%" stopColor={PACK_BG_1} />
-            <stop offset="78%" stopColor="#0c0820" />
-            <stop offset="100%" stopColor="#05040c" />
-          </linearGradient>
-          <linearGradient id={`pack-edge-${idSuffix}`} x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#ff2ea6" stopOpacity="0.5" />
-            <stop offset="50%" stopColor="#8b5cf6" stopOpacity="0.35" />
-            <stop offset="100%" stopColor="#23e6ff" stopOpacity="0.5" />
-          </linearGradient>
-        </defs>
-        <path d={BOOSTER_PATH} fill={`url(#pack-body-${idSuffix})`} stroke={`url(#pack-edge-${idSuffix})`} strokeWidth="1.2" />
-        <path
-          d={BOOSTER_PATH}
-          fill="none"
-          stroke="rgba(255,255,255,0.12)"
-          strokeWidth="0.6"
-          transform="translate(0.3,0.3)"
-        />
-      </svg>
-
       <div
-        className="absolute inset-0 overflow-hidden"
-        style={{ clipPath: `url(#${clipId})` }}
+        className="absolute inset-0 overflow-hidden rounded-[14px] ring-1 ring-white/20"
+        style={{
+          boxShadow: '0 22px 44px -14px rgba(0,0,0,0.9), inset 0 0 0 1px rgba(139,92,246,0.25)',
+          background: `linear-gradient(170deg, ${PACK_BG_1} 0%, ${PACK_BG_2} 68%, #050213 100%)`,
+        }}
       >
-        <div
-          className="absolute inset-0"
-          style={{
-            background: `linear-gradient(165deg, #191233 0%, ${PACK_BG_1} 38%, #100d22 72%, #05040c 100%)`,
-          }}
-        />
         <PackPattern pattern={pattern} accent={accent} suffix={idSuffix} />
 
         <div
-          className="pointer-events-none absolute inset-y-[8%] left-0 w-[4%]"
-          style={{ background: 'linear-gradient(90deg, rgba(0,0,0,0.55), transparent)' }}
-        />
-        <div
-          className="pointer-events-none absolute inset-y-[8%] right-0 w-[4%]"
-          style={{ background: 'linear-gradient(270deg, rgba(0,0,0,0.55), transparent)' }}
+          className="pointer-events-none absolute inset-x-0 top-0 h-[50%]"
+          style={{ background: `radial-gradient(ellipse at 50% 0%, ${accent}28, transparent 65%)` }}
         />
 
-        <div
-          className="absolute inset-x-0 top-[5%] h-[48%] pointer-events-none"
-          style={{ background: `radial-gradient(ellipse at 50% 0%, ${accent}30, transparent 65%)` }}
-        />
+        <TopCrimp accent={accentSoft} />
+        <BottomCrimp accent={accent} />
 
-        {/* Flat foil strip below top crimp — classic rip tab area */}
+        {/* Rip foil tab */}
         <div
-          className="absolute inset-x-[3%] top-[6.2%] z-10 h-[4.5%] min-h-[12px] rounded-[1px]"
+          className="absolute inset-x-[8%] top-[5.5%] z-20 h-[3.5%] min-h-[10px] rounded-[1px]"
           style={{
-            background: `linear-gradient(180deg, ${accentSoft} 0%, ${accent} 55%, rgba(0,0,0,0.5) 100%)`,
-            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.35), 0 1px 2px rgba(0,0,0,0.4)',
-          }}
-        >
-          <div className="absolute bottom-[18%] left-[4%] right-[4%] flex justify-between">
-            {Array.from({ length: 22 }).map((_, i) => (
-              <span key={i} className="h-[1.5px] w-[1.5px] rounded-full bg-black/45" />
-            ))}
-          </div>
-        </div>
-
-        <div
-          className="absolute inset-x-[2%] z-[15] h-[2.5%]"
-          style={{
-            top: '10.2%',
-            background: 'linear-gradient(180deg, rgba(0,0,0,0.75), rgba(12,10,28,0.9))',
+            background: `linear-gradient(180deg, ${accentSoft}, ${accent})`,
+            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.35)',
           }}
         />
 
-        {(tearLineActive || isOpening) && (
+        {(isOpening || tearLineActive) && (
           <div
-            className="absolute left-[4%] right-[4%] z-[25] tear-rip-guide rounded-full"
+            className="tear-rip-guide absolute left-[6%] right-[6%] z-[25] rounded-full"
             style={{
               top: PACK_TEAR_SEAM_TOP,
-              height: tearLineActive ? 4 : 3,
+              height: 4,
               background:
                 tearProgress > 0
-                  ? `linear-gradient(90deg, #23e6ff ${Math.max(0, tearProgress - 8)}%, #ffffff ${tearProgress}%, rgba(255,255,255,0.15) ${tearProgress}%)`
-                  : 'repeating-linear-gradient(90deg, #23e6ff 0 10px, #ffffff 10px 14px, transparent 14px 22px)',
+                  ? `linear-gradient(90deg, #23e6ff ${Math.max(0, tearProgress - 10)}%, #fff ${tearProgress}%, transparent ${tearProgress}%)`
+                  : 'repeating-linear-gradient(90deg, #23e6ff 0 12px, #ffffff 12px 16px, transparent 16px 24px)',
             }}
           />
         )}
 
-        {!isOpening && (
-          <div className="absolute left-0 right-0 top-[12%] z-20 text-center text-[6px] font-black uppercase tracking-[3px] text-white/55">
-            Pull · Forge
-          </div>
-        )}
+        <div className="absolute left-0 right-0 top-[8%] z-20 text-center text-[6px] font-black uppercase tracking-[3px] text-white/55">
+          Pull · Forge
+        </div>
 
-        <div className={`absolute inset-x-0 z-20 flex flex-col items-center px-3 text-center ${isOpening ? 'top-[14%]' : 'top-[13.5%]'}`}>
+        <div className="absolute inset-x-0 top-[11%] z-20 flex flex-col items-center px-2 text-center">
           <div
-            className={`w-full truncate font-black leading-none tracking-wide ${isOpening ? 'text-[13px] sm:text-[15px]' : 'text-[12px] sm:text-[13px]'}`}
+            className={`w-full truncate font-black leading-none ${isOpening ? 'text-[14px]' : 'text-[13px]'}`}
             style={{
-              background: 'linear-gradient(180deg, #ffffff 0%, #ff2ea6 55%, #ff9e2c 100%)',
+              background: `linear-gradient(180deg, ${accentSoft} 0%, ${accent} 70%)`,
               WebkitBackgroundClip: 'text',
               backgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
@@ -252,72 +230,54 @@ export function NeonForgeBoosterPack({
           >
             {wordmark}
           </div>
-          <div className="mt-0.5 text-[7px] font-bold uppercase tracking-[2px]" style={{ color: `${accent}dd` }}>
+          <div className="mt-0.5 text-[7px] font-bold uppercase tracking-[2px]" style={{ color: `${accent}cc` }}>
             {tagline}
           </div>
         </div>
 
         <div
-          className={`absolute z-10 overflow-hidden rounded-sm ${
-            isOpening ? 'left-[10%] right-[10%] top-[22%] bottom-[22%]' : 'left-[12%] right-[12%] top-[24%] bottom-[24%]'
+          className={`absolute z-10 overflow-hidden rounded-md ${
+            isOpening ? 'left-[10%] right-[10%] top-[22%] bottom-[26%]' : 'left-[12%] right-[12%] top-[24%] bottom-[28%]'
           }`}
           style={{
-            background: '#06040f',
-            boxShadow: `
-              0 0 0 2px ${accent},
-              0 0 0 3px rgba(0,0,0,0.65),
-              inset 0 0 20px rgba(0,0,0,0.45)
-            `,
+            background: '#07050f',
+            boxShadow: `0 0 0 2px ${accent}cc, 0 0 0 3px rgba(0,0,0,0.5), inset 0 0 16px rgba(0,0,0,0.4)`,
           }}
         >
-          <div
-            className="absolute inset-[4px] overflow-hidden rounded-[3px]"
-            style={{ background: `radial-gradient(circle at 50% 20%, ${PACK_BG_1}, ${PACK_BG_2})` }}
-          >
+          <div className="absolute inset-[3px] overflow-hidden rounded-[5px] bg-[#0a0820]">
             {heroImageUrl ? (
               <Image
                 src={heroImageUrl}
                 alt=""
                 fill
-                className={isOpening ? 'object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.85)]' : 'object-cover'}
-                sizes={isOpening ? '240px' : '180px'}
+                className={isOpening ? 'object-contain p-0.5' : 'object-cover'}
+                sizes={isOpening ? '220px' : '160px'}
                 unoptimized
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center">
-                <Icon className="h-10 w-10 text-white/40" />
+                <Icon className="h-9 w-9 text-white/35" />
               </div>
             )}
           </div>
           {isOpening && heroImageUrl && (
-            <span className="absolute left-1.5 top-1.5 z-10 rounded px-1.5 py-0.5 text-[7px] font-black uppercase tracking-wider text-[#14041f] bg-gradient-to-r from-[#ff2ea6] to-[#ff6ec4]">
+            <span className="absolute left-1 top-1 z-10 rounded bg-[#ff2ea6] px-1 py-px text-[6px] font-black uppercase text-[#14041f]">
               Chase
             </span>
           )}
           <div
-            className="pointer-events-none absolute inset-0"
+            className="pointer-events-none absolute inset-0 rounded-md"
             style={{
-              background: 'linear-gradient(165deg, rgba(255,255,255,0.1) 0%, transparent 40%, transparent 70%, rgba(0,0,0,0.2) 100%)',
+              background: 'linear-gradient(155deg, rgba(255,255,255,0.15) 0%, transparent 42%, rgba(0,0,0,0.2) 100%)',
             }}
           />
-          {!isOpening && (
-            <div className="pack-shine pointer-events-none absolute inset-0 overflow-hidden opacity-50">
-              <div
-                className="absolute top-0 h-full w-[45%]"
-                style={{ background: 'linear-gradient(105deg, transparent 28%, rgba(255,255,255,0.4) 50%, transparent 72%)' }}
-              />
-            </div>
-          )}
         </div>
 
-        <div className="absolute inset-x-0 bottom-[11%] z-20 px-3 pb-1 pt-2">
-          <div
-            className={`text-center font-black uppercase leading-[1.1] text-white ${isOpening ? 'text-[10px] sm:text-[11px]' : 'text-[9px] sm:text-[10px]'} tracking-wide line-clamp-2`}
-            style={{ textShadow: '0 1px 3px rgba(0,0,0,1)' }}
-          >
+        <div className="absolute inset-x-0 bottom-[9%] z-20 px-2 pb-1 pt-2">
+          <div className="line-clamp-2 text-center text-[9px] font-black uppercase leading-tight tracking-wide text-white sm:text-[10px]">
             {boxName}
           </div>
-          <div className="mt-1 flex items-center justify-between gap-1">
+          <div className="mt-1 flex items-center gap-1.5">
             <div
               className="flex h-5 w-5 shrink-0 items-center justify-center sm:h-6 sm:w-6"
               style={{
@@ -327,27 +287,26 @@ export function NeonForgeBoosterPack({
             >
               <Icon className="h-2.5 w-2.5 text-[#0a0420] sm:h-3 sm:w-3" />
             </div>
-            <div className="flex-1 rounded-sm px-2 py-0.5 text-center" style={{ background: accent }}>
-              <span className="text-[7px] font-black uppercase tracking-[1.5px] text-[#14041f] sm:text-[8px]">
-                {cardsPerPack} CARDS
-              </span>
+            <div className="flex-1 rounded-sm py-0.5 text-center text-[7px] font-black uppercase tracking-wider text-[#14041f] sm:text-[8px]" style={{ background: accent }}>
+              {cardsPerPack} cards
             </div>
           </div>
         </div>
 
         {revealGlow && (
-          <div
-            className="pointer-events-none absolute inset-0 z-[5]"
-            style={{ background: 'radial-gradient(circle at 50% 38%, rgba(255,46,166,0.14), transparent 60%)' }}
-          />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(255,46,166,0.12),transparent_60%)]" />
         )}
 
         {overlay}
 
-        <div
-          className="pointer-events-none absolute inset-x-[8%] bottom-[5%] h-[6%] opacity-40"
-          style={{ background: 'linear-gradient(0deg, rgba(0,0,0,0.6), transparent)' }}
-        />
+        {!isOpening && (
+          <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            <div
+              className="pack-shine absolute top-0 h-full w-[40%]"
+              style={{ background: 'linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.45) 50%, transparent 70%)' }}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

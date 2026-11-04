@@ -298,24 +298,14 @@ function PackCard({
 function BoosterPack({ box, theme }: { box: Box; theme: BoosterPackTheme }) {
   const heroImage = box.topCard?.imageUrlGatherer || box.imageUrl || null;
   return (
-    <div className="relative overflow-hidden">
-      <NeonForgeBoosterPack
-        boxName={box.name}
-        cardsPerPack={box.cardsPerPack}
-        heroImageUrl={heroImage}
-        theme={theme}
-        variant="catalog"
-        idSuffix={box.id}
-      />
-      <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-        <div
-          className="pack-shine absolute top-0 h-full w-[40%]"
-          style={{
-            background: 'linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.45) 50%, transparent 70%)',
-          }}
-        />
-      </div>
-    </div>
+    <NeonForgeBoosterPack
+      boxName={box.name}
+      cardsPerPack={box.cardsPerPack}
+      heroImageUrl={heroImage}
+      theme={theme}
+      variant="catalog"
+      idSuffix={box.id}
+    />
   );
 }
 
