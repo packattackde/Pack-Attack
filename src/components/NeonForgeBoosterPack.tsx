@@ -141,6 +141,9 @@ function BoosterSilhouetteRim({ suffix, glow }: { suffix: string; glow?: boolean
   );
 }
 
+/** Standard TCG portrait slot: 2.5 × 3.5 (tailwind 5/7) */
+const CARD_ASPECT_CLASS = 'aspect-[5/7]';
+
 function OpeningChaseCardPreview({
   heroImageUrl,
   Icon,
@@ -149,21 +152,39 @@ function OpeningChaseCardPreview({
   Icon: BoosterPackTheme['Icon'];
 }) {
   return (
-    <div className="absolute inset-[3px] overflow-hidden rounded-[4px] bg-gradient-to-b from-[#0c0a18] to-[#05040c]">
-      <div className="relative h-full w-full">
-        {heroImageUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={heroImageUrl}
-            alt=""
-            referrerPolicy="no-referrer"
-            className="absolute left-1/2 top-1/2 max-h-[92%] max-w-[92%] -translate-x-1/2 -translate-y-1/2 object-contain drop-shadow-[0_6px_14px_rgba(0,0,0,0.65)]"
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center">
-            <Icon className="h-10 w-10 text-white/30" aria-hidden />
-          </div>
-        )}
+    <div className="absolute inset-[4px] flex items-center justify-center overflow-hidden rounded-[4px] bg-gradient-to-b from-[#0c0a18] to-[#05040c] p-1.5 sm:p-2">
+      <div
+        className={`relative ${CARD_ASPECT_CLASS} h-full w-auto max-h-full max-w-full shrink-0 rounded-[4px] bg-[#080612]`}
+        style={{
+          boxShadow: `
+            0 0 0 1px ${FOIL_GOLD}99,
+            0 0 0 2px rgba(0,0,0,0.85),
+            0 8px 20px rgba(0,0,0,0.55)
+          `,
+        }}
+      >
+        <div className="absolute inset-[3px] overflow-hidden rounded-[3px] bg-[#0a0820]">
+          {heroImageUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={heroImageUrl}
+              alt=""
+              referrerPolicy="no-referrer"
+              className="block h-full w-full object-contain object-center"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center">
+              <Icon className="h-10 w-10 text-white/30" aria-hidden />
+            </div>
+          )}
+        </div>
+        <div
+          className="pointer-events-none absolute inset-0 rounded-[4px]"
+          style={{
+            background:
+              'linear-gradient(145deg, rgba(255,255,255,0.12) 0%, transparent 40%, transparent 100%)',
+          }}
+        />
       </div>
     </div>
   );
@@ -200,7 +221,7 @@ function OpeningBoosterPack({
           background: `linear-gradient(168deg, ${PACK_BG_1} 0%, ${PACK_BG_2} 52%, #050213 100%)`,
         }}
       >
-        <PackPattern pattern={pattern} accent={accent} suffix={idSuffix ?? 'catalog'} />
+        <PackPattern pattern={pattern} accent={accent} suffix={idSuffix ?? 'opening'} />
 
         <div
           className="pointer-events-none absolute inset-x-0 top-0 h-[45%]"
@@ -299,25 +320,25 @@ function OpeningBoosterPack({
         </div>
 
         <div
-          className="absolute z-[20] overflow-hidden rounded-[5px]"
+          className="absolute z-[20] overflow-visible rounded-[5px]"
           style={{
-            left: '8.5%',
-            right: '8.5%',
-            top: '19%',
-            bottom: '20%',
+            left: '7.5%',
+            right: '7.5%',
+            top: '18%',
+            bottom: '18%',
             background: '#020106',
             boxShadow: `0 0 0 2px ${FOIL_GOLD}, 0 0 0 4px rgba(0,0,0,0.9), 0 0 0 5px ${accent}88`,
           }}
         >
           <OpeningChaseCardPreview heroImageUrl={heroImageUrl} Icon={Icon} />
           {heroImageUrl && (
-            <span className="absolute left-0 top-0 z-30 rounded-br-md bg-[#ff2ea6] px-1.5 py-0.5 text-[6px] font-black uppercase text-[#14041f]">
+            <span className="absolute -left-px -top-px z-30 rounded-br-md bg-[#ff2ea6] px-1.5 py-0.5 text-[6px] font-black uppercase text-[#14041f] shadow-sm">
               Chase
             </span>
           )}
           {cardsPerPack > 0 && (
             <span
-              className="absolute right-0 top-0 z-30 flex h-[18px] w-[18px] items-center justify-center rounded-bl-md text-[7px] font-black text-white ring-1 ring-[#f5e6a8]"
+              className="absolute -right-px -top-px z-30 flex h-[18px] w-[18px] items-center justify-center rounded-bl-md text-[7px] font-black text-white ring-1 ring-[#f5e6a8] shadow-sm"
               style={{ background: accent }}
             >
               {cardsPerPack}
