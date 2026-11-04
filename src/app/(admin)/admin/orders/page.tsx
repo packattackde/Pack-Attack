@@ -90,7 +90,7 @@ export default async function AdminOrdersPage() {
       <div>
         <h1 className="text-3xl font-bold text-white">Order Management</h1>
         <p className="text-[#8888aa] mt-1">
-          View and manage customer orders. Assign to shops or send individual PENDING orders to Cardmarket (Processing).
+          Partner shops or Cardmarket warehouse — use the blue buttons on each order row (no need to expand).
         </p>
       </div>
 
