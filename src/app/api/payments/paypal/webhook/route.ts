@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { verifyWebhookSignature, getPayPalOrder } from '@/lib/paypal';
+import { verifyWebhookSignature } from '@/lib/paypal';
+import { fulfillPendingCoinPurchase } from '@/lib/fulfill-coin-purchase';
 
 const PAYPAL_WEBHOOK_ID = process.env.PAYPAL_WEBHOOK_ID || '';
 
@@ -14,8 +15,11 @@ export async function POST(request: Request) {
       headers[key.toLowerCase()] = value;
     });
 
-    // Verify webhook signature in production
-    if (process.env.NODE_ENV === 'production' && PAYPAL_WEBHOOK_ID) {
+    if (process.env.NODE_ENV === 'production') {
+      if (!PAYPAL_WEBHOOK_ID) {
+        console.error('PAYPAL_WEBHOOK_ID not configured in production');
+        return NextResponse.json({ error: 'Webhook not configured' }, { status: 503 });
+      }
       const isValid = await verifyWebhookSignature(PAYPAL_WEBHOOK_ID, headers, body);
       if (!isValid) {
         console.error('Invalid PayPal webhook signature');
@@ -48,20 +52,11 @@ export async function POST(request: Request) {
             where: { paypalOrderId: orderId },
           });
 
-          if (transaction && transaction.status !== 'COMPLETED') {
-            // Update transaction and user balance
-            await prisma.$transaction([
-              prisma.user.update({
-                where: { id: transaction.userId },
-                data: { coins: { increment: transaction.coins } },
-              }),
-              prisma.transaction.update({
-                where: { id: transaction.id },
-                data: { status: 'COMPLETED' },
-              }),
-            ]);
-            
-            console.log(`Payment completed for order ${orderId}, added ${transaction.coins} coins`);
+          if (transaction) {
+            const result = await fulfillPendingCoinPurchase({ paypalOrderId: orderId });
+            if (result.completed) {
+              console.log(`Payment completed for order ${orderId}, added ${result.coinsAdded} coins`);
+            }
           }
         }
         break;

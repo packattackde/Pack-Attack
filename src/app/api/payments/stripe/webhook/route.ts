@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { constructWebhookEvent } from '@/lib/stripe';
+import { fulfillPendingCoinPurchase } from '@/lib/fulfill-coin-purchase';
 import Stripe from 'stripe';
 
 const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET || '';
@@ -43,17 +44,7 @@ export async function POST(request: Request) {
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
-        
-        // Get metadata
-        const userId = session.metadata?.userId;
-        const coins = parseInt(session.metadata?.coins || '0');
 
-        if (!userId || !coins) {
-          console.error('Missing metadata in checkout session');
-          break;
-        }
-
-        // Find the transaction
         const transaction = await prisma.transaction.findUnique({
           where: { stripePaymentId: session.id },
         });
@@ -63,25 +54,24 @@ export async function POST(request: Request) {
           break;
         }
 
-        // Skip if already completed
-        if (transaction.status === 'COMPLETED') {
-          console.log('Transaction already completed:', session.id);
+        const metaUserId = session.metadata?.userId;
+        if (metaUserId && metaUserId !== transaction.userId) {
+          console.error('Stripe metadata userId mismatch for session:', session.id);
           break;
         }
 
-        // Update user coins and transaction status
-        await prisma.$transaction([
-          prisma.user.update({
-            where: { id: userId },
-            data: { coins: { increment: coins } },
-          }),
-          prisma.transaction.update({
-            where: { id: transaction.id },
-            data: { status: 'COMPLETED' },
-          }),
-        ]);
+        const result = await fulfillPendingCoinPurchase(
+          { stripePaymentId: session.id },
+          { expectedUserId: transaction.userId }
+        );
 
-        console.log(`Payment completed: ${coins} coins added to user ${userId}`);
+        if (result.completed) {
+          console.log(
+            `Payment completed: ${result.coinsAdded} coins added to user ${result.userId}`
+          );
+        } else if (result.alreadyCompleted) {
+          console.log('Transaction already completed:', session.id);
+        }
         break;
       }
 

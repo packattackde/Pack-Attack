@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { awardXp } from '@/lib/level';
+import { isValidCronBearerFromHeader } from '@/lib/cron-auth';
 
 function drawRandomCard(cards: Array<{ id: string; name: string; coinValue: number; pullRate: number; imageUrlGatherer: string | null; imageUrlScryfall: string | null; rarity: string | null }>) {
   const totalWeight = cards.reduce((sum, c) => sum + c.pullRate, 0);
@@ -172,6 +174,7 @@ export async function POST(
 ) {
   try {
     const { battleId } = await params;
+    const isCron = isValidCronBearerFromHeader(request.headers.get('authorization'));
 
     const battle = await prisma.battle.findUnique({
       where: { id: battleId },
@@ -180,6 +183,26 @@ export async function POST(
 
     if (!battle) {
       return NextResponse.json({ error: 'Battle nicht gefunden' }, { status: 404 });
+    }
+
+    if (!isCron) {
+      const session = await getCurrentSession();
+      if (!session?.user?.email) {
+        return NextResponse.json({ error: 'Nicht autorisiert' }, { status: 401 });
+      }
+      const user = await prisma.user.findUnique({
+        where: { email: session.user.email },
+        select: { id: true, role: true },
+      });
+      if (!user) {
+        return NextResponse.json({ error: 'Benutzer nicht gefunden' }, { status: 404 });
+      }
+      const isParticipant = battle.participants.some((p) => p.userId === user.id);
+      const isCreator = battle.creatorId === user.id;
+      const isAdmin = user.role === 'ADMIN';
+      if (!isParticipant && !isCreator && !isAdmin) {
+        return NextResponse.json({ error: 'Nicht autorisiert' }, { status: 403 });
+      }
     }
 
     if (battle.status !== 'FULL' && battle.status !== 'READY') {

@@ -104,9 +104,9 @@ test.describe('Design System - Glass Effects', () => {
     const glassElement = page.locator('.glass, .glass-strong').first();
     
     if (await glassElement.count() > 0) {
-      const backdropFilter = await glassElement.evaluate((el) => {
-        return window.getComputedStyle(el).backdropFilter || 
-               window.getComputedStyle(el).webkitBackdropFilter || '';
+      await glassElement.evaluate((el) => {
+        const style = window.getComputedStyle(el);
+        return style.backdropFilter || (style as CSSStyleDeclaration & { webkitBackdropFilter?: string }).webkitBackdropFilter || '';
       });
       
       // Backdrop blur may not be supported in all browsers during testing

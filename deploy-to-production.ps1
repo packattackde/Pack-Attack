@@ -16,7 +16,7 @@ if ($LASTEXITCODE -ne 0) {
 
 # Deploy on server
 Write-Host "`n[2/2] Deploying on server..." -ForegroundColor Yellow
-ssh -i $SSH_KEY $SERVER "cd /var/www/packattack/app && git pull origin main && npm ci --production=false && npx prisma generate && npx prisma db push --accept-data-loss && npm run build && pm2 reload packattack --update-env && pm2 status"
+ssh -i $SSH_KEY $SERVER "cd /var/www/packattack/app && git pull origin main && npm ci --production=false && npx prisma generate && npx prisma db push --accept-data-loss && npm run build && sudo -u packattack pm2 reload ecosystem.config.cjs --update-env && sudo -u packattack pm2 status"
 
 if ($LASTEXITCODE -eq 0) {
     Write-Host "`n=== Deployment successful! ===" -ForegroundColor Green

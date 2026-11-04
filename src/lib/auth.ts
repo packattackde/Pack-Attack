@@ -8,6 +8,7 @@ import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import { cookies } from 'next/headers';
 import { prisma, withRetry } from './prisma';
+import { verifyOAuthLinkToken } from './oauth-link-cookie';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Custom Adapter
@@ -122,30 +123,22 @@ export const authOptions: NextAuthOptions = {
     ];
 
     if (process.env.TWITCH_CLIENT_ID && process.env.TWITCH_CLIENT_SECRET) {
-      console.info('[Auth] Twitch provider enabled');
       providers.push(
         TwitchProvider({
           clientId: process.env.TWITCH_CLIENT_ID,
           clientSecret: process.env.TWITCH_CLIENT_SECRET,
-          allowDangerousEmailAccountLinking: true,
         }),
       );
-    } else {
-      console.warn('[Auth] Twitch provider DISABLED — missing TWITCH_CLIENT_ID or TWITCH_CLIENT_SECRET');
     }
 
     if (process.env.DISCORD_CLIENT_ID && process.env.DISCORD_CLIENT_SECRET) {
-      console.info('[Auth] Discord provider enabled');
       providers.push(
         DiscordProvider({
           clientId: process.env.DISCORD_CLIENT_ID,
           clientSecret: process.env.DISCORD_CLIENT_SECRET,
           authorization: { params: { scope: 'identify email' } },
-          allowDangerousEmailAccountLinking: true,
         }),
       );
-    } else {
-      console.warn('[Auth] Discord provider DISABLED — missing DISCORD_CLIENT_ID or DISCORD_CLIENT_SECRET');
     }
 
     return providers;
@@ -205,7 +198,7 @@ export const authOptions: NextAuthOptions = {
         let connectUserId: string | null = null;
         try {
           const cookieStore = await cookies();
-          connectUserId = cookieStore.get('discord_link_uid')?.value ?? null;
+          connectUserId = verifyOAuthLinkToken(cookieStore.get('discord_link_uid')?.value);
         } catch { /* ignore */ }
 
         if (connectUserId) {
@@ -297,7 +290,7 @@ export const authOptions: NextAuthOptions = {
       let connectUserId: string | null = null;
       try {
         const cookieStore = await cookies();
-        connectUserId = cookieStore.get('twitch_link_uid')?.value ?? null;
+        connectUserId = verifyOAuthLinkToken(cookieStore.get('twitch_link_uid')?.value);
       } catch {
         // Fallback for environments where cookies() isn't available here
       }
@@ -454,12 +447,17 @@ export const authOptions: NextAuthOptions = {
     },
 
     async session({ session, token }) {
-      if (session.user) {
+      if (session.user && token.id) {
         session.user.id = token.id as string;
-        session.user.role = token.role as string;
         session.user.image = token.image as string | null;
         session.user.twitchUsername = token.twitchUsername as string | null;
         session.user.discordUsername = token.discordUsername as string | null;
+
+        const dbUser = await prisma.user.findUnique({
+          where: { id: token.id as string },
+          select: { role: true },
+        });
+        session.user.role = dbUser?.role ?? (token.role as string) ?? 'USER';
       }
       return session;
     },

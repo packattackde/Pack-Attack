@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { createOAuthLinkToken, OAUTH_LINK_COOKIE_OPTIONS } from '@/lib/oauth-link-cookie';
 
 export async function GET() {
     const session = await getServerSession(authOptions);
@@ -21,13 +22,7 @@ export async function GET() {
 
     const response = NextResponse.json({ ok: true });
 
-    response.cookies.set('discord_link_uid', session.user.id, {
-        httpOnly: true,
-        sameSite: 'lax',
-        path: '/',
-        maxAge: 60 * 10, // 10 Minuten
-        secure: process.env.NODE_ENV === 'production',
-    });
+    response.cookies.set('discord_link_uid', createOAuthLinkToken(session.user.id), OAUTH_LINK_COOKIE_OPTIONS);
 
     return response;
 }

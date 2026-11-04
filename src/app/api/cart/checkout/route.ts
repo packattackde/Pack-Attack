@@ -121,10 +121,13 @@ export async function POST(request: NextRequest) {
       // Deduct coins for shipping + upsell items paid with coins
       const totalCoinDeduction = (shippingMethod === 'COINS' ? SHIPPING_COST_COINS : 0) + upsellCoinCost;
       if (totalCoinDeduction > 0) {
-        await tx.user.update({
-          where: { id: user.id },
+        const deducted = await tx.user.updateMany({
+          where: { id: user.id, coins: { gte: new Decimal(totalCoinDeduction) } },
           data: { coins: { decrement: new Decimal(totalCoinDeduction) } },
         });
+        if (deducted.count !== 1) {
+          throw new Error('INSUFFICIENT_COINS');
+        }
       }
 
       let newOrder = null;

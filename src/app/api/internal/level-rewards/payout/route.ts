@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { isValidCronBearer } from '@/lib/cron-auth';
 
 /**
  * POST /api/internal/level-rewards/payout
@@ -8,10 +9,7 @@ import { prisma } from '@/lib/prisma';
  */
 export async function POST(request: Request) {
   try {
-    const authHeader = request.headers.get('authorization');
-    const expectedKey = process.env.CRON_SECRET || 'your-secret-key';
-
-    if (authHeader !== `Bearer ${expectedKey}`) {
+    if (!isValidCronBearer(request)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

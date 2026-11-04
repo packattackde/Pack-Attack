@@ -174,11 +174,16 @@ export async function POST(request: NextRequest) {
     const xpAmount = Math.round(10 * Number(box.price) * quantity);
     const levelResult = await awardXp(user.id, xpAmount, prisma);
 
+    const balanceAfter = await prisma.user.findUnique({
+      where: { id: user.id },
+      select: { coins: true },
+    });
+
     return NextResponse.json({
       success: true,
       pulls: pullsForClient,
       totalCost,
-      remainingCoins: userCoins - totalCost,
+      remainingCoins: Number(balanceAfter?.coins ?? 0),
       levelResult,
     });
   } catch (error) {

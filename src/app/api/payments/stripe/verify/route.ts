@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { getCheckoutSession, isStripeConfigured } from '@/lib/stripe';
+import { fulfillPendingCoinPurchase } from '@/lib/fulfill-coin-purchase';
 import { z } from 'zod';
 
 const verifySchema = z.object({
@@ -69,40 +70,26 @@ export async function POST(request: Request) {
 
     // Check payment status
     if (checkoutSession.payment_status === 'paid') {
-      // If transaction is still pending, complete it
-      if (transaction.status === 'PENDING') {
-        const coins = parseInt(checkoutSession.metadata?.coins || '0');
-        
-        await prisma.$transaction([
-          prisma.user.update({
-            where: { id: user.id },
-            data: { coins: { increment: coins } },
-          }),
-          prisma.transaction.update({
-            where: { id: transaction.id },
-            data: { status: 'COMPLETED' },
-          }),
-        ]);
+      const result = await fulfillPendingCoinPurchase(
+        { stripePaymentId: sessionId },
+        { expectedUserId: user.id }
+      );
 
-        // Get updated user
-        const updatedUser = await prisma.user.findUnique({
-          where: { id: user.id },
-        });
-
+      if (result.completed) {
         return NextResponse.json({
           success: true,
           status: 'completed',
-          coinsAdded: coins,
-          newBalance: Number(updatedUser?.coins || 0),
+          coinsAdded: result.coinsAdded,
+          newBalance: result.newBalance ?? Number(user.coins),
         });
       }
 
-      // Already completed
+      const updatedUser = await prisma.user.findUnique({ where: { id: user.id } });
       return NextResponse.json({
         success: true,
-        status: 'already_completed',
-        coinsAdded: Number(transaction.coins),
-        newBalance: Number(user.coins),
+        status: result.alreadyCompleted ? 'already_completed' : 'pending',
+        coinsAdded: result.alreadyCompleted ? result.coinsAdded : 0,
+        newBalance: Number(updatedUser?.coins ?? user.coins),
       });
     }
 

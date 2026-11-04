@@ -7,7 +7,7 @@
 
 import cron from 'node-cron';
 
-const CRON_SECRET = process.env.CRON_SECRET || 'your-secret-key';
+import { getCronSecret } from '@/lib/cron-auth';
 const API_BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
 export function startLevelRewardScheduler() {
@@ -21,7 +21,7 @@ export function startLevelRewardScheduler() {
       const response = await fetch(`${API_BASE_URL}/api/internal/level-rewards/payout`, {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${CRON_SECRET}`,
+          Authorization: `Bearer ${getCronSecret()}`,
           'Content-Type': 'application/json',
         },
       });

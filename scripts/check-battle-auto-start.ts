@@ -23,7 +23,7 @@ try {
   console.log('[AUTO-START] Warning: Could not load .env file');
 }
 
-const CRON_SECRET = process.env.CRON_SECRET || 'your-secret-key';
+import { getCronSecret } from '../src/lib/cron-auth';
 const API_BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
 async function checkAndStartBattles() {
@@ -33,7 +33,7 @@ async function checkAndStartBattles() {
     const response = await fetch(`${API_BASE_URL}/api/battles/auto-start`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${CRON_SECRET}`,
+        Authorization: `Bearer ${getCronSecret()}`,
         'Content-Type': 'application/json',
       },
     });

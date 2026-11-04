@@ -631,22 +631,6 @@ export const DashboardClient = memo(function DashboardClient({
 
     const currentTabConfig = tabs.find(t => t.id === activeTab);
 
-    const handleConnectDiscord = () => {
-        console.log("Connecting Discord")
-    }
-
-    const handleDisconnectDiscord = () => {
-        console.log("Disconnecting Discord")
-    }
-
-    const handleConnectTwitch = () => {
-        console.log("Connecting Twitch")
-    }
-
-    const handleDisconnectTwitch = () => {
-        console.log("Disconnecting Twitch")
-    }
-
     return (
         <>
             {/* Premium Tab Navigation */}

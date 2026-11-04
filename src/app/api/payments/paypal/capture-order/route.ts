@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { capturePayPalOrder, isPayPalConfigured } from '@/lib/paypal';
+import { fulfillPendingCoinPurchase } from '@/lib/fulfill-coin-purchase';
 import { z } from 'zod';
 
 const captureOrderSchema = z.object({
@@ -86,25 +87,15 @@ export async function POST(request: Request) {
     // Get payer ID if available
     const payerId = captureResult.payer?.payer_id;
 
-    // Update user's coin balance and transaction status atomically
-    const [updatedUser] = await prisma.$transaction([
-      prisma.user.update({
-        where: { id: user.id },
-        data: { coins: { increment: transaction.coins } },
-      }),
-      prisma.transaction.update({
-        where: { id: transaction.id },
-        data: {
-          status: 'COMPLETED',
-          paypalPayerId: payerId,
-        },
-      }),
-    ]);
+    const result = await fulfillPendingCoinPurchase(
+      { paypalOrderId: orderId },
+      { expectedUserId: user.id, paypalPayerId: payerId }
+    );
 
     return NextResponse.json({
       success: true,
-      coinsAdded: Number(transaction.coins),
-      newBalance: Number(updatedUser.coins),
+      coinsAdded: result.coinsAdded,
+      newBalance: result.newBalance ?? Number(user.coins),
     });
   } catch (error) {
     if (error instanceof z.ZodError) {

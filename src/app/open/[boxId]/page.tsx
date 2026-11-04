@@ -1067,6 +1067,13 @@ export default function OpenBoxPage() {
         <PackOpeningFlow
           pulls={pendingPullsRef.current}
           boxName={box.name}
+          cardsPerPack={box.cardsPerPack}
+          heroImageUrl={(() => {
+            const pulls = pendingPullsRef.current;
+            if (pulls.length === 0) return box.imageUrl || null;
+            const top = pulls.reduce((a, b) => (b.card.coinValue > a.card.coinValue ? b : a));
+            return top.card?.imageUrlGatherer || box.imageUrl || null;
+          })()}
           cardBackUrl={box.cardBackUrl}
           bestPullId={featuredPullId}
           onComplete={() => {

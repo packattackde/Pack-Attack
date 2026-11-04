@@ -5,6 +5,8 @@ import { motion, useMotionValue, useTransform, useSpring, AnimatePresence } from
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Coins } from 'lucide-react';
+import { NeonForgeBoosterPack } from '@/components/NeonForgeBoosterPack';
+import { NEON_FORGE_CLIP } from '@/lib/booster-pack-theme';
 
 // ─── Types ──────────────────────────────────────────────────────────
 
@@ -20,6 +22,9 @@ interface PackOpeningFlowProps {
     };
   }>;
   boxName: string;
+  cardsPerPack: number;
+  heroImageUrl?: string | null;
+  game?: string;
   cardBackUrl?: string | null;
   bestPullId: string | null;
   onComplete: () => void;
@@ -59,24 +64,14 @@ const RARITY_BUILDUP_MS: Record<RarityTier, number> = {
 
 // ─── SVG booster silhouette with crimped edges ──────────────────────
 
-const BOOSTER_PATH = `
-  M 6,24 L 10,18 L 16,24 L 22,18 L 28,24 L 34,18 L 40,24 L 46,18 L 52,24 L 58,18
-  L 64,24 L 70,18 L 76,24 L 82,18 L 88,24 L 94,18 L 100,24 L 106,18 L 112,24 L 118,18
-  L 124,24 L 130,18 L 136,24 L 142,18 L 148,24 L 154,18 L 160,24 L 166,18 L 172,24
-  L 178,18 L 184,24 L 190,18 L 196,24 L 202,18 L 206,24
-  L 206,346
-  L 202,352 L 196,346 L 190,352 L 184,346 L 178,352 L 172,346 L 166,352 L 160,346
-  L 154,352 L 148,346 L 142,352 L 136,346 L 130,352 L 124,346 L 118,352 L 112,346
-  L 106,352 L 100,346 L 94,352 L 88,346 L 82,352 L 76,346 L 70,352 L 64,346
-  L 58,352 L 52,346 L 46,352 L 40,346 L 34,352 L 28,346 L 22,352 L 16,346
-  L 10,352 L 6,346 L 4,346 Z
-`;
-
 // ─── Component ──────────────────────────────────────────────────────
 
 export function PackOpeningFlow({
   pulls,
   boxName,
+  cardsPerPack,
+  heroImageUrl,
+  game,
   cardBackUrl,
   bestPullId,
   onComplete,
@@ -121,6 +116,8 @@ export function PackOpeningFlow({
   const holoBackground = useTransform(holoAngle, (a: number) =>
     `linear-gradient(${a}deg, rgba(255,0,128,0.15), rgba(0,255,200,0.18), rgba(255,200,0,0.15), rgba(0,128,255,0.18), rgba(255,0,200,0.12))`
   );
+  const specularLeft = useTransform(mouseX, [-0.5, 0.5], ['5%', '45%']);
+  const specularTop = useTransform(mouseY, [-0.5, 0.5], ['8%', '42%']);
 
   // ── Derived values ──
   const bestPullTier = bestPullId ? getRarityTier(pulls.find(p => p.id === bestPullId)?.card.rarity ?? '') : 'common';
@@ -181,8 +178,8 @@ export function PackOpeningFlow({
     setTearProgress(pct);
 
     // Build jagged tear line
-    const svgX = (x / rect.width) * 210;
-    const centerY = 35;
+    const svgX = (x / rect.width) * 208;
+    const centerY = 12;
     const jitter = (Math.random() - 0.5) * 14;
     const cursorOffset = ((y - rect.height / 2) / (rect.height / 2)) * 8;
     const svgY = centerY + cursorOffset + jitter;
@@ -386,18 +383,22 @@ export function PackOpeningFlow({
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#06061a] overflow-hidden select-none [&_*]:select-none"
+      className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden select-none bg-[#06061a] [&_*]:select-none"
+      style={{
+        cursor: 'none',
+        background:
+          'radial-gradient(ellipse 55% 45% at 50% 38%, rgba(255,46,166,0.18), transparent), radial-gradient(ellipse 40% 35% at 80% 80%, rgba(35,230,255,0.1), transparent), #06061a',
+      }}
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
       onClick={phase === 'revealing' ? advanceCard : phase === 'bestPull' ? (bestPullReady ? onComplete : undefined) : undefined}
-      style={{ cursor: 'none' }}
     >
       {/* ═══ BOOSTER PACK ═══ */}
       <AnimatePresence>
         {(phase === 'booster' || phase === 'emerging' || phase === 'revealing' || phase === 'bestPull') && (
           <motion.div
-            className="absolute w-[min(210px,80vw)]"
-            style={{ aspectRatio: '210/370' }}
+            className="absolute w-[min(260px,85vw)]"
+            style={{ aspectRatio: '208/320' }}
             animate={
               phase === 'booster' && (boosterPhase === 'torn' || boosterPhase === 'glow')
                 ? { scale: 0.85, y: 30 }
@@ -417,82 +418,36 @@ export function PackOpeningFlow({
                 rotateY: phase === 'booster' && boosterPhase === 'tilt' ? tiltRotateY : 0,
               }}
             >
-              {/* Front face — flat */}
-              <div className="absolute inset-0">
-                {/* SVG Booster Shape */}
-                <svg viewBox="0 0 210 370" className="absolute inset-0 w-full h-full" style={{ overflow: 'visible' }}>
-                  <defs>
-                    <linearGradient id="boosterGradPOF" x1="0" y1="0" x2="0.8" y2="1">
-                      <stop offset="0%" stopColor="#2a1878" />
-                      <stop offset="25%" stopColor="#3d2590" />
-                      <stop offset="50%" stopColor="#4a30a8" />
-                      <stop offset="75%" stopColor="#3d2590" />
-                      <stop offset="100%" stopColor="#221268" />
-                    </linearGradient>
-                    <clipPath id="boosterClipPOF">
-                      <path d={BOOSTER_PATH} />
-                    </clipPath>
-                  </defs>
-                  <path d={BOOSTER_PATH} fill="url(#boosterGradPOF)" />
-                </svg>
-
-                {/* Holographic foil */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <NeonForgeBoosterPack
+                  variant="opening"
+                  boxName={boxName}
+                  cardsPerPack={cardsPerPack}
+                  heroImageUrl={heroImageUrl}
+                  game={game}
+                  idSuffix="opening"
+                  revealGlow={boosterPhase === 'glow'}
+                  tearLineActive={boosterPhase === 'tilt' || boosterPhase === 'tearing'}
+                />
                 <motion.div
-                  className="absolute inset-0 pointer-events-none"
+                  className="pointer-events-none absolute inset-0 mx-auto max-w-[min(260px,85vw)]"
                   style={{
-                    clipPath: 'url(#boosterClipPOF)',
+                    aspectRatio: '208/320',
+                    clipPath: NEON_FORGE_CLIP,
                     background: holoBackground,
                     mixBlendMode: 'color-dodge',
                   }}
                 />
-
-                {/* Specular highlight */}
                 <motion.div
-                  className="absolute pointer-events-none"
+                  className="pointer-events-none absolute h-40 w-40 max-w-[min(260px,85vw)]"
                   style={{
-                    clipPath: 'url(#boosterClipPOF)',
-                    width: 180,
-                    height: 180,
-                    borderRadius: '50%',
-                    background: 'radial-gradient(circle, rgba(255,255,255,0.2), transparent 60%)',
-                    left: useTransform(mouseX, [-0.5, 0.5], ['20%', '60%']),
-                    top: useTransform(mouseY, [-0.5, 0.5], ['15%', '50%']),
-                    mixBlendMode: 'overlay' as const,
+                    clipPath: NEON_FORGE_CLIP,
+                    background: 'radial-gradient(circle, rgba(255,255,255,0.18), transparent 60%)',
+                    left: specularLeft,
+                    top: specularTop,
+                    mixBlendMode: 'overlay',
                   }}
                 />
-
-                {/* Pack content */}
-                <div
-                  className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
-                  style={{ clipPath: 'url(#boosterClipPOF)' }}
-                >
-                  <span className="text-5xl mb-2" style={{ filter: 'drop-shadow(0 0 15px rgba(255,46,166,0.3))' }}>
-                    🏴‍☠️
-                  </span>
-                  <span
-                    className="text-[15px] font-extrabold text-[#ff2ea6] uppercase tracking-[3px]"
-                    style={{ textShadow: '0 0 10px rgba(255,46,166,0.4)' }}
-                  >
-                    {t('pullforge')}
-                  </span>
-                  <span className="text-[9px] text-white/40 uppercase tracking-[2px] mt-1">
-                    {boxName}
-                  </span>
-                  <span className="absolute bottom-[18%] text-[9px] text-white/30 bg-black/30 px-3 py-0.5 rounded-full">
-                    {pulls.length} {t('cards')}
-                  </span>
-                </div>
-
-                {/* Seal */}
-                <div
-                  className="absolute top-[15%] right-[12%] w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-black text-black z-10"
-                  style={{
-                    background: 'radial-gradient(circle at 35% 35%, #e0ff60, #ff2ea6, #80cc00)',
-                    boxShadow: '0 2px 8px rgba(255,46,166,0.4)',
-                  }}
-                >
-                  PA
-                </div>
               </div>
             </motion.div>
 
@@ -501,7 +456,7 @@ export function PackOpeningFlow({
               <div
                 ref={tearZoneRef}
                 className="absolute left-0 right-0"
-                style={{ top: 'calc(22% - 35px)', height: 70, touchAction: 'none', cursor: 'none', zIndex: 50 }}
+                style={{ top: 0, height: '12%', touchAction: 'none', cursor: 'none', zIndex: 50 }}
                 onMouseDown={startTear}
                 onMouseMove={moveTear}
                 onMouseUp={endTear}
@@ -520,7 +475,7 @@ export function PackOpeningFlow({
                   />
                 )}
                 <svg
-                  viewBox="0 0 210 70"
+                  viewBox="0 0 208 40"
                   className="absolute inset-0 w-full h-full pointer-events-none"
                   preserveAspectRatio="none"
                 >
@@ -548,7 +503,7 @@ export function PackOpeningFlow({
             {phase === 'booster' && (
               <div
                 className="absolute left-0 right-0 pointer-events-none"
-                style={{ top: '22%', height: 0, overflow: 'visible', zIndex: 60 }}
+                style={{ top: '6%', height: 0, overflow: 'visible', zIndex: 60 }}
               >
                 {particles.map(p => (
                   <motion.div
@@ -573,8 +528,8 @@ export function PackOpeningFlow({
             <AnimatePresence>
               {phase === 'booster' && (boosterPhase === 'torn' || boosterPhase === 'glow') && (
                 <motion.div
-                  className="absolute top-0 left-0 right-0 z-30"
-                  style={{ height: '24%', transformOrigin: '30% bottom' }}
+                  className="absolute top-0 left-0 right-0 z-30 overflow-hidden"
+                  style={{ height: '9%', transformOrigin: '30% bottom', clipPath: NEON_FORGE_CLIP }}
                   initial={{ rotateX: 0, rotateZ: 0, x: 0, y: 0, opacity: 1 }}
                   animate={{
                     rotateX: [0, 40, 90, 120],
@@ -589,18 +544,12 @@ export function PackOpeningFlow({
                     times: [0, 0.25, 0.6, 1],
                   }}
                 >
-                  <svg viewBox="0 0 210 85" className="w-full h-full">
-                    <path
-                      fill="#2a1870"
-                      d={`
-                        M 6,24 L 10,18 L 16,24 L 22,18 L 28,24 L 34,18 L 40,24 L 46,18 L 52,24 L 58,18
-                        L 64,24 L 70,18 L 76,24 L 82,18 L 88,24 L 94,18 L 100,24 L 106,18 L 112,24 L 118,18
-                        L 124,24 L 130,18 L 136,24 L 142,18 L 148,24 L 154,18 L 160,24 L 166,18 L 172,24
-                        L 178,18 L 184,24 L 190,18 L 196,24 L 202,18 L 206,24
-                        L 206,85 L 4,85 Z
-                      `}
-                    />
-                  </svg>
+                  <div
+                    className="h-[320px] w-full scale-[1.02]"
+                    style={{
+                      background: `linear-gradient(180deg, #ff6ec4 0%, #ff2ea6 40%, #191233 100%)`,
+                    }}
+                  />
                 </motion.div>
               )}
             </AnimatePresence>

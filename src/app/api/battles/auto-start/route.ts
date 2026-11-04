@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { awardXp } from '@/lib/level';
-
-const CRON_SECRET = process.env.CRON_SECRET || 'your-secret-key';
+import { isValidCronBearerFromHeader } from '@/lib/cron-auth';
 
 function drawRandomCard(cards: Array<{ id: string; name: string; coinValue: number; pullRate: number; imageUrlGatherer: string | null; imageUrlScryfall: string | null; rarity: string | null }>) {
   const totalWeight = cards.reduce((sum, c) => sum + c.pullRate, 0);
@@ -127,8 +126,7 @@ async function startBattle(battleId: string): Promise<{ status: string; message:
 
 export async function POST(request: NextRequest) {
   try {
-    const authHeader = request.headers.get('authorization');
-    if (authHeader !== `Bearer ${CRON_SECRET}`) {
+    if (!isValidCronBearerFromHeader(request.headers.get('authorization'))) {
       return NextResponse.json({ error: 'Nicht autorisiert' }, { status: 401 });
     }
 

@@ -93,34 +93,63 @@ export async function POST(
       }, { status: 400 });
     }
 
-    // Deduct coins and add participant atomically
-    const [updatedUser, participant] = await prisma.$transaction([
-      prisma.user.update({
-        where: { id: user.id },
-        data: { coins: { decrement: entryFee } },
-      }),
-      prisma.battleParticipant.create({
+    const { updatedUser, participant } = await prisma.$transaction(async (tx) => {
+      const freshBattle = await tx.battle.findUnique({
+        where: { id: battleId },
+        include: {
+          participants: true,
+        },
+      });
+
+      if (!freshBattle || freshBattle.status !== 'OPEN') {
+        throw new Error('BATTLE_NOT_JOINABLE');
+      }
+      if (freshBattle.participants.length >= freshBattle.maxParticipants) {
+        throw new Error('BATTLE_FULL');
+      }
+      if (freshBattle.creatorId === user.id) {
+        throw new Error('CREATOR_JOIN');
+      }
+      if (freshBattle.participants.some((p) => p.userId === user.id)) {
+        throw new Error('ALREADY_JOINED');
+      }
+      if (freshBattle.lobbyExpiresAt && new Date() > freshBattle.lobbyExpiresAt) {
+        throw new Error('LOBBY_EXPIRED');
+      }
+
+      const fee = Number(freshBattle.entryFee);
+      const deducted = await tx.user.updateMany({
+        where: { id: user.id, coins: { gte: fee } },
+        data: { coins: { decrement: fee } },
+      });
+      if (deducted.count !== 1) {
+        throw new Error('INSUFFICIENT_COINS');
+      }
+
+      const updatedUserRow = await tx.user.findUniqueOrThrow({ where: { id: user.id } });
+      const participantRow = await tx.battleParticipant.create({
         data: {
-          battleId: battle.id,
+          battleId: freshBattle.id,
           userId: user.id,
         },
         include: {
           user: { select: { id: true, name: true, email: true } },
         },
-      }),
-    ]);
-
-    // Check if battle is now full -> set FULL + autoStartAt
-    const newCount = battle.participants.length + 1;
-    if (newCount >= battle.maxParticipants) {
-      await prisma.battle.update({
-        where: { id: battleId },
-        data: {
-          status: 'FULL',
-          autoStartAt: new Date(Date.now() + 3 * 60 * 1000),
-        },
       });
-    }
+
+      const newCount = freshBattle.participants.length + 1;
+      if (newCount >= freshBattle.maxParticipants) {
+        await tx.battle.updateMany({
+          where: { id: battleId, status: 'OPEN' },
+          data: {
+            status: 'FULL',
+            autoStartAt: new Date(Date.now() + 3 * 60 * 1000),
+          },
+        });
+      }
+
+      return { updatedUser: updatedUserRow, participant: participantRow };
+    });
 
     const updatedBattle = await prisma.battle.findUnique({
       where: { id: battleId },
@@ -154,6 +183,23 @@ export async function POST(
       newBalance: Number(updatedUser.coins),
     });
   } catch (error) {
+    if (error instanceof Error) {
+      const map: Record<string, { message: string; status: number }> = {
+        BATTLE_NOT_JOINABLE: { message: 'Dieses Battle nimmt keine Teilnehmer mehr an', status: 400 },
+        BATTLE_FULL: { message: 'Dieses Battle ist voll', status: 400 },
+        CREATOR_JOIN: { message: 'Du kannst deinem eigenen Battle nicht beitreten', status: 400 },
+        ALREADY_JOINED: { message: 'Du bist bereits in diesem Battle', status: 400 },
+        LOBBY_EXPIRED: { message: 'Die Lobby-Zeit ist abgelaufen', status: 400 },
+        INSUFFICIENT_COINS: {
+          message: 'Nicht genug Coins für den Eintritt.',
+          status: 400,
+        },
+      };
+      const mapped = map[error.message];
+      if (mapped) {
+        return NextResponse.json({ error: mapped.message }, { status: mapped.status });
+      }
+    }
     console.error('Error joining battle:', error);
     return NextResponse.json({ error: 'Beitritt zum Battle fehlgeschlagen' }, { status: 500 });
   }

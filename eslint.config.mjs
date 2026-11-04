@@ -10,6 +10,12 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "check-user.js",
+    "create-admin-now.js",
+    "verify-admin.js",
+    "tmp-*.js",
+    "ecosystem.config.js",
+    "scripts/**/*.js",
   ]),
 ]);
 

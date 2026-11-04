@@ -30,6 +30,6 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules", "Pack-Attack"]
+  "exclude": ["node_modules"]
 }
 

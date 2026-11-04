@@ -2,12 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { createPayPalOrder, isPayPalConfigured } from '@/lib/paypal';
+import { getPackageByPrice } from '@/lib/stripe';
 import { z } from 'zod';
 import { rateLimit } from '@/lib/rate-limit';
 
 const createOrderSchema = z.object({
-  amount: z.number().min(5).max(500), // 5 to 500 euros
-  coins: z.number().min(500).max(50000),
+  /** Package price in EUR — must match a server-side COIN_PACKAGES tier */
+  price: z.number().min(5).max(500),
 });
 
 export async function POST(request: NextRequest) {
@@ -43,7 +44,14 @@ export async function POST(request: NextRequest) {
 
     // Parse request body
     const body = await request.json();
-    const { amount, coins } = createOrderSchema.parse(body);
+    const { price } = createOrderSchema.parse(body);
+    const coinPackage = getPackageByPrice(price);
+    if (!coinPackage) {
+      return NextResponse.json({ error: 'Invalid coin package' }, { status: 400 });
+    }
+
+    const amount = coinPackage.price;
+    const coins = coinPackage.amount;
 
     // Create PayPal order
     const paypalOrder = await createPayPalOrder(amount, coins);

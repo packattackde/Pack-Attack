@@ -46,6 +46,27 @@ export async function GET(
       return NextResponse.json({ error: 'Battle nicht gefunden' }, { status: 404 });
     }
 
+    if (battle.privacy === 'PRIVATE') {
+      const session = await getCurrentSession();
+      let allowed = false;
+      if (session?.user?.email) {
+        const user = await prisma.user.findUnique({
+          where: { email: session.user.email },
+          select: { id: true, role: true },
+        });
+        if (user) {
+          const isParticipant = battle.participants.some((p) => p.userId === user.id);
+          allowed =
+            user.role === 'ADMIN' ||
+            battle.creatorId === user.id ||
+            isParticipant;
+        }
+      }
+      if (!allowed) {
+        return NextResponse.json({ error: 'Battle nicht gefunden' }, { status: 404 });
+      }
+    }
+
     const serializedBattle = {
       ...battle,
       entryFee: Number(battle.entryFee),

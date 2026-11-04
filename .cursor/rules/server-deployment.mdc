@@ -70,7 +70,7 @@ ssh -i "$env:USERPROFILE\.ssh\packattack-server" packattack@82.165.66.236
 
 ### Quick Deploy (from local machine)
 ```powershell
-ssh -i "$env:USERPROFILE\.ssh\packattack-server" root@82.165.66.236 "cd /var/www/packattack/app && git fetch origin beta/beta && git reset --hard origin/beta/beta && npm ci && npx prisma generate && npm run build && npx prisma migrate deploy && pm2 reload packattack --update-env && pm2 status"
+ssh -i "$env:USERPROFILE\.ssh\packattack-server" root@82.165.66.236 "cd /var/www/packattack/app && git fetch origin beta/beta && git reset --hard origin/beta/beta && npm ci && npx prisma generate && npm run build && npx prisma migrate deploy && sudo -u packattack pm2 reload ecosystem.config.cjs --update-env && sudo -u packattack pm2 reload ecosystem.battle-scheduler.config.cjs --update-env && sudo -u packattack pm2 status"
 ```
 
 ### On-Server Deploy

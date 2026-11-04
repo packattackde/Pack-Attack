@@ -83,7 +83,7 @@ module.exports = {
     production: {
       user: 'packattack',
       host: process.env.DEPLOY_HOST || '82.165.66.236',
-      ref: 'origin/main',
+      ref: 'origin/beta/beta',
       repo: process.env.DEPLOY_REPO || 'git@github.com:user/pack-attack.git',
       path: '/var/www/packattack',
       'pre-deploy-local': '',

@@ -63,17 +63,28 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid achievement reward' }, { status: 500 });
     }
 
-    // Update user coins and mark reward as claimed
-    const [updatedUser, updatedAchievement] = await prisma.$transaction([
-      prisma.user.update({
+    const [updatedUser, updatedAchievement] = await prisma.$transaction(async (tx) => {
+      const claimed = await tx.userAchievement.updateMany({
+        where: {
+          id: userAchievement.id,
+          userId: user.id,
+          rewardClaimed: false,
+          unlockedAt: { not: null },
+        },
+        data: { rewardClaimed: true },
+      });
+      if (claimed.count !== 1) {
+        throw new Error('ALREADY_CLAIMED');
+      }
+      const updatedUserRow = await tx.user.update({
         where: { id: user.id },
         data: { coins: { increment: coinReward } },
-      }),
-      prisma.userAchievement.update({
+      });
+      const updatedAchievementRow = await tx.userAchievement.findUniqueOrThrow({
         where: { id: userAchievement.id },
-        data: { rewardClaimed: true },
-      }),
-    ]);
+      });
+      return [updatedUserRow, updatedAchievementRow] as const;
+    });
 
     // Verify the transaction succeeded
     if (!updatedUser || !updatedAchievement.rewardClaimed) {
@@ -90,6 +101,9 @@ export async function POST(request: NextRequest) {
       achievementName: userAchievement.achievement.name,
     });
   } catch (error) {
+    if (error instanceof Error && error.message === 'ALREADY_CLAIMED') {
+      return NextResponse.json({ error: 'Reward already claimed' }, { status: 400 });
+    }
     console.error('Error claiming achievement reward:', error);
     return NextResponse.json({ error: 'Failed to claim reward' }, { status: 500 });
   }

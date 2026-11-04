@@ -1,15 +1,17 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { getCurrentSession } from '@/lib/auth';
+import { requireAdminFromDb } from '@/lib/require-admin';
 import bcrypt from 'bcryptjs';
 
 export async function POST() {
   try {
-    const session = await getCurrentSession();
-    
-    // Only admins can create test bots
-    if (!session || session.user.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+    if (process.env.NODE_ENV === 'production') {
+      return NextResponse.json({ error: 'Not available in production' }, { status: 403 });
+    }
+
+    const adminCheck = await requireAdminFromDb();
+    if (adminCheck.error) {
+      return adminCheck.error;
     }
 
     const botCount = 8; // Create 8 bot users
