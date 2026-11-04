@@ -52,7 +52,7 @@ export async function GET(
   const { id } = await params;
   const order = await prisma.order.findUnique({
     where: { id },
-    include: { items: { select: { cardName: true } } },
+    include: { items: true },
   });
   if (!order) {
     return NextResponse.json({ error: 'Order not found' }, { status: 404 });
