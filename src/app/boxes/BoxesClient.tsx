@@ -16,7 +16,7 @@ import {
   Wand2,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { NeonForgeBoosterPack } from '@/components/NeonForgeBoosterPack';
+import { GridBoosterPack } from '@/components/boxes/GridBoosterPack';
 import { getBoosterPackTheme, type BoosterPackTheme } from '@/lib/booster-pack-theme';
 
 interface TopCard {
@@ -298,12 +298,11 @@ function PackCard({
 function BoosterPack({ box, theme }: { box: Box; theme: BoosterPackTheme }) {
   const heroImage = box.topCard?.imageUrlGatherer || box.imageUrl || null;
   return (
-    <NeonForgeBoosterPack
+    <GridBoosterPack
       boxName={box.name}
       cardsPerPack={box.cardsPerPack}
       heroImageUrl={heroImage}
       theme={theme}
-      variant="catalog"
       idSuffix={box.id}
     />
   );

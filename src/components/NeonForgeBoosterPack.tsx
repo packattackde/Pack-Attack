@@ -1,7 +1,6 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import Image from 'next/image';
 import {
   BoosterPackPattern,
   BoosterPackTheme,
@@ -116,154 +115,6 @@ function PackPattern({
     ),
   };
   return <>{patterns[pattern]}</>;
-}
-
-/** Box grid (/boxes) — unchanged stable catalog art; do not use opening premium layout here */
-function CatalogBoosterPack({
-  boxName,
-  cardsPerPack,
-  heroImageUrl,
-  theme,
-  idSuffix,
-  className,
-}: NeonForgeBoosterPackProps & { theme: BoosterPackTheme }) {
-  const { accent, accentSoft, Icon, wordmark, tagline, pattern } = theme;
-
-  return (
-    <div
-      className={`relative aspect-[5/8] w-[160px] select-none sm:w-[180px] ${className ?? ''}`}
-    >
-      <div
-        className="absolute inset-0 overflow-hidden rounded-[14px] ring-1 ring-white/20"
-        style={{
-          boxShadow: '0 22px 44px -14px rgba(0,0,0,0.9), inset 0 0 0 1px rgba(139,92,246,0.25)',
-          background: `linear-gradient(170deg, ${PACK_BG_1} 0%, ${PACK_BG_2} 68%, #050213 100%)`,
-        }}
-      >
-        <PackPattern pattern={pattern} accent={accent} suffix={idSuffix ?? 'catalog'} />
-
-        <div
-          className="pointer-events-none absolute inset-x-0 top-0 h-[50%]"
-          style={{ background: `radial-gradient(ellipse at 50% 0%, ${accent}28, transparent 65%)` }}
-        />
-
-        <svg
-          className="pointer-events-none absolute inset-x-0 top-0 z-30 h-[6%] min-h-[18px] w-full"
-          viewBox="0 0 180 18"
-          preserveAspectRatio="none"
-          aria-hidden
-        >
-          <path
-            d="M0,18 L0,10 L6,14 L12,8 L18,14 L24,8 L30,14 L36,8 L42,14 L48,8 L54,14 L60,8 L66,14 L72,8 L78,14 L84,8 L90,14 L96,8 L102,14 L108,8 L114,14 L120,8 L126,14 L132,8 L138,14 L144,8 L150,14 L156,8 L162,14 L168,8 L174,14 L180,8 L180,18 Z"
-            fill={accentSoft}
-            opacity="0.95"
-          />
-        </svg>
-        <svg
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-30 h-[5%] min-h-[14px] w-full"
-          viewBox="0 0 180 14"
-          preserveAspectRatio="none"
-          aria-hidden
-        >
-          <path
-            d="M0,0 L6,6 L12,0 L18,6 L24,0 L30,6 L36,0 L42,6 L48,0 L54,6 L60,0 L66,6 L72,0 L78,6 L84,0 L90,6 L96,0 L102,6 L108,0 L114,6 L120,0 L126,6 L132,0 L138,6 L144,0 L150,6 L156,0 L162,6 L168,0 L174,6 L180,0 L180,14 L0,14 Z"
-            fill={accent}
-            opacity="0.85"
-          />
-        </svg>
-
-        <div
-          className="absolute inset-x-[8%] top-[5.5%] z-20 h-[3.5%] min-h-[10px] rounded-[1px]"
-          style={{
-            background: `linear-gradient(180deg, ${accentSoft}, ${accent})`,
-            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.35)',
-          }}
-        />
-
-        <div className="absolute left-0 right-0 top-[8%] z-20 text-center text-[6px] font-black uppercase tracking-[3px] text-white/55">
-          Pull · Forge
-        </div>
-
-        <div className="absolute inset-x-0 top-[11%] z-20 flex flex-col items-center px-2 text-center">
-          <div
-            className="w-full truncate text-[13px] font-black leading-none"
-            style={{
-              background: `linear-gradient(180deg, ${accentSoft} 0%, ${accent} 70%)`,
-              WebkitBackgroundClip: 'text',
-              backgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-            }}
-          >
-            {wordmark}
-          </div>
-          <div className="mt-0.5 text-[7px] font-bold uppercase tracking-[2px]" style={{ color: `${accent}cc` }}>
-            {tagline}
-          </div>
-        </div>
-
-        <div
-          className="absolute z-10 overflow-hidden rounded-md left-[12%] right-[12%] top-[24%] bottom-[28%]"
-          style={{
-            background: '#07050f',
-            boxShadow: `0 0 0 2px ${accent}cc, 0 0 0 3px rgba(0,0,0,0.5), inset 0 0 16px rgba(0,0,0,0.4)`,
-          }}
-        >
-          <div className="absolute inset-[3px] overflow-hidden rounded-[5px] bg-[#0a0820]">
-            {heroImageUrl ? (
-              <Image
-                src={heroImageUrl}
-                alt=""
-                fill
-                className="object-cover"
-                sizes="160px"
-                unoptimized
-              />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center">
-                <Icon className="h-9 w-9 text-white/35" />
-              </div>
-            )}
-          </div>
-          <div
-            className="pointer-events-none absolute inset-0 rounded-md"
-            style={{
-              background: 'linear-gradient(155deg, rgba(255,255,255,0.15) 0%, transparent 42%, rgba(0,0,0,0.2) 100%)',
-            }}
-          />
-        </div>
-
-        <div className="absolute inset-x-0 bottom-[9%] z-20 px-2 pb-1 pt-2">
-          <div className="line-clamp-2 text-center text-[9px] font-black uppercase leading-tight tracking-wide text-white sm:text-[10px]">
-            {boxName}
-          </div>
-          <div className="mt-1 flex items-center gap-1.5">
-            <div
-              className="flex h-5 w-5 shrink-0 items-center justify-center sm:h-6 sm:w-6"
-              style={{
-                background: `linear-gradient(145deg, ${accentSoft}, ${accent})`,
-                clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-              }}
-            >
-              <Icon className="h-2.5 w-2.5 text-[#0a0420] sm:h-3 sm:w-3" />
-            </div>
-            <div
-              className="flex-1 rounded-sm py-0.5 text-center text-[7px] font-black uppercase tracking-wider text-[#14041f] sm:text-[8px]"
-              style={{ background: accent }}
-            >
-              {cardsPerPack} cards
-            </div>
-          </div>
-        </div>
-
-        <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <div
-            className="pack-shine absolute top-0 h-full w-[40%]"
-            style={{ background: 'linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.45) 50%, transparent 70%)' }}
-          />
-        </div>
-      </div>
-    </div>
-  );
 }
 
 function BoosterSilhouetteRim({ suffix, glow }: { suffix: string; glow?: boolean }) {
@@ -512,14 +363,10 @@ function OpeningBoosterPack({
   );
 }
 
+/** Pack opening flow only — /boxes uses GridBoosterPack */
 export function NeonForgeBoosterPack(props: NeonForgeBoosterPackProps) {
   const theme = props.theme ?? getBoosterPackTheme(props.game);
-
-  if (props.variant === 'opening') {
-    return <OpeningBoosterPack {...props} theme={theme} />;
-  }
-
-  return <CatalogBoosterPack {...props} theme={theme} />;
+  return <OpeningBoosterPack {...props} theme={theme} />;
 }
 
 /** Pick best image for pack chase window (opening flow) */
