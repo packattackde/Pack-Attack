@@ -5,7 +5,7 @@ import { motion, useMotionValue, useTransform, useSpring, AnimatePresence } from
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Coins } from 'lucide-react';
-import { NeonForgeBoosterPack } from '@/components/NeonForgeBoosterPack';
+import { NeonForgeBoosterPack, PACK_TEAR_SEAM_TOP } from '@/components/NeonForgeBoosterPack';
 import { NEON_FORGE_CLIP } from '@/lib/booster-pack-theme';
 
 // ─── Types ──────────────────────────────────────────────────────────
@@ -179,7 +179,7 @@ export function PackOpeningFlow({
 
     // Build jagged tear line
     const svgX = (x / rect.width) * 208;
-    const centerY = 12;
+    const centerY = 28;
     const jitter = (Math.random() - 0.5) * 14;
     const cursorOffset = ((y - rect.height / 2) / (rect.height / 2)) * 8;
     const svgY = centerY + cursorOffset + jitter;
@@ -338,7 +338,7 @@ export function PackOpeningFlow({
     ? `M ${tearPoints[0].x},${tearPoints[0].y}` + tearPoints.slice(1).map(p => ` L ${p.x},${p.y}`).join('')
     : '';
 
-  const tearLineColor = tearProgress < 35 ? 'rgba(255,46,166,0.4)' : tearProgress < 60 ? 'rgba(255,46,166,0.7)' : '#ff2ea6';
+  const tearLineColor = tearProgress < 20 ? '#23e6ff' : tearProgress < 50 ? '#ffffff' : '#ff2ea6';
 
   // ─── Card fan angles ──────────────────────────────────────────────
 
@@ -397,7 +397,7 @@ export function PackOpeningFlow({
       <AnimatePresence>
         {(phase === 'booster' || phase === 'emerging' || phase === 'revealing' || phase === 'bestPull') && (
           <motion.div
-            className="absolute w-[min(260px,85vw)]"
+            className="absolute w-[min(290px,88vw)]"
             style={{ aspectRatio: '208/320' }}
             animate={
               phase === 'booster' && (boosterPhase === 'torn' || boosterPhase === 'glow')
@@ -428,6 +428,7 @@ export function PackOpeningFlow({
                   idSuffix="opening"
                   revealGlow={boosterPhase === 'glow'}
                   tearLineActive={boosterPhase === 'tilt' || boosterPhase === 'tearing'}
+                  tearProgress={tearProgress}
                 />
                 <motion.div
                   className="pointer-events-none absolute inset-0 mx-auto max-w-[min(260px,85vw)]"
@@ -456,7 +457,7 @@ export function PackOpeningFlow({
               <div
                 ref={tearZoneRef}
                 className="absolute left-0 right-0"
-                style={{ top: 0, height: '12%', touchAction: 'none', cursor: 'none', zIndex: 50 }}
+                style={{ top: 0, height: '18%', touchAction: 'none', cursor: 'none', zIndex: 50 }}
                 onMouseDown={startTear}
                 onMouseMove={moveTear}
                 onMouseUp={endTear}
@@ -465,23 +466,32 @@ export function PackOpeningFlow({
                 onTouchEnd={endTear}
                 onTouchCancel={endTear}
               >
-                {boosterPhase === 'tilt' && (
-                  <div
-                    className="absolute top-1/2 left-2 right-2 h-[2px] -translate-y-1/2"
-                    style={{
-                      background:
-                        'repeating-linear-gradient(90deg, rgba(255,255,255,0.4) 0px, rgba(255,255,255,0.4) 4px, transparent 4px, transparent 8px)',
-                    }}
-                  />
+                {boosterPhase === 'tilt' && tearProgress < 5 && (
+                  <>
+                    <div
+                      className="absolute left-1 right-1 rounded-sm bg-black/50"
+                      style={{ top: PACK_TEAR_SEAM_TOP, height: 14, transform: 'translateY(-50%)' }}
+                    />
+                    <div
+                      className="tear-rip-guide absolute left-3 right-3 rounded-full"
+                      style={{
+                        top: PACK_TEAR_SEAM_TOP,
+                        height: 4,
+                        transform: 'translateY(-50%)',
+                        background:
+                          'repeating-linear-gradient(90deg, #23e6ff 0 12px, #ffffff 12px 16px, transparent 16px 24px)',
+                      }}
+                    />
+                  </>
                 )}
                 <svg
-                  viewBox="0 0 208 40"
+                  viewBox="0 0 208 56"
                   className="absolute inset-0 w-full h-full pointer-events-none"
                   preserveAspectRatio="none"
                 >
                   <defs>
                     <filter id="tearGlowPOF">
-                      <feGaussianBlur stdDeviation="1.5" result="b" />
+                      <feGaussianBlur stdDeviation="2.5" result="b" />
                       <feMerge>
                         <feMergeNode in="b" />
                         <feMergeNode in="SourceGraphic" />
@@ -492,7 +502,9 @@ export function PackOpeningFlow({
                     d={tearLinePath}
                     fill="none"
                     stroke={tearLineColor}
-                    strokeWidth={tearProgress > 60 ? 4 : 3}
+                    strokeWidth={tearProgress > 50 ? 6 : 4}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     filter="url(#tearGlowPOF)"
                   />
                 </svg>
@@ -503,7 +515,7 @@ export function PackOpeningFlow({
             {phase === 'booster' && (
               <div
                 className="absolute left-0 right-0 pointer-events-none"
-                style={{ top: '6%', height: 0, overflow: 'visible', zIndex: 60 }}
+                style={{ top: PACK_TEAR_SEAM_TOP, height: 0, overflow: 'visible', zIndex: 60 }}
               >
                 {particles.map(p => (
                   <motion.div
@@ -593,9 +605,9 @@ export function PackOpeningFlow({
       {/* Hint text */}
       {phase === 'booster' && boosterPhase === 'tilt' && (
         <motion.p
-          className="absolute bottom-16 text-sm text-[#ff2ea6] font-semibold"
-          animate={{ opacity: [0.4, 1, 0.4] }}
-          transition={{ duration: 2, repeat: Infinity }}
+          className="absolute left-0 right-0 top-[14%] z-[100] text-center text-sm font-bold uppercase tracking-widest text-[#23e6ff] pointer-events-none drop-shadow-[0_0_12px_rgba(35,230,255,0.9)]"
+          animate={{ opacity: [0.55, 1, 0.55] }}
+          transition={{ duration: 1.6, repeat: Infinity }}
         >
           {t('swipeTearLine')} &rarr;
         </motion.p>

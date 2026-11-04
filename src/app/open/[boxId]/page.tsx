@@ -1069,10 +1069,19 @@ export default function OpenBoxPage() {
           boxName={box.name}
           cardsPerPack={box.cardsPerPack}
           heroImageUrl={(() => {
+            const topBoxCard = box.cards?.length
+              ? [...box.cards].sort((a, b) => b.coinValue - a.coinValue)[0]
+              : null;
             const pulls = pendingPullsRef.current;
-            if (pulls.length === 0) return box.imageUrl || null;
-            const top = pulls.reduce((a, b) => (b.card.coinValue > a.card.coinValue ? b : a));
-            return top.card?.imageUrlGatherer || box.imageUrl || null;
+            const topPull = pulls.length
+              ? pulls.reduce((a, b) => (b.card.coinValue > a.card.coinValue ? b : a))
+              : null;
+            return (
+              topPull?.card?.imageUrlGatherer ||
+              topBoxCard?.imageUrlGatherer ||
+              box.imageUrl ||
+              null
+            );
           })()}
           cardBackUrl={box.cardBackUrl}
           bestPullId={featuredPullId}

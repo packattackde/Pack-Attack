@@ -20,10 +20,16 @@ type NeonForgeBoosterPackProps = {
   /** Catalog grid vs full-screen opening */
   variant?: 'catalog' | 'opening';
   revealGlow?: boolean;
+  /** Highlight the foil rip seam (opening flow) */
   tearLineActive?: boolean;
+  /** 0–100 rip progress while dragging */
+  tearProgress?: number;
   idSuffix?: string;
   className?: string;
 };
+
+/** Rip seam position — keep in sync with PackOpeningFlow tear zone */
+export const PACK_TEAR_SEAM_TOP = '9.5%';
 
 function PackPattern({
   pattern,
@@ -122,6 +128,7 @@ export function NeonForgeBoosterPack({
   variant = 'catalog',
   revealGlow = false,
   tearLineActive = false,
+  tearProgress = 0,
   idSuffix = 'default',
   className = '',
 }: NeonForgeBoosterPackProps) {
@@ -129,7 +136,7 @@ export function NeonForgeBoosterPack({
   const { accent, accentSoft, Icon, wordmark, tagline, pattern } = theme;
   const isOpening = variant === 'opening';
 
-  const widthClass = isOpening ? 'w-full max-w-[min(260px,85vw)]' : 'w-[160px] sm:w-[180px]';
+  const widthClass = isOpening ? 'w-full max-w-[min(290px,88vw)]' : 'w-[160px] sm:w-[180px]';
 
   return (
     <div
@@ -175,38 +182,55 @@ export function NeonForgeBoosterPack({
           style={{ background: `radial-gradient(ellipse at 50% 0%, ${accent}35, transparent 62%)` }}
         />
 
-        {/* Foil tear strip */}
+        {/* Foil tear strip + rip seam */}
         <div
-          className="absolute top-0 inset-x-0 z-10 h-[6.5%] min-h-[14px]"
+          className="absolute top-0 inset-x-0 z-10 h-[7.5%] min-h-[18px]"
           style={{
-            background: `linear-gradient(180deg, ${accentSoft} 0%, ${accent} 55%, rgba(0,0,0,0.45) 100%)`,
+            background: `linear-gradient(180deg, ${accentSoft} 0%, ${accent} 50%, rgba(0,0,0,0.55) 100%)`,
           }}
         >
-          <div className="absolute left-[5%] right-[5%] bottom-[20%] flex items-center justify-between">
+          <div className="absolute left-[5%] right-[5%] bottom-[22%] flex items-center justify-between">
             {Array.from({ length: 20 }).map((_, i) => (
-              <span key={i} className="h-[1.5px] w-[1.5px] rounded-full bg-black/45" />
+              <span key={i} className="h-[2px] w-[2px] rounded-full bg-black/50" />
             ))}
           </div>
         </div>
 
-        {tearLineActive && (
+        {/* High-contrast rip band */}
+        <div
+          className="absolute inset-x-0 z-[15] h-[3.5%] min-h-[10px]"
+          style={{
+            top: '7.5%',
+            background: 'linear-gradient(180deg, rgba(0,0,0,0.85), rgba(10,8,22,0.95))',
+            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.12)',
+          }}
+        />
+
+        {(tearLineActive || isOpening) && (
           <div
-            className="absolute left-[4%] right-[4%] z-20 h-[2px]"
+            className="absolute left-[3%] right-[3%] z-[25] tear-rip-guide rounded-full"
             style={{
-              top: '6.5%',
-              background: 'linear-gradient(90deg, transparent, #23e6ff, #ffffff, #23e6ff, transparent)',
-              boxShadow: '0 0 10px rgba(35,230,255,0.8)',
+              top: PACK_TEAR_SEAM_TOP,
+              height: tearLineActive ? 4 : 3,
+              background:
+                tearProgress > 0
+                  ? `linear-gradient(90deg, #23e6ff ${Math.max(0, tearProgress - 8)}%, #ffffff ${tearProgress}%, rgba(255,255,255,0.2) ${tearProgress}%)`
+                  : 'repeating-linear-gradient(90deg, #23e6ff 0 10px, #ffffff 10px 14px, transparent 14px 22px)',
             }}
           />
         )}
 
-        <div className="absolute left-0 right-0 top-[7%] z-20 text-center text-[6px] font-black uppercase tracking-[3px] text-white/55 sm:text-[6.5px]">
-          Pull · Forge
-        </div>
+        {!isOpening && (
+          <div className="absolute left-0 right-0 top-[7%] z-20 text-center text-[6px] font-black uppercase tracking-[3px] text-white/55 sm:text-[6.5px]">
+            Pull · Forge
+          </div>
+        )}
 
-        <div className="absolute inset-x-0 top-[9.5%] z-20 flex flex-col items-center px-2 text-center">
+        <div
+          className={`absolute inset-x-0 z-20 flex flex-col items-center px-2 text-center ${isOpening ? 'top-[12%]' : 'top-[9.5%]'}`}
+        >
           <div
-            className={`w-full truncate font-black leading-none tracking-wide ${isOpening ? 'text-[15px] sm:text-[17px]' : 'text-[13px] sm:text-[14px]'}`}
+            className={`w-full truncate font-black leading-none tracking-wide ${isOpening ? 'text-[13px] sm:text-[15px]' : 'text-[13px] sm:text-[14px]'}`}
             style={{
               background: 'linear-gradient(180deg, #ffffff 0%, #ff2ea6 55%, #ff9e2c 100%)',
               WebkitBackgroundClip: 'text',
@@ -226,45 +250,70 @@ export function NeonForgeBoosterPack({
           />
         </div>
 
-        {/* Hero window */}
+        {/* Hero / chase card window */}
         <div
-          className="absolute left-[11%] right-[11%] top-[24%] bottom-[31%] z-10 overflow-hidden rounded-md"
+          className={`absolute z-10 overflow-hidden rounded-lg ${
+            isOpening ? 'left-[6%] right-[6%] top-[21%] bottom-[24%]' : 'left-[11%] right-[11%] top-[24%] bottom-[31%]'
+          }`}
           style={{
-            background: `linear-gradient(135deg, ${PACK_BG_1}, ${PACK_BG_2})`,
+            background: '#06040f',
             boxShadow: `
-              0 0 0 1.5px ${accent}ee,
-              0 0 0 2.5px rgba(0,0,0,0.55),
-              0 0 0 3px ${accentSoft}44,
-              0 8px 18px rgba(0,0,0,0.65),
-              inset 0 0 24px ${accent}22
+              0 0 0 2px ${accent},
+              0 0 0 3px rgba(0,0,0,0.7),
+              0 0 0 4px ${accentSoft}55,
+              0 0 20px ${accent}44,
+              0 10px 24px rgba(0,0,0,0.7),
+              inset 0 0 30px rgba(0,0,0,0.5)
             `,
           }}
         >
-          {heroImageUrl ? (
-            <Image src={heroImageUrl} alt="" fill className="object-cover" sizes="200px" unoptimized />
-          ) : (
-            <div
-              className="flex h-full w-full items-center justify-center"
-              style={{ background: `radial-gradient(circle at 30% 30%, ${accent}44, ${PACK_BG_2})` }}
-            >
-              <Icon className="h-10 w-10 text-white/40" />
-            </div>
+          <div
+            className="absolute inset-[5px] overflow-hidden rounded-[6px]"
+            style={{
+              background: `radial-gradient(circle at 50% 30%, ${PACK_BG_1}, ${PACK_BG_2})`,
+            }}
+          >
+            {heroImageUrl ? (
+              <Image
+                src={heroImageUrl}
+                alt=""
+                fill
+                className={isOpening ? 'object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.85)]' : 'object-cover'}
+                sizes={isOpening ? '240px' : '200px'}
+                unoptimized
+              />
+            ) : (
+              <div
+                className="flex h-full w-full items-center justify-center"
+                style={{ background: `radial-gradient(circle at 30% 30%, ${accent}44, ${PACK_BG_2})` }}
+              >
+                <Icon className="h-10 w-10 text-white/40" />
+              </div>
+            )}
+          </div>
+          {isOpening && heroImageUrl && (
+            <span className="absolute left-2 top-2 z-10 rounded px-1.5 py-0.5 text-[7px] font-black uppercase tracking-wider text-[#14041f] bg-gradient-to-r from-[#ff2ea6] to-[#ff6ec4] shadow-[0_0_8px_rgba(255,46,166,0.6)]">
+              Chase
+            </span>
           )}
           <div
-            className="pointer-events-none absolute inset-0"
+            className="pointer-events-none absolute inset-0 rounded-lg"
             style={{
-              background:
-                'linear-gradient(160deg, rgba(255,255,255,0.28) 0%, transparent 38%, transparent 68%, rgba(0,0,0,0.28) 100%)',
+              background: isOpening
+                ? 'linear-gradient(165deg, rgba(255,255,255,0.12) 0%, transparent 35%, transparent 75%, rgba(0,0,0,0.15) 100%)'
+                : 'linear-gradient(160deg, rgba(255,255,255,0.28) 0%, transparent 38%, transparent 68%, rgba(0,0,0,0.28) 100%)',
             }}
           />
-          <div className="pack-shine pointer-events-none absolute inset-0 overflow-hidden opacity-60">
-            <div
-              className="absolute top-0 h-full w-[45%]"
-              style={{
-                background: 'linear-gradient(105deg, transparent 28%, rgba(255,255,255,0.45) 50%, transparent 72%)',
-              }}
-            />
-          </div>
+          {!isOpening && (
+            <div className="pack-shine pointer-events-none absolute inset-0 overflow-hidden opacity-60">
+              <div
+                className="absolute top-0 h-full w-[45%]"
+                style={{
+                  background: 'linear-gradient(105deg, transparent 28%, rgba(255,255,255,0.45) 50%, transparent 72%)',
+                }}
+              />
+            </div>
+          )}
         </div>
 
         <div className="absolute inset-x-0 bottom-0 z-20 px-2.5 pb-2.5 pt-3">
