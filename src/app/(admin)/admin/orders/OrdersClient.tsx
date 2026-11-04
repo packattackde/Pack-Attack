@@ -186,15 +186,30 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
     }
   };
 
-  const handleSendToCardmarket = async (orderId: string) => {
-    setCardmarketSending(orderId);
-    try {
-      const res = await fetch(`/api/admin/orders/${orderId}/cardmarket`, { method: 'POST' });
-      const data = await res.json();
-      if (!res.ok) {
+  const pollCardmarketCartJob = async (orderId: string, maxMs = 180_000) => {
+    const started = Date.now();
+    while (Date.now() - started < maxMs) {
+      await new Promise((r) => setTimeout(r, 2500));
+      const poll = await fetch(`/api/admin/orders/${orderId}/cardmarket`);
+      const data = await poll.json();
+      if (data.state === 'ready') {
+        if (data.order) {
+          setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, ...data.order } : o)));
+        }
+        const cartUrl = typeof data.cartUrl === 'string' ? data.cartUrl : CARDMARKET_CART_URL;
+        addToast({
+          title: 'Added to Cardmarket cart',
+          description: 'Customer address filled in — finish payment on Cardmarket.',
+        });
+        window.open(cartUrl, '_blank', 'noopener,noreferrer');
+        setFilterStatus('CARDMARKET');
+        router.refresh();
+        return;
+      }
+      if (data.state === 'error') {
         addToast({
           title: 'Cardmarket cart failed',
-          description: data.error || 'Could not add order to Cardmarket',
+          description: data.error || 'Automation failed',
           variant: 'destructive',
         });
         setOrders((prev) =>
@@ -204,20 +219,37 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
         );
         return;
       }
-      setOrders(orders.map((o) => (o.id === orderId ? { ...o, ...data.order } : o)));
-      const cartUrl = typeof data.cartUrl === 'string' ? data.cartUrl : CARDMARKET_CART_URL;
+    }
+    addToast({
+      title: 'Still working…',
+      description: 'Cart job is taking longer than usual. Refresh the page in a minute.',
+      variant: 'destructive',
+    });
+  };
+
+  const handleSendToCardmarket = async (orderId: string) => {
+    setCardmarketSending(orderId);
+    try {
+      const res = await fetch(`/api/admin/orders/${orderId}/cardmarket`, { method: 'POST' });
+      const data = await res.json();
+      if (res.status === 503 || (res.status >= 400 && res.status !== 202)) {
+        addToast({
+          title: 'Cardmarket cart failed',
+          description: data.error || 'Could not add order to Cardmarket',
+          variant: 'destructive',
+        });
+        return;
+      }
       addToast({
-        title: 'Added to Cardmarket cart',
-        description: 'Customer address filled in — finish payment on Cardmarket.',
+        title: 'Adding to Cardmarket cart…',
+        description: 'Server is filling cart and address (1–2 min). Do not close this tab.',
       });
-      window.open(cartUrl, '_blank', 'noopener,noreferrer');
-      setFilterStatus('CARDMARKET');
-      router.refresh();
+      await pollCardmarketCartJob(orderId);
     } catch (e) {
       console.error(e);
       addToast({
         title: 'Error',
-        description: 'Request timed out or network error — cart may still be updating.',
+        description: 'Network error while starting cart job.',
         variant: 'destructive',
       });
     } finally {
@@ -510,7 +542,9 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
                       className="flex flex-wrap items-center gap-2 border-t border-[rgba(255,255,255,0.06)] pt-3 lg:border-t-0 lg:pt-0"
                       onClick={(e) => e.stopPropagation()}
                     >
-                      {order.fulfillmentChannel === 'CARDMARKET' && order.status === 'PROCESSING' ? (
+                      {order.fulfillmentChannel === 'CARDMARKET' &&
+                      order.status === 'PROCESSING' &&
+                      order.cardmarketPreparedAt ? (
                         <a
                           href={CARDMARKET_CART_URL}
                           target="_blank"
@@ -520,7 +554,11 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
                           <ExternalLink className="w-4 h-4" />
                           Checkout on MKM
                         </a>
-                      ) : order.status === 'PENDING' && !order.assignedShopId ? (
+                      ) : !order.assignedShopId &&
+                        (order.status === 'PENDING' ||
+                          (order.status === 'PROCESSING' &&
+                            order.fulfillmentChannel === 'CARDMARKET' &&
+                            !order.cardmarketPreparedAt)) ? (
                         <button
                           type="button"
                           disabled={

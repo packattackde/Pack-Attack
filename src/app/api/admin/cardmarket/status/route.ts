@@ -18,13 +18,20 @@ export async function GET() {
   }
 
   const config = loadCardmarketBrowserConfigFromEnv();
-  const ready = isCardmarketBrowserConfigured(config);
+  const hasSession = isCardmarketBrowserConfigured(config);
+  const hasCreds =
+    Boolean(process.env.CARDMARKET_BROWSER_USERNAME?.trim()) &&
+    Boolean(process.env.CARDMARKET_BROWSER_PASSWORD?.trim());
+  const ready = hasSession || hasCreds;
 
   return NextResponse.json({
     ready,
-    storagePath: ready ? undefined : config.storageStatePath.replace(process.cwd(), '…'),
+    hasSession,
+    hasCreds,
     message: ready
-      ? 'Server can add orders to Cardmarket cart.'
-      : 'Upload a session file (from npm run cardmarket:login) to enable one-click cart fill.',
+      ? hasSession
+        ? 'Server can add orders to Cardmarket cart.'
+        : 'Server will log in to Cardmarket on first cart run (env credentials).'
+      : 'Upload a session file or set CARDMARKET_BROWSER_USERNAME/PASSWORD on the server.',
   });
 }
