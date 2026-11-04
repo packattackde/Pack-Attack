@@ -3,7 +3,7 @@ import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import {
   CardmarketBrowserFulfillment,
-  CardmarketBrowserSession,
+  isCardmarketBrowserConfigured,
   loadCardmarketBrowserConfigFromEnv,
   notifyAdminsCardmarketCartReady,
 } from '@/lib/cardmarket-browser';
@@ -13,15 +13,18 @@ import {
 } from '@/lib/cardmarket-browser/prepare-pullforge-order';
 import { cardmarketShoppingCartUrl } from '@/lib/cardmarket-browser/links';
 
+export const maxDuration = 300;
+export const dynamic = 'force-dynamic';
+
 /**
- * Queue a single Pullforge order for Cardmarket fulfillment:
- * status → PROCESSING, fulfillmentChannel → CARDMARKET.
- * Optionally runs browser cart prep when CARDMARKET_RUN_BROWSER=true (dev / worker machine).
+ * Add order lines to Cardmarket cart + customer ship-to (Playwright). Marks Processing only on success.
  */
 export async function POST(
   _request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  let fulfillment: CardmarketBrowserFulfillment | null = null;
+
   try {
     const session = await getCurrentSession();
     if (!session?.user?.email) {
@@ -33,6 +36,17 @@ export async function POST(
     });
     if (!admin || admin.role !== 'ADMIN') {
       return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
+    }
+
+    const config = loadCardmarketBrowserConfigFromEnv();
+    if (!isCardmarketBrowserConfigured(config)) {
+      return NextResponse.json(
+        {
+          error:
+            'Cardmarket is not logged in on the server. In Admin → Orders, upload your session file (run npm run cardmarket:login locally first).',
+        },
+        { status: 503 }
+      );
     }
 
     const { id } = await params;
@@ -48,7 +62,7 @@ export async function POST(
 
     if (existing.status !== 'PENDING') {
       return NextResponse.json(
-        { error: 'Only PENDING orders can be sent to Cardmarket' },
+        { error: 'Only PENDING orders can be added to Cardmarket' },
         { status: 400 }
       );
     }
@@ -64,13 +78,21 @@ export async function POST(
       return NextResponse.json({ error: 'Order has no items' }, { status: 400 });
     }
 
+    fulfillment = new CardmarketBrowserFulfillment(config);
+    const browserPrep = await preparePullforgeOrderInCardmarket(
+      fulfillment,
+      pullforgeOrderToShipment(existing)
+    );
+
+    const cartUrl = browserPrep.cartUrl ?? cardmarketShoppingCartUrl();
+
     const order = await prisma.order.update({
       where: { id },
       data: {
         status: 'PROCESSING',
         fulfillmentChannel: 'CARDMARKET',
         cardmarketQueuedAt: new Date(),
-        cardmarketPreparedAt: null,
+        cardmarketPreparedAt: new Date(),
         cardmarketLastError: null,
       },
       include: {
@@ -86,43 +108,9 @@ export async function POST(
       },
     });
 
-    let browserPrep: unknown = null;
-    let cartUrl = cardmarketShoppingCartUrl();
-
-    if (process.env.CARDMARKET_RUN_BROWSER === 'true') {
-      const config = loadCardmarketBrowserConfigFromEnv();
-      CardmarketBrowserSession.requireStorageFile(config);
-      const fulfillment = new CardmarketBrowserFulfillment(config);
-      try {
-        browserPrep = await preparePullforgeOrderInCardmarket(
-          fulfillment,
-          pullforgeOrderToShipment(order)
-        );
-        cartUrl = (browserPrep as { cartUrl: string }).cartUrl;
-        await prisma.order.update({
-          where: { id },
-          data: { cardmarketPreparedAt: new Date(), cardmarketLastError: null },
-        });
-      } catch (err) {
-        const message = err instanceof Error ? err.message : 'Cardmarket browser prep failed';
-        await prisma.order.update({
-          where: { id },
-          data: { cardmarketLastError: message },
-        });
-        await fulfillment.close();
-        return NextResponse.json(
-          { error: message, order: serializeOrder(order) },
-          { status: 502 }
-        );
-      } finally {
-        await fulfillment.close();
-      }
-    }
-
-    const notifyLines = order.items.map((i) => i.cardName);
     notifyAdminsCardmarketCartReady({
       pullforgeOrderIds: [order.id],
-      lines: notifyLines,
+      lines: order.items.map((i) => i.cardName),
       cartUrl,
     }).catch((err) => console.error('Cardmarket notify email failed:', err));
 
@@ -130,26 +118,24 @@ export async function POST(
       success: true,
       cartUrl,
       browserPrep,
-      order: serializeOrder(
-        await prisma.order.findUniqueOrThrow({
-          where: { id },
-          include: {
-            user: { select: { id: true, email: true, name: true } },
-            items: true,
-            assignedShop: {
-              select: {
-                id: true,
-                name: true,
-                owner: { select: { id: true, email: true, name: true } },
-              },
-            },
-          },
-        })
-      ),
+      order: serializeOrder(order),
     });
   } catch (error) {
-    console.error('Cardmarket order queue error:', error);
-    return NextResponse.json({ error: 'Failed to queue Cardmarket fulfillment' }, { status: 500 });
+    const message =
+      error instanceof Error ? error.message : 'Cardmarket cart automation failed';
+    console.error('Cardmarket order cart error:', error);
+
+    const { id } = await params;
+    await prisma.order
+      .update({
+        where: { id },
+        data: { cardmarketLastError: message },
+      })
+      .catch(() => undefined);
+
+    return NextResponse.json({ error: message }, { status: 502 });
+  } finally {
+    await fulfillment?.close();
   }
 }
 

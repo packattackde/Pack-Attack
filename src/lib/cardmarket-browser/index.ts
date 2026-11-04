@@ -1,6 +1,7 @@
 export {
   loadCardmarketBrowserConfigFromEnv,
   assertCheckoutAllowed,
+  isCardmarketBrowserConfigured,
   type CardmarketBrowserConfig,
 } from './config';
 export {

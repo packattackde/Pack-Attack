@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import {
@@ -21,9 +21,7 @@ import {
   Save,
   ShoppingCart,
   ExternalLink,
-  Download,
-  ClipboardCopy,
-  ArrowRight,
+  Upload,
 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { useTranslations } from 'next-intl';
@@ -93,9 +91,18 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
   const [updatingOrder, setUpdatingOrder] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState<string>('ALL');
   const [cardmarketSending, setCardmarketSending] = useState<string | null>(null);
-  const [cardmarketExporting, setCardmarketExporting] = useState<string | null>(null);
+  const [cardmarketReady, setCardmarketReady] = useState<boolean | null>(null);
+  const [sessionUploading, setSessionUploading] = useState(false);
+  const sessionFileRef = useRef<HTMLInputElement>(null);
 
   const CARDMARKET_CART_URL = 'https://www.cardmarket.com/en/Magic/ShoppingCart';
+
+  useEffect(() => {
+    fetch('/api/admin/cardmarket/status')
+      .then((r) => r.json())
+      .then((d) => setCardmarketReady(Boolean(d.ready)))
+      .catch(() => setCardmarketReady(false));
+  }, []);
 
   const cardmarketQueueCount = orders.filter(
     (o) => o.fulfillmentChannel === 'CARDMARKET' && o.status === 'PROCESSING'
@@ -143,39 +150,39 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
     }
   };
 
-  const handleExportCardmarket = async (orderId: string, downloadFile = false) => {
-    setCardmarketExporting(orderId);
+  const handleUploadCardmarketSession = async (file: File) => {
+    setSessionUploading(true);
     try {
-      const url = `/api/admin/orders/${orderId}/cardmarket/export${downloadFile ? '?download=1' : ''}`;
-      if (downloadFile) {
-        window.open(url, '_blank');
-        addToast({ title: 'Export', description: 'Cardmarket JSON download started.' });
-        return;
-      }
-      const res = await fetch(url);
+      const text = await file.text();
+      const res = await fetch('/api/admin/cardmarket/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: text,
+      });
       const data = await res.json();
       if (!res.ok) {
         addToast({
-          title: 'Export failed',
-          description: data.error || 'Could not export order',
+          title: 'Session upload failed',
+          description: data.error || 'Could not save session',
           variant: 'destructive',
         });
         return;
       }
-      await navigator.clipboard.writeText(JSON.stringify(data.export, null, 2));
+      setCardmarketReady(true);
       addToast({
-        title: 'Copied to clipboard',
-        description: 'Cardmarket export JSON — use search URLs or MCP to fill cart.',
+        title: 'Cardmarket connected',
+        description: 'Server can fill your MKM cart. Try Add to Cardmarket cart on a pending order.',
       });
     } catch (e) {
       console.error(e);
       addToast({
-        title: 'Export failed',
-        description: 'Clipboard or network error',
+        title: 'Upload failed',
+        description: 'Could not read session file',
         variant: 'destructive',
       });
     } finally {
-      setCardmarketExporting(null);
+      setSessionUploading(false);
+      if (sessionFileRef.current) sessionFileRef.current.value = '';
     }
   };
 
@@ -186,25 +193,31 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
       const data = await res.json();
       if (!res.ok) {
         addToast({
-          title: 'Cardmarket',
-          description: data.error || 'Failed to send order to Cardmarket',
+          title: 'Cardmarket cart failed',
+          description: data.error || 'Could not add order to Cardmarket',
           variant: 'destructive',
         });
+        setOrders((prev) =>
+          prev.map((o) =>
+            o.id === orderId ? { ...o, cardmarketLastError: data.error ?? 'Failed' } : o
+          )
+        );
         return;
       }
       setOrders(orders.map((o) => (o.id === orderId ? { ...o, ...data.order } : o)));
+      const cartUrl = typeof data.cartUrl === 'string' ? data.cartUrl : CARDMARKET_CART_URL;
       addToast({
-        title: 'Queued for Cardmarket',
-        description: 'Status → Processing. Export copied next — open MKM cart and checkout.',
+        title: 'Added to Cardmarket cart',
+        description: 'Customer address filled in — finish payment on Cardmarket.',
       });
-      window.open(`/api/admin/orders/${orderId}/cardmarket/export?download=1`, '_blank');
+      window.open(cartUrl, '_blank', 'noopener,noreferrer');
       setFilterStatus('CARDMARKET');
       router.refresh();
     } catch (e) {
       console.error(e);
       addToast({
         title: 'Error',
-        description: 'Failed to send order to Cardmarket',
+        description: 'Request timed out or network error — cart may still be updating.',
         variant: 'destructive',
       });
     } finally {
@@ -321,25 +334,42 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
               <ShoppingCart className="w-5 h-5 text-sky-400" />
               Cardmarket warehouse
             </h2>
-            <ol className="mt-3 space-y-2 text-sm text-[#c4c4e0] list-decimal list-inside">
-              <li>
-                On a <strong className="text-white">Pending</strong> order row →{' '}
-                <strong className="text-sky-300">Export</strong> (JSON + search links) or{' '}
-                <strong className="text-sky-300">Queue for Cardmarket</strong> (marks Processing).
-              </li>
-              <li>Add cards on Cardmarket (German seller, ≥100 sales) — cart uses customer ship-to.</li>
-              <li>
-                <a
-                  href={CARDMARKET_CART_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sky-300 underline hover:text-sky-200"
+            <p className="mt-2 text-sm text-[#c4c4e0]">
+              Click <strong className="text-sky-300">Add to Cardmarket cart</strong> on a pending order.
+              The server logs into Cardmarket, adds the cards (DE seller, ≥100 sales), and fills the
+              customer&apos;s shipping address — then open the cart and pay.
+            </p>
+            {cardmarketReady === false && (
+              <div className="mt-3 rounded-lg border border-amber-500/40 bg-amber-950/40 p-3 text-sm text-amber-100">
+                <p className="font-medium">One-time setup: log in on the server</p>
+                <p className="mt-1 text-amber-200/90 text-xs">
+                  On your PC run <code className="text-amber-50">npm run cardmarket:login</code>, then upload
+                  the file from <code className="text-amber-50">.cardmarket/storage.json</code>.
+                </p>
+                <input
+                  ref={sessionFileRef}
+                  type="file"
+                  accept="application/json,.json"
+                  className="hidden"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) void handleUploadCardmarketSession(f);
+                  }}
+                />
+                <button
+                  type="button"
+                  disabled={sessionUploading}
+                  onClick={() => sessionFileRef.current?.click()}
+                  className="mt-2 inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold disabled:opacity-50"
                 >
-                  Open Cardmarket cart
-                </a>{' '}
-                → pay → mark order <strong className="text-white">Shipped</strong> here.
-              </li>
-            </ol>
+                  <Upload className="w-3.5 h-3.5" />
+                  {sessionUploading ? 'Uploading…' : 'Upload Cardmarket session'}
+                </button>
+              </div>
+            )}
+            {cardmarketReady === true && (
+              <p className="mt-2 text-xs text-emerald-400/90">Server session OK — cart automation is enabled.</p>
+            )}
             <p className="mt-3 text-xs text-[#8888aa]">
               {cardmarketPendingCount} pending (unassigned) · {cardmarketQueueCount} in Cardmarket queue
             </p>
@@ -480,27 +510,6 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
                       className="flex flex-wrap items-center gap-2 border-t border-[rgba(255,255,255,0.06)] pt-3 lg:border-t-0 lg:pt-0"
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <button
-                        type="button"
-                        title="Copy Cardmarket export JSON"
-                        disabled={cardmarketExporting === order.id || order.items.length === 0}
-                        onClick={() => handleExportCardmarket(order.id, false)}
-                        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium bg-[#12123a] border border-sky-500/40 text-sky-200 hover:bg-sky-500/10 disabled:opacity-40"
-                      >
-                        <ClipboardCopy className="w-4 h-4" />
-                        {cardmarketExporting === order.id ? '…' : 'Export'}
-                      </button>
-                      <button
-                        type="button"
-                        title="Download Cardmarket export JSON"
-                        disabled={order.items.length === 0}
-                        onClick={() => handleExportCardmarket(order.id, true)}
-                        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium bg-[#12123a] border border-sky-500/40 text-sky-200 hover:bg-sky-500/10 disabled:opacity-40"
-                      >
-                        <Download className="w-4 h-4" />
-                        JSON
-                      </button>
-
                       {order.fulfillmentChannel === 'CARDMARKET' && order.status === 'PROCESSING' ? (
                         <a
                           href={CARDMARKET_CART_URL}
@@ -514,12 +523,23 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
                       ) : order.status === 'PENDING' && !order.assignedShopId ? (
                         <button
                           type="button"
-                          disabled={cardmarketSending === order.id}
+                          disabled={
+                            cardmarketSending === order.id ||
+                            order.items.length === 0 ||
+                            cardmarketReady !== true
+                          }
+                          title={
+                            cardmarketReady !== true
+                              ? 'Upload Cardmarket session in the banner above (one-time)'
+                              : 'Adds cards + customer address on Cardmarket (1–2 min)'
+                          }
                           onClick={() => handleSendToCardmarket(order.id)}
                           className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold bg-sky-600 hover:bg-sky-500 text-white disabled:opacity-50"
                         >
-                          <ArrowRight className="w-4 h-4" />
-                          {cardmarketSending === order.id ? 'Queuing…' : 'Queue for Cardmarket'}
+                          <ShoppingCart className="w-4 h-4" />
+                          {cardmarketSending === order.id
+                            ? 'Adding to cart… (wait)'
+                            : 'Add to Cardmarket cart'}
                         </button>
                       ) : order.assignedShopId ? (
                         <span className="text-xs text-[#8888aa] px-2">Shop assigned — unassign for MKM</span>

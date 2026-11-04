@@ -1,3 +1,4 @@
+import { existsSync } from 'fs';
 import { resolve } from 'path';
 import { DEFAULT_SELLER_RULES, type SellerRules } from './seller-rules';
 
@@ -40,6 +41,11 @@ export function loadCardmarketBrowserConfigFromEnv(): CardmarketBrowserConfig {
         : DEFAULT_SELLER_RULES.minSellerSales,
     },
   };
+}
+
+export function isCardmarketBrowserConfigured(config?: CardmarketBrowserConfig): boolean {
+  const c = config ?? loadCardmarketBrowserConfigFromEnv();
+  return existsSync(c.storageStatePath);
 }
 
 export function assertCheckoutAllowed(config: CardmarketBrowserConfig): void {

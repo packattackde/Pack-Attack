@@ -1,6 +1,6 @@
 import type { Page } from 'playwright';
 import type { CardmarketBrowserConfig } from './config';
-import { toCardmarketCountryOption } from './country-codes';
+import { toCardmarketCountryLabel } from './country-codes';
 import {
   cardmarketArticleUrl,
   cardmarketProductSearchUrl,
@@ -38,32 +38,34 @@ export class CardmarketBrowserFulfillment {
     return { username };
   }
 
-  async getCartSummary(): Promise<CartSummary> {
+  async getCartSummary(game = 'Magic'): Promise<CartSummary> {
     const page = await this.session.getPage();
-    const url = cardmarketShoppingCartUrl();
+    const url = cardmarketShoppingCartUrl({ game });
     await page.goto(url, { waitUntil: 'domcontentloaded' });
     await dismissCookieBanner(page);
     return readCartSummary(page, url);
   }
 
-  async emptyCart(): Promise<CartSummary> {
+  async emptyCart(game = 'Magic'): Promise<CartSummary> {
     const page = await this.session.getPage();
-    await page.goto(cardmarketShoppingCartUrl(), { waitUntil: 'domcontentloaded' });
+    const cartUrl = cardmarketShoppingCartUrl({ game });
+    await page.goto(cartUrl, { waitUntil: 'domcontentloaded' });
     await dismissCookieBanner(page);
     const removeAll = page.getByRole('button', { name: 'Remove all articles' });
     if (await removeAll.isVisible().catch(() => false)) {
       await removeAll.click();
       await page.waitForTimeout(800);
     }
-    return readCartSummary(page, cardmarketShoppingCartUrl());
+    return readCartSummary(page, cartUrl);
   }
 
   /** Opens product search, picks first result, adds cheapest listing matching seller rules. */
   async addCheapestFromSearch(
-    search: string
+    search: string,
+    game = 'Magic'
   ): Promise<{ productUrl: string; selectedListing: SelectedListing }> {
     const page = await this.session.getPage();
-    const searchUrl = cardmarketProductSearchUrl(search);
+    const searchUrl = cardmarketProductSearchUrl(search, { game });
     await page.goto(searchUrl, { waitUntil: 'domcontentloaded' });
     await dismissCookieBanner(page);
     const firstProduct = page.locator('a[href*="/Products/Singles/"]').first();
@@ -102,14 +104,26 @@ export class CardmarketBrowserFulfillment {
     return toSelectedListing(listing);
   }
 
-  async setCartShippingAddress(address: ShippingAddressInput): Promise<void> {
+  async setCartShippingAddress(address: ShippingAddressInput, game = 'Magic'): Promise<void> {
     const page = await this.session.getPage();
-    await page.goto(cardmarketShoppingCartUrl(), { waitUntil: 'domcontentloaded' });
+    await page.goto(cardmarketShoppingCartUrl({ game }), { waitUntil: 'domcontentloaded' });
     await dismissCookieBanner(page);
-    const choose = page.getByRole('button', { name: 'Choose Shipping Address' });
-    await choose.waitFor({ state: 'visible', timeout: 15_000 });
-    await choose.click();
-    await fillAddressModal(page, address);
+
+    const empty = page.getByText('Your shopping cart is empty', { exact: false });
+    if (await empty.isVisible().catch(() => false)) {
+      throw new Error('Cardmarket cart is empty — no listing matched seller rules or card was not found.');
+    }
+
+    const chooseButtons = page.getByRole('button', { name: 'Choose Shipping Address' });
+    const count = await chooseButtons.count();
+    if (count === 0) {
+      throw new Error('No shipping address control on Cardmarket cart — check login session.');
+    }
+    for (let i = 0; i < count; i++) {
+      await chooseButtons.nth(i).click();
+      await fillAddressModal(page, address);
+      await page.waitForTimeout(600);
+    }
   }
 
   async prepareCartForCustomer(options: {
@@ -173,9 +187,10 @@ async function fillAddressModal(page: Page, address: ShippingAddressInput): Prom
   await page.locator('input[name="street"]').fill(address.street);
   await page.locator('input[name="city"]').fill(address.city);
   await page.locator('input[name="postCode"]').fill(address.zip);
-  const country = toCardmarketCountryOption(address.country);
-  await page.locator('select[name="idCountry"]').selectOption({ value: country }).catch(async () => {
-    await page.locator('select[name="idCountry"]').selectOption({ label: country });
+  const countryLabel = toCardmarketCountryLabel(address.country);
+  const countrySelect = page.locator('select[name="idCountry"]');
+  await countrySelect.selectOption({ label: countryLabel }).catch(async () => {
+    await countrySelect.selectOption({ value: countryLabel });
   });
 
   const save = modal.getByRole('button', { name: /save|select|confirm|apply/i }).first();

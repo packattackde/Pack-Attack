@@ -1,20 +1,40 @@
-/** ISO 3166-1 alpha-2 → Cardmarket country option value (extend as needed). */
-const ISO_TO_MKM_OPTION: Record<string, string> = {
-  DE: 'DE',
-  AT: 'AT',
-  FR: 'FR',
-  IT: 'IT',
-  ES: 'ES',
-  NL: 'NL',
-  BE: 'BE',
-  PL: 'PL',
-  CZ: 'CZ',
-  GB: 'GB',
-  US: 'US',
-  CH: 'CH',
+/** ISO / common names → Cardmarket idCountry option label. */
+const TO_MKM_LABEL: Record<string, string> = {
+  DE: 'Germany',
+  D: 'Germany',
+  GERMANY: 'Germany',
+  AT: 'Austria',
+  AUSTRIA: 'Austria',
+  FR: 'France',
+  FRANCE: 'France',
+  IT: 'Italy',
+  ITALY: 'Italy',
+  ES: 'Spain',
+  SPAIN: 'Spain',
+  NL: 'Netherlands',
+  NETHERLANDS: 'Netherlands',
+  BE: 'Belgium',
+  BELGIUM: 'Belgium',
+  PL: 'Poland',
+  POLAND: 'Poland',
+  CZ: 'Czech Republic',
+  'CZECH REPUBLIC': 'Czech Republic',
+  GB: 'United Kingdom',
+  UK: 'United Kingdom',
+  'UNITED KINGDOM': 'United Kingdom',
+  US: 'United States',
+  USA: 'United States',
+  'UNITED STATES': 'United States',
+  CH: 'Switzerland',
+  SWITZERLAND: 'Switzerland',
 };
 
+export function toCardmarketCountryLabel(isoOrName: string): string {
+  const key = isoOrName.trim().toUpperCase();
+  return TO_MKM_LABEL[key] ?? isoOrName.trim();
+}
+
+/** @deprecated use toCardmarketCountryLabel for address forms */
 export function toCardmarketCountryOption(isoOrCode: string): string {
-  const raw = isoOrCode.trim().toUpperCase();
-  return ISO_TO_MKM_OPTION[raw] ?? raw;
+  return toCardmarketCountryLabel(isoOrCode);
 }

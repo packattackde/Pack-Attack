@@ -1,6 +1,7 @@
 import type { CardmarketBrowserFulfillment } from './fulfillment';
 import type { ShippingAddressInput } from './types';
 import { cardmarketShoppingCartUrl } from './links';
+import { assertSingleCardmarketGame } from './cardmarket-game';
 
 export type PullforgeOrderLine = {
   cardName: string;
@@ -33,12 +34,14 @@ export async function preparePullforgeOrderInCardmarket(
     throw new Error('Order has no items');
   }
 
+  const game = assertSingleCardmarketGame(order.items.map((i) => i.cardName));
+
   await fulfillment.ensureLoggedIn();
-  await fulfillment.emptyCart();
+  await fulfillment.emptyCart(game);
 
   const lines: PreparePullforgeOrderResult['lines'] = [];
   for (const item of order.items) {
-    const added = await fulfillment.addCheapestFromSearch(item.cardName);
+    const added = await fulfillment.addCheapestFromSearch(item.cardName, game);
     lines.push({
       cardName: item.cardName,
       productUrl: added.productUrl,
@@ -48,11 +51,17 @@ export async function preparePullforgeOrderInCardmarket(
     });
   }
 
-  await fulfillment.setCartShippingAddress(order.shipping);
-  const cart = await fulfillment.getCartSummary();
+  await fulfillment.setCartShippingAddress(order.shipping, game);
+  const cart = await fulfillment.getCartSummary(game);
+
+  if (cart.itemCount < order.items.length) {
+    throw new Error(
+      `Cardmarket cart has ${cart.itemCount} item(s) but order has ${order.items.length} — check seller rules or card names.`
+    );
+  }
 
   return {
-    cartUrl: cardmarketShoppingCartUrl(),
+    cartUrl: cardmarketShoppingCartUrl({ game }),
     lines,
     cart,
   };
