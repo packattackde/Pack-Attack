@@ -152,60 +152,24 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
     }
   };
 
-  const handleSendToCardmarket = async (orderId: string) => {
-    setCardmarketSending(orderId);
-    try {
-      let bridgeRes: Response;
-      try {
-        bridgeRes = await fetch(`${LOCAL_BRIDGE}/fill/${encodeURIComponent(orderId)}`, {
-          method: 'POST',
-        });
-      } catch {
-        addToast({
-          title: 'Start local bridge',
-          description:
-            'In C:\\PA\\Pack-Attack run: npm run cardmarket:local-bridge (Cardmarket blocks the server bot check).',
-          variant: 'destructive',
-        });
-        return;
-      }
-
-      const bridgeData = await bridgeRes.json();
-      if (!bridgeData.success) {
-        addToast({
-          title: 'Cardmarket cart failed',
-          description: bridgeData.error || 'Local fill failed',
-          variant: 'destructive',
-        });
-        setOrders((prev) =>
-          prev.map((o) =>
-            o.id === orderId
-              ? { ...o, cardmarketLastError: bridgeData.error ?? 'Failed' }
-              : o
-          )
-        );
-        return;
-      }
-
-      const cartUrl =
-        typeof bridgeData.cartUrl === 'string' ? bridgeData.cartUrl : CARDMARKET_CART_URL;
+  const handleSendToCardmarket = (orderId: string) => {
+    const fillUrl = `${LOCAL_BRIDGE}/fill/${encodeURIComponent(orderId)}`;
+    const tab = window.open(fillUrl, '_blank', 'noopener,noreferrer');
+    if (!tab) {
       addToast({
-        title: 'Added to Cardmarket cart',
-        description: 'Customer address filled — finish payment in the browser window.',
-      });
-      window.open(cartUrl, '_blank', 'noopener,noreferrer');
-      setFilterStatus('CARDMARKET');
-      router.refresh();
-    } catch (e) {
-      console.error(e);
-      addToast({
-        title: 'Error',
-        description: e instanceof Error ? e.message : 'Local cart fill failed',
+        title: 'Pop-up blocked',
+        description: `Allow pop-ups, or open: ${fillUrl}`,
         variant: 'destructive',
       });
-    } finally {
-      setCardmarketSending(null);
+      return;
     }
+    addToast({
+      title: 'Filling cart on this PC',
+      description:
+        'Watch the new localhost tab and Chrome window. First time? Run npm run cardmarket:login in Pack-Attack.',
+    });
+    setCardmarketSending(orderId);
+    window.setTimeout(() => setCardmarketSending(null), 90_000);
   };
 
   const handleShopAssignment = async (orderId: string, shopId: string | null) => {
