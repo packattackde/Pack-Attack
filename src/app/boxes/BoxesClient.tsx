@@ -17,12 +17,14 @@ import {
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { GridBoosterPack } from '@/components/boxes/GridBoosterPack';
+import { pickChaseCardImageUrl } from '@/components/NeonForgeBoosterPack';
 import { getBoosterPackTheme, type BoosterPackTheme } from '@/lib/booster-pack-theme';
 
 interface TopCard {
   id: string;
   name: string;
   imageUrlGatherer: string | null;
+  imageUrlScryfall?: string | null;
   coinValue: number;
 }
 
@@ -296,7 +298,7 @@ function PackCard({
 }
 
 function BoosterPack({ box, theme }: { box: Box; theme: BoosterPackTheme }) {
-  const heroImage = box.topCard?.imageUrlGatherer || box.imageUrl || null;
+  const heroImage = pickChaseCardImageUrl(box.topCard) || box.imageUrl || null;
   return (
     <GridBoosterPack
       boxName={box.name}

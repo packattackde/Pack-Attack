@@ -187,7 +187,7 @@ function OpeningChaseCardPreview({
   return (
     <div
       ref={slotRef}
-      className="absolute inset-0 flex items-center justify-center overflow-visible rounded-[4px] bg-gradient-to-b from-[#0c0a18] to-[#05040c] p-1.5 sm:p-2"
+      className="absolute inset-0 flex items-center justify-center rounded-[4px] bg-gradient-to-b from-[#0c0a18] to-[#05040c] p-1.5 sm:p-2"
     >
       <div
         className="relative shrink-0 rounded-[4px] bg-[#080612]"
@@ -202,7 +202,7 @@ function OpeningChaseCardPreview({
           `,
         }}
       >
-        <div className="absolute inset-[3px] flex items-center justify-center overflow-visible rounded-[3px] bg-[#0a0820]">
+        <div className="absolute inset-[3px] overflow-hidden rounded-[3px] bg-[#0a0820]">
           {heroImageUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -210,8 +210,7 @@ function OpeningChaseCardPreview({
               alt=""
               referrerPolicy="no-referrer"
               draggable={false}
-              className="max-h-full max-w-full object-contain object-center"
-              style={{ width: 'auto', height: 'auto', display: 'block' }}
+              className="h-full w-full object-contain object-center"
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center">

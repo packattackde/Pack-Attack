@@ -176,9 +176,9 @@ export function GridBoosterPack({
       </div>
 
       <div
-        className="absolute z-10 overflow-hidden rounded-md left-[12%] right-[12%] top-[25%] bottom-[30%]"
+        className="absolute z-10 flex items-center justify-center overflow-hidden rounded-md left-[12%] right-[12%] top-[23%] bottom-[28%] p-1"
         style={{
-          background: `linear-gradient(135deg, ${PACK_BG_1}, ${PACK_BG_2})`,
+          background: `linear-gradient(135deg, #0a0818, ${PACK_BG_2})`,
           boxShadow: `
             0 0 0 1.5px ${accent}dd,
             0 0 0 2.5px rgba(0,0,0,0.5),
@@ -189,7 +189,16 @@ export function GridBoosterPack({
         }}
       >
         {heroImageUrl ? (
-          <Image src={heroImageUrl} alt="" fill className="object-cover" sizes="150px" unoptimized />
+          <div className="relative h-full w-full">
+            <Image
+              src={heroImageUrl}
+              alt=""
+              fill
+              className="object-contain object-center"
+              sizes="150px"
+              unoptimized
+            />
+          </div>
         ) : (
           <div
             className="flex h-full w-full items-center justify-center"

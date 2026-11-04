@@ -43,6 +43,7 @@ async function getBoxes() {
             id: true,
             name: true,
             imageUrlGatherer: true,
+            imageUrlScryfall: true,
             coinValue: true,
           },
         },
@@ -74,6 +75,7 @@ export default async function BoxesPage() {
           id: box.cards[0].id,
           name: box.cards[0].name,
           imageUrlGatherer: box.cards[0].imageUrlGatherer,
+          imageUrlScryfall: box.cards[0].imageUrlScryfall,
           coinValue: Number(box.cards[0].coinValue),
         }
       : null,
