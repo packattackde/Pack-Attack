@@ -38,18 +38,34 @@ jobs:
             git fetch origin beta/beta
             git reset --hard origin/beta/beta
             git clean -fd
-            npm ci
-            npx prisma generate
+
+            # Full reinstall — partial node_modules causes npx to fetch Prisma 7 instead of lockfile 6.x
+            rm -rf node_modules
+            if ! npm ci; then
+              echo "npm ci failed — retrying once after clean node_modules"
+              rm -rf node_modules
+              npm ci
+            fi
+            PRISMA_VERSION="$(node -p "require('./node_modules/prisma/package.json').version")"
+            echo "Using Prisma CLI ${PRISMA_VERSION} from node_modules"
+            case "${PRISMA_VERSION}" in
+              6.*) ;;
+              *)
+                echo "ERROR: Expected Prisma 6.x from package-lock; got ${PRISMA_VERSION}"
+                exit 1
+                ;;
+            esac
+            npm run db:generate
 
             # Build first (does not require a live DB for this app); migrations need DB
             rm -rf .next-fresh
             NEXT_DIST_DIR=.next-fresh npm run build
 
             # Production migrations (uses DATABASE_URL from server .env only — never from GitHub)
-            if ! npx prisma migrate deploy; then
+            if ! npm run db:migrate:prod; then
               echo "WARNING: prisma migrate deploy failed — database unreachable or migration error."
               echo "   Code build is already done; when PostgreSQL is reachable run on the server:"
-              echo "   cd /var/www/packattack/app && npx prisma migrate deploy && pm2 reload packattack --update-env"
+              echo "   cd /var/www/packattack/app && npm run db:migrate:prod && pm2 reload packattack --update-env"
             fi
 
             # Add CRON_SECRET if not exists
@@ -72,7 +88,9 @@ jobs:
               pm2 start ecosystem.config.cjs
             fi
 
-            if pm2 describe battle-scheduler > /dev/null 2>&1; then
+            if pm2 describe battle-auto-start-scheduler > /dev/null 2>&1; then
+              pm2 reload ecosystem.battle-scheduler.config.cjs --update-env
+            elif pm2 describe battle-scheduler > /dev/null 2>&1; then
               pm2 reload ecosystem.battle-scheduler.config.cjs --update-env
             else
               pm2 start ecosystem.battle-scheduler.config.cjs
