@@ -11,6 +11,8 @@ export type CardmarketBrowserConfig = {
   /** Never true in automation unless explicitly placing orders. */
   allowCheckout: boolean;
   sellerRules: SellerRules;
+  /** Datacenter Playwright hits MKM bot checks — default off on server. */
+  allowServerAutomation: boolean;
 };
 
 const DEFAULT_GAME_BASE = 'https://www.cardmarket.com/en/Magic';
@@ -29,11 +31,14 @@ export function loadCardmarketBrowserConfigFromEnv(): CardmarketBrowserConfig {
   const minSalesRaw = process.env.CARDMARKET_MIN_SELLER_SALES ?? '100';
   const minSellerSales = Number.parseInt(minSalesRaw, 10);
 
+  const allowServerAutomation = process.env.CARDMARKET_SERVER_AUTOMATION === 'true';
+
   return {
     storageStatePath,
     gameBasePath: process.env.CARDMARKET_BROWSER_GAME_BASE ?? DEFAULT_GAME_BASE,
     headless: process.env.CARDMARKET_BROWSER_HEADLESS !== 'false',
     allowCheckout: process.env.CARDMARKET_ALLOW_CHECKOUT === 'true',
+    allowServerAutomation,
     sellerRules: {
       sellerCountries: sellerCountries.length > 0 ? sellerCountries : DEFAULT_SELLER_RULES.sellerCountries,
       minSellerSales: Number.isFinite(minSellerSales)

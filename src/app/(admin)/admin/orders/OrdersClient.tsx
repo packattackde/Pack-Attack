@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import {
@@ -21,7 +21,6 @@ import {
   Save,
   ShoppingCart,
   ExternalLink,
-  Upload,
 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { useTranslations } from 'next-intl';
@@ -92,16 +91,19 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
   const [filterStatus, setFilterStatus] = useState<string>('ALL');
   const [cardmarketSending, setCardmarketSending] = useState<string | null>(null);
   const [cardmarketReady, setCardmarketReady] = useState<boolean | null>(null);
-  const [sessionUploading, setSessionUploading] = useState(false);
-  const sessionFileRef = useRef<HTMLInputElement>(null);
+  const [localBridgeOnline, setLocalBridgeOnline] = useState<boolean | null>(null);
 
   const CARDMARKET_CART_URL = 'https://www.cardmarket.com/en/Magic/ShoppingCart';
+  const LOCAL_BRIDGE = 'http://127.0.0.1:3847';
 
   useEffect(() => {
     fetch('/api/admin/cardmarket/status')
       .then((r) => r.json())
       .then((d) => setCardmarketReady(Boolean(d.ready)))
       .catch(() => setCardmarketReady(false));
+    fetch(`${LOCAL_BRIDGE}/health`)
+      .then((r) => setLocalBridgeOnline(r.ok))
+      .catch(() => setLocalBridgeOnline(false));
   }, []);
 
   const cardmarketQueueCount = orders.filter(
@@ -150,106 +152,55 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
     }
   };
 
-  const handleUploadCardmarketSession = async (file: File) => {
-    setSessionUploading(true);
+  const handleSendToCardmarket = async (orderId: string) => {
+    setCardmarketSending(orderId);
     try {
-      const text = await file.text();
-      const res = await fetch('/api/admin/cardmarket/session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: text,
-      });
-      const data = await res.json();
-      if (!res.ok) {
+      let bridgeRes: Response;
+      try {
+        bridgeRes = await fetch(`${LOCAL_BRIDGE}/fill/${encodeURIComponent(orderId)}`, {
+          method: 'POST',
+        });
+      } catch {
         addToast({
-          title: 'Session upload failed',
-          description: data.error || 'Could not save session',
+          title: 'Start local bridge',
+          description:
+            'In C:\\PA\\Pack-Attack run: npm run cardmarket:local-bridge (Cardmarket blocks the server bot check).',
           variant: 'destructive',
         });
         return;
       }
-      setCardmarketReady(true);
-      addToast({
-        title: 'Cardmarket connected',
-        description: 'Server can fill your MKM cart. Try Add to Cardmarket cart on a pending order.',
-      });
-    } catch (e) {
-      console.error(e);
-      addToast({
-        title: 'Upload failed',
-        description: 'Could not read session file',
-        variant: 'destructive',
-      });
-    } finally {
-      setSessionUploading(false);
-      if (sessionFileRef.current) sessionFileRef.current.value = '';
-    }
-  };
 
-  const pollCardmarketCartJob = async (orderId: string, maxMs = 180_000) => {
-    const started = Date.now();
-    while (Date.now() - started < maxMs) {
-      await new Promise((r) => setTimeout(r, 2500));
-      const poll = await fetch(`/api/admin/orders/${orderId}/cardmarket`);
-      const data = await poll.json();
-      if (data.state === 'ready') {
-        if (data.order) {
-          setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, ...data.order } : o)));
-        }
-        const cartUrl = typeof data.cartUrl === 'string' ? data.cartUrl : CARDMARKET_CART_URL;
-        addToast({
-          title: 'Added to Cardmarket cart',
-          description: 'Customer address filled in — finish payment on Cardmarket.',
-        });
-        window.open(cartUrl, '_blank', 'noopener,noreferrer');
-        setFilterStatus('CARDMARKET');
-        router.refresh();
-        return;
-      }
-      if (data.state === 'error') {
+      const bridgeData = await bridgeRes.json();
+      if (!bridgeData.success) {
         addToast({
           title: 'Cardmarket cart failed',
-          description: data.error || 'Automation failed',
+          description: bridgeData.error || 'Local fill failed',
           variant: 'destructive',
         });
         setOrders((prev) =>
           prev.map((o) =>
-            o.id === orderId ? { ...o, cardmarketLastError: data.error ?? 'Failed' } : o
+            o.id === orderId
+              ? { ...o, cardmarketLastError: bridgeData.error ?? 'Failed' }
+              : o
           )
         );
         return;
       }
-    }
-    addToast({
-      title: 'Still working…',
-      description: 'Cart job is taking longer than usual. Refresh the page in a minute.',
-      variant: 'destructive',
-    });
-  };
 
-  const handleSendToCardmarket = async (orderId: string) => {
-    setCardmarketSending(orderId);
-    try {
-      const res = await fetch(`/api/admin/orders/${orderId}/cardmarket`, { method: 'POST' });
-      const data = await res.json();
-      if (res.status === 503 || (res.status >= 400 && res.status !== 202)) {
-        addToast({
-          title: 'Cardmarket cart failed',
-          description: data.error || 'Could not add order to Cardmarket',
-          variant: 'destructive',
-        });
-        return;
-      }
+      const cartUrl =
+        typeof bridgeData.cartUrl === 'string' ? bridgeData.cartUrl : CARDMARKET_CART_URL;
       addToast({
-        title: 'Adding to Cardmarket cart…',
-        description: 'Server is filling cart and address (1–2 min). Do not close this tab.',
+        title: 'Added to Cardmarket cart',
+        description: 'Customer address filled — finish payment in the browser window.',
       });
-      await pollCardmarketCartJob(orderId);
+      window.open(cartUrl, '_blank', 'noopener,noreferrer');
+      setFilterStatus('CARDMARKET');
+      router.refresh();
     } catch (e) {
       console.error(e);
       addToast({
         title: 'Error',
-        description: 'Network error while starting cart job.',
+        description: e instanceof Error ? e.message : 'Local cart fill failed',
         variant: 'destructive',
       });
     } finally {
@@ -367,40 +318,30 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
               Cardmarket warehouse
             </h2>
             <p className="mt-2 text-sm text-[#c4c4e0]">
-              Click <strong className="text-sky-300">Add to Cardmarket cart</strong> on a pending order.
-              The server logs into Cardmarket, adds the cards (DE seller, ≥100 sales), and fills the
-              customer&apos;s shipping address — then open the cart and pay.
+              Cardmarket blocks the <strong className="text-white">server</strong> (bot check). Cart fill runs on{' '}
+              <strong className="text-sky-300">your PC</strong>: real Chrome, customer address, DE seller ≥100 sales.
             </p>
-            {cardmarketReady === false && (
-              <div className="mt-3 rounded-lg border border-amber-500/40 bg-amber-950/40 p-3 text-sm text-amber-100">
-                <p className="font-medium">One-time setup: log in on the server</p>
-                <p className="mt-1 text-amber-200/90 text-xs">
-                  On your PC run <code className="text-amber-50">npm run cardmarket:login</code>, then upload
-                  the file from <code className="text-amber-50">.cardmarket/storage.json</code>.
-                </p>
-                <input
-                  ref={sessionFileRef}
-                  type="file"
-                  accept="application/json,.json"
-                  className="hidden"
-                  onChange={(e) => {
-                    const f = e.target.files?.[0];
-                    if (f) void handleUploadCardmarketSession(f);
-                  }}
-                />
-                <button
-                  type="button"
-                  disabled={sessionUploading}
-                  onClick={() => sessionFileRef.current?.click()}
-                  className="mt-2 inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold disabled:opacity-50"
-                >
-                  <Upload className="w-3.5 h-3.5" />
-                  {sessionUploading ? 'Uploading…' : 'Upload Cardmarket session'}
-                </button>
-              </div>
+            <ol className="mt-2 text-xs text-[#c4c4e0] list-decimal list-inside space-y-1">
+              <li>
+                Once: <code className="text-sky-200">npm run cardmarket:login</code> (sign in, pass bot check)
+              </li>
+              <li>
+                Keep running: <code className="text-sky-200">npm run cardmarket:local-bridge</code>
+              </li>
+              <li>Click <strong className="text-sky-300">Add to cart on this PC</strong> on a pending order</li>
+            </ol>
+            {localBridgeOnline === true && (
+              <p className="mt-2 text-xs text-emerald-400/90">Local bridge connected — ready to fill carts.</p>
             )}
-            {cardmarketReady === true && (
-              <p className="mt-2 text-xs text-emerald-400/90">Server session OK — cart automation is enabled.</p>
+            {localBridgeOnline === false && (
+              <p className="mt-2 text-xs text-amber-300/90">
+                Local bridge offline — start npm run cardmarket:local-bridge in C:\PA\Pack-Attack
+              </p>
+            )}
+            {cardmarketReady === false && (
+              <p className="mt-2 text-xs text-[#8888aa]">
+                Server: set FULFILLMENT_SCRIPT_KEY in .env (same value in your PC .env.local as the bridge).
+              </p>
             )}
             <p className="mt-3 text-xs text-[#8888aa]">
               {cardmarketPendingCount} pending (unassigned) · {cardmarketQueueCount} in Cardmarket queue
@@ -561,23 +502,15 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
                             !order.cardmarketPreparedAt)) ? (
                         <button
                           type="button"
-                          disabled={
-                            cardmarketSending === order.id ||
-                            order.items.length === 0 ||
-                            cardmarketReady !== true
-                          }
-                          title={
-                            cardmarketReady !== true
-                              ? 'Upload Cardmarket session in the banner above (one-time)'
-                              : 'Adds cards + customer address on Cardmarket (1–2 min)'
-                          }
+                          disabled={cardmarketSending === order.id || order.items.length === 0}
+                          title="Runs on your PC via local bridge (passes Cardmarket bot check)"
                           onClick={() => handleSendToCardmarket(order.id)}
                           className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold bg-sky-600 hover:bg-sky-500 text-white disabled:opacity-50"
                         >
                           <ShoppingCart className="w-4 h-4" />
                           {cardmarketSending === order.id
-                            ? 'Adding to cart… (wait)'
-                            : 'Add to Cardmarket cart'}
+                            ? 'Filling cart on this PC…'
+                            : 'Add to cart on this PC'}
                         </button>
                       ) : order.assignedShopId ? (
                         <span className="text-xs text-[#8888aa] px-2">Shop assigned — unassign for MKM</span>

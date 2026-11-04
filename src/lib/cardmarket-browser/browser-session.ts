@@ -1,6 +1,7 @@
 import { existsSync } from 'fs';
-import { chromium, type Browser, type BrowserContext, type Page } from 'playwright';
+import type { Browser, BrowserContext, Page } from 'playwright';
 import type { CardmarketBrowserConfig } from './config';
+import { launchCardmarketBrowser, STEALTH_INIT_SCRIPT } from './playwright-launch';
 
 export class CardmarketBrowserSession {
   private browser: Browser | null = null;
@@ -11,7 +12,7 @@ export class CardmarketBrowserSession {
   static requireStorageFile(config: CardmarketBrowserConfig): void {
     if (!existsSync(config.storageStatePath)) {
       throw new Error(
-        `Cardmarket browser session missing at ${config.storageStatePath}. Run: npm run cardmarket:login`
+        `Cardmarket session missing at ${config.storageStatePath}. Run: npm run cardmarket:login (on your PC, not the server).`
       );
     }
   }
@@ -19,11 +20,15 @@ export class CardmarketBrowserSession {
   async getPage(): Promise<Page> {
     if (!this.context) {
       CardmarketBrowserSession.requireStorageFile(this.config);
-      this.browser = await chromium.launch({ headless: this.config.headless });
+      this.browser = await launchCardmarketBrowser(this.config);
       this.context = await this.browser.newContext({
         storageState: this.config.storageStatePath,
         locale: 'en-GB',
+        viewport: { width: 1366, height: 900 },
+        userAgent:
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
       });
+      await this.context.addInitScript(STEALTH_INIT_SCRIPT);
     }
     const pages = this.context.pages();
     if (pages.length > 0) return pages[0]!;

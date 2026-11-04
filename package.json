@@ -29,6 +29,7 @@
     "test:cardmarket:unit": "node --import tsx --test tests/cardmarket/**/*.test.ts",
     "test:cardmarket:live": "tsx scripts/test-cardmarket-browser-dry-run.ts",
     "cardmarket:login": "tsx scripts/cardmarket-save-session.ts",
+    "cardmarket:local-bridge": "tsx scripts/cardmarket-local-bridge.ts",
     "cardmarket:mcp": "tsx scripts/cardmarket-mcp-server.ts"
   },
   "dependencies": {

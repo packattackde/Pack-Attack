@@ -19,19 +19,17 @@ export async function GET() {
 
   const config = loadCardmarketBrowserConfigFromEnv();
   const hasSession = isCardmarketBrowserConfigured(config);
-  const hasCreds =
-    Boolean(process.env.CARDMARKET_BROWSER_USERNAME?.trim()) &&
-    Boolean(process.env.CARDMARKET_BROWSER_PASSWORD?.trim());
-  const ready = hasSession || hasCreds;
+  const serverAutomation = config.allowServerAutomation && hasSession;
+  const hasFulfillmentKey = Boolean(process.env.FULFILLMENT_SCRIPT_KEY?.trim());
 
   return NextResponse.json({
-    ready,
+    ready: hasFulfillmentKey,
+    serverAutomation,
     hasSession,
-    hasCreds,
-    message: ready
-      ? hasSession
-        ? 'Server can add orders to Cardmarket cart.'
-        : 'Server will log in to Cardmarket on first cart run (env credentials).'
-      : 'Upload a session file or set CARDMARKET_BROWSER_USERNAME/PASSWORD on the server.',
+    hasFulfillmentKey,
+    useLocalBridge: !serverAutomation,
+    message: hasFulfillmentKey
+      ? 'Use Add to cart on this PC with npm run cardmarket:local-bridge running.'
+      : 'Set FULFILLMENT_SCRIPT_KEY on the server and in your PC .env.local, then run the local bridge.',
   });
 }

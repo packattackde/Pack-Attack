@@ -7,6 +7,7 @@ import {
   cardmarketShoppingCartUrl,
 } from './links';
 import { CardmarketBrowserSession } from './browser-session';
+import { assertNotBotBlocked, gotoCardmarket } from './bot-guard';
 import { addCheapestListingMatchingRules, scrapeProductListings } from './listings';
 import { listingMatchesRules } from './seller-rules';
 import type { CartSummary, PrepareCartResult, SelectedListing, ShippingAddressInput } from './types';
@@ -25,8 +26,9 @@ export class CardmarketBrowserFulfillment {
 
   async ensureLoggedIn(): Promise<{ username: string | null }> {
     const page = await this.session.getPage();
-    await page.goto(this.config.gameBasePath, { waitUntil: 'domcontentloaded' });
+    await gotoCardmarket(page, this.config.gameBasePath);
     await dismissCookieBanner(page);
+    await assertNotBotBlocked(page);
     const logout = page.getByRole('button', { name: 'Log out' });
     if (!(await logout.isVisible().catch(() => false))) {
       throw new Error(
@@ -41,7 +43,7 @@ export class CardmarketBrowserFulfillment {
   async getCartSummary(game = 'Magic'): Promise<CartSummary> {
     const page = await this.session.getPage();
     const url = cardmarketShoppingCartUrl({ game });
-    await page.goto(url, { waitUntil: 'domcontentloaded' });
+    await gotoCardmarket(page, url);
     await dismissCookieBanner(page);
     return readCartSummary(page, url);
   }
@@ -49,7 +51,7 @@ export class CardmarketBrowserFulfillment {
   async emptyCart(game = 'Magic'): Promise<CartSummary> {
     const page = await this.session.getPage();
     const cartUrl = cardmarketShoppingCartUrl({ game });
-    await page.goto(cartUrl, { waitUntil: 'domcontentloaded' });
+    await gotoCardmarket(page, cartUrl);
     await dismissCookieBanner(page);
     const removeAll = page.getByRole('button', { name: 'Remove all articles' });
     if (await removeAll.isVisible().catch(() => false)) {
@@ -66,14 +68,17 @@ export class CardmarketBrowserFulfillment {
   ): Promise<{ productUrl: string; selectedListing: SelectedListing }> {
     const page = await this.session.getPage();
     const searchUrl = cardmarketProductSearchUrl(search, { game });
-    await page.goto(searchUrl, { waitUntil: 'domcontentloaded' });
+    await gotoCardmarket(page, searchUrl);
     await dismissCookieBanner(page);
     const firstProduct = page.locator('a[href*="/Products/Singles/"]').first();
-    await firstProduct.waitFor({ state: 'visible', timeout: 20_000 });
+    await firstProduct.waitFor({ state: 'visible', timeout: 25_000 }).catch(async () => {
+      await assertNotBotBlocked(page);
+      throw new Error(`No product found for search: ${search}`);
+    });
     const href = await firstProduct.getAttribute('href');
     if (!href) throw new Error(`No product found for search: ${search}`);
     const productUrl = href.startsWith('http') ? href : `https://www.cardmarket.com${href}`;
-    await page.goto(productUrl, { waitUntil: 'domcontentloaded' });
+    await gotoCardmarket(page, productUrl);
     await dismissCookieBanner(page);
     const pick = await addCheapestListingMatchingRules(page, this.config.sellerRules);
     return { productUrl, selectedListing: toSelectedListing(pick) };
@@ -81,7 +86,7 @@ export class CardmarketBrowserFulfillment {
 
   async addFromProductUrl(productUrl: string): Promise<SelectedListing> {
     const page = await this.session.getPage();
-    await page.goto(productUrl, { waitUntil: 'domcontentloaded' });
+    await gotoCardmarket(page, productUrl);
     await dismissCookieBanner(page);
     const pick = await addCheapestListingMatchingRules(page, this.config.sellerRules);
     return toSelectedListing(pick);
@@ -90,7 +95,7 @@ export class CardmarketBrowserFulfillment {
   async addFromArticleId(idArticle: number): Promise<SelectedListing> {
     const page = await this.session.getPage();
     const url = cardmarketArticleUrl(idArticle);
-    await page.goto(url, { waitUntil: 'domcontentloaded' });
+    await gotoCardmarket(page, url);
     await dismissCookieBanner(page);
     const listings = await scrapeProductListings(page);
     const listing = listings[0];
@@ -106,7 +111,7 @@ export class CardmarketBrowserFulfillment {
 
   async setCartShippingAddress(address: ShippingAddressInput, game = 'Magic'): Promise<void> {
     const page = await this.session.getPage();
-    await page.goto(cardmarketShoppingCartUrl({ game }), { waitUntil: 'domcontentloaded' });
+    await gotoCardmarket(page, cardmarketShoppingCartUrl({ game }));
     await dismissCookieBanner(page);
 
     const empty = page.getByText('Your shopping cart is empty', { exact: false });

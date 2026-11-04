@@ -1,15 +1,19 @@
 import { prisma } from '@/lib/prisma';
 import { CardmarketBrowserFulfillment } from './fulfillment';
-import { loadCardmarketBrowserConfigFromEnv } from './config';
-import { ensureCardmarketStorageState } from './session-login';
+import {
+  isCardmarketBrowserConfigured,
+  loadCardmarketBrowserConfigFromEnv,
+} from './config';
 import {
   preparePullforgeOrderInCardmarket,
   pullforgeOrderToShipment,
 } from './prepare-pullforge-order';
 import { cardmarketShoppingCartUrl } from './links';
 import { notifyAdminsCardmarketCartReady } from './notify-admin';
+import { CardmarketBotCheckError } from './bot-guard';
 
 const runningOrderIds = new Set<string>();
+const JOB_TIMEOUT_MS = 120_000;
 
 export function isCardmarketCartJobRunning(orderId: string): boolean {
   return runningOrderIds.has(orderId);
@@ -30,8 +34,19 @@ async function executeCardmarketCartJob(orderId: string): Promise<void> {
   const config = loadCardmarketBrowserConfigFromEnv();
   let fulfillment: CardmarketBrowserFulfillment | null = null;
 
-  try {
-    await ensureCardmarketStorageState(config);
+  const run = async (): Promise<void> => {
+    let localFulfillment: CardmarketBrowserFulfillment | null = null;
+    try {
+    if (!config.allowServerAutomation) {
+      throw new Error(
+        'Server cart automation is off (Cardmarket bot check). Use “Add to cart on this PC” with the local bridge running.'
+      );
+    }
+    if (!isCardmarketBrowserConfigured(config)) {
+      throw new Error(
+        'No Cardmarket session on server. Use local cart fill on your PC (npm run cardmarket:local-bridge).'
+      );
+    }
 
     const existing = await prisma.order.findUnique({
       where: { id: orderId },
@@ -50,9 +65,10 @@ async function executeCardmarketCartJob(orderId: string): Promise<void> {
       },
     });
 
-    fulfillment = new CardmarketBrowserFulfillment(config);
+    localFulfillment = new CardmarketBrowserFulfillment(config);
+    fulfillment = localFulfillment;
     const browserPrep = await preparePullforgeOrderInCardmarket(
-      fulfillment,
+      localFulfillment,
       pullforgeOrderToShipment(existing)
     );
 
@@ -73,9 +89,27 @@ async function executeCardmarketCartJob(orderId: string): Promise<void> {
       lines: existing.items.map((i) => i.cardName),
       cartUrl,
     }).catch((err) => console.error('Cardmarket notify email failed:', err));
+    } finally {
+      await localFulfillment?.close();
+    }
+  };
+
+  const timeout = new Promise<never>((_, reject) => {
+    setTimeout(
+      () => reject(new Error('Cardmarket cart job timed out (bot check or slow page).')),
+      JOB_TIMEOUT_MS
+    );
+  });
+
+  try {
+    await Promise.race([run(), timeout]);
   } catch (error) {
     const message =
-      error instanceof Error ? error.message : 'Cardmarket cart automation failed';
+      error instanceof CardmarketBotCheckError
+        ? error.message
+        : error instanceof Error
+          ? error.message
+          : 'Cardmarket cart automation failed';
     console.error(`Cardmarket cart job ${orderId}:`, error);
     await prisma.order
       .update({
@@ -83,7 +117,5 @@ async function executeCardmarketCartJob(orderId: string): Promise<void> {
         data: { cardmarketLastError: message },
       })
       .catch(() => undefined);
-  } finally {
-    await fulfillment?.close();
   }
 }

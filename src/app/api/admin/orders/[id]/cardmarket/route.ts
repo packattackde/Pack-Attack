@@ -104,15 +104,21 @@ export async function POST(
     }
 
     const config = loadCardmarketBrowserConfigFromEnv();
-    const hasSession = isCardmarketBrowserConfigured(config);
-    const hasCreds =
-      Boolean(process.env.CARDMARKET_BROWSER_USERNAME?.trim()) &&
-      Boolean(process.env.CARDMARKET_BROWSER_PASSWORD?.trim());
-    if (!hasSession && !hasCreds) {
+    if (!config.allowServerAutomation) {
       return NextResponse.json(
         {
           error:
-            'Cardmarket not set up on server: upload session in Admin → Orders, or add CARDMARKET_BROWSER_USERNAME/PASSWORD to server .env.',
+            'Use “Add to cart on this PC” (Cardmarket blocks the server). Start: npm run cardmarket:local-bridge',
+          useLocalBridge: true,
+        },
+        { status: 503 }
+      );
+    }
+    if (!isCardmarketBrowserConfigured(config)) {
+      return NextResponse.json(
+        {
+          error: 'No Cardmarket session on server. Use local bridge on your PC instead.',
+          useLocalBridge: true,
         },
         { status: 503 }
       );
