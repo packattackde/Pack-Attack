@@ -18,19 +18,23 @@ import {
 
 const PORT = Number.parseInt(process.env.CARDMARKET_LOCAL_BRIDGE_PORT ?? '3847', 10);
 const BASE = process.env.PULLFORGE_URL?.trim() ?? 'https://pack-attack.de';
-const KEY = process.env.FULFILLMENT_SCRIPT_KEY?.trim();
-
-if (!KEY) {
-  console.error('Missing FULFILLMENT_SCRIPT_KEY in .env.local (same value as on the server).');
-  process.exit(1);
+function requireFulfillmentKey(): string {
+  const k = process.env.FULFILLMENT_SCRIPT_KEY?.trim();
+  if (!k) {
+    console.error('Missing FULFILLMENT_SCRIPT_KEY in .env.local (same value as on the server).');
+    process.exit(1);
+  }
+  return k;
 }
+
+const FULFILLMENT_KEY = requireFulfillmentKey();
 
 async function runFill(orderId: string): Promise<{ success: true; cartUrl: string } | { success: false; error: string }> {
   try {
     console.log(`[cardmarket-bridge] Filling order ${orderId}…`);
-    const shipment = await fetchShipmentFromPullforge(BASE, orderId, KEY);
+    const shipment = await fetchShipmentFromPullforge(BASE, orderId, FULFILLMENT_KEY);
     const { cartUrl } = await fulfillPullforgeOrderLocally(shipment);
-    await markOrderPreparedOnPullforge(BASE, orderId, KEY, cartUrl);
+    await markOrderPreparedOnPullforge(BASE, orderId, FULFILLMENT_KEY, cartUrl);
     console.log(`[cardmarket-bridge] Done → ${cartUrl}`);
     return { success: true, cartUrl };
   } catch (e) {
