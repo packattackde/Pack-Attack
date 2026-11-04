@@ -39,6 +39,8 @@ async function getOrders() {
     createdAt: order.createdAt.toISOString(),
     updatedAt: order.updatedAt.toISOString(),
     assignedAt: order.assignedAt?.toISOString() || null,
+    cardmarketQueuedAt: order.cardmarketQueuedAt?.toISOString() ?? null,
+    cardmarketPreparedAt: order.cardmarketPreparedAt?.toISOString() ?? null,
     items: order.items.map(item => ({
       ...item,
       coinValue: Number(item.coinValue),
@@ -87,7 +89,9 @@ export default async function AdminOrdersPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold text-white">Order Management</h1>
-        <p className="text-[#8888aa] mt-1">View and manage all customer orders. Assign orders to shop owners for fulfillment.</p>
+        <p className="text-[#8888aa] mt-1">
+          View and manage customer orders. Assign to shops or send individual PENDING orders to Cardmarket (Processing).
+        </p>
       </div>
 
       <OrdersClient orders={orders} shops={shops} />

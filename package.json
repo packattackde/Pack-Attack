@@ -25,7 +25,11 @@
     "test:e2e": "playwright test tests/e2e/",
     "test:report": "playwright show-report",
     "neon:dev-branch": "powershell -ExecutionPolicy Bypass -File ./scripts/neon-create-dev-branch.ps1",
-    "i18n:check": "tsx scripts/check-i18n-parity.ts"
+    "i18n:check": "tsx scripts/check-i18n-parity.ts",
+    "test:cardmarket:unit": "node --import tsx --test tests/cardmarket/**/*.test.ts",
+    "test:cardmarket:live": "tsx scripts/test-cardmarket-browser-dry-run.ts",
+    "cardmarket:login": "tsx scripts/cardmarket-save-session.ts",
+    "cardmarket:mcp": "tsx scripts/cardmarket-mcp-server.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -65,7 +69,10 @@
     "zustand": "^5.0.8"
   },
   "devDependencies": {
+    "@modelcontextprotocol/sdk": "^1.25.0",
     "@playwright/test": "^1.57.0",
+    "dotenv": "^17.2.3",
+    "playwright": "^1.57.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/node-cron": "^3.0.11",

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Package, Truck, CheckCircle, Clock, XCircle, ChevronDown, ChevronUp, MapPin, Mail, User, Coins, Euro, Store, Link2, Save } from 'lucide-react';
+import { Package, Truck, CheckCircle, Clock, XCircle, ChevronDown, ChevronUp, MapPin, Mail, User, Coins, Euro, Store, Link2, Save, ShoppingCart, ExternalLink } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { useTranslations } from 'next-intl';
 
@@ -43,6 +43,10 @@ type Order = {
   assignedShopId: string | null;
   assignedAt: string | null;
   assignedShop: Shop | null;
+  fulfillmentChannel: 'SHOP' | 'CARDMARKET' | null;
+  cardmarketQueuedAt: string | null;
+  cardmarketPreparedAt: string | null;
+  cardmarketLastError: string | null;
   createdAt: string;
   user: {
     id: string;
@@ -67,6 +71,7 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
   const [updatingOrder, setUpdatingOrder] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState<string>('ALL');
+  const [cardmarketSending, setCardmarketSending] = useState<string | null>(null);
   const [trackingInputs, setTrackingInputs] = useState<Record<string, { number: string; url: string }>>({});
 
   const handleStatusUpdate = async (orderId: string, newStatus: string) => {
@@ -104,6 +109,39 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
       });
     } finally {
       setUpdatingOrder(null);
+    }
+  };
+
+  const handleSendToCardmarket = async (orderId: string) => {
+    setCardmarketSending(orderId);
+    try {
+      const res = await fetch(`/api/admin/orders/${orderId}/cardmarket`, { method: 'POST' });
+      const data = await res.json();
+      if (!res.ok) {
+        addToast({
+          title: 'Cardmarket',
+          description: data.error || 'Failed to send order to Cardmarket',
+          variant: 'destructive',
+        });
+        return;
+      }
+      setOrders(orders.map((o) => (o.id === orderId ? { ...o, ...data.order } : o)));
+      addToast({
+        title: 'Sent to Cardmarket',
+        description: data.cartUrl
+          ? 'Order is Processing. Open the Cardmarket cart to finish checkout.'
+          : 'Order marked Processing (Cardmarket).',
+      });
+      router.refresh();
+    } catch (e) {
+      console.error(e);
+      addToast({
+        title: 'Error',
+        description: 'Failed to send order to Cardmarket',
+        variant: 'destructive',
+      });
+    } finally {
+      setCardmarketSending(null);
     }
   };
 
@@ -189,9 +227,14 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
     }
   };
 
-  const filteredOrders = filterStatus === 'ALL' 
-    ? orders 
-    : orders.filter(o => o.status === filterStatus);
+  const filteredOrders =
+    filterStatus === 'ALL'
+      ? orders
+      : filterStatus === 'CARDMARKET'
+        ? orders.filter(
+            (o) => o.fulfillmentChannel === 'CARDMARKET' && o.status === 'PROCESSING'
+          )
+        : orders.filter((o) => o.status === filterStatus);
 
   const orderStats = {
     total: orders.length,
@@ -229,7 +272,7 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
 
       {/* Filter */}
       <div className="flex gap-2 flex-wrap">
-        {['ALL', 'PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'].map((status) => (
+        {['ALL', 'PENDING', 'PROCESSING', 'CARDMARKET', 'SHIPPED', 'DELIVERED', 'CANCELLED'].map((status) => (
           <button
             key={status}
             onClick={() => setFilterStatus(status)}
@@ -239,7 +282,11 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
                 : 'bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md text-[#8888aa] hover:text-white'
             }`}
           >
-            {status === 'ALL' ? 'All Orders' : statusConfig[status]?.label || status}
+            {status === 'ALL'
+              ? 'All Orders'
+              : status === 'CARDMARKET'
+                ? 'Cardmarket'
+                : statusConfig[status]?.label || status}
           </button>
         ))}
       </div>
@@ -291,6 +338,12 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
                         <div className="px-3 py-1 rounded-full text-xs font-medium bg-purple-500/20 text-purple-400 flex items-center gap-1">
                           <Store className="w-3 h-3" />
                           {order.assignedShop.name}
+                        </div>
+                      )}
+                      {order.fulfillmentChannel === 'CARDMARKET' && (
+                        <div className="px-3 py-1 rounded-full text-xs font-medium bg-sky-500/20 text-sky-300 flex items-center gap-1">
+                          <ShoppingCart className="w-3 h-3" />
+                          Cardmarket
                         </div>
                       )}
                       <div className={`px-3 py-1 rounded-full text-sm font-medium ${status.color}`}>
@@ -360,6 +413,71 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
                           </div>
                         </div>
                       </div>
+                    </div>
+
+                    {/* Cardmarket fulfillment */}
+                    <div className="bg-[#100d22] border border-sky-500/25 shadow-md rounded-xl p-4">
+                      <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
+                        <ShoppingCart className="w-4 h-4 text-sky-400" />
+                        Cardmarket fulfillment
+                      </h4>
+                      {order.fulfillmentChannel === 'CARDMARKET' ? (
+                        <div className="space-y-2 text-sm text-[#8888aa]">
+                          <p>
+                            <span className="text-sky-300 font-medium">Processing</span> via Cardmarket
+                            {order.cardmarketQueuedAt && (
+                              <span className="text-gray-500">
+                                {' '}
+                                · queued{' '}
+                                {new Date(order.cardmarketQueuedAt).toLocaleString('de-DE')}
+                              </span>
+                            )}
+                          </p>
+                          {order.cardmarketPreparedAt && (
+                            <p className="text-[#E879F9]">
+                              Cart prepared{' '}
+                              {new Date(order.cardmarketPreparedAt).toLocaleString('de-DE')}
+                            </p>
+                          )}
+                          {order.cardmarketLastError && (
+                            <p className="text-red-400">{order.cardmarketLastError}</p>
+                          )}
+                          <a
+                            href="https://www.cardmarket.com/en/Magic/ShoppingCart"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-sky-300 hover:text-sky-200"
+                          >
+                            <ExternalLink className="w-3 h-3" />
+                            Open Cardmarket cart
+                          </a>
+                        </div>
+                      ) : order.status === 'PENDING' && !order.assignedShopId ? (
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                          <p className="text-sm text-[#8888aa] flex-1">
+                            Send this order to Cardmarket: status becomes{' '}
+                            <strong className="text-white">Processing</strong>, one cart per order.
+                          </p>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleSendToCardmarket(order.id);
+                            }}
+                            disabled={cardmarketSending === order.id}
+                            className="px-4 py-2 bg-sky-600 hover:bg-sky-500 disabled:opacity-50 text-white rounded-lg text-sm font-medium flex items-center gap-2 shrink-0"
+                          >
+                            <ShoppingCart className="w-4 h-4" />
+                            {cardmarketSending === order.id ? 'Sending…' : 'Send to Cardmarket'}
+                          </button>
+                        </div>
+                      ) : (
+                        <p className="text-sm text-[#8888aa]">
+                          {order.assignedShopId
+                            ? 'Unassign the shop to use Cardmarket for this order.'
+                            : 'Only PENDING orders can be sent to Cardmarket.'}
+                        </p>
+                      )}
                     </div>
 
                     {/* Shop Assignment */}

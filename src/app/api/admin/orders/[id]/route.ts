@@ -133,7 +133,12 @@ export async function PATCH(
           prisma.shopBoxOrder.deleteMany({ where: { sourceOrderId: id } }),
           prisma.order.update({
             where: { id },
-            data: { ...updateData, assignedShopId: null, assignedAt: null },
+            data: {
+              ...updateData,
+              assignedShopId: null,
+              assignedAt: null,
+              fulfillmentChannel: null,
+            },
           }),
         ]);
       } else {
@@ -173,7 +178,12 @@ export async function PATCH(
           }
           await tx.order.update({
             where: { id },
-            data: { ...updateData, assignedShopId, assignedAt: new Date() },
+            data: {
+              ...updateData,
+              assignedShopId,
+              assignedAt: new Date(),
+              fulfillmentChannel: 'SHOP',
+            },
           });
           return created;
         });

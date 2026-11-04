@@ -448,6 +448,11 @@ enum EmailStatus {
   BOUNCED
 }
 
+enum OrderFulfillmentChannel {
+  SHOP
+  CARDMARKET
+}
+
 model Order {
   id              String                @id @default(cuid())
   userId          String
@@ -467,6 +472,11 @@ model Order {
   assignedShopId  String?
   assignedShop    Shop?                 @relation(fields: [assignedShopId], references: [id], onDelete: SetNull)
   assignedAt      DateTime?
+  // Cardmarket browser fulfillment (admin → PROCESSING → MKM cart)
+  fulfillmentChannel   OrderFulfillmentChannel?
+  cardmarketQueuedAt   DateTime?
+  cardmarketPreparedAt DateTime?
+  cardmarketLastError  String?
   // Tracking info (can be filled by shop or admin)
   trackingNumber  String?
   trackingUrl     String?
@@ -479,6 +489,7 @@ model Order {
   @@index([userId])
   @@index([status])
   @@index([assignedShopId])
+  @@index([fulfillmentChannel])
   @@index([userId, status]) // User order filtering
   @@index([createdAt]) // Date-based queries
   @@index([assignedShopId, status]) // Shop order filtering

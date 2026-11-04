@@ -1,0 +1,18 @@
+---
+description: Cardmarket browser fulfillment — seller filters and checkout policy. Use when automating MKM cart prep or editing cardmarket-browser code.
+globs:
+  - src/lib/cardmarket-browser/**
+  - scripts/cardmarket*.ts
+  - docs/cardmarket*.md
+  - src/app/api/admin/orders/**/cardmarket/**
+---
+
+# Cardmarket fulfillment (Pullforge)
+
+- **No MKM API** — use Playwright + `.cardmarket/storage.json` (`npm run cardmarket:login`).
+- **Seller rules (defaults):** Germany only (`sellerCountry[7]`), ≥100 **Sales** on listing tooltip, cheapest match.
+- **Admin:** PENDING orders → **Send to Cardmarket** → `PROCESSING` + `fulfillmentChannel = CARDMARKET`. One Pullforge order per MKM cart checkout.
+- **Never checkout** unless `CARDMARKET_ALLOW_CHECKOUT=true` and user explicitly asked.
+- Env: `CARDMARKET_SELLER_COUNTRIES`, `CARDMARKET_MIN_SELLER_SALES`, `FULFILLMENT_NOTIFY_EMAIL`, optional `CARDMARKET_RUN_BROWSER=true` on dev machine only.
+
+See `docs/cardmarket-fulfillment-flow.md`.
