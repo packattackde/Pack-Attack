@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Coins } from 'lucide-react';
 import { NeonForgeBoosterPack, PACK_TEAR_SEAM_TOP } from '@/components/NeonForgeBoosterPack';
-import { NEON_FORGE_CLIP } from '@/lib/booster-pack-theme';
+import { BOOSTER_TOP_FLAP_PATH, BOOSTER_VIEWBOX } from '@/lib/booster-pack-theme';
 
 // ─── Types ──────────────────────────────────────────────────────────
 
@@ -178,8 +178,8 @@ export function PackOpeningFlow({
     setTearProgress(pct);
 
     // Build jagged tear line
-    const svgX = (x / rect.width) * 208;
-    const centerY = 28;
+    const svgX = (x / rect.width) * BOOSTER_VIEWBOX.w;
+    const centerY = 42;
     const jitter = (Math.random() - 0.5) * 14;
     const cursorOffset = ((y - rect.height / 2) / (rect.height / 2)) * 8;
     const svgY = centerY + cursorOffset + jitter;
@@ -398,7 +398,7 @@ export function PackOpeningFlow({
         {(phase === 'booster' || phase === 'emerging' || phase === 'revealing' || phase === 'bestPull') && (
           <motion.div
             className="absolute w-[min(290px,88vw)]"
-            style={{ aspectRatio: '208/320' }}
+            style={{ aspectRatio: `${BOOSTER_VIEWBOX.w}/${BOOSTER_VIEWBOX.h}` }}
             animate={
               phase === 'booster' && (boosterPhase === 'torn' || boosterPhase === 'glow')
                 ? { scale: 0.85, y: 30 }
@@ -429,25 +429,26 @@ export function PackOpeningFlow({
                   revealGlow={boosterPhase === 'glow'}
                   tearLineActive={boosterPhase === 'tilt' || boosterPhase === 'tearing'}
                   tearProgress={tearProgress}
-                />
-                <motion.div
-                  className="pointer-events-none absolute inset-0 mx-auto max-w-[min(260px,85vw)]"
-                  style={{
-                    aspectRatio: '208/320',
-                    clipPath: NEON_FORGE_CLIP,
-                    background: holoBackground,
-                    mixBlendMode: 'color-dodge',
-                  }}
-                />
-                <motion.div
-                  className="pointer-events-none absolute h-40 w-40 max-w-[min(260px,85vw)]"
-                  style={{
-                    clipPath: NEON_FORGE_CLIP,
-                    background: 'radial-gradient(circle, rgba(255,255,255,0.18), transparent 60%)',
-                    left: specularLeft,
-                    top: specularTop,
-                    mixBlendMode: 'overlay',
-                  }}
+                  overlay={
+                    <>
+                      <motion.div
+                        className="pointer-events-none absolute inset-0"
+                        style={{
+                          background: holoBackground,
+                          mixBlendMode: 'color-dodge',
+                        }}
+                      />
+                      <motion.div
+                        className="pointer-events-none absolute h-36 w-36"
+                        style={{
+                          background: 'radial-gradient(circle, rgba(255,255,255,0.2), transparent 60%)',
+                          left: specularLeft,
+                          top: specularTop,
+                          mixBlendMode: 'overlay',
+                        }}
+                      />
+                    </>
+                  }
                 />
               </div>
             </motion.div>
@@ -457,7 +458,7 @@ export function PackOpeningFlow({
               <div
                 ref={tearZoneRef}
                 className="absolute left-0 right-0"
-                style={{ top: 0, height: '18%', touchAction: 'none', cursor: 'none', zIndex: 50 }}
+                style={{ top: 0, height: '16%', touchAction: 'none', cursor: 'none', zIndex: 50 }}
                 onMouseDown={startTear}
                 onMouseMove={moveTear}
                 onMouseUp={endTear}
@@ -485,7 +486,7 @@ export function PackOpeningFlow({
                   </>
                 )}
                 <svg
-                  viewBox="0 0 208 56"
+                  viewBox="0 0 210 56"
                   className="absolute inset-0 w-full h-full pointer-events-none"
                   preserveAspectRatio="none"
                 >
@@ -540,8 +541,8 @@ export function PackOpeningFlow({
             <AnimatePresence>
               {phase === 'booster' && (boosterPhase === 'torn' || boosterPhase === 'glow') && (
                 <motion.div
-                  className="absolute top-0 left-0 right-0 z-30 overflow-hidden"
-                  style={{ height: '9%', transformOrigin: '30% bottom', clipPath: NEON_FORGE_CLIP }}
+                  className="absolute top-0 left-0 right-0 z-30"
+                  style={{ height: '24%', transformOrigin: '30% bottom' }}
                   initial={{ rotateX: 0, rotateZ: 0, x: 0, y: 0, opacity: 1 }}
                   animate={{
                     rotateX: [0, 40, 90, 120],
@@ -556,12 +557,16 @@ export function PackOpeningFlow({
                     times: [0, 0.25, 0.6, 1],
                   }}
                 >
-                  <div
-                    className="h-[320px] w-full scale-[1.02]"
-                    style={{
-                      background: `linear-gradient(180deg, #ff6ec4 0%, #ff2ea6 40%, #191233 100%)`,
-                    }}
-                  />
+                  <svg viewBox={`0 0 ${BOOSTER_VIEWBOX.w} 88`} className="h-full w-full">
+                    <defs>
+                      <linearGradient id="flapGradPOF" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#ff6ec4" />
+                        <stop offset="45%" stopColor="#ff2ea6" />
+                        <stop offset="100%" stopColor="#2a1458" />
+                      </linearGradient>
+                    </defs>
+                    <path d={BOOSTER_TOP_FLAP_PATH} fill="url(#flapGradPOF)" />
+                  </svg>
                 </motion.div>
               )}
             </AnimatePresence>

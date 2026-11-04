@@ -13,8 +13,34 @@ import {
 export const PACK_BG_1 = '#2A1458';
 export const PACK_BG_2 = '#0A0A2A';
 
-export const NEON_FORGE_CLIP =
-  'polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px)';
+/** Classic sealed booster — crimped top & bottom (viewBox 0 0 210 370) */
+export const BOOSTER_VIEWBOX = { w: 210, h: 370 } as const;
+
+export const BOOSTER_PATH = `
+  M 6,24 L 10,18 L 16,24 L 22,18 L 28,24 L 34,18 L 40,24 L 46,18 L 52,24 L 58,18
+  L 64,24 L 70,18 L 76,24 L 82,18 L 88,24 L 94,18 L 100,24 L 106,18 L 112,24 L 118,18
+  L 124,24 L 130,18 L 136,24 L 142,18 L 148,24 L 154,18 L 160,24 L 166,18 L 172,24
+  L 178,18 L 184,24 L 190,18 L 196,24 L 202,18 L 206,24
+  L 206,346
+  L 202,352 L 196,346 L 190,352 L 184,346 L 178,352 L 172,346 L 166,352 L 160,346
+  L 154,352 L 148,346 L 142,352 L 136,346 L 130,352 L 124,346 L 118,352 L 112,346
+  L 106,352 L 100,346 L 94,352 L 88,346 L 82,352 L 76,346 L 70,352 L 64,346
+  L 58,352 L 52,346 L 46,352 L 40,346 L 34,352 L 28,346 L 22,352 L 16,346
+  L 10,352 L 6,346 L 4,346 Z
+`.trim();
+
+/** Top flap path (for tear-off animation) */
+export const BOOSTER_TOP_FLAP_PATH = `
+  M 6,24 L 10,18 L 16,24 L 22,18 L 28,24 L 34,18 L 40,24 L 46,18 L 52,24 L 58,18
+  L 64,24 L 70,18 L 76,24 L 82,18 L 88,24 L 94,18 L 100,24 L 106,18 L 112,24 L 118,18
+  L 124,24 L 130,18 L 136,24 L 142,18 L 148,24 L 154,18 L 160,24 L 166,18 L 172,24
+  L 178,18 L 184,24 L 190,18 L 196,24 L 202,18 L 206,24
+  L 206,88 L 4,88 Z
+`.trim();
+
+export function boosterClipId(suffix: string) {
+  return `booster-clip-${suffix}`;
+}
 
 export type BoosterPackPattern = 'diamond' | 'wave' | 'star' | 'chevron' | 'burst' | 'grid';
 
