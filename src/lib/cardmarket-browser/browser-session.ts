@@ -1,44 +1,51 @@
-import { existsSync } from 'fs';
-import type { Browser, BrowserContext, Page } from 'playwright';
+import { chromium, type Browser, type Page } from 'playwright';
 import type { CardmarketBrowserConfig } from './config';
-import { launchCardmarketBrowser, STEALTH_INIT_SCRIPT } from './playwright-launch';
 
+/**
+ * Uses your real Chrome (remote debugging) — not Playwright-launched Chromium.
+ * Cardmarket bot checks block automated browser launches; CDP attach does not.
+ */
 export class CardmarketBrowserSession {
   private browser: Browser | null = null;
-  private context: BrowserContext | null = null;
 
   constructor(private readonly config: CardmarketBrowserConfig) {}
 
-  static requireStorageFile(config: CardmarketBrowserConfig): void {
-    if (!existsSync(config.storageStatePath)) {
-      throw new Error(
-        `Cardmarket session missing at ${config.storageStatePath}. Run: npm run cardmarket:login (on your PC, not the server).`
-      );
-    }
-  }
-
   async getPage(): Promise<Page> {
-    if (!this.context) {
-      CardmarketBrowserSession.requireStorageFile(this.config);
-      this.browser = await launchCardmarketBrowser(this.config);
-      this.context = await this.browser.newContext({
-        storageState: this.config.storageStatePath,
-        locale: 'en-GB',
-        viewport: { width: 1366, height: 900 },
-        userAgent:
-          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
-      });
-      await this.context.addInitScript(STEALTH_INIT_SCRIPT);
+    if (!this.browser) {
+      const cdpUrl = this.config.cdpUrl;
+      try {
+        this.browser = await chromium.connectOverCDP(cdpUrl, { timeout: 8000 });
+      } catch {
+        throw new Error(
+          'Cannot connect to Chrome. Run: npm run cardmarket:chrome-debug — log into Cardmarket in that Chrome window, then retry auto-fill.'
+        );
+      }
+
+      const context = this.browser.contexts()[0];
+      if (!context) {
+        throw new Error('Chrome has no browser context. Restart npm run cardmarket:chrome-debug.');
+      }
+
+      const mkmPage = context.pages().find((p) => p.url().includes('cardmarket.com'));
+      if (mkmPage) return mkmPage;
+
+      const page = await context.newPage();
+      await page.goto('https://www.cardmarket.com/en/', { waitUntil: 'domcontentloaded' });
+      return page;
     }
-    const pages = this.context.pages();
+
+    const context = this.browser.contexts()[0];
+    if (!context) throw new Error('Chrome disconnected.');
+    const pages = context.pages();
     if (pages.length > 0) return pages[0]!;
-    return this.context.newPage();
+    return context.newPage();
   }
 
+  /** Disconnect Playwright from Chrome; does not quit the user’s browser. */
   async close(): Promise<void> {
-    await this.context?.close();
-    await this.browser?.close();
-    this.context = null;
-    this.browser = null;
+    if (this.browser) {
+      await this.browser.close();
+      this.browser = null;
+    }
   }
 }

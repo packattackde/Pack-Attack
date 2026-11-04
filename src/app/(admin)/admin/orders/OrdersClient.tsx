@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
   Package,
@@ -89,22 +90,7 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
   const [updatingOrder, setUpdatingOrder] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState<string>('ALL');
-  const [cardmarketSending, setCardmarketSending] = useState<string | null>(null);
-  const [cardmarketReady, setCardmarketReady] = useState<boolean | null>(null);
-  const [localBridgeOnline, setLocalBridgeOnline] = useState<boolean | null>(null);
-
   const CARDMARKET_CART_URL = 'https://www.cardmarket.com/en/Magic/ShoppingCart';
-  const LOCAL_BRIDGE = 'http://127.0.0.1:3847';
-
-  useEffect(() => {
-    fetch('/api/admin/cardmarket/status')
-      .then((r) => r.json())
-      .then((d) => setCardmarketReady(Boolean(d.ready)))
-      .catch(() => setCardmarketReady(false));
-    fetch(`${LOCAL_BRIDGE}/health`)
-      .then((r) => setLocalBridgeOnline(r.ok))
-      .catch(() => setLocalBridgeOnline(false));
-  }, []);
 
   const cardmarketQueueCount = orders.filter(
     (o) => o.fulfillmentChannel === 'CARDMARKET' && o.status === 'PROCESSING'
@@ -150,26 +136,6 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
     } finally {
       setUpdatingOrder(null);
     }
-  };
-
-  const handleSendToCardmarket = (orderId: string) => {
-    const fillUrl = `${LOCAL_BRIDGE}/fill/${encodeURIComponent(orderId)}`;
-    const tab = window.open(fillUrl, '_blank', 'noopener,noreferrer');
-    if (!tab) {
-      addToast({
-        title: 'Pop-up blocked',
-        description: `Allow pop-ups, or open: ${fillUrl}`,
-        variant: 'destructive',
-      });
-      return;
-    }
-    addToast({
-      title: 'Filling cart on this PC',
-      description:
-        'Watch the new localhost tab and Chrome window. First time? Run npm run cardmarket:login in Pack-Attack.',
-    });
-    setCardmarketSending(orderId);
-    window.setTimeout(() => setCardmarketSending(null), 90_000);
   };
 
   const handleShopAssignment = async (orderId: string, shopId: string | null) => {
@@ -282,31 +248,10 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
               Cardmarket warehouse
             </h2>
             <p className="mt-2 text-sm text-[#c4c4e0]">
-              Cardmarket blocks the <strong className="text-white">server</strong> (bot check). Cart fill runs on{' '}
-              <strong className="text-sky-300">your PC</strong>: real Chrome, customer address, DE seller ≥100 sales.
+              Cardmarket bot protection blocks automated browsers. Use{' '}
+              <strong className="text-sky-300">Fulfill on Cardmarket</strong> — copy customer address, open
+              search links in your normal Chrome (already logged in), add to cart, pay.
             </p>
-            <ol className="mt-2 text-xs text-[#c4c4e0] list-decimal list-inside space-y-1">
-              <li>
-                Once: <code className="text-sky-200">npm run cardmarket:login</code> (sign in, pass bot check)
-              </li>
-              <li>
-                Keep running: <code className="text-sky-200">npm run cardmarket:local-bridge</code>
-              </li>
-              <li>Click <strong className="text-sky-300">Add to cart on this PC</strong> on a pending order</li>
-            </ol>
-            {localBridgeOnline === true && (
-              <p className="mt-2 text-xs text-emerald-400/90">Local bridge connected — ready to fill carts.</p>
-            )}
-            {localBridgeOnline === false && (
-              <p className="mt-2 text-xs text-amber-300/90">
-                Local bridge offline — start npm run cardmarket:local-bridge in C:\PA\Pack-Attack
-              </p>
-            )}
-            {cardmarketReady === false && (
-              <p className="mt-2 text-xs text-[#8888aa]">
-                Server: set FULFILLMENT_SCRIPT_KEY in .env (same value in your PC .env.local as the bridge).
-              </p>
-            )}
             <p className="mt-3 text-xs text-[#8888aa]">
               {cardmarketPendingCount} pending (unassigned) · {cardmarketQueueCount} in Cardmarket queue
             </p>
@@ -464,18 +409,13 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
                           (order.status === 'PROCESSING' &&
                             order.fulfillmentChannel === 'CARDMARKET' &&
                             !order.cardmarketPreparedAt)) ? (
-                        <button
-                          type="button"
-                          disabled={cardmarketSending === order.id || order.items.length === 0}
-                          title="Runs on your PC via local bridge (passes Cardmarket bot check)"
-                          onClick={() => handleSendToCardmarket(order.id)}
-                          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold bg-sky-600 hover:bg-sky-500 text-white disabled:opacity-50"
+                        <Link
+                          href={`/admin/orders/${order.id}/cardmarket`}
+                          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold bg-sky-600 hover:bg-sky-500 text-white"
                         >
                           <ShoppingCart className="w-4 h-4" />
-                          {cardmarketSending === order.id
-                            ? 'Filling cart on this PC…'
-                            : 'Add to cart on this PC'}
-                        </button>
+                          Fulfill on Cardmarket
+                        </Link>
                       ) : order.assignedShopId ? (
                         <span className="text-xs text-[#8888aa] px-2">Shop assigned — unassign for MKM</span>
                       ) : null}

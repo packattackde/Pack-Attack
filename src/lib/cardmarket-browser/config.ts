@@ -13,6 +13,8 @@ export type CardmarketBrowserConfig = {
   sellerRules: SellerRules;
   /** Datacenter Playwright hits MKM bot checks — default off on server. */
   allowServerAutomation: boolean;
+  /** Real Chrome remote debugging (npm run cardmarket:chrome-debug). */
+  cdpUrl: string;
 };
 
 const DEFAULT_GAME_BASE = 'https://www.cardmarket.com/en/Magic';
@@ -39,6 +41,7 @@ export function loadCardmarketBrowserConfigFromEnv(): CardmarketBrowserConfig {
     headless: process.env.CARDMARKET_BROWSER_HEADLESS !== 'false',
     allowCheckout: process.env.CARDMARKET_ALLOW_CHECKOUT === 'true',
     allowServerAutomation,
+    cdpUrl: process.env.CARDMARKET_CDP_URL?.trim() ?? 'http://127.0.0.1:9222',
     sellerRules: {
       sellerCountries: sellerCountries.length > 0 ? sellerCountries : DEFAULT_SELLER_RULES.sellerCountries,
       minSellerSales: Number.isFinite(minSellerSales)

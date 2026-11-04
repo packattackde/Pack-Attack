@@ -1,4 +1,5 @@
 import { cardmarketProductSearchUrl, cardmarketShoppingCartUrl } from './links';
+import { assertSingleCardmarketGame, inferCardmarketGameSlug } from './cardmarket-game';
 
 export type CardmarketOrderExport = {
   pullforgeOrderId: string;
@@ -11,9 +12,11 @@ export type CardmarketOrderExport = {
     zip: string;
     country: string;
   };
+  game: string;
   items: Array<{
     cardName: string;
     cardmarketSearchUrl: string;
+    game: string;
   }>;
   cardmarketShoppingCartUrl: string;
   sellerRulesHint: string;
@@ -29,9 +32,13 @@ export function buildCardmarketOrderExport(order: {
   shippingCountry: string;
   items: { cardName: string }[];
 }): CardmarketOrderExport {
+  const names = order.items.map((i) => i.cardName);
+  const game = names.length > 0 ? assertSingleCardmarketGame(names) : 'Magic';
+
   return {
     pullforgeOrderId: order.id,
     exportedAt: new Date().toISOString(),
+    game,
     shipping: {
       name: order.shippingName,
       email: order.shippingEmail,
@@ -40,13 +47,23 @@ export function buildCardmarketOrderExport(order: {
       zip: order.shippingZip,
       country: order.shippingCountry,
     },
-    items: order.items.map((item) => ({
-      cardName: item.cardName,
-      cardmarketSearchUrl: cardmarketProductSearchUrl(item.cardName),
-    })),
-    cardmarketShoppingCartUrl: cardmarketShoppingCartUrl(),
+    items: order.items.map((item) => {
+      const itemGame = inferCardmarketGameSlug(item.cardName);
+      return {
+        cardName: item.cardName,
+        game: itemGame,
+        cardmarketSearchUrl: cardmarketProductSearchUrl(item.cardName, { game: itemGame }),
+      };
+    }),
+    cardmarketShoppingCartUrl: cardmarketShoppingCartUrl({ game }),
     sellerRulesHint: 'Germany sellers only, min 100 sales, cheapest listing.',
   };
+}
+
+/** Plain text for pasting into Cardmarket address modal. */
+export function formatShippingClipboard(exportData: CardmarketOrderExport): string {
+  const s = exportData.shipping;
+  return [s.name, s.street, `${s.zip} ${s.city}`, s.country].filter(Boolean).join('\n');
 }
 
 export function cardmarketExportFilename(orderId: string): string {

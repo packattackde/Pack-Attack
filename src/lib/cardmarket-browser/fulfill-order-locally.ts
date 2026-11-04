@@ -1,8 +1,5 @@
 import { CardmarketBrowserFulfillment } from './fulfillment';
-import {
-  isCardmarketBrowserConfigured,
-  loadCardmarketBrowserConfigFromEnv,
-} from './config';
+import { loadCardmarketBrowserConfigFromEnv } from './config';
 import {
   preparePullforgeOrderInCardmarket,
   type PullforgeOrderShipment,
@@ -13,18 +10,11 @@ export type FulfillOrderLocallyResult = {
   browserPrep: Awaited<ReturnType<typeof preparePullforgeOrderInCardmarket>>;
 };
 
+/** Auto-fill via real Chrome (CDP). No Playwright launch — avoids MKM bot wall. */
 export async function fulfillPullforgeOrderLocally(
   shipment: PullforgeOrderShipment
 ): Promise<FulfillOrderLocallyResult> {
   const config = loadCardmarketBrowserConfigFromEnv();
-  config.headless = false;
-
-  if (!isCardmarketBrowserConfigured(config)) {
-    throw new Error(
-      'Run npm run cardmarket:login on this PC first (real browser — pass bot check), then try again.'
-    );
-  }
-
   const fulfillment = new CardmarketBrowserFulfillment(config);
   try {
     const browserPrep = await preparePullforgeOrderInCardmarket(fulfillment, shipment);

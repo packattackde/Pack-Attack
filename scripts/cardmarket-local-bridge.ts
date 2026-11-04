@@ -89,8 +89,8 @@ const server = createServer(async (req, res) => {
         htmlPage(
           'Cart fill failed',
           `<p class="err">${result.error.replace(/</g, '&lt;')}</p>
-           <p>First time setup: in <code>C:\\PA\\Pack-Attack</code> run <code>npm run cardmarket:login</code>, sign in (pass bot check), press Enter.</p>
-           <p>Keep <code>npm run cardmarket:local-bridge</code> running.</p>`
+           <p>Run <code>npm run cardmarket:chrome-debug</code>, log into Cardmarket in that Chrome window.</p>
+           <p>Keep <code>npm run cardmarket:local-bridge</code> running, then retry auto-fill from the fulfill page.</p>`
         )
       );
     }
