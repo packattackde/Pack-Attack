@@ -397,7 +397,7 @@ export function PackOpeningFlow({
         {(phase === 'booster' || phase === 'emerging' || phase === 'revealing' || phase === 'bestPull') && (
           <motion.div
             className="absolute w-[min(280px,88vw)]"
-            style={{ aspectRatio: '5/8' }}
+            style={{ aspectRatio: '210 / 370' }}
             animate={
               phase === 'booster' && (boosterPhase === 'torn' || boosterPhase === 'glow')
                 ? { scale: 0.85, y: 30 }
@@ -431,7 +431,7 @@ export function PackOpeningFlow({
                   overlay={
                     <>
                       <motion.div
-                        className="pointer-events-none absolute inset-0 rounded-[14px]"
+                        className="pointer-events-none absolute inset-0"
                         style={{
                           background: holoBackground,
                           mixBlendMode: 'color-dodge',
