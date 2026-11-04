@@ -10,6 +10,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { emitCoinBalanceUpdate } from '@/lib/coin-events';
 import { PackOpeningFlow } from '@/components/PackOpeningFlow';
+import { pickChaseCardImageUrl } from '@/components/NeonForgeBoosterPack';
 
 type BoxCard = {
   id: string;
@@ -1077,8 +1078,8 @@ export default function OpenBoxPage() {
               ? pulls.reduce((a, b) => (b.card.coinValue > a.card.coinValue ? b : a))
               : null;
             return (
-              topPull?.card?.imageUrlGatherer ||
-              topBoxCard?.imageUrlGatherer ||
+              pickChaseCardImageUrl(topPull?.card) ||
+              pickChaseCardImageUrl(topBoxCard) ||
               box.imageUrl ||
               null
             );

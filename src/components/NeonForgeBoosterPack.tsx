@@ -1,6 +1,6 @@
 'use client';
 
-import type { ReactNode } from 'react';
+import { useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import {
   BoosterPackPattern,
   BoosterPackTheme,
@@ -141,8 +141,19 @@ function BoosterSilhouetteRim({ suffix, glow }: { suffix: string; glow?: boolean
   );
 }
 
-/** Standard TCG portrait slot: 2.5 × 3.5 (tailwind 5/7) */
-const CARD_ASPECT_CLASS = 'aspect-[5/7]';
+/** TCG portrait frame: 2.5 × 3.5 (5:7) */
+const CARD_ASPECT = 5 / 7;
+
+function fitCardFrameInBox(contentWidth: number, contentHeight: number) {
+  if (contentWidth <= 0 || contentHeight <= 0) return { width: 0, height: 0 };
+  let height = contentHeight;
+  let width = height * CARD_ASPECT;
+  if (width > contentWidth) {
+    width = contentWidth;
+    height = width / CARD_ASPECT;
+  }
+  return { width: Math.floor(width), height: Math.floor(height) };
+}
 
 function OpeningChaseCardPreview({
   heroImageUrl,
@@ -151,11 +162,39 @@ function OpeningChaseCardPreview({
   heroImageUrl: string | null | undefined;
   Icon: BoosterPackTheme['Icon'];
 }) {
+  const slotRef = useRef<HTMLDivElement>(null);
+  const [frameSize, setFrameSize] = useState({ width: 0, height: 0 });
+
+  useLayoutEffect(() => {
+    const el = slotRef.current;
+    if (!el) return;
+
+    const update = () => {
+      const style = getComputedStyle(el);
+      const padX = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
+      const padY = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+      setFrameSize(fitCardFrameInBox(el.clientWidth - padX, el.clientHeight - padY));
+    };
+
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  const frameReady = frameSize.width > 0 && frameSize.height > 0;
+
   return (
-    <div className="absolute inset-[4px] flex items-center justify-center overflow-hidden rounded-[4px] bg-gradient-to-b from-[#0c0a18] to-[#05040c] p-1.5 sm:p-2">
+    <div
+      ref={slotRef}
+      className="absolute inset-0 flex items-center justify-center overflow-visible rounded-[4px] bg-gradient-to-b from-[#0c0a18] to-[#05040c] p-1.5 sm:p-2"
+    >
       <div
-        className={`relative ${CARD_ASPECT_CLASS} h-full w-auto max-h-full max-w-full shrink-0 rounded-[4px] bg-[#080612]`}
+        className="relative shrink-0 rounded-[4px] bg-[#080612]"
         style={{
+          width: frameSize.width,
+          height: frameSize.height,
+          visibility: frameReady ? 'visible' : 'hidden',
           boxShadow: `
             0 0 0 1px ${FOIL_GOLD}99,
             0 0 0 2px rgba(0,0,0,0.85),
@@ -163,14 +202,16 @@ function OpeningChaseCardPreview({
           `,
         }}
       >
-        <div className="absolute inset-[3px] overflow-hidden rounded-[3px] bg-[#0a0820]">
+        <div className="absolute inset-[3px] flex items-center justify-center overflow-visible rounded-[3px] bg-[#0a0820]">
           {heroImageUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={heroImageUrl}
               alt=""
               referrerPolicy="no-referrer"
-              className="block h-full w-full object-contain object-center"
+              draggable={false}
+              className="max-h-full max-w-full object-contain object-center"
+              style={{ width: 'auto', height: 'auto', display: 'block' }}
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center">
@@ -390,12 +431,26 @@ export function NeonForgeBoosterPack(props: NeonForgeBoosterPackProps) {
   return <OpeningBoosterPack {...props} theme={theme} />;
 }
 
+type ChaseCardImageSource = {
+  imageUrlGatherer?: string | null;
+  imageUrlScryfall?: string | null;
+};
+
+/** Prefer full-card Scryfall art when available; opening chase window uses object-contain */
+export function pickChaseCardImageUrl(card: ChaseCardImageSource | null | undefined): string | null {
+  if (!card) return null;
+  const scry = card.imageUrlScryfall?.trim();
+  if (scry) return scry;
+  const gatherer = card.imageUrlGatherer?.trim();
+  return gatherer || null;
+}
+
 /** Pick best image for pack chase window (opening flow) */
 export function resolveBoosterHeroImage(
-  topCard: { imageUrlGatherer: string | null } | null | undefined,
+  topCard: ChaseCardImageSource | null | undefined,
   boxImageUrl: string | null | undefined
 ): string | null {
-  const chase = topCard?.imageUrlGatherer?.trim();
+  const chase = pickChaseCardImageUrl(topCard);
   if (chase) return chase;
   const box = boxImageUrl?.trim();
   return box || null;
