@@ -3,7 +3,11 @@
  * Run on your PC (not the server): npm run cardmarket:local-bridge
  * Admin “Add to cart” on pack-attack.de calls http://127.0.0.1:3847/fill/:orderId
  */
-import 'dotenv/config';
+import dotenv from 'dotenv';
+import { resolve } from 'path';
+
+dotenv.config({ path: resolve(process.cwd(), '.env.local') });
+dotenv.config();
 import { createServer } from 'http';
 import {
   fetchShipmentFromPullforge,
