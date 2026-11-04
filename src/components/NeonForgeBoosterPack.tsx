@@ -1,7 +1,6 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import Image from 'next/image';
 import {
   BoosterPackPattern,
   BoosterPackTheme,
@@ -27,6 +26,21 @@ type NeonForgeBoosterPackProps = {
 
 /** Foil seam — below top crimp decoration */
 export const PACK_TEAR_SEAM_TOP = '8.5%';
+
+const FOIL_GOLD = '#d4af37';
+const FOIL_SILVER_HI = '#eef4ff';
+const FOIL_SILVER = '#b8c9de';
+
+function SideSeams() {
+  return (
+    <>
+      <div className="pointer-events-none absolute inset-y-[8%] left-[7%] w-px bg-black/35" />
+      <div className="pointer-events-none absolute inset-y-[8%] left-[9%] w-px bg-white/[0.07]" />
+      <div className="pointer-events-none absolute inset-y-[8%] right-[7%] w-px bg-black/35" />
+      <div className="pointer-events-none absolute inset-y-[8%] right-[9%] w-px bg-white/[0.07]" />
+    </>
+  );
+}
 
 function TopCrimp({ accent }: { accent: string }) {
   return (
@@ -62,9 +76,86 @@ function BottomCrimp({ accent }: { accent: string }) {
       <path
         d="M0,0 L6,6 L12,0 L18,6 L24,0 L30,6 L36,0 L42,6 L48,0 L54,6 L60,0 L66,6 L72,0 L78,6 L84,0 L90,6 L96,0 L102,6 L108,0 L114,6 L120,0 L126,6 L132,0 L138,6 L144,0 L150,6 L156,0 L162,6 L168,0 L174,6 L180,0 L180,14 L0,14 Z"
         fill={accent}
-        opacity="0.85"
+        opacity="0.88"
+      />
+      <path
+        d="M0,0 L6,6 L12,0 L18,6 L24,0 L30,6 L36,0 L42,6 L48,0 L54,6 L60,0 L66,6 L72,0 L78,6 L84,0 L90,6 L96,0 L102,6 L108,0 L114,6 L120,0 L126,6 L132,0 L138,6 L144,0 L150,6 L156,0 L162,6 L168,0 L174,6 L180,0"
+        fill="none"
+        stroke="rgba(0,0,0,0.35)"
+        strokeWidth="0.6"
       />
     </svg>
+  );
+}
+
+/** TCG portrait ~ 2.5:3.5 — centered, never cropped */
+function ChaseCardPreview({
+  heroImageUrl,
+  Icon,
+  isOpening,
+}: {
+  heroImageUrl: string | null | undefined;
+  Icon: BoosterPackTheme['Icon'];
+  isOpening: boolean;
+}) {
+  const pad = isOpening ? 'p-2 sm:p-2.5' : 'p-1.5 sm:p-2';
+
+  return (
+    <div
+      className={`absolute inset-[5px] flex min-h-0 items-center justify-center overflow-hidden rounded-[5px] bg-gradient-to-b from-[#0c0a18] to-[#06040f] ${pad}`}
+    >
+      {heroImageUrl ? (
+        // Native img so max-h/max-w always fit the full card inside the frame (Next fill + aspect boxes often crop)
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={heroImageUrl}
+          alt=""
+          className="max-h-full max-w-full object-contain object-center drop-shadow-[0_4px_12px_rgba(0,0,0,0.55)]"
+          loading={isOpening ? 'eager' : 'lazy'}
+          decoding="async"
+        />
+      ) : (
+        <div className="flex aspect-[5/7] h-full max-h-full w-auto items-center justify-center">
+          <Icon className="h-9 w-9 text-white/35" aria-hidden />
+        </div>
+      )}
+      {/* Soft mat vignette — edges only, not over the card center */}
+      <div
+        className="pointer-events-none absolute inset-0 rounded-[5px]"
+        style={{
+          background:
+            'radial-gradient(ellipse 85% 90% at 50% 48%, transparent 55%, rgba(0,0,0,0.35) 100%)',
+        }}
+        aria-hidden
+      />
+    </div>
+  );
+}
+
+function BarcodeBand({ accent }: { accent: string }) {
+  return (
+    <div
+      className="pointer-events-none absolute inset-x-[8%] bottom-[5.5%] z-[18] flex h-[4.5%] min-h-[12px] items-end gap-[1px] overflow-hidden rounded-sm bg-black/55 px-1 pb-0.5 pt-1"
+      aria-hidden
+    >
+      <div
+        className="mb-0.5 flex h-[70%] w-[18%] shrink-0 items-center justify-center rounded-[2px] text-[5px] font-black text-[#14041f]"
+        style={{ background: FOIL_GOLD }}
+      >
+        PF
+      </div>
+      {Array.from({ length: 22 }).map((_, i) => (
+        <div
+          key={i}
+          className="h-[72%] shrink-0 rounded-[1px]"
+          style={{
+            width: i % 4 === 0 ? 2 : i % 2 === 0 ? 1.5 : 1,
+            background: i % 6 === 0 ? accent : 'rgba(240,240,248,0.65)',
+            opacity: 0.9,
+          }}
+        />
+      ))}
+    </div>
   );
 }
 
@@ -182,23 +273,42 @@ export function NeonForgeBoosterPack({
         }}
       >
         <PackPattern pattern={pattern} accent={accent} suffix={idSuffix} />
+        <SideSeams />
 
         <div
           className="pointer-events-none absolute inset-x-0 top-0 h-[50%]"
           style={{ background: `radial-gradient(ellipse at 50% 0%, ${accent}28, transparent 65%)` }}
         />
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background: 'linear-gradient(90deg, rgba(0,0,0,0.42) 0%, transparent 16%, transparent 84%, rgba(0,0,0,0.42) 100%)',
+          }}
+        />
 
         <TopCrimp accent={accentSoft} />
         <BottomCrimp accent={accent} />
 
-        {/* Rip foil tab */}
+        {/* Silver rip strip + center notch */}
         <div
-          className="absolute inset-x-[8%] top-[5.5%] z-20 h-[3.5%] min-h-[10px] rounded-[1px]"
-          style={{
-            background: `linear-gradient(180deg, ${accentSoft}, ${accent})`,
-            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.35)',
-          }}
-        />
+          className={`absolute inset-x-[7%] top-[5.2%] z-20 h-[3.8%] min-h-[11px] transition-transform duration-200 ${tearLineActive ? '-translate-y-0.5' : ''}`}
+        >
+          <div
+            className="absolute inset-0 rounded-[2px]"
+            style={{
+              background: `linear-gradient(180deg, ${FOIL_SILVER_HI}, ${FOIL_SILVER} 55%, #7a8aa8)`,
+              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.45)',
+            }}
+          />
+          <div
+            className="absolute left-1/2 top-0 h-[140%] w-[11%] -translate-x-1/2 -translate-y-[35%]"
+            style={{
+              background: FOIL_SILVER_HI,
+              clipPath: 'polygon(50% 0%, 100% 55%, 50% 100%, 0% 55%)',
+              boxShadow: '0 0 0 1px rgba(0,0,0,0.2)',
+            }}
+          />
+        </div>
 
         {(isOpening || tearLineActive) && (
           <div
@@ -214,8 +324,8 @@ export function NeonForgeBoosterPack({
           />
         )}
 
-        <div className="absolute left-0 right-0 top-[8%] z-20 text-center text-[6px] font-black uppercase tracking-[3px] text-white/55">
-          Pull · Forge
+        <div className="absolute left-0 right-0 top-[8%] z-20 text-center text-[5px] font-black uppercase tracking-[0.28em] text-white/50">
+          Neon District · Factory Seal
         </div>
 
         <div className="absolute inset-x-0 top-[11%] z-20 flex flex-col items-center px-2 text-center">
@@ -236,44 +346,42 @@ export function NeonForgeBoosterPack({
         </div>
 
         <div
-          className={`absolute z-10 overflow-hidden rounded-md ${
-            isOpening ? 'left-[10%] right-[10%] top-[22%] bottom-[26%]' : 'left-[12%] right-[12%] top-[24%] bottom-[28%]'
+          className={`absolute z-10 overflow-visible rounded-md ${
+            isOpening
+              ? 'left-[9%] right-[9%] top-[20%] bottom-[24%]'
+              : 'left-[10%] right-[10%] top-[21%] bottom-[26%]'
           }`}
           style={{
-            background: '#07050f',
-            boxShadow: `0 0 0 2px ${accent}cc, 0 0 0 3px rgba(0,0,0,0.5), inset 0 0 16px rgba(0,0,0,0.4)`,
+            background: '#030208',
+            boxShadow: `0 0 0 2px ${FOIL_GOLD}, 0 0 0 4px rgba(0,0,0,0.85), 0 0 0 5px ${accent}99, inset 0 0 18px rgba(0,0,0,0.45)`,
           }}
         >
-          <div className="absolute inset-[3px] overflow-hidden rounded-[5px] bg-[#0a0820]">
-            {heroImageUrl ? (
-              <Image
-                src={heroImageUrl}
-                alt=""
-                fill
-                className={isOpening ? 'object-contain p-0.5' : 'object-cover'}
-                sizes={isOpening ? '220px' : '160px'}
-                unoptimized
-              />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center">
-                <Icon className="h-9 w-9 text-white/35" />
-              </div>
-            )}
-          </div>
-          {isOpening && heroImageUrl && (
-            <span className="absolute left-1 top-1 z-10 rounded bg-[#ff2ea6] px-1 py-px text-[6px] font-black uppercase text-[#14041f]">
+          <ChaseCardPreview heroImageUrl={heroImageUrl} Icon={Icon} isOpening={isOpening} />
+          {heroImageUrl && (
+            <span className="absolute -left-0.5 -top-0.5 z-20 rounded border border-[#14041f]/40 bg-[#ff2ea6] px-1 py-px text-[6px] font-black uppercase text-[#14041f] shadow-sm">
               Chase
+            </span>
+          )}
+          {cardsPerPack > 0 && (
+            <span
+              className="absolute -right-0.5 -top-0.5 z-20 flex h-4 w-4 items-center justify-center rounded-full text-[6px] font-black text-white ring-1 ring-[#f5e6a8] shadow-sm"
+              style={{ background: accent }}
+            >
+              {cardsPerPack}
             </span>
           )}
           <div
             className="pointer-events-none absolute inset-0 rounded-md"
             style={{
-              background: 'linear-gradient(155deg, rgba(255,255,255,0.15) 0%, transparent 42%, rgba(0,0,0,0.2) 100%)',
+              background:
+                'linear-gradient(155deg, rgba(255,255,255,0.12) 0%, transparent 38%, transparent 62%, rgba(0,0,0,0.15) 100%)',
             }}
           />
         </div>
 
-        <div className="absolute inset-x-0 bottom-[9%] z-20 px-2 pb-1 pt-2">
+        <BarcodeBand accent={accent} />
+
+        <div className="absolute inset-x-0 bottom-[11%] z-20 px-2 pb-0 pt-1">
           <div className="line-clamp-2 text-center text-[9px] font-black uppercase leading-tight tracking-wide text-white sm:text-[10px]">
             {boxName}
           </div>

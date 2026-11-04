@@ -21,7 +21,11 @@ jobs:
           username: packattack
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            set -euo pipefail
             cd /var/www/packattack/app
+
+            # Root deploys can leave root-owned files and break CI builds (EACCES on tsconfig.json)
+            sudo chown -R packattack:packattack /var/www/packattack/app
 
             # Clean stale build artifacts before git operations
             sudo rm -rf .next.old.* 2>/dev/null || true
