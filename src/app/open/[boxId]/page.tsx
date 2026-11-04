@@ -16,6 +16,7 @@ type BoxCard = {
   id: string;
   name: string;
   imageUrlGatherer: string;
+  imageUrlScryfall?: string | null;
   coinValue: number;
   pullRate: number;
   rarity: string;
@@ -536,6 +537,13 @@ export default function OpenBoxPage() {
 
   const totalCost = box.price * quantity;
 
+  const chaseHeroUrl = (() => {
+    const topCard = box.cards.length
+      ? [...box.cards].sort((a, b) => b.coinValue - a.coinValue)[0]
+      : null;
+    return pickChaseCardImageUrl(topCard) || box.imageUrl || null;
+  })();
+
   return (
     <div className="min-h-screen font-display">
       {/* Background Effects */}
@@ -571,15 +579,25 @@ export default function OpenBoxPage() {
 
           {/* Hero content: floating box image + title */}
           <div className="flex flex-col items-center text-center">
-            {/* Floating box image */}
-            <div className="relative w-40 h-40 sm:w-52 sm:h-52 mb-6 animate-float">
-              <div className="absolute inset-0 rounded-2xl bg-[#ff2ea6]/20 blur-3xl scale-150" />
-              <div className="relative w-full h-full rounded-2xl overflow-hidden border border-[rgba(255,255,255,0.15)] shadow-2xl">
-                {box.imageUrl ? (
-                  <Image src={box.imageUrl} alt={box.name} fill className="object-cover" unoptimized />
+            {/* Top chase card — full TCG portrait (5:7), not square crop */}
+            <div
+              className="relative mb-6 w-[min(168px,42vw)] animate-float sm:w-[200px]"
+              style={{ aspectRatio: '5 / 7' }}
+            >
+              <div className="absolute inset-0 rounded-2xl bg-[#ff2ea6]/20 blur-3xl scale-125" />
+              <div className="relative h-full w-full overflow-hidden rounded-2xl border border-[rgba(255,255,255,0.15)] bg-[#080612] shadow-2xl">
+                {chaseHeroUrl ? (
+                  <Image
+                    src={chaseHeroUrl}
+                    alt={box.name}
+                    fill
+                    className="object-contain object-center p-1.5"
+                    unoptimized
+                    priority
+                  />
                 ) : (
-                  <div className="w-full h-full bg-[#12123a] flex items-center justify-center">
-                    <Package className="w-16 h-16 text-gray-600" />
+                  <div className="flex h-full w-full items-center justify-center bg-[#12123a]">
+                    <Package className="h-16 w-16 text-gray-600" />
                   </div>
                 )}
               </div>

@@ -202,7 +202,7 @@ function OpeningChaseCardPreview({
           `,
         }}
       >
-        <div className="absolute inset-[3px] overflow-hidden rounded-[3px] bg-[#0a0820]">
+        <div className="absolute inset-[3px] flex items-center justify-center rounded-[3px] bg-[#0a0820]">
           {heroImageUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -210,7 +210,8 @@ function OpeningChaseCardPreview({
               alt=""
               referrerPolicy="no-referrer"
               draggable={false}
-              className="h-full w-full object-contain object-center"
+              className="max-h-full max-w-full object-contain object-center"
+              style={{ width: 'auto', height: 'auto' }}
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center">
@@ -360,12 +361,12 @@ function OpeningBoosterPack({
         </div>
 
         <div
-          className="absolute z-[20] overflow-visible rounded-[5px]"
+          className="absolute z-[28] overflow-hidden rounded-[5px]"
           style={{
             left: '7.5%',
             right: '7.5%',
-            top: '18%',
-            bottom: '18%',
+            top: '26%',
+            bottom: '21%',
             background: '#020106',
             boxShadow: `0 0 0 2px ${FOIL_GOLD}, 0 0 0 4px rgba(0,0,0,0.9), 0 0 0 5px ${accent}88`,
           }}
