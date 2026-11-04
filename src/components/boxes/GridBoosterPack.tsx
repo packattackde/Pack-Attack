@@ -108,7 +108,7 @@ export function GridBoosterPack({
 
   return (
     <div
-      className="relative aspect-[5/8] w-[160px] select-none overflow-hidden rounded-[14px] sm:w-[180px]"
+      className="relative mx-auto aspect-[5/8] w-full max-w-[160px] select-none overflow-hidden rounded-[14px] sm:max-w-[180px]"
       style={{
         boxShadow: `
           0 25px 50px -12px rgba(0,0,0,0.85),

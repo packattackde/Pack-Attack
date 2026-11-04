@@ -570,7 +570,7 @@ export default function OpenBoxPage() {
           <div className="absolute inset-0 z-0 bg-gradient-to-b from-[#100d22] to-[#06061a]" />
         )}
 
-        <div className="relative z-10 container pt-8 pb-6">
+        <div className="relative z-10 container px-4 pt-[max(2rem,env(safe-area-inset-top))] pb-6 sm:px-6">
           {/* Back Link */}
           <Link href="/boxes" className="inline-flex items-center gap-2 text-[#8888aa] hover:text-[#f0f0f5] transition-colors mb-8">
             <ArrowLeft className="w-4 h-4" />
@@ -581,11 +581,11 @@ export default function OpenBoxPage() {
           <div className="flex flex-col items-center text-center">
             {/* Top chase card — full TCG portrait (5:7), not square crop */}
             <div
-              className="relative mb-6 w-[min(168px,42vw)] animate-float sm:w-[200px]"
+              className="relative mb-6 w-[min(200px,56vw)] max-w-[200px] animate-float"
               style={{ aspectRatio: '5 / 7' }}
             >
-              <div className="absolute inset-0 rounded-2xl bg-[#ff2ea6]/20 blur-3xl scale-125" />
-              <div className="relative h-full w-full overflow-hidden rounded-2xl border border-[rgba(255,255,255,0.15)] bg-[#080612] shadow-2xl">
+              <div className="absolute inset-0 scale-125 rounded-2xl bg-[#ff2ea6]/20 blur-3xl" />
+              <div className="relative h-full w-full min-h-0 overflow-hidden rounded-2xl border border-[rgba(255,255,255,0.15)] bg-[#080612] shadow-2xl">
                 {chaseHeroUrl ? (
                   <Image
                     src={chaseHeroUrl}
@@ -604,12 +604,12 @@ export default function OpenBoxPage() {
             </div>
 
             {/* Box name */}
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-3 tracking-tight">
+            <h1 className="mb-3 max-w-xl px-2 text-2xl font-extrabold tracking-tight text-white break-words sm:text-4xl md:text-5xl">
               {box.name}
             </h1>
 
             {/* Game badge + stats */}
-            <div className="flex items-center gap-3 text-sm text-[#8888aa] mb-2">
+            <div className="mb-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-sm text-[#8888aa]">
               <div className="flex items-center gap-1.5">
                 <Coins className="w-4 h-4 text-amber-400" />
                 <span className="text-[#f0f0f5] font-semibold">{box.price.toFixed(2)} {t('coinsPerPack')}</span>
@@ -740,7 +740,7 @@ export default function OpenBoxPage() {
                           key={qty}
                           type="button"
                           onClick={() => setQuantity(qty)}
-                          className={`w-12 h-12 rounded-full text-lg font-bold transition-all duration-200 ${
+                          className={`touch-target flex h-12 min-h-[48px] w-12 min-w-[48px] items-center justify-center rounded-full text-lg font-bold transition-all duration-200 active:scale-95 ${
                             quantity === qty
                               ? 'bg-[#ff2ea6] text-white shadow-[0_0_20px_rgba(255,46,166,0.4)] scale-110 ring-2 ring-[#ff2ea6]/50 ring-offset-2 ring-offset-[#0a0a2e]'
                               : 'bg-[#1e1e55] text-[#8888aa] border border-[rgba(255,255,255,0.1)] hover:border-[rgba(255,46,166,0.3)] hover:text-[#f0f0f5]'
@@ -766,7 +766,7 @@ export default function OpenBoxPage() {
                     <button
                       onClick={() => setShowConfirm(true)}
                       disabled={opening || isAutoOpening || (userCoins !== null && userCoins < totalCost)}
-                      className="w-full py-4 bg-gradient-to-r from-[#ff2ea6] to-[#8b5cf6] hover:from-[#E879F9] hover:to-[#ff2ea6] text-white font-bold text-base rounded-xl transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2.5 shimmer shadow-[0_0_30px_rgba(255,46,166,0.35)]"
+                      className="touch-target flex w-full min-h-[52px] items-center justify-center gap-2.5 rounded-xl bg-gradient-to-r from-[#ff2ea6] to-[#8b5cf6] py-4 text-base font-bold text-white transition-all hover:scale-[1.02] hover:from-[#E879F9] hover:to-[#ff2ea6] disabled:opacity-50 disabled:hover:scale-100 active:scale-[0.98] shimmer shadow-[0_0_30px_rgba(255,46,166,0.35)]"
                     >
                       {opening ? (
                         <><div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />{t('opening')}</>
@@ -827,7 +827,7 @@ export default function OpenBoxPage() {
                           key={qty}
                           type="button"
                           onClick={() => setQuantity(qty)}
-                          className={`w-12 h-12 rounded-full text-lg font-bold transition-all duration-200 ${
+                          className={`touch-target flex h-12 min-h-[48px] w-12 min-w-[48px] items-center justify-center rounded-full text-lg font-bold transition-all duration-200 active:scale-95 ${
                             quantity === qty
                               ? 'bg-[#ff2ea6] text-white shadow-[0_0_20px_rgba(255,46,166,0.4)] scale-110 ring-2 ring-[#ff2ea6]/50 ring-offset-2 ring-offset-[#0a0a2e]'
                               : 'bg-[#1e1e55] text-[#8888aa] border border-[rgba(255,255,255,0.1)] hover:border-[rgba(255,46,166,0.3)] hover:text-[#f0f0f5]'
@@ -853,7 +853,7 @@ export default function OpenBoxPage() {
                     <button
                       onClick={() => setShowConfirm(true)}
                       disabled={opening || isAutoOpening || (userCoins !== null && userCoins < totalCost)}
-                      className="w-full py-4 bg-gradient-to-r from-[#ff2ea6] to-[#8b5cf6] hover:from-[#E879F9] hover:to-[#ff2ea6] text-white font-bold text-base rounded-xl transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2.5 shimmer shadow-[0_0_30px_rgba(255,46,166,0.35)]"
+                      className="touch-target flex w-full min-h-[52px] items-center justify-center gap-2.5 rounded-xl bg-gradient-to-r from-[#ff2ea6] to-[#8b5cf6] py-4 text-base font-bold text-white transition-all hover:scale-[1.02] hover:from-[#E879F9] hover:to-[#ff2ea6] disabled:opacity-50 disabled:hover:scale-100 active:scale-[0.98] shimmer shadow-[0_0_30px_rgba(255,46,166,0.35)]"
                     >
                       {opening ? (
                         <><div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />{t('opening')}</>

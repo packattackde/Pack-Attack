@@ -6,6 +6,10 @@ import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Coins } from 'lucide-react';
 import { NeonForgeBoosterPack, PACK_TEAR_SEAM_TOP } from '@/components/NeonForgeBoosterPack';
+import { useCoarsePointer } from '@/hooks/use-coarse-pointer';
+
+const PACK_OPENING_WIDTH = 'min(280px, calc(100vw - 1.5rem))';
+const EMERGING_CARD_WIDTH = 'min(180px, 38vw)';
 
 // ─── Types ──────────────────────────────────────────────────────────
 
@@ -76,7 +80,8 @@ export function PackOpeningFlow({
   onComplete,
   onSkip,
 }: PackOpeningFlowProps) {
-  const t = useTranslations('packFlow')
+  const t = useTranslations('packFlow');
+  const isCoarsePointer = useCoarsePointer();
   // ── Main phase ──
   const [phase, setPhase] = useState<Phase>('booster');
 
@@ -382,22 +387,26 @@ export function PackOpeningFlow({
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden select-none bg-[#06061a] [&_*]:select-none"
+      className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden select-none bg-[#06061a] overscroll-none [&_*]:select-none supports-[height:100dvh]:min-h-[100dvh] supports-[height:100dvh]:max-h-[100dvh]"
       style={{
-        cursor: 'none',
+        cursor: isCoarsePointer ? 'auto' : 'none',
+        paddingTop: 'env(safe-area-inset-top, 0px)',
+        paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+        paddingLeft: 'env(safe-area-inset-left, 0px)',
+        paddingRight: 'env(safe-area-inset-right, 0px)',
         background:
           'radial-gradient(ellipse 55% 45% at 50% 38%, rgba(255,46,166,0.18), transparent), radial-gradient(ellipse 40% 35% at 80% 80%, rgba(35,230,255,0.1), transparent), #06061a',
       }}
-      onPointerMove={handlePointerMove}
-      onPointerLeave={handlePointerLeave}
+      onPointerMove={isCoarsePointer ? undefined : handlePointerMove}
+      onPointerLeave={isCoarsePointer ? undefined : handlePointerLeave}
       onClick={phase === 'revealing' ? advanceCard : phase === 'bestPull' ? (bestPullReady ? onComplete : undefined) : undefined}
     >
       {/* ═══ BOOSTER PACK ═══ */}
       <AnimatePresence>
         {(phase === 'booster' || phase === 'emerging' || phase === 'revealing' || phase === 'bestPull') && (
           <motion.div
-            className="absolute w-[min(280px,88vw)]"
-            style={{ aspectRatio: '210 / 370' }}
+            className="absolute max-w-full"
+            style={{ width: PACK_OPENING_WIDTH, aspectRatio: '210 / 370' }}
             animate={
               phase === 'booster' && (boosterPhase === 'torn' || boosterPhase === 'glow')
                 ? { scale: 0.85, y: 30 }
@@ -456,8 +465,13 @@ export function PackOpeningFlow({
             {phase === 'booster' && (boosterPhase === 'tilt' || boosterPhase === 'tearing') && (
               <div
                 ref={tearZoneRef}
-                className="absolute left-0 right-0"
-                style={{ top: 0, height: '14%', touchAction: 'none', cursor: 'none', zIndex: 50 }}
+                className="absolute left-0 right-0 sm:h-[14%] h-[18%]"
+                style={{
+                  top: 0,
+                  touchAction: 'none',
+                  cursor: isCoarsePointer ? 'grab' : 'none',
+                  zIndex: 50,
+                }}
                 onMouseDown={startTear}
                 onMouseMove={moveTear}
                 onMouseUp={endTear}
@@ -603,7 +617,7 @@ export function PackOpeningFlow({
       {/* Hint text */}
       {phase === 'booster' && boosterPhase === 'tilt' && (
         <motion.p
-          className="absolute left-0 right-0 top-[14%] z-[100] text-center text-sm font-bold uppercase tracking-widest text-[#23e6ff] pointer-events-none drop-shadow-[0_0_12px_rgba(35,230,255,0.9)]"
+          className="absolute left-0 right-0 top-[12%] z-[100] px-4 text-center text-xs font-bold uppercase tracking-widest text-[#23e6ff] pointer-events-none drop-shadow-[0_0_12px_rgba(35,230,255,0.9)] sm:top-[14%] sm:text-sm"
           animate={{ opacity: [0.55, 1, 0.55] }}
           transition={{ duration: 1.6, repeat: Infinity }}
         >
@@ -635,8 +649,8 @@ export function PackOpeningFlow({
                   key={pull.id}
                   className="absolute"
                   style={{
-                    width: 180,
-                    height: 252,
+                    width: EMERGING_CARD_WIDTH,
+                    aspectRatio: '5 / 7',
                     zIndex: index,
                   }}
                   initial={{ y: -300, opacity: 0, rotate: 0, scale: 0.8 }}
@@ -762,7 +776,10 @@ export function PackOpeningFlow({
             )}
 
             {/* Flipping card */}
-            <div className="w-[min(240px,85vw)]" style={{ perspective: 1000, aspectRatio: '240/336' }}>
+            <div
+              className="w-[min(240px,calc(100vw-2rem))] max-w-full"
+              style={{ perspective: 1000, aspectRatio: '5 / 7' }}
+            >
               <motion.div
                 className="relative w-full h-full"
                 style={{ transformStyle: 'preserve-3d' }}
@@ -961,10 +978,9 @@ export function PackOpeningFlow({
 
             {/* Card */}
             <div
-              className="rounded-xl overflow-hidden"
+              className="w-[min(240px,calc(100vw-2rem))] max-w-full overflow-hidden rounded-xl"
               style={{
-                width: 240,
-                height: 336,
+                aspectRatio: '5 / 7',
                 boxShadow: `0 0 30px ${bestColors.glow}, 0 0 60px ${bestColors.glow}`,
                 border: `3px solid ${bestColors.border}`,
               }}
@@ -1004,8 +1020,9 @@ export function PackOpeningFlow({
 
       {/* ═══ SKIP BUTTON ═══ */}
       <motion.button
-        className="absolute bottom-6 right-6 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white/40 text-sm hover:bg-white/10 hover:text-white/60 transition-colors z-[100]"
-        style={{ cursor: 'none' }}
+        type="button"
+        className="touch-target absolute bottom-[max(1.5rem,env(safe-area-inset-bottom))] right-[max(1rem,env(safe-area-inset-right))] z-[100] min-h-[48px] rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white/50 transition-colors hover:bg-white/10 hover:text-white/70 active:bg-white/15"
+        style={{ cursor: isCoarsePointer ? 'pointer' : 'none' }}
         onClick={(e) => {
           e.stopPropagation();
           onSkip();
@@ -1017,31 +1034,33 @@ export function PackOpeningFlow({
         {t('skip')}
       </motion.button>
 
-      {/* ═══ CUSTOM NEON CURSOR ═══ */}
-      <motion.div
-        className="pointer-events-none"
-        style={{
-          position: 'fixed',
-          left: cursorX,
-          top: cursorY,
-          zIndex: 10000,
-          transform: 'translate(-50%, -50%)',
-        }}
-      >
+      {/* ═══ CUSTOM NEON CURSOR (desktop / fine pointer only) ═══ */}
+      {!isCoarsePointer && (
         <motion.div
-          className="rounded-full border-2"
-          animate={{
-            width: cursorPressed ? 32 : 22,
-            height: cursorPressed ? 32 : 22,
-            borderColor: cursorPressed ? '#ff2ea6' : 'rgba(255,46,166,0.5)',
-            backgroundColor: cursorPressed ? 'rgba(255,46,166,0.15)' : 'rgba(255,46,166,0)',
-            boxShadow: cursorPressed
-              ? '0 0 15px rgba(255,46,166,0.4), 0 0 30px rgba(255,46,166,0.2)'
-              : '0 0 8px rgba(255,46,166,0.2)',
+          className="pointer-events-none"
+          style={{
+            position: 'fixed',
+            left: cursorX,
+            top: cursorY,
+            zIndex: 10000,
+            transform: 'translate(-50%, -50%)',
           }}
-          transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-        />
-      </motion.div>
+        >
+          <motion.div
+            className="rounded-full border-2"
+            animate={{
+              width: cursorPressed ? 32 : 22,
+              height: cursorPressed ? 32 : 22,
+              borderColor: cursorPressed ? '#ff2ea6' : 'rgba(255,46,166,0.5)',
+              backgroundColor: cursorPressed ? 'rgba(255,46,166,0.15)' : 'rgba(255,46,166,0)',
+              boxShadow: cursorPressed
+                ? '0 0 15px rgba(255,46,166,0.4), 0 0 30px rgba(255,46,166,0.2)'
+                : '0 0 8px rgba(255,46,166,0.2)',
+            }}
+            transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+          />
+        </motion.div>
+      )}
     </div>
   );
 }

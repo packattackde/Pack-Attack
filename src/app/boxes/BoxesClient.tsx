@@ -282,7 +282,7 @@ function PackCard({
 
         <Link
           href={`/open/${box.id}`}
-          className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-br from-[#ff2ea6] to-[#8b5cf6] text-white text-xs font-black uppercase tracking-wider shadow-[0_4px_16px_rgba(255,46,166,0.3)] group-hover:shadow-[0_6px_22px_rgba(255,46,166,0.5)] group-hover:scale-105 transition-all"
+          className="touch-target inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-xl bg-gradient-to-br from-[#ff2ea6] to-[#8b5cf6] px-4 py-2.5 text-xs font-black uppercase tracking-wider text-white shadow-[0_4px_16px_rgba(255,46,166,0.3)] transition-all group-hover:scale-105 group-hover:shadow-[0_6px_22px_rgba(255,46,166,0.5)] active:scale-95"
         >
           <Coins className="w-3.5 h-3.5" />
           {box.price.toLocaleString(undefined, {

@@ -179,7 +179,15 @@ function OpeningChaseCardPreview({
     update();
     const ro = new ResizeObserver(update);
     ro.observe(el);
-    return () => ro.disconnect();
+    window.addEventListener('resize', update);
+    window.addEventListener('orientationchange', update);
+    const raf = requestAnimationFrame(update);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', update);
+      window.removeEventListener('orientationchange', update);
+      cancelAnimationFrame(raf);
+    };
   }, []);
 
   const frameReady = frameSize.width > 0 && frameSize.height > 0;
@@ -187,7 +195,7 @@ function OpeningChaseCardPreview({
   return (
     <div
       ref={slotRef}
-      className="absolute inset-0 flex items-center justify-center rounded-[4px] bg-gradient-to-b from-[#0c0a18] to-[#05040c] p-1.5 sm:p-2"
+      className="absolute inset-0 flex min-h-0 min-w-0 items-center justify-center rounded-[4px] bg-gradient-to-b from-[#0c0a18] to-[#05040c] p-1 sm:p-2"
     >
       <div
         className="relative shrink-0 rounded-[4px] bg-[#080612]"
@@ -248,7 +256,7 @@ function OpeningBoosterPack({
 
   return (
     <div
-      className={`relative w-full max-w-[min(280px,88vw)] select-none ${className ?? ''}`}
+      className={`relative w-full max-w-[min(280px,calc(100vw-1.5rem))] select-none ${className ?? ''}`}
       style={{
         aspectRatio: OPENING_PACK_ASPECT,
         filter: revealGlow
