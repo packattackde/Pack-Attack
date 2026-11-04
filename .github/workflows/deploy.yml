@@ -24,8 +24,12 @@ jobs:
             set -euo pipefail
             cd /var/www/packattack/app
 
-            # Root deploys can leave root-owned files and break CI builds (EACCES on tsconfig.json)
-            sudo chown -R packattack:packattack /var/www/packattack/app
+            # Root deploys can leave root-owned files (EACCES on tsconfig.json). Fix when passwordless sudo exists.
+            if sudo -n chown -R packattack:packattack /var/www/packattack/app 2>/dev/null; then
+              echo "App directory ownership reset to packattack"
+            else
+              echo "Skipping chown (no passwordless sudo — run as root on server if builds fail with EACCES)"
+            fi
 
             # Clean stale build artifacts before git operations
             sudo rm -rf .next.old.* 2>/dev/null || true
