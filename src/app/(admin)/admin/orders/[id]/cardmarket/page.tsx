@@ -1,7 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
 import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { buildCardmarketOrderExport } from '@/lib/cardmarket-browser/export-order';
 import { CardmarketFulfillClient } from './CardmarketFulfillClient';
 
 export default async function OrderCardmarketFulfillPage({
@@ -22,13 +21,5 @@ export default async function OrderCardmarketFulfillPage({
   });
   if (!order) notFound();
 
-  const exportData = buildCardmarketOrderExport(order);
-
-  return (
-    <CardmarketFulfillClient
-      orderId={order.id}
-      exportData={exportData}
-      orderStatus={order.status}
-    />
-  );
+  return <CardmarketFulfillClient orderId={order.id} />;
 }

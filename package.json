@@ -31,6 +31,7 @@
     "cardmarket:login": "tsx scripts/cardmarket-save-session.ts",
     "cardmarket:chrome-debug": "powershell -ExecutionPolicy Bypass -File ./scripts/cardmarket-chrome-debug.ps1",
     "cardmarket:local-bridge": "tsx scripts/cardmarket-local-bridge.ts",
+    "cardmarket:agent": "powershell -ExecutionPolicy Bypass -File ./scripts/cardmarket-agent.ps1",
     "cardmarket:mcp": "tsx scripts/cardmarket-mcp-server.ts"
   },
   "dependencies": {

@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { runCardmarketAutomation } from '@/lib/cardmarket-automation-client';
 import {
   Package,
   Truck,
@@ -90,7 +90,34 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
   const [updatingOrder, setUpdatingOrder] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState<string>('ALL');
+  const [cardmarketSending, setCardmarketSending] = useState<string | null>(null);
   const CARDMARKET_CART_URL = 'https://www.cardmarket.com/en/Magic/ShoppingCart';
+
+  const handleAutomateCardmarket = async (orderId: string) => {
+    setCardmarketSending(orderId);
+    const result = await runCardmarketAutomation(orderId);
+    if (result.success) {
+      if (result.cartUrl) {
+        window.open(result.cartUrl, '_blank', 'noopener,noreferrer');
+        addToast({ title: 'Cart filled', description: 'Finish payment on Cardmarket.' });
+      } else {
+        addToast({
+          title: 'Automating order',
+          description:
+            result.message ??
+            'Watch the localhost tab. Agent must run: npm run cardmarket:agent',
+        });
+      }
+      router.refresh();
+    } else {
+      addToast({
+        title: 'Automation failed',
+        description: result.error ?? 'Failed',
+        variant: 'destructive',
+      });
+    }
+    setCardmarketSending(null);
+  };
 
   const cardmarketQueueCount = orders.filter(
     (o) => o.fulfillmentChannel === 'CARDMARKET' && o.status === 'PROCESSING'
@@ -248,9 +275,10 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
               Cardmarket warehouse
             </h2>
             <p className="mt-2 text-sm text-[#c4c4e0]">
-              Cardmarket bot protection blocks automated browsers. Use{' '}
-              <strong className="text-sky-300">Fulfill on Cardmarket</strong> — copy customer address, open
-              search links in your normal Chrome (already logged in), add to cart, pay.
+              <strong className="text-sky-300">Automate Cardmarket order</strong> fills cart + customer address
+              via your PC. One-time: load Chrome extension in{' '}
+              <code className="text-sky-200">extensions/pullforge-cardmarket</code>, run{' '}
+              <code className="text-sky-200">npm run cardmarket:agent</code>, log into MKM in that Chrome.
             </p>
             <p className="mt-3 text-xs text-[#8888aa]">
               {cardmarketPendingCount} pending (unassigned) · {cardmarketQueueCount} in Cardmarket queue
@@ -409,13 +437,17 @@ export function OrdersClient({ orders: initialOrders, shops }: { orders: Order[]
                           (order.status === 'PROCESSING' &&
                             order.fulfillmentChannel === 'CARDMARKET' &&
                             !order.cardmarketPreparedAt)) ? (
-                        <Link
-                          href={`/admin/orders/${order.id}/cardmarket`}
-                          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold bg-sky-600 hover:bg-sky-500 text-white"
+                        <button
+                          type="button"
+                          disabled={cardmarketSending === order.id || order.items.length === 0}
+                          onClick={() => void handleAutomateCardmarket(order.id)}
+                          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold bg-sky-600 hover:bg-sky-500 text-white disabled:opacity-50"
                         >
                           <ShoppingCart className="w-4 h-4" />
-                          Fulfill on Cardmarket
-                        </Link>
+                          {cardmarketSending === order.id
+                            ? 'Automating…'
+                            : 'Automate Cardmarket order'}
+                        </button>
                       ) : order.assignedShopId ? (
                         <span className="text-xs text-[#8888aa] px-2">Shop assigned — unassign for MKM</span>
                       ) : null}

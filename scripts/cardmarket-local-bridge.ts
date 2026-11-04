@@ -15,6 +15,7 @@ import {
   fulfillPullforgeOrderLocally,
   markOrderPreparedOnPullforge,
 } from '../src/lib/cardmarket-browser/fulfill-order-locally';
+import { ensureCdpChrome } from './cardmarket-ensure-cdp';
 
 const PORT = Number.parseInt(process.env.CARDMARKET_LOCAL_BRIDGE_PORT ?? '3847', 10);
 const BASE = process.env.PULLFORGE_URL?.trim() ?? 'https://pack-attack.de';
@@ -32,6 +33,7 @@ const FULFILLMENT_KEY = requireFulfillmentKey();
 async function runFill(orderId: string): Promise<{ success: true; cartUrl: string } | { success: false; error: string }> {
   try {
     console.log(`[cardmarket-bridge] Filling order ${orderId}…`);
+    await ensureCdpChrome();
     const shipment = await fetchShipmentFromPullforge(BASE, orderId, FULFILLMENT_KEY);
     const { cartUrl } = await fulfillPullforgeOrderLocally(shipment);
     await markOrderPreparedOnPullforge(BASE, orderId, FULFILLMENT_KEY, cartUrl);

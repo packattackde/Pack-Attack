@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Pullforge Cardmarket</title>
+    <style>
+      body { font-family: system-ui; max-width: 28rem; margin: 2rem auto; padding: 0 1rem; }
+      label { display: block; margin-top: 1rem; font-weight: 600; }
+      input { width: 100%; padding: 0.5rem; margin-top: 0.25rem; }
+      button { margin-top: 1rem; padding: 0.5rem 1rem; }
+      #status { margin-top: 1rem; color: green; }
+    </style>
+  </head>
+  <body>
+    <h1>Pullforge Cardmarket</h1>
+    <p>Keep <code>npm run cardmarket:agent</code> running on your PC.</p>
+    <label>Local bridge URL</label>
+    <input id="bridgeUrl" type="url" value="http://127.0.0.1:3847" />
+    <button id="save">Save</button>
+    <p id="status"></p>
+    <script src="options.js"></script>
+  </body>
+</html>
