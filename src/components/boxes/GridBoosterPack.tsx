@@ -189,7 +189,7 @@ export function GridBoosterPack({
         }}
       >
         {heroImageUrl ? (
-          <div className="relative h-full w-full">
+          <div className="absolute inset-0">
             <Image
               src={heroImageUrl}
               alt=""

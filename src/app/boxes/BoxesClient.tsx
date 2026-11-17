@@ -227,7 +227,7 @@ function PackCard({
   const gameLabel = box.games?.[0] ? getGameDisplayName(box.games[0]) : '';
 
   return (
-    <div className="group relative flex flex-col items-center" style={{ perspective: '1200px' }}>
+    <div className="group relative flex w-full flex-col items-stretch" style={{ perspective: '1200px' }}>
       {/* Ambient glow */}
       <div
         className="absolute inset-x-0 top-0 h-[85%] pointer-events-none opacity-60 group-hover:opacity-100 transition-opacity duration-500 blur-2xl"
@@ -258,7 +258,7 @@ function PackCard({
       <Link
         href={`/open/${box.id}`}
         aria-label={`${t('open')} ${box.name}`}
-        className="relative block transition-transform duration-500 ease-out group-hover:-translate-y-3 group-hover:rotate-[-3deg]"
+        className="relative block w-full transition-transform duration-500 ease-out group-hover:-translate-y-3 group-hover:rotate-[-3deg]"
       >
         <BoosterPack box={box} theme={theme} />
 
