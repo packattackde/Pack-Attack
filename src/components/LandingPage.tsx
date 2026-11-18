@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { NeonCoinForgeShowcase } from '@/components/NeonCoinForgeShowcase';
 
 export type LandingPull = {
   userName: string;
@@ -315,6 +316,12 @@ export function LandingPage({
           <FeatureCard icon={<CoinIcon />} title="COIN ECONOMY" jpLabel="コイン経済" description="Earn coins from battles and daily streaks. Spend them on new boxes — the forge never sleeps." watermark="貨" />
         </div>
       </section>
+
+      {heroCards[0] && (
+        <section className="px-6 pb-24 -mt-6">
+          <NeonCoinForgeShowcase card={heroCards[0]} />
+        </section>
+      )}
 
       <Divider />
 
