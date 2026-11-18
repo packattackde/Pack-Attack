@@ -1,9 +1,9 @@
 'use client';
 
-import Image from 'next/image';
 import { Coins, Calendar, CheckCircle2 } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import { useTranslations } from 'next-intl';
+import { CardFaceImage } from '@/components/CardFaceImage';
 
 type Sale = {
   id: string;
@@ -21,18 +21,17 @@ export function SalesHistoryClient({ sales }: { sales: Sale[] }) {
       {sales.map((sale) => (
         <div
           key={sale.id}
-          className="group bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl overflow-hidden transition-all"
+          className="group min-w-0 bg-[#100d22] border border-[rgba(255,255,255,0.12)] shadow-md rounded-xl overflow-hidden transition-all"
         >
-          <div className="relative aspect-[63/88] w-full">
+          <div className="relative w-full">
             {sale.cardImage ? (
-              <Image
+              <CardFaceImage
                 src={sale.cardImage}
                 alt={sale.cardName}
-                fill
-                className="object-cover"
+                sizes="(max-width: 640px) 45vw, (max-width: 1024px) 20vw, 12vw"
               />
             ) : (
-              <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+              <div className="relative aspect-[63/88] w-full bg-gray-800 flex items-center justify-center">
                 <span className="text-gray-600 text-xs">{t('noImage')}</span>
               </div>
             )}

@@ -578,8 +578,8 @@ a:not([class]) {
   color: currentColor;
 }
 
-/* Make images easier to work with */
-img,
+/* Make images easier to work with — do not apply height:auto to Next.js fill images */
+img:not([data-nimg="fill"]),
 picture,
 video,
 canvas,
@@ -587,6 +587,13 @@ svg {
   display: block;
   max-width: 100%;
   height: auto;
+}
+
+img[data-nimg="fill"] {
+  display: block;
+  max-width: none;
+  width: 100%;
+  height: 100%;
 }
 
 /* Inherit fonts for inputs and buttons */
@@ -947,8 +954,8 @@ select:-webkit-autofill:focus {
    IMAGE LOADING OPTIMIZATION
    ============================================ */
 
-/* Prevent layout shift on images */
-img {
+/* Prevent layout shift on images — fill images must stay visible in card grids */
+img:not([data-nimg="fill"]) {
   content-visibility: auto;
 }
 
@@ -1287,7 +1294,7 @@ img {
 }
 
 /* Optimize images for layout stability */
-img,
+img:not([data-nimg="fill"]),
 video {
   content-visibility: auto;
   contain-intrinsic-size: auto 300px;

@@ -39,10 +39,33 @@ export default async function SalesHistoryPage() {
 
   const rawSales = await getSalesHistory();
 
-  // Convert Decimal to Number for client
-  const sales = rawSales.map(sale => ({
+  const cardIdsNeedingImage = [
+    ...new Set(
+      rawSales
+        .filter((s) => !s.cardImage && s.cardId)
+        .map((s) => s.cardId as string),
+    ),
+  ];
+
+  const cardImageById = new Map<string, string>();
+  if (cardIdsNeedingImage.length > 0) {
+    const cards = await prisma.card.findMany({
+      where: { id: { in: cardIdsNeedingImage } },
+      select: { id: true, imageUrlGatherer: true, imageUrlScryfall: true },
+    });
+    for (const card of cards) {
+      const url = card.imageUrlGatherer || card.imageUrlScryfall;
+      if (url) cardImageById.set(card.id, url);
+    }
+  }
+
+  // Convert Decimal to Number for client; backfill missing sale snapshots from Card
+  const sales = rawSales.map((sale) => ({
     ...sale,
     coinsReceived: Number(sale.coinsReceived),
+    cardImage:
+      sale.cardImage ||
+      (sale.cardId ? cardImageById.get(sale.cardId) ?? null : null),
   }));
 
   // Calculate stats
