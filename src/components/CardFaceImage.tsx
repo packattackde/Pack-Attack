@@ -8,6 +8,8 @@ type CardFaceImageProps = {
   className?: string;
   sizes?: string;
   priority?: boolean;
+  /** Parent already has aspect + position:relative — only render fill image */
+  embedded?: boolean;
 };
 
 const DEFAULT_SIZES =
@@ -23,20 +25,29 @@ export function CardFaceImage({
   className = 'object-cover',
   sizes = DEFAULT_SIZES,
   priority = false,
+  embedded = false,
 }: CardFaceImageProps) {
+  const image = (
+    <Image
+      src={src}
+      alt={alt}
+      fill
+      className={className}
+      sizes={sizes}
+      unoptimized
+      priority={priority}
+      loading={priority ? undefined : 'lazy'}
+      decoding="async"
+    />
+  );
+
+  if (embedded) {
+    return <div className="absolute inset-0">{image}</div>;
+  }
+
   return (
     <div className="relative aspect-[63/88] w-full min-h-0">
-      <div className="absolute inset-0">
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          className={className}
-          sizes={sizes}
-          unoptimized
-          priority={priority}
-        />
-      </div>
+      <div className="absolute inset-0">{image}</div>
     </div>
   );
 }

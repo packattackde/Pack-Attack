@@ -257,6 +257,7 @@ function PackCard({
 
       <Link
         href={`/open/${box.id}`}
+        prefetch
         aria-label={`${t('open')} ${box.name}`}
         className="relative block w-full transition-transform duration-500 ease-out group-hover:-translate-y-3 group-hover:rotate-[-3deg]"
       >
@@ -282,6 +283,7 @@ function PackCard({
 
         <Link
           href={`/open/${box.id}`}
+        prefetch
           className="touch-target inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-xl bg-gradient-to-br from-[#ff2ea6] to-[#8b5cf6] px-4 py-2.5 text-xs font-black uppercase tracking-wider text-white shadow-[0_4px_16px_rgba(255,46,166,0.3)] transition-all group-hover:scale-105 group-hover:shadow-[0_6px_22px_rgba(255,46,166,0.5)] active:scale-95"
         >
           <Coins className="w-3.5 h-3.5" />
