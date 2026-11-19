@@ -31,6 +31,9 @@ const dayBerlin = (column: string) =>
 const packCoinSpendSql = `COALESCE(SUM(b.price / NULLIF(b."cardsPerPack", 0)), 0)::float`;
 const packOpenCountSql = `ROUND(COALESCE(SUM(1.0 / NULLIF(b."cardsPerPack", 0)), 0))::int`;
 
+/** Battle rounds create Pull rows without `/api/packs/open` coin spend — exclude from pack KPIs. */
+const packPullOnlySql = `AND NOT EXISTS (SELECT 1 FROM "BattlePull" bp WHERE bp."pullId" = p.id)`;
+
 const sinceSql = sqlSinceBerlinDaysAgo();
 
 function emptyByPrice(): Record<string, number> {
@@ -113,6 +116,7 @@ export async function aggregateKpi(rangeDays: KpiRangeDays): Promise<KpiPayload>
        INNER JOIN "User" u ON u.id = p."userId"
        WHERE p."timestamp" >= ${sinceSql}
          AND u."isBot" = false
+         ${packPullOnlySql}
        GROUP BY 1
        ORDER BY 1`,
       rangeDays,
@@ -198,6 +202,7 @@ export async function aggregateKpi(rangeDays: KpiRangeDays): Promise<KpiPayload>
        INNER JOIN "User" u ON u.id = p."userId"
        WHERE p."timestamp" >= ${sinceSql}
          AND u."isBot" = false
+         ${packPullOnlySql}
        GROUP BY 1
        ORDER BY 1`,
       rangeDays,
@@ -222,6 +227,7 @@ export async function aggregateKpi(rangeDays: KpiRangeDays): Promise<KpiPayload>
        INNER JOIN "User" u ON u.id = p."userId"
        WHERE p."timestamp" >= ${sinceSql}
          AND u."isBot" = false
+         ${packPullOnlySql}
        GROUP BY 1
        ORDER BY 1`,
       rangeDays,
@@ -234,6 +240,7 @@ export async function aggregateKpi(rangeDays: KpiRangeDays): Promise<KpiPayload>
        INNER JOIN "User" u ON u.id = p."userId"
        WHERE p."timestamp" >= ${sinceSql}
          AND u."isBot" = false
+         ${packPullOnlySql}
        GROUP BY 1
        ORDER BY 1`,
       rangeDays,

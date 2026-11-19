@@ -388,7 +388,8 @@ export default function KpiDashboardClient({ previewMode = false }: KpiDashboard
           <p>
             Gewinn = Erlöse (Coin-Käufe) minus Kosten (Kartenverkäufe + Versand + Pack-Öffnungen in Coins ×{' '}
             {COIN_EUR_RATE} €/Coin). Pack-Öffnungen = Anzahl geöffneter Booster (nicht Einzelkarten); Coins für
-            Packs = tatsächlicher Coin-Abzug (Boxpreis × Öffnungen). HP-Hits ohne Dedupe. Auto-Refresh 60s.
+            Packs = Coin-Abzug via Pack-Öffnung (ohne Battle-Pulls). Erlöse nur Coin-Käufe (Stripe/PayPal), nicht
+            Shop-EUR. HP-Hits ohne Dedupe. Auto-Refresh 60s.
           </p>
         </div>
 
