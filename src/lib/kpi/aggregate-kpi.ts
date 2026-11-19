@@ -27,6 +27,10 @@ const OPEN_STATUSES = ['OPEN', 'CLAIMED', 'IN_PROGRESS'] as const;
 const dayBerlin = (column: string) =>
   `((${column} AT TIME ZONE 'UTC') AT TIME ZONE '${KPI_TIMEZONE}')::date`;
 
+/** Box.price is per pack open; each Pull row is one card inside that pack. */
+const packCoinSpendSql = `COALESCE(SUM(b.price / NULLIF(b."cardsPerPack", 0)), 0)::float`;
+const packOpenCountSql = `ROUND(COALESCE(SUM(1.0 / NULLIF(b."cardsPerPack", 0)), 0))::int`;
+
 const sinceSql = sqlSinceBerlinDaysAgo();
 
 function emptyByPrice(): Record<string, number> {
@@ -103,7 +107,7 @@ export async function aggregateKpi(rangeDays: KpiRangeDays): Promise<KpiPayload>
     ),
     prisma.$queryRawUnsafe<Array<{ day: Date; coins: number }>>(
       `SELECT ${dayBerlin('p."timestamp"')} as day,
-              SUM(b.price)::float as coins
+              ${packCoinSpendSql} as coins
        FROM "Pull" p
        INNER JOIN "Box" b ON b.id = p."boxId"
        INNER JOIN "User" u ON u.id = p."userId"
@@ -212,8 +216,9 @@ export async function aggregateKpi(rangeDays: KpiRangeDays): Promise<KpiPayload>
     ),
     prisma.$queryRawUnsafe<Array<{ day: Date; count: number }>>(
       `SELECT ${dayBerlin('p."timestamp"')} as day,
-              COUNT(*)::int as count
+              ${packOpenCountSql} as count
        FROM "Pull" p
+       INNER JOIN "Box" b ON b.id = p."boxId"
        INNER JOIN "User" u ON u.id = p."userId"
        WHERE p."timestamp" >= ${sinceSql}
          AND u."isBot" = false
@@ -223,7 +228,7 @@ export async function aggregateKpi(rangeDays: KpiRangeDays): Promise<KpiPayload>
     ),
     prisma.$queryRawUnsafe<Array<{ day: Date; coins: number }>>(
       `SELECT ${dayBerlin('p."timestamp"')} as day,
-              SUM(b.price)::float as coins
+              ${packCoinSpendSql} as coins
        FROM "Pull" p
        INNER JOIN "Box" b ON b.id = p."boxId"
        INNER JOIN "User" u ON u.id = p."userId"

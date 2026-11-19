@@ -15,10 +15,14 @@ export function buildDayKeys(rangeDays: number): string[] {
   return keys;
 }
 
-/** Postgres `date` columns come back as UTC midnight of that calendar day. */
+/** Map Postgres `date` / timestamptz buckets to Berlin YYYY-MM-DD chart keys. */
 export function dateKeyFromDb(d: Date | string): string {
-  if (typeof d === 'string') return d.slice(0, 10);
-  return d.toISOString().slice(0, 10);
+  if (typeof d === 'string') {
+    const s = d.trim();
+    if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0, 10);
+    return formatBerlinYmd(new Date(s));
+  }
+  return formatBerlinYmd(d);
 }
 
 /** SQL fragment: timestamptz >= start of (today Berlin - (n-1) days). Pass range days as $1. */

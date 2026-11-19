@@ -8,7 +8,7 @@ async function main() {
       where: { timestamp: { gte: since }, user: { isBot: false } },
     }),
     prisma.$queryRaw<Array<{ coins: number }>>`
-      SELECT COALESCE(SUM(b.price), 0)::float as coins
+      SELECT COALESCE(SUM(b.price / NULLIF(b."cardsPerPack", 0)), 0)::float as coins
       FROM "Pull" p
       INNER JOIN "Box" b ON b.id = p."boxId"
       INNER JOIN "User" u ON u.id = p."userId"
@@ -29,6 +29,10 @@ async function main() {
         estimatedCoinSpendOnPacks24h: pullCoinSum[0]?.coins ?? 0,
         pageViews24h: pageViewCount,
         kpiTodayDateKey: today,
+        kpiSummaryToday: {
+          packsOpenedToday: kpi.summary.packsOpenedToday,
+          packCoinsSpentToday: kpi.summary.packCoinsSpentToday,
+        },
         kpiEvToday: todayEv,
         kpiEvSeriesNonZero: kpi.evPerCardByDay.filter((d) => d.avgEv > 0).length,
       },
