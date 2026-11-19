@@ -16,6 +16,9 @@ import {
   Swords,
   Loader2,
   Info,
+  Package,
+  RefreshCw,
+  Coins,
 } from 'lucide-react';
 import type { KpiPayload, KpiRangeDays } from '@/lib/kpi/types';
 import { COIN_PACKAGE_EUR_TIERS } from '@/lib/kpi/types';
@@ -161,6 +164,12 @@ export default function KpiDashboardClient({ previewMode = false }: KpiDashboard
     load();
   }, [load]);
 
+  useEffect(() => {
+    if (previewMode || mockParam) return;
+    const id = window.setInterval(load, 60_000);
+    return () => window.clearInterval(id);
+  }, [load, previewMode, mockParam]);
+
   const setRange = (r: KpiRangeDays) => {
     if (previewMode) {
       setPreviewRange(r);
@@ -266,6 +275,16 @@ export default function KpiDashboardClient({ previewMode = false }: KpiDashboard
             {!previewMode && (
               <button
                 type="button"
+                onClick={() => load()}
+                className="px-3 py-1.5 rounded-lg text-sm font-medium border border-white/10 text-[#8888aa] hover:text-white hover:border-white/20 inline-flex items-center gap-1.5"
+              >
+                <RefreshCw className="w-3.5 h-3.5" />
+                Aktualisieren
+              </button>
+            )}
+            {!previewMode && (
+              <button
+                type="button"
                 onClick={toggleMock}
                 className={`px-3 py-1.5 rounded-lg text-sm font-medium border ${
                   mockParam || data.mock
@@ -294,7 +313,9 @@ export default function KpiDashboardClient({ previewMode = false }: KpiDashboard
           <StatCard icon={Sparkles} label="EV/Karte heute" value={summary.avgEvPerCardToday.toFixed(2)} accent="text-[#ff2ea6]" />
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-8">
+          <MiniStat label="Pack-Öffnungen (heute)" value={summary.packsOpenedToday} />
+          <MiniStat label="Coins für Packs (heute)" value={summary.packCoinsSpentToday.toFixed(2)} />
           <MiniStat label="Karten verkauft (heute)" value={summary.cardsSoldToday} />
           <MiniStat label="Lieferaufträge (heute)" value={summary.deliveryOrdersToday} />
           <MiniStat label="Liefer-Karten (heute)" value={summary.deliveryCardsToday} />
@@ -304,8 +325,8 @@ export default function KpiDashboardClient({ previewMode = false }: KpiDashboard
         <div className="rounded-xl border border-white/[0.06] bg-[#1e1e55]/80 p-4 mb-8 flex gap-2 text-xs text-[#8888aa]">
           <Info className="w-4 h-4 shrink-0 text-[#E879F9]" />
           <p>
-            Gewinn = Erlöse (abgeschlossene Coin-Käufe) minus Kosten (Kartenverkäufe + Versand in Coins ×{' '}
-            {COIN_EUR_RATE} €/Coin). Kein Ersatz für Buchhaltung; HP-Hits ohne Dedupe.
+            Gewinn = Erlöse (Coin-Käufe) minus Kosten (Kartenverkäufe + Versand + Pack-Öffnungen in Coins ×{' '}
+            {COIN_EUR_RATE} €/Coin). Pack-Aktivität siehe „Pack-Öffnungen“. HP-Hits ohne Dedupe. Auto-Refresh 60s.
           </p>
         </div>
 
@@ -350,6 +371,20 @@ export default function KpiDashboardClient({ previewMode = false }: KpiDashboard
               className="bg-amber-500/60 hover:bg-amber-500/80"
             />
             <p className="text-[10px] text-[#8888aa] mt-2">Kategorien: Pack, Battle, Shop, General</p>
+          </ChartCard>
+          <ChartCard title="Pack-Öffnungen / Tag" icon={Package}>
+            <BarChart
+              series={data.packsOpenedByDay.map((d) => ({ date: d.date, value: d.count }))}
+              max={maxOf(data.packsOpenedByDay.map((d) => d.count))}
+              className="bg-[#ff2ea6]/60 hover:bg-[#ff2ea6]/80"
+            />
+          </ChartCard>
+          <ChartCard title="Coins für Packs / Tag" icon={Coins}>
+            <BarChart
+              series={data.packCoinsSpentByDay.map((d) => ({ date: d.date, value: d.count }))}
+              max={maxOf(data.packCoinsSpentByDay.map((d) => d.count))}
+              className="bg-amber-500/60 hover:bg-amber-500/80"
+            />
           </ChartCard>
           <ChartCard title="Verkaufte Karten / Tag" icon={BadgeDollarSign}>
             <BarChart

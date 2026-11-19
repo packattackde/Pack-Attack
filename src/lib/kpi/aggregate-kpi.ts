@@ -1,6 +1,11 @@
-import { subDays, format } from 'date-fns';
 import { prisma } from '@/lib/prisma';
 import { coinsToEur } from './coin-eur';
+import {
+  buildDayKeys,
+  dateKeyFromDb,
+  KPI_TIMEZONE,
+  sqlSinceBerlinDaysAgo,
+} from './berlin-dates';
 import type {
   KpiPayload,
   KpiRangeDays,
@@ -14,35 +19,20 @@ import type {
 } from './types';
 import { COIN_PACKAGE_EUR_TIERS } from './types';
 
-export const KPI_TIMEZONE = 'Europe/Berlin';
-
 const COMPLAINT_CATEGORIES_SQL =
   "('PACK_ISSUE', 'BATTLE_ISSUE', 'SHOP_ISSUE', 'GENERAL')";
 
 const OPEN_STATUSES = ['OPEN', 'CLAIMED', 'IN_PROGRESS'] as const;
 
-/** Berlin calendar date bucket for a timestamptz column. */
 const dayBerlin = (column: string) =>
   `((${column} AT TIME ZONE 'UTC') AT TIME ZONE '${KPI_TIMEZONE}')::date`;
+
+const sinceSql = sqlSinceBerlinDaysAgo();
 
 function emptyByPrice(): Record<string, number> {
   const o: Record<string, number> = {};
   for (const tier of COIN_PACKAGE_EUR_TIERS) o[String(tier)] = 0;
   return o;
-}
-
-function buildDayKeys(rangeDays: KpiRangeDays): string[] {
-  const keys: string[] = [];
-  const today = new Date();
-  for (let i = rangeDays - 1; i >= 0; i--) {
-    keys.push(format(subDays(today, i), 'yyyy-MM-dd'));
-  }
-  return keys;
-}
-
-function dateKeyFromDb(d: Date | string): string {
-  if (typeof d === 'string') return d.slice(0, 10);
-  return format(d, 'yyyy-MM-dd');
 }
 
 function fillCounts(dayKeys: string[], rows: Array<{ day: Date | string; count: number }>): DailyCount[] {
@@ -53,10 +43,9 @@ function fillCounts(dayKeys: string[], rows: Array<{ day: Date | string; count: 
   return dayKeys.map((date) => ({ date, count: map.get(date) ?? 0 }));
 }
 
-export async function aggregateKpi(rangeDays: KpiRangeDays): Promise<KpiPayload> {
-  const since = subDays(new Date(), rangeDays - 1);
-  since.setHours(0, 0, 0, 0);
+export { KPI_TIMEZONE };
 
+export async function aggregateKpi(rangeDays: KpiRangeDays): Promise<KpiPayload> {
   const dayKeys = buildDayKeys(rangeDays);
   const todayKey = dayKeys[dayKeys.length - 1];
 
@@ -64,6 +53,7 @@ export async function aggregateKpi(rangeDays: KpiRangeDays): Promise<KpiPayload>
     revenueRows,
     saleCostRows,
     shippingCostRows,
+    packCostRows,
     packageRows,
     hpHitRows,
     openComplaintsCount,
@@ -73,6 +63,8 @@ export async function aggregateKpi(rangeDays: KpiRangeDays): Promise<KpiPayload>
     deliveryCardRows,
     evRows,
     battleRows,
+    pullsByDayRows,
+    packCoinsByDayRows,
   ] = await Promise.all([
     prisma.$queryRawUnsafe<Array<{ day: Date; revenue: number }>>(
       `SELECT ${dayBerlin('t."timestamp"')} as day,
@@ -81,21 +73,21 @@ export async function aggregateKpi(rangeDays: KpiRangeDays): Promise<KpiPayload>
        INNER JOIN "User" u ON u.id = t."userId"
        WHERE t.status = 'COMPLETED'
          AND u."isBot" = false
-         AND t."timestamp" >= $1
+         AND t."timestamp" >= ${sinceSql}
        GROUP BY 1
        ORDER BY 1`,
-      since,
+      rangeDays,
     ),
     prisma.$queryRawUnsafe<Array<{ day: Date; coins: number }>>(
       `SELECT ${dayBerlin('s."timestamp"')} as day,
               SUM(s."coinsReceived")::float as coins
        FROM "SaleHistory" s
        INNER JOIN "User" u ON u.id = s."userId"
-       WHERE s."timestamp" >= $1
+       WHERE s."timestamp" >= ${sinceSql}
          AND u."isBot" = false
        GROUP BY 1
        ORDER BY 1`,
-      since,
+      rangeDays,
     ),
     prisma.$queryRawUnsafe<Array<{ day: Date; coins: number }>>(
       `SELECT ${dayBerlin('o."createdAt"')} as day,
@@ -103,11 +95,23 @@ export async function aggregateKpi(rangeDays: KpiRangeDays): Promise<KpiPayload>
        FROM "Order" o
        INNER JOIN "User" u ON u.id = o."userId"
        WHERE o."shippingMethod" = 'COINS'
-         AND o."createdAt" >= $1
+         AND o."createdAt" >= ${sinceSql}
          AND u."isBot" = false
        GROUP BY 1
        ORDER BY 1`,
-      since,
+      rangeDays,
+    ),
+    prisma.$queryRawUnsafe<Array<{ day: Date; coins: number }>>(
+      `SELECT ${dayBerlin('p."timestamp"')} as day,
+              SUM(b.price)::float as coins
+       FROM "Pull" p
+       INNER JOIN "Box" b ON b.id = p."boxId"
+       INNER JOIN "User" u ON u.id = p."userId"
+       WHERE p."timestamp" >= ${sinceSql}
+         AND u."isBot" = false
+       GROUP BY 1
+       ORDER BY 1`,
+      rangeDays,
     ),
     prisma.$queryRawUnsafe<Array<{ day: Date; amount: number; count: number }>>(
       `SELECT ${dayBerlin('t."timestamp"')} as day,
@@ -117,20 +121,20 @@ export async function aggregateKpi(rangeDays: KpiRangeDays): Promise<KpiPayload>
        INNER JOIN "User" u ON u.id = t."userId"
        WHERE t.status = 'COMPLETED'
          AND u."isBot" = false
-         AND t."timestamp" >= $1
+         AND t."timestamp" >= ${sinceSql}
        GROUP BY 1, t.amount
        ORDER BY 1`,
-      since,
+      rangeDays,
     ),
     prisma.$queryRawUnsafe<Array<{ day: Date; count: number }>>(
       `SELECT ${dayBerlin('"viewedAt"')} as day,
               COUNT(*)::int as count
        FROM "PageView"
        WHERE path = '/'
-         AND "viewedAt" >= $1
+         AND "viewedAt" >= ${sinceSql}
        GROUP BY 1
        ORDER BY 1`,
-      since,
+      rangeDays,
     ).catch(() => [] as Array<{ day: Date; count: number }>),
     prisma.feedback.count({
       where: {
@@ -142,33 +146,33 @@ export async function aggregateKpi(rangeDays: KpiRangeDays): Promise<KpiPayload>
       `SELECT ${dayBerlin('"createdAt"')} as day,
               COUNT(*)::int as count
        FROM "Feedback"
-       WHERE "createdAt" >= $1
+       WHERE "createdAt" >= ${sinceSql}
          AND category IN ${COMPLAINT_CATEGORIES_SQL}
        GROUP BY 1
        ORDER BY 1`,
-      since,
+      rangeDays,
     ),
     prisma.$queryRawUnsafe<Array<{ day: Date; count: number }>>(
       `SELECT ${dayBerlin('s."timestamp"')} as day,
               COUNT(*)::int as count
        FROM "SaleHistory" s
        INNER JOIN "User" u ON u.id = s."userId"
-       WHERE s."timestamp" >= $1
+       WHERE s."timestamp" >= ${sinceSql}
          AND u."isBot" = false
        GROUP BY 1
        ORDER BY 1`,
-      since,
+      rangeDays,
     ),
     prisma.$queryRawUnsafe<Array<{ day: Date; count: number }>>(
       `SELECT ${dayBerlin('o."createdAt"')} as day,
               COUNT(*)::int as count
        FROM "Order" o
        INNER JOIN "User" u ON u.id = o."userId"
-       WHERE o."createdAt" >= $1
+       WHERE o."createdAt" >= ${sinceSql}
          AND u."isBot" = false
        GROUP BY 1
        ORDER BY 1`,
-      since,
+      rangeDays,
     ),
     prisma.$queryRawUnsafe<Array<{ day: Date; count: number }>>(
       `SELECT ${dayBerlin('o."createdAt"')} as day,
@@ -176,11 +180,11 @@ export async function aggregateKpi(rangeDays: KpiRangeDays): Promise<KpiPayload>
        FROM "Order" o
        INNER JOIN "User" u ON u.id = o."userId"
        INNER JOIN "OrderItem" oi ON oi."orderId" = o.id
-       WHERE o."createdAt" >= $1
+       WHERE o."createdAt" >= ${sinceSql}
          AND u."isBot" = false
        GROUP BY 1
        ORDER BY 1`,
-      since,
+      rangeDays,
     ),
     prisma.$queryRawUnsafe<Array<{ day: Date; avg_ev: number }>>(
       `SELECT ${dayBerlin('p."timestamp"')} as day,
@@ -188,11 +192,11 @@ export async function aggregateKpi(rangeDays: KpiRangeDays): Promise<KpiPayload>
        FROM "Pull" p
        LEFT JOIN "Card" c ON p."cardId" = c.id
        INNER JOIN "User" u ON u.id = p."userId"
-       WHERE p."timestamp" >= $1
+       WHERE p."timestamp" >= ${sinceSql}
          AND u."isBot" = false
        GROUP BY 1
        ORDER BY 1`,
-      since,
+      rangeDays,
     ),
     prisma.$queryRawUnsafe<Array<{ day: Date; battles: number; rounds: number }>>(
       `SELECT ${dayBerlin('b."finishedAt"')} as day,
@@ -201,10 +205,33 @@ export async function aggregateKpi(rangeDays: KpiRangeDays): Promise<KpiPayload>
        FROM "Battle" b
        WHERE b.status IN ('FINISHED_WIN', 'FINISHED_DRAW')
          AND b."finishedAt" IS NOT NULL
-         AND b."finishedAt" >= $1
+         AND b."finishedAt" >= ${sinceSql}
        GROUP BY 1
        ORDER BY 1`,
-      since,
+      rangeDays,
+    ),
+    prisma.$queryRawUnsafe<Array<{ day: Date; count: number }>>(
+      `SELECT ${dayBerlin('p."timestamp"')} as day,
+              COUNT(*)::int as count
+       FROM "Pull" p
+       INNER JOIN "User" u ON u.id = p."userId"
+       WHERE p."timestamp" >= ${sinceSql}
+         AND u."isBot" = false
+       GROUP BY 1
+       ORDER BY 1`,
+      rangeDays,
+    ),
+    prisma.$queryRawUnsafe<Array<{ day: Date; coins: number }>>(
+      `SELECT ${dayBerlin('p."timestamp"')} as day,
+              SUM(b.price)::float as coins
+       FROM "Pull" p
+       INNER JOIN "Box" b ON b.id = p."boxId"
+       INNER JOIN "User" u ON u.id = p."userId"
+       WHERE p."timestamp" >= ${sinceSql}
+         AND u."isBot" = false
+       GROUP BY 1
+       ORDER BY 1`,
+      rangeDays,
     ),
   ]);
 
@@ -219,6 +246,10 @@ export async function aggregateKpi(rangeDays: KpiRangeDays): Promise<KpiPayload>
     costByDay.set(key, (costByDay.get(key) ?? 0) + coinsToEur(Number(r.coins)));
   }
   for (const r of shippingCostRows) {
+    const key = dateKeyFromDb(r.day);
+    costByDay.set(key, (costByDay.get(key) ?? 0) + coinsToEur(Number(r.coins)));
+  }
+  for (const r of packCostRows) {
     const key = dateKeyFromDb(r.day);
     costByDay.set(key, (costByDay.get(key) ?? 0) + coinsToEur(Number(r.coins)));
   }
@@ -261,6 +292,15 @@ export async function aggregateKpi(rangeDays: KpiRangeDays): Promise<KpiPayload>
   const hpHitsByDay = fillCounts(dayKeys, hpHitRows);
   const complaintsOpenedByDay = fillCounts(dayKeys, complaintOpenedRows);
   const cardsSoldByDay = fillCounts(dayKeys, cardsSoldRows);
+  const packsOpenedByDay = fillCounts(dayKeys, pullsByDayRows);
+
+  const packCoinsMap = new Map(
+    packCoinsByDayRows.map((r) => [dateKeyFromDb(r.day), Number(r.coins)]),
+  );
+  const packCoinsSpentByDay: DailyCount[] = dayKeys.map((date) => ({
+    date,
+    count: Math.round((packCoinsMap.get(date) ?? 0) * 100) / 100,
+  }));
 
   const ordersMap = new Map(deliveryOrderRows.map((r) => [dateKeyFromDb(r.day), Number(r.count)]));
   const cardsMap = new Map(deliveryCardRows.map((r) => [dateKeyFromDb(r.day), Number(r.count)]));
@@ -288,6 +328,8 @@ export async function aggregateKpi(rangeDays: KpiRangeDays): Promise<KpiPayload>
     rounds: battleMap.get(date)?.rounds ?? 0,
   }));
 
+  const todayPacks = packsOpenedByDay.find((d) => d.date === todayKey);
+  const todayPackCoins = packCoinsSpentByDay.find((d) => d.date === todayKey);
   const todayHits = hpHitsByDay.find((d) => d.date === todayKey);
   const todaySold = cardsSoldByDay.find((d) => d.date === todayKey);
   const todayDelivery = deliveryByDay.find((d) => d.date === todayKey);
@@ -306,6 +348,8 @@ export async function aggregateKpi(rangeDays: KpiRangeDays): Promise<KpiPayload>
     deliveryCardsToday: todayDelivery?.cards ?? 0,
     battlesToday: todayBattles?.battles ?? 0,
     roundsToday: todayBattles?.rounds ?? 0,
+    packsOpenedToday: todayPacks?.count ?? 0,
+    packCoinsSpentToday: todayPackCoins?.count ?? 0,
   };
 
   return {
@@ -321,6 +365,8 @@ export async function aggregateKpi(rangeDays: KpiRangeDays): Promise<KpiPayload>
     deliveryByDay,
     evPerCardByDay,
     battlesByDay,
+    packsOpenedByDay,
+    packCoinsSpentByDay,
     coinPackagesRangeTotal,
   };
 }

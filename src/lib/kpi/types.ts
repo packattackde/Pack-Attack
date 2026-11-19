@@ -45,6 +45,8 @@ export type KpiSummary = {
   deliveryCardsToday: number;
   battlesToday: number;
   roundsToday: number;
+  packsOpenedToday: number;
+  packCoinsSpentToday: number;
 };
 
 export type KpiPayload = {
@@ -60,5 +62,7 @@ export type KpiPayload = {
   deliveryByDay: DailyDelivery[];
   evPerCardByDay: DailyEv[];
   battlesByDay: DailyBattles[];
+  packsOpenedByDay: DailyCount[];
+  packCoinsSpentByDay: DailyCount[];
   coinPackagesRangeTotal: Record<string, number>;
 };

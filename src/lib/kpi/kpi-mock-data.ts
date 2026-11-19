@@ -63,6 +63,8 @@ export function buildKpiMockData(rangeDays: KpiRangeDays): KpiPayload {
       deliveryCardsToday: 52,
       battlesToday: 23,
       roundsToday: 156,
+      packsOpenedToday: 412,
+      packCoinsSpentToday: 1000,
     },
     pnlByDay,
     coinPackagesByDay,
@@ -91,6 +93,14 @@ export function buildKpiMockData(rangeDays: KpiRangeDays): KpiPayload {
       date,
       battles: Math.floor(pseudo(i + 11, 5, 40)),
       rounds: Math.floor(pseudo(i + 12, 30, 320)),
+    })),
+    packsOpenedByDay: days.map((date, i) => ({
+      date,
+      count: Math.floor(pseudo(i + 13, 50, 500)),
+    })),
+    packCoinsSpentByDay: days.map((date, i) => ({
+      date,
+      count: Math.round(pseudo(i + 14, 200, 3500) * 100) / 100,
     })),
     coinPackagesRangeTotal,
   };
