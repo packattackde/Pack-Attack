@@ -5,6 +5,8 @@ import { aggregateKpi } from '@/lib/kpi/aggregate-kpi';
 import { buildKpiMockData } from '@/lib/kpi/kpi-mock-data';
 import type { KpiRangeDays } from '@/lib/kpi/types';
 
+export const dynamic = 'force-dynamic';
+
 function parseRange(raw: string | null): KpiRangeDays {
   const n = Number(raw ?? '30');
   if (n === 7 || n === 90) return n;
@@ -24,7 +26,14 @@ export async function GET(request: NextRequest) {
 
     const data = mock ? buildKpiMockData(rangeDays) : await aggregateKpi(rangeDays);
 
-    return NextResponse.json({ success: true, data });
+    return NextResponse.json(
+      { success: true, data },
+      {
+        headers: {
+          'Cache-Control': 'no-store, max-age=0',
+        },
+      },
+    );
   } catch (error) {
     console.error('[admin/kpi]', error);
     return NextResponse.json({ success: false, error: 'Failed to load KPI data' }, { status: 500 });

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import {
@@ -133,32 +133,67 @@ export default function KpiDashboardClient({ previewMode = false }: KpiDashboard
   const rangeDays = previewMode ? previewRange : urlRange;
 
   const [data, setData] = useState<KpiPayload | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [refreshError, setRefreshError] = useState<string | null>(null);
+  const [lastUpdatedAt, setLastUpdatedAt] = useState<Date | null>(null);
+  const loadSeq = useRef(0);
 
-  const load = useCallback(() => {
-    setLoading(true);
-    setError(null);
-    if (previewMode) {
-      setData(buildKpiMockData(rangeDays));
-      setLoading(false);
-      return;
-    }
-    const q = new URLSearchParams({ range: String(rangeDays) });
-    if (mockParam) q.set('mock', '1');
-    fetch(`/api/admin/kpi?${q}`)
-      .then((res) => res.json())
-      .then((json) => {
-        if (!json.success) {
-          setError(json.error || 'Laden fehlgeschlagen');
+  const load = useCallback(
+    (options?: { background?: boolean }) => {
+      const background = options?.background ?? false;
+      if (!background) {
+        setInitialLoading(true);
+        setError(null);
+      } else {
+        setRefreshing(true);
+        setRefreshError(null);
+      }
+      if (previewMode) {
+        setData(buildKpiMockData(rangeDays));
+        setLastUpdatedAt(new Date());
+        setInitialLoading(false);
+        setRefreshing(false);
+        return;
+      }
+      const q = new URLSearchParams({ range: String(rangeDays) });
+      if (mockParam) q.set('mock', '1');
+      const reqId = ++loadSeq.current;
+      fetch(`/api/admin/kpi?${q}`, { cache: 'no-store' })
+        .then((res) => res.json())
+        .then((json) => {
+          if (loadSeq.current !== reqId) return;
+          if (!json.success) {
+            if (background) {
+              setRefreshError(json.error || 'Aktualisierung fehlgeschlagen');
+              return;
+            }
+            setError(json.error || 'Laden fehlgeschlagen');
+            setData(null);
+            return;
+          }
+          setData(json.data);
+          setLastUpdatedAt(new Date());
+          setRefreshError(null);
+        })
+        .catch(() => {
+          if (loadSeq.current !== reqId) return;
+          if (background) {
+            setRefreshError('Netzwerkfehler beim Aktualisieren');
+            return;
+          }
+          setError('Netzwerkfehler');
           setData(null);
-          return;
-        }
-        setData(json.data);
-      })
-      .catch(() => setError('Netzwerkfehler'))
-      .finally(() => setLoading(false));
-  }, [rangeDays, mockParam, previewMode]);
+        })
+        .finally(() => {
+          if (loadSeq.current !== reqId) return;
+          setInitialLoading(false);
+          setRefreshing(false);
+        });
+    },
+    [rangeDays, mockParam, previewMode],
+  );
 
   useEffect(() => {
     load();
@@ -166,8 +201,15 @@ export default function KpiDashboardClient({ previewMode = false }: KpiDashboard
 
   useEffect(() => {
     if (previewMode || mockParam) return;
-    const id = window.setInterval(load, 60_000);
-    return () => window.clearInterval(id);
+    const id = window.setInterval(() => load({ background: true }), 60_000);
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') load({ background: true });
+    };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      window.clearInterval(id);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
   }, [load, previewMode, mockParam]);
 
   const setRange = (r: KpiRangeDays) => {
@@ -205,7 +247,7 @@ export default function KpiDashboardClient({ previewMode = false }: KpiDashboard
     }));
   }, [data]);
 
-  if (loading) {
+  if (initialLoading) {
     return (
       <div className="min-h-screen font-display flex items-center justify-center">
         <Loader2 className="w-8 h-8 text-[#ff2ea6] animate-spin" />
@@ -217,7 +259,7 @@ export default function KpiDashboardClient({ previewMode = false }: KpiDashboard
     return (
       <div className="min-h-screen font-display flex flex-col items-center justify-center gap-4">
         <p className="text-gray-500">{error ?? 'Keine Daten'}</p>
-        <button type="button" onClick={load} className="text-sm text-[#ff2ea6] hover:underline">
+        <button type="button" onClick={() => load()} className="text-sm text-[#ff2ea6] hover:underline">
           Erneut versuchen
         </button>
       </div>
@@ -255,6 +297,18 @@ export default function KpiDashboardClient({ previewMode = false }: KpiDashboard
             </h1>
             <p className="text-[#8888aa] text-sm">
               Zeitraum: {rangeDays} Tage · Zeitzone {data.timezone}
+              {lastUpdatedAt && (
+                <>
+                  {' '}
+                  · Stand{' '}
+                  {lastUpdatedAt.toLocaleTimeString('de-DE', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                  })}
+                  {refreshing && ' (lädt…)'}
+                </>
+              )}
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -275,10 +329,11 @@ export default function KpiDashboardClient({ previewMode = false }: KpiDashboard
             {!previewMode && (
               <button
                 type="button"
-                onClick={() => load()}
-                className="px-3 py-1.5 rounded-lg text-sm font-medium border border-white/10 text-[#8888aa] hover:text-white hover:border-white/20 inline-flex items-center gap-1.5"
+                onClick={() => load({ background: true })}
+                disabled={refreshing}
+                className="px-3 py-1.5 rounded-lg text-sm font-medium border border-white/10 text-[#8888aa] hover:text-white hover:border-white/20 inline-flex items-center gap-1.5 disabled:opacity-50"
               >
-                <RefreshCw className="w-3.5 h-3.5" />
+                <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
                 Aktualisieren
               </button>
             )}
@@ -301,6 +356,12 @@ export default function KpiDashboardClient({ previewMode = false }: KpiDashboard
         {(mockParam || data.mock) && (
           <div className="mb-6 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
             Vorschau mit Beispieldaten — Umschalter oben rechts für Live-Daten aus der Datenbank.
+          </div>
+        )}
+
+        {refreshError && !mockParam && !data.mock && (
+          <div className="mb-6 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">
+            {refreshError} — angezeigte Werte sind vom letzten erfolgreichen Abruf.
           </div>
         )}
 
