@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
-import { Package, Swords, Users, Mail, ShieldCheck, Coins, TrendingUp, ShoppingCart, Tag, Store, Wallet, MessageSquare, MessageCircle } from 'lucide-react';
+import { Package, Swords, Users, Mail, ShieldCheck, Coins, TrendingUp, ShoppingCart, Tag, Store, Wallet, MessageSquare, MessageCircle, BarChart3 } from 'lucide-react';
 
 export default async function AdminDashboard() {
   const session = await getCurrentSession();
@@ -159,6 +159,14 @@ export default async function AdminDashboard() {
             </div>
             <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#E879F9] transition-colors">Shop Payouts</h3>
             <p className="text-[#8888aa] text-sm">Process payout requests from shop owners. 5 coins = 1 EUR.</p>
+          </Link>
+
+          <Link href="/admin/kpi" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-cyan-500/50 transition-all group">
+            <div className="inline-flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-gradient-to-br from-cyan-500/20 to-[#ff2ea6]/20">
+              <BarChart3 className="w-6 h-6 text-cyan-400" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">KPI Command Center</h3>
+            <p className="text-[#8888aa] text-sm">Erlöse, Packs, Battles, Reklamationen und HP-Traffic.</p>
           </Link>
 
           <Link href="/admin/feedback" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:ring-2 hover:ring-[#ff2ea6]/50 transition-all group relative">

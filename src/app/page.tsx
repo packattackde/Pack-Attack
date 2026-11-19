@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { prisma } from '@/lib/prisma';
+import { recordHomePageView } from '@/lib/page-view';
 import { LandingPage, type LandingCard, type LandingPull, type LandingBox, type LandingStats } from '@/components/LandingPage';
 
 export const dynamic = 'force-dynamic';
@@ -38,6 +39,7 @@ const emptyStats: LandingStats = {
 };
 
 export default async function Home() {
+  recordHomePageView();
   try {
     const [recentPulls, heroPulls, catalogCards, pullCount, battleCount, collectorCount, boxCount, featuredBoxes] =
       await Promise.all([

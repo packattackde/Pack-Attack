@@ -1062,6 +1062,14 @@ model InfoText {
   @@index([key])
 }
 
+model PageView {
+  id       String   @id @default(cuid())
+  path     String
+  viewedAt DateTime @default(now())
+
+  @@index([path, viewedAt])
+}
+
 model ChatLog {
   id          String    @id @default(cuid())
   originalId  String    // ChatMessage.id snapshot (not FK, message may be hard-deleted)
