@@ -433,7 +433,7 @@
     "infoInstantRipTitle": "Sofort öffnen",
     "infoInstantRipDesc": "Öffne Packs sofort mit einer vollständigen Reveal-Animation.",
     "infoSellBackTitle": "Jederzeit zurückverkaufen",
-    "infoSellBackDesc": "Tausche deine Hits zurück in Coins — oder lass dir die Originale schicken.",
+    "infoSellBackDesc": "Verkaufe Karten für Coins in deiner Sammlung — oder lass dir die Originale schicken.",
     "games": {
       "POKEMON": "Pokémon",
       "MAGIC_THE_GATHERING": "Magic: The Gathering",
@@ -608,6 +608,7 @@
     "viewCollection": "Sammlung anzeigen",
     "openMore": "Weitere öffnen",
     "openingResults": "Öffnungsergebnisse",
+    "sellInCollectionHint": "Deine Karten liegen in der Sammlung. Dort kannst du sie jederzeit für Coins verkaufen.",
     "totalValue": "Gesamtwert",
     "cardsSold": "Karte(n) verkauft",
     "sellByRarity": "Nach Seltenheit verkaufen",

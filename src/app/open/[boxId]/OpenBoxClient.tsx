@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/use-toast';
 import { useTranslations } from 'next-intl';
-import { Coins, Package, Sparkles, ArrowLeft, Layers, Zap, Square, BadgeDollarSign, X } from 'lucide-react';
+import { Coins, Package, Sparkles, ArrowLeft, Layers, Zap, Square, X } from 'lucide-react';
 import { InfoTooltip } from '@/components/InfoTooltip';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -183,16 +183,6 @@ const getRarityGlow = (rarity: string | undefined): RarityTier => {
   return COMMON_TIER;
 };
 
-// Rarity tier sell-button metadata (ordered from common → legendary)
-const TIER_ORDER = ['lindwurm-common', 'lindwurm-uncommon', 'lindwurm-rare', 'lindwurm-epic', 'lindwurm-legendary'] as const;
-const TIER_META: Record<string, { label: string; labelKey: string; btnClass: string }> = {
-  'lindwurm-common':    { label: 'Commons',     labelKey: 'rarities.commons',     btnClass: 'border-gray-500/60 text-gray-300 hover:bg-gray-500/10' },
-  'lindwurm-uncommon':  { label: 'Uncommons',   labelKey: 'rarities.uncommons',   btnClass: 'border-[#ff2ea6]/60 text-[#E879F9] hover:bg-[#ff2ea6]/10' },
-  'lindwurm-rare':      { label: 'Rares',       labelKey: 'rarities.rares',       btnClass: 'border-blue-500/60 text-blue-400 hover:bg-blue-500/10' },
-  'lindwurm-epic':      { label: 'Epics',       labelKey: 'rarities.epics',       btnClass: 'border-purple-500/60 text-purple-400 hover:bg-purple-500/10' },
-  'lindwurm-legendary': { label: 'Legendaries', labelKey: 'rarities.legendaries', btnClass: 'border-amber-500/60 text-amber-400 hover:bg-amber-500/10' },
-};
-
 type Box = OpenBoxData & { cards: BoxCard[] };
 
 type OpenBoxClientProps = {
@@ -278,10 +268,6 @@ export function OpenBoxClient({ initialBox, initialUserCoins = null }: OpenBoxCl
   const [featuredPullId, setFeaturedPullId] = useState<string | null>(null);
   const [featuredCardId, setFeaturedCardId] = useState<string | null>(null);
   const [showConfirm, setShowConfirm] = useState(false);
-  // Summary sell-by-rarity
-  const [soldPullIds, setSoldPullIds] = useState<Set<string>>(new Set());
-  const [sellConfirm, setSellConfirm] = useState<{ tier: string; pullIds: string[]; coins: number } | null>(null);
-  const [sellingSummary, setSellingSummary] = useState(false);
   // Auto-open
   const [autoMaxCoins, setAutoMaxCoins] = useState('');
   const [isAutoOpening, setIsAutoOpening] = useState(false);
@@ -350,7 +336,6 @@ export function OpenBoxClient({ initialBox, initialUserCoins = null }: OpenBoxCl
     clearRevealTimeouts();
     setOpening(true);
     setOpenedCardIds(new Set());
-    setSoldPullIds(new Set());
     setPulls([]);
     setFeaturedPullId(null);
     setFeaturedCardId(null);
@@ -412,7 +397,6 @@ export function OpenBoxClient({ initialBox, initialUserCoins = null }: OpenBoxCl
     setIsAutoOpening(true);
     setAutoBoxesOpened(0);
     setAutoCoinsSpent(0);
-    setSoldPullIds(new Set());
 
     const limit = autoMaxCoins !== '' ? parseFloat(autoMaxCoins) : Infinity;
     let coinsLeft = userCoins ?? 0;
@@ -474,33 +458,6 @@ export function OpenBoxClient({ initialBox, initialUserCoins = null }: OpenBoxCl
   };
 
   const handleAutoStop = () => { autoStopRef.current = true; };
-
-  const handleSellByTier = async () => {
-    if (!sellConfirm) return;
-    setSellingSummary(true);
-    try {
-      const res = await fetch('/api/cards/sell-all', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pullIds: sellConfirm.pullIds }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to sell cards');
-
-      setSoldPullIds(prev => new Set([...prev, ...sellConfirm.pullIds]));
-      setUserCoins(data.newBalance);
-      emitCoinBalanceUpdate({ balance: data.newBalance });
-      addToast({
-        title: 'Sold!',
-        description: `Sold ${sellConfirm.pullIds.length} ${TIER_META[sellConfirm.tier]?.labelKey ? t(TIER_META[sellConfirm.tier].labelKey) : 'cards'} for ${sellConfirm.coins.toFixed(2)} coins.`,
-      });
-      setSellConfirm(null);
-    } catch (error) {
-      addToast({ title: 'Error', description: (error as Error).message, variant: 'destructive' });
-    } finally {
-      setSellingSummary(false);
-    }
-  };
 
   if (!box.cards || !Array.isArray(box.cards)) {
     return (
@@ -1152,10 +1109,9 @@ export function OpenBoxClient({ initialBox, initialUserCoins = null }: OpenBoxCl
                     const rarityGlow = getRarityGlow(group.card?.rarity);
                     const fx = getRarityEffects(rarityGlow.lindwurm);
                     const isFeatured = group.isFeatured;
-                    const allSold = group.pullIds.every(id => soldPullIds.has(id));
                     const shimmerBg = `linear-gradient(105deg, transparent, ${rarityGlow.glowColor.replace('1)', '0.35)')}, transparent)`;
                     return (
-                      <div key={group.cardId} className={`relative flex flex-col transition-opacity ${allSold ? 'opacity-40' : ''}`}>
+                      <div key={group.cardId} className="relative flex flex-col">
                         {/* Count badge */}
                         {group.pullIds.length > 1 && (
                           <div className="absolute top-1.5 left-1.5 z-30 bg-[#06061a]/90 border border-[rgba(255,255,255,0.06)] text-[#f0f0f5] text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none pointer-events-none">
@@ -1200,12 +1156,6 @@ export function OpenBoxClient({ initialBox, initialUserCoins = null }: OpenBoxCl
                                 {group.pullIds.length > 1 && <span className="text-[#8888aa] font-normal"> ×{group.pullIds.length}</span>}
                               </p>
                             </div>
-                            {/* Sold overlay */}
-                            {allSold && (
-                              <div className="absolute inset-0 flex items-center justify-center bg-black/50" style={{ zIndex: 25 }}>
-                                <span className="text-[11px] font-bold text-white uppercase tracking-widest bg-black/60 px-2 py-0.5 rounded">{t('sell')}</span>
-                              </div>
-                            )}
                           </div>
                           {/* Spark particles */}
                           {fx.sparks?.map((s, i) => (
@@ -1226,42 +1176,9 @@ export function OpenBoxClient({ initialBox, initialUserCoins = null }: OpenBoxCl
               );
             })()}
 
-            {/* Sell by rarity */}
-            {(() => {
-              const groups: Record<string, { pullIds: string[]; coins: number }> = {};
-              for (const pull of pulls) {
-                if (soldPullIds.has(pull.id)) continue;
-                const tier = getRarityGlow(pull.card?.rarity).lindwurm;
-                if (!groups[tier]) groups[tier] = { pullIds: [], coins: 0 };
-                groups[tier].pullIds.push(pull.id);
-                groups[tier].coins += pull.card?.coinValue ?? 0;
-              }
-              const entries = TIER_ORDER.filter(t => groups[t]);
-              if (entries.length === 0) return null;
-              return (
-                <div className="w-full mb-5">
-                  <div className="flex items-center gap-2 mb-3">
-                    <BadgeDollarSign className="w-4 h-4 text-gray-500" />
-                    <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">{t('sellByRarity')}</p>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {entries.map(tier => {
-                      const g = groups[tier];
-                      const meta = TIER_META[tier];
-                      return (
-                        <button
-                          key={tier}
-                          onClick={() => setSellConfirm({ tier, pullIds: g.pullIds, coins: g.coins })}
-                          className={`px-3 py-2 rounded-xl border text-sm font-medium transition-all hover:scale-[1.02] ${meta.btnClass}`}
-                        >
-                          {t('sell')} {t(meta.labelKey)} ({g.pullIds.length}x) — {g.coins.toFixed(2)} coins
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            })()}
+            <p className="text-sm text-[#8888aa] text-center mb-5 max-w-md">
+              {t('sellInCollectionHint')}
+            </p>
 
             {/* Total value */}
             <div className="flex items-center gap-3 px-8 py-4 rounded-2xl bg-white/[0.04] border border-white/[0.08] mb-6">
@@ -1269,11 +1186,8 @@ export function OpenBoxClient({ initialBox, initialUserCoins = null }: OpenBoxCl
               <div>
                 <p className="text-xs text-gray-500 uppercase tracking-widest">{t('totalValue')}</p>
                 <p className="text-2xl font-bold text-[#f0f0f5]">
-                  {pulls.filter(p => !soldPullIds.has(p.id)).reduce((sum, p) => sum + (p.card?.coinValue ?? 0), 0).toFixed(2)} coins
+                  {pulls.reduce((sum, p) => sum + (p.card?.coinValue ?? 0), 0).toFixed(2)} coins
                 </p>
-                {soldPullIds.size > 0 && (
-                  <p className="text-xs text-gray-500 mt-0.5">{t('cardsSold', { count: soldPullIds.size })}</p>
-                )}
               </div>
             </div>
 
@@ -1284,42 +1198,6 @@ export function OpenBoxClient({ initialBox, initialUserCoins = null }: OpenBoxCl
               {t('openPack')}
             </button>
           </div>
-          </div>
-        </div>
-      )}
-
-      {/* Sell-by-rarity confirmation dialog */}
-      {sellConfirm && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setSellConfirm(null)} />
-          <div className="relative z-10 w-full max-w-sm rounded-2xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] p-6 shadow-2xl">
-            <div className="flex items-center gap-2 mb-1">
-              <BadgeDollarSign className="w-5 h-5 text-amber-400" />
-              <h3 className="text-lg font-bold text-[#f0f0f5]">{t('sellQuestion', { label: TIER_META[sellConfirm.tier]?.labelKey ? t(TIER_META[sellConfirm.tier].labelKey) : '' })}</h3>
-            </div>
-            <p className="text-[#8888aa] text-sm mb-5">
-              {t('thisCannotBeUndone')}
-            </p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setSellConfirm(null)}
-                disabled={sellingSummary}
-                className="flex-1 py-2.5 rounded-xl border border-[rgba(255,255,255,0.06)] text-[#8888aa] hover:text-[#f0f0f5] hover:border-[rgba(255,255,255,0.12)] font-medium transition-colors disabled:opacity-50"
-              >
-                {t('stop')}
-              </button>
-              <button
-                onClick={handleSellByTier}
-                disabled={sellingSummary}
-                className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-semibold transition-all hover:scale-[1.02] flex items-center justify-center gap-2 disabled:opacity-50 disabled:hover:scale-100"
-              >
-                {sellingSummary ? (
-                  <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> {t('selling')}</>
-                ) : (
-                  <><BadgeDollarSign className="w-4 h-4" /> {t('sell')}</>
-                )}
-              </button>
-            </div>
           </div>
         </div>
       )}
