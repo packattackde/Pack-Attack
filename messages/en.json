@@ -481,6 +481,7 @@
     "sellNow": "Sell Now",
     "soldTitle": "Sold!",
     "sellAllByRarity": "Sell all by rarity",
+    "sellCooldown": "Selling is available in the collection about {seconds}s after you pull a card.",
     "sort": {
       "rarityHighLow": "Rarity (High → Low)",
       "rarityLowHigh": "Rarity (Low → High)",

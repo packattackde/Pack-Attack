@@ -3,6 +3,7 @@ import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { awardXp } from '@/lib/level';
+import { getTooFreshPullsError, sellGuardFromRequest } from '@/lib/validate-pull-sell';
 
 const sellCardSchema = z.object({
   pullId: z.string(),
@@ -20,6 +21,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const refererBlock = sellGuardFromRequest(request);
+    if (refererBlock) {
+      return NextResponse.json({ error: refererBlock.error }, { status: refererBlock.status });
+    }
+
     const { pullId } = sellCardSchema.parse(body);
 
     // PERFORMANCE: Single query to get pull with user validation and card data
@@ -32,6 +38,7 @@ export async function POST(request: NextRequest) {
       select: {
         id: true,
         userId: true,
+        timestamp: true,
         cartItem: { select: { id: true } },
         card: {
           select: {
@@ -55,6 +62,11 @@ export async function POST(request: NextRequest) {
 
     if (!pull.card) {
       return NextResponse.json({ error: 'Card not found' }, { status: 404 });
+    }
+
+    const tooFreshError = getTooFreshPullsError([pull]);
+    if (tooFreshError) {
+      return NextResponse.json({ error: tooFreshError }, { status: 400 });
     }
 
     const coinValue = Number(pull.card.coinValue);

@@ -7,9 +7,11 @@ import { Coins, ShoppingCart, Package, Crown, Gem, Star, Sparkles, Search, X, Ar
 import { useToast } from '@/components/ui/use-toast';
 import { emitCoinBalanceUpdate } from '@/lib/coin-events';
 import { useTranslations } from 'next-intl';
+import { isPullOldEnoughForSell, msUntilPullSellable } from '@/lib/pull-sell-eligibility';
 
 type Pull = {
     id: string;
+    timestamp: string;
     card: {
         id: string;
         name: string;
@@ -27,6 +29,7 @@ type GroupedCard = {
     box: Pull['box'];
     count: number;
     availablePullIds: string[];
+    sellablePullIds: string[];
     cartCount: number;
 };
 
@@ -134,13 +137,18 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                     existing.cartCount++;
                 } else {
                     existing.availablePullIds.push(pull.id);
+                    if (isPullOldEnoughForSell(pull.timestamp)) {
+                        existing.sellablePullIds.push(pull.id);
+                    }
                 }
             } else {
+                const canSell = !pull.cartItem && isPullOldEnoughForSell(pull.timestamp);
                 map.set(key, {
                     card: pull.card,
                     box: pull.box,
                     count: 1,
                     availablePullIds: pull.cartItem ? [] : [pull.id],
+                    sellablePullIds: canSell ? [pull.id] : [],
                     cartCount: pull.cartItem ? 1 : 0,
                 });
             }
@@ -170,7 +178,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
     const sellByRarity = useMemo(() => {
         const map = new Map<string, { pullIds: string[]; totalCoins: number }>();
         for (const p of pulls) {
-            if (!p.card || p.cartItem) continue;
+            if (!p.card || p.cartItem || !isPullOldEnoughForSell(p.timestamp)) continue;
             const r = p.card.rarity;
             if (!map.has(r)) map.set(r, { pullIds: [], totalCoins: 0 });
             const entry = map.get(r)!;
@@ -526,7 +534,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                                 <span className="text-amber-400/70">{t('coinsEach')}</span>
                                 {zoomedCard.count > 1 && (
                                     <span className="text-amber-400/50 text-sm">
-                                        · {zoomedCard.card.coinValue * zoomedCard.availablePullIds.length} {t('sellable')}
+                                        · {zoomedCard.card.coinValue * zoomedCard.sellablePullIds.length} {t('sellable')}
                                     </span>
                                 )}
                             </div>
@@ -550,22 +558,34 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                                         )}
                                     </button>
 
+                                    {zoomedCard.sellablePullIds.length === 0 ? (
+                                        <p className="text-sm text-[#8888aa] border-t border-white/10 pt-3">
+                                            {t('sellCooldown', {
+                                                seconds: Math.ceil(
+                                                    msUntilPullSellable(
+                                                        pulls.find((p) => p.id === zoomedCard.availablePullIds[0])?.timestamp ??
+                                                            new Date().toISOString()
+                                                    ) / 1000
+                                                ),
+                                            })}
+                                        </p>
+                                    ) : (
                                     <div className="border-t border-white/10 pt-3">
                                         <p className="text-xs text-[#8888aa] uppercase tracking-wider mb-3">{t('sellForCoins')}</p>
 
-                                        {zoomedCard.availablePullIds.length >= 5 && (
+                                        {zoomedCard.sellablePullIds.length >= 5 && (
                                             <div className="flex gap-2 mb-3">
                                                 <button
-                                                    onClick={() => setConfirmSell({ pullIds: zoomedCard.availablePullIds.slice(0, 5), cardName: zoomedCard.card.name, quantity: 5, totalCoins: zoomedCard.card.coinValue * 5 })}
+                                                    onClick={() => setConfirmSell({ pullIds: zoomedCard.sellablePullIds.slice(0, 5), cardName: zoomedCard.card.name, quantity: 5, totalCoins: zoomedCard.card.coinValue * 5 })}
                                                     disabled={loading}
                                                     className="flex-1 px-3 py-2.5 rounded-xl font-bold text-white bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/30 transition-all text-sm flex flex-col items-center gap-0.5 disabled:opacity-50"
                                                 >
                                                     <span>{t('sellCards', { count: 5 })}</span>
                                                     <span className="text-amber-400 text-xs font-normal">{zoomedCard.card.coinValue * 5} {tCommon('coins').toLowerCase()}</span>
                                                 </button>
-                                                {zoomedCard.availablePullIds.length >= 10 && (
+                                                {zoomedCard.sellablePullIds.length >= 10 && (
                                                     <button
-                                                        onClick={() => setConfirmSell({ pullIds: zoomedCard.availablePullIds.slice(0, 10), cardName: zoomedCard.card.name, quantity: 10, totalCoins: zoomedCard.card.coinValue * 10 })}
+                                                        onClick={() => setConfirmSell({ pullIds: zoomedCard.sellablePullIds.slice(0, 10), cardName: zoomedCard.card.name, quantity: 10, totalCoins: zoomedCard.card.coinValue * 10 })}
                                                         disabled={loading}
                                                         className="flex-1 px-3 py-2.5 rounded-xl font-bold text-white bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/30 transition-all text-sm flex flex-col items-center gap-0.5 disabled:opacity-50"
                                                     >
@@ -577,19 +597,19 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                                         )}
 
                                         {(() => {
-                                            const parsed = Math.min(Math.max(1, parseInt(sellAmount) || 1), zoomedCard.availablePullIds.length);
+                                            const parsed = Math.min(Math.max(1, parseInt(sellAmount) || 1), zoomedCard.sellablePullIds.length);
                                             return (
                                                 <div className="flex gap-2">
                                                     <input
                                                         type="number"
                                                         min="1"
-                                                        max={zoomedCard.availablePullIds.length}
+                                                        max={zoomedCard.sellablePullIds.length}
                                                         value={sellAmount}
                                                         onChange={(e) => setSellAmount(e.target.value)}
                                                         className="w-20 px-3 py-3 bg-black/30 border border-white/10 rounded-xl text-white text-center focus:border-amber-500/50 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
                                                     />
                                                     <button
-                                                        onClick={() => setConfirmSell({ pullIds: zoomedCard.availablePullIds.slice(0, parsed), cardName: zoomedCard.card.name, quantity: parsed, totalCoins: parsed * zoomedCard.card.coinValue })}
+                                                        onClick={() => setConfirmSell({ pullIds: zoomedCard.sellablePullIds.slice(0, parsed), cardName: zoomedCard.card.name, quantity: parsed, totalCoins: parsed * zoomedCard.card.coinValue })}
                                                         disabled={loading}
                                                         className="flex-1 px-4 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-bold rounded-xl transition-all hover:scale-[1.02] flex items-center justify-center gap-2 shadow-lg shadow-amber-500/25 disabled:opacity-50"
                                                     >
@@ -600,6 +620,7 @@ export const CollectionClient = memo(function CollectionClient({ pulls: initialP
                                             );
                                         })()}
                                     </div>
+                                    )}
                                 </div>
                             )}
                         </div>

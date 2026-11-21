@@ -481,6 +481,7 @@
     "sellNow": "Jetzt verkaufen",
     "soldTitle": "Verkauft!",
     "sellAllByRarity": "Alle nach Seltenheit verkaufen",
+    "sellCooldown": "Verkauf ist in der Sammlung etwa {seconds}s nach dem Ziehen möglich.",
     "sort": {
       "rarityHighLow": "Seltenheit (Hoch → Niedrig)",
       "rarityLowHigh": "Seltenheit (Niedrig → Hoch)",

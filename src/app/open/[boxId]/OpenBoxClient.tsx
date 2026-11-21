@@ -1191,12 +1191,27 @@ export function OpenBoxClient({ initialBox, initialUserCoins = null }: OpenBoxCl
               </div>
             </div>
 
-            <button
-              onClick={() => setDeckPhase('idle')}
-              className="px-8 py-3 bg-[#ff2ea6] hover:bg-[#E879F9] text-white font-semibold rounded-xl transition-all hover:scale-105 shadow-[0_0_24px_rgba(255,46,166,0.3)]"
-            >
-              {t('openPack')}
-            </button>
+            <div className="flex flex-col sm:flex-row gap-3 w-full max-w-md">
+              <Link
+                href="/collection"
+                className="flex-1 px-6 py-3 text-center rounded-xl font-semibold text-[#f0f0f5] gradient-border bg-[#06061a]/50 hover:bg-[#12123a]/50 transition-all"
+              >
+                {t('viewCollection')}
+              </Link>
+              <button
+                type="button"
+                onClick={() => {
+                  setDeckPhase('idle');
+                  setPulls([]);
+                  setOpenedCardIds(new Set());
+                  setFeaturedPullId(null);
+                  setFeaturedCardId(null);
+                }}
+                className="flex-1 px-8 py-3 bg-[#ff2ea6] hover:bg-[#E879F9] text-white font-semibold rounded-xl transition-all hover:scale-105 shadow-[0_0_24px_rgba(255,46,166,0.3)]"
+              >
+                {t('openPack')}
+              </button>
+            </div>
           </div>
           </div>
         </div>

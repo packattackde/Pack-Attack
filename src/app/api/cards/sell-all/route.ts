@@ -3,6 +3,7 @@ import { getCurrentSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { awardXp } from '@/lib/level';
+import { getTooFreshPullsError, sellGuardFromRequest } from '@/lib/validate-pull-sell';
 
 // Schema for batch selling specific cards
 const batchSellSchema = z.object({
@@ -19,6 +20,11 @@ export async function POST(request: NextRequest) {
 
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const refererBlock = sellGuardFromRequest(request);
+    if (refererBlock) {
+      return NextResponse.json({ error: refererBlock.error }, { status: refererBlock.status });
     }
 
     const { pullIds } = batchSellSchema.parse(body);
@@ -51,6 +57,7 @@ export async function POST(request: NextRequest) {
       where: whereClause,
       select: {
         id: true,
+        timestamp: true,
         card: {
           select: {
             id: true,
@@ -65,6 +72,11 @@ export async function POST(request: NextRequest) {
 
     if (pulls.length === 0) {
       return NextResponse.json({ error: 'No cards to sell' }, { status: 400 });
+    }
+
+    const tooFreshError = getTooFreshPullsError(pulls);
+    if (tooFreshError) {
+      return NextResponse.json({ error: tooFreshError }, { status: 400 });
     }
 
     // PERFORMANCE: Calculate totals in a single pass

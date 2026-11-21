@@ -48,6 +48,7 @@ async function getCollection() {
 
   const pullsData = pulls.map(pull => ({
     id: pull.id,
+    timestamp: pull.timestamp.toISOString(),
     card: pull.card
       ? {
           id: pull.card.id,
