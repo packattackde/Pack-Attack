@@ -25,6 +25,9 @@ import { COIN_PACKAGE_EUR_TIERS } from '@/lib/kpi/types';
 import { COIN_EUR_RATE } from '@/lib/kpi/coin-eur';
 import { buildKpiMockData } from '@/lib/kpi/kpi-mock-data';
 
+/** Tailwind `h-32` — used so bar heights are px, not % (fixes collapsed charts under flex items-end). */
+const CHART_HEIGHT_PX = 128;
+
 const PACKAGE_COLORS: Record<string, string> = {
   '5': 'bg-slate-400',
   '10': 'bg-blue-400',
@@ -63,12 +66,17 @@ function BarChart({
   return (
     <div className="flex items-end gap-[2px] h-32">
       {series.map((entry) => {
-        const height = max > 0 ? (entry.value / max) * 100 : 0;
+        const barPx =
+          max > 0 ? (entry.value / max) * CHART_HEIGHT_PX : 0;
+        const heightPx = Math.max(barPx, entry.value > 0 ? 3 : 1);
         return (
-          <div key={entry.date} className="flex-1 group relative min-w-0">
+          <div
+            key={entry.date}
+            className="flex-1 group relative min-w-0 h-full flex flex-col justify-end"
+          >
             <div
-              className={`w-full rounded-t transition-colors cursor-default ${className}`}
-              style={{ height: `${Math.max(height, entry.value > 0 ? 4 : 2)}%` }}
+              className={`w-full rounded-t transition-colors cursor-default shrink-0 ${className}`}
+              style={{ height: `${heightPx}px` }}
             />
             <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 rounded bg-[#12123a] text-[10px] text-white whitespace-nowrap z-10 border border-white/10">
               {formatDateShort(entry.date)}: {entry.value}
@@ -95,16 +103,24 @@ function MultiBarChart({
     <div className="flex items-end gap-[2px] h-32">
       {rows.map((row) => {
         const total = keys.reduce((s, k) => s + (row.values[k] ?? 0), 0);
-        const height = max > 0 ? (total / max) * 100 : 0;
+        const stackPx = max > 0 ? (total / max) * CHART_HEIGHT_PX : 0;
+        const heightPx = Math.max(stackPx, total > 0 ? 3 : 1);
         return (
           <div key={row.date} className="flex-1 group relative min-w-0 h-full flex flex-col justify-end">
-            <div className="w-full flex flex-col-reverse rounded-t overflow-hidden" style={{ height: `${Math.max(height, total > 0 ? 4 : 2)}%` }}>
+            <div
+              className="w-full flex flex-col-reverse rounded-t overflow-hidden shrink-0"
+              style={{ height: `${heightPx}px` }}
+            >
               {keys.map((k) => {
                 const v = row.values[k] ?? 0;
                 if (v === 0) return null;
                 const seg = total > 0 ? (v / total) * 100 : 0;
                 return (
-                  <div key={k} className={`w-full ${colors[k] ?? 'bg-gray-500'}`} style={{ height: `${seg}%` }} />
+                  <div
+                    key={k}
+                    className={`w-full shrink-0 ${colors[k] ?? 'bg-gray-500'}`}
+                    style={{ height: `${seg}%` }}
+                  />
                 );
               })}
             </div>
