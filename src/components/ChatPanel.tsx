@@ -242,11 +242,11 @@ export function ChatPanel() {
 
   const cycleSoundMode = () => {
     const next: Record<SoundMode, SoundMode> = { all: 'focused', focused: 'off', off: 'all' };
-    const labelKeys: Record<SoundMode, string> = {
+    const labelKeys = {
       all: 'soundAlways',
       focused: 'soundActiveTab',
       off: 'soundOff',
-    };
+    } as const satisfies Record<SoundMode, string>;
     const newMode = next[soundMode];
     setSoundMode(newMode);
     localStorage.setItem(SOUND_MODE_KEY, newMode);

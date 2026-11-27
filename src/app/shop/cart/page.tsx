@@ -203,7 +203,7 @@ export default function ShopCartPage() {
           <h1 className="text-3xl font-bold text-white">{t('title')}</h1>
           {cart && cart.itemCount > 0 && (
             <span className="px-3 py-1 rounded-full bg-[rgba(255,46,166,0.15)] text-[#ff2ea6] text-sm">
-              {cart.itemCount} {t('items')}
+              {t('items', { count: cart.itemCount })}
             </span>
           )}
         </div>
@@ -333,7 +333,7 @@ export default function ShopCartPage() {
 
                 <div className="space-y-3 mb-6">
                   <div className="flex justify-between text-[#8888aa]">
-                    <span>{t('subtotal')} ({cart.itemCount} {t('items')})</span>
+                    <span>{t('subtotal', { count: cart.itemCount })}</span>
                     <span className="text-white">€{cart.total.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-[#8888aa]">

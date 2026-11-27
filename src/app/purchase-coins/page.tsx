@@ -35,7 +35,8 @@ type CoinPackage = {
   icon: typeof Coins;
   gradient: string;
   shadowColor: string;
-  label: string;
+  // Lowercased, this is the message key under coins.packages.*
+  label: 'Starter' | 'Basic' | 'Popular' | 'Pro' | 'Premium' | 'Ultimate';
 };
 
 const coinPackages: CoinPackage[] = [
@@ -321,7 +322,7 @@ function PurchaseCoinsContent() {
                       <Icon className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <p className="text-white font-bold text-sm">{t(`packages.${pkg.label.toLowerCase()}`)}</p>
+                      <p className="text-white font-bold text-sm">{t(`packages.${pkg.label.toLowerCase() as Lowercase<CoinPackage['label']>}`)}</p>
                       <p className="text-[#8888aa] text-xs">{t('package')}</p>
                     </div>
                   </div>

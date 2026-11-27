@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import type { CardCondition, ProductCategory } from '@prisma/client';
 import { useToast } from '@/components/ui/use-toast';
 import { 
   Store, 
@@ -27,9 +28,9 @@ type Product = {
   price: number;
   comparePrice: number | null;
   images: string[];
-  category: string;
+  category: ProductCategory;
   game: string | null;
-  condition: string;
+  condition: CardCondition;
   stock: number;
   featured: boolean;
   shop: {

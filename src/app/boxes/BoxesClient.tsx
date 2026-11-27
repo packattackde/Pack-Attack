@@ -15,7 +15,7 @@ import {
   Ship,
   Wand2,
 } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, type Messages } from 'next-intl';
 import { GridBoosterPack } from '@/components/boxes/GridBoosterPack';
 import { pickChaseCardImageUrl } from '@/components/NeonForgeBoosterPack';
 import { getBoosterPackTheme, type BoosterPackTheme } from '@/lib/booster-pack-theme';
@@ -57,7 +57,7 @@ export default function BoxesClient({ boxes, availableGames }: BoxesClientProps)
 
   const getGameDisplayName = (game: string) => {
     const normalized = game.toUpperCase().replace(/-/g, '_');
-    const gameKeys: Record<string, string> = {
+    const gameKeys: Record<string, keyof Messages['boxes']['games']> = {
       POKEMON: 'POKEMON',
       MAGIC: 'MAGIC_THE_GATHERING',
       MAGIC_THE_GATHERING: 'MAGIC_THE_GATHERING',

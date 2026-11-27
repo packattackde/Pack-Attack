@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import type { ProductCategory } from '@prisma/client';
 import { useToast } from '@/components/ui/use-toast';
 import { 
   Package, 
@@ -23,7 +24,7 @@ type Product = {
   name: string;
   price: number;
   images: string[];
-  category: string;
+  category: ProductCategory;
   stock: number;
   isActive: boolean;
   featured: boolean;

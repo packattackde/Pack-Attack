@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import type { ShopOrderStatus } from '@prisma/client';
 import { useToast } from '@/components/ui/use-toast';
 import { 
   ShoppingBag, 
@@ -31,7 +32,7 @@ type OrderItem = {
 type Order = {
   id: string;
   orderNumber: string;
-  status: string;
+  status: ShopOrderStatus;
   subtotal: number;
   shippingCost: number;
   total: number;
@@ -99,7 +100,7 @@ export default function ManageOrdersPage() {
     fetchOrders();
   }, [router]);
 
-  const updateOrderStatus = async (orderId: string, status: string) => {
+  const updateOrderStatus = async (orderId: string, status: ShopOrderStatus) => {
     setUpdating(orderId);
     try {
       const res = await fetch(`/api/shop/owner/orders/${orderId}`, {
@@ -125,7 +126,7 @@ export default function ManageOrdersPage() {
 
       addToast({
         title: t('updated'),
-        description: t('updatedDesc'),
+        description: t('updatedDesc', { status: t(`statusLabels.${status}`) }),
       });
     } catch (error) {
       addToast({
@@ -299,7 +300,7 @@ export default function ManageOrdersPage() {
                           <h3 className="font-semibold text-white mb-3">{t('updateStatus')}</h3>
                           <select
                             value={order.status}
-                            onChange={(e) => updateOrderStatus(order.id, e.target.value)}
+                            onChange={(e) => updateOrderStatus(order.id, e.target.value as ShopOrderStatus)}
                             disabled={updating === order.id}
                             className="w-full px-4 py-3 rounded-xl bg-[#100d22] shadow-md text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(255,46,166,0.3)] focus:outline-none disabled:opacity-50"
                           >

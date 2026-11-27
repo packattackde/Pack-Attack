@@ -327,7 +327,7 @@ export function OpenBoxClient({ initialBox, initialUserCoins = null }: OpenBoxCl
     if (userCoins !== null && userCoins < totalCost) {
       addToast({
         title: t('insufficientCoins'),
-        description: t('insufficientCoinsDesc', { needed: totalCost.toFixed(2), have: userCoins.toFixed(2) }),
+        description: t('insufficientCoinsDesc', { needed: totalCost.toFixed(2), balance: userCoins.toFixed(2) }),
         variant: 'destructive',
       });
       return;
@@ -550,12 +550,12 @@ export function OpenBoxClient({ initialBox, initialUserCoins = null }: OpenBoxCl
             <div className="mb-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-sm text-[#8888aa]">
               <div className="flex items-center gap-1.5">
                 <Coins className="w-4 h-4 text-amber-400" />
-                <span className="text-[#f0f0f5] font-semibold">{box.price.toFixed(2)} {t('coinsPerPack')}</span>
+                <span className="text-[#f0f0f5] font-semibold">{t('coinsPerPack', { price: box.price.toFixed(2) })}</span>
               </div>
               <span className="text-[rgba(255,255,255,0.2)]">·</span>
               <div className="flex items-center gap-1.5">
                 <Layers className="w-4 h-4 text-[#8888aa]" />
-                <span>{box.cardsPerPack} {t('cardsPerPack')}</span>
+                <span>{t('cardsPerPack', { cards: box.cardsPerPack })}</span>
               </div>
             </div>
             {box.description && (
@@ -1264,7 +1264,7 @@ export function OpenBoxClient({ initialBox, initialUserCoins = null }: OpenBoxCl
           />
           {/* Dialog */}
           <div className="relative z-10 w-full max-w-sm rounded-2xl bg-[#12123a] border border-[rgba(255,255,255,0.06)] p-6 shadow-2xl">
-            <h3 className="text-lg font-bold text-[#f0f0f5] mb-1">{t('confirmOpen', { quantity })}?</h3>
+            <h3 className="text-lg font-bold text-[#f0f0f5] mb-1">{t('confirmOpen', { count: quantity })}</h3>
             <p className="text-[#8888aa] text-sm mb-5">
               {t('confirmCost', { cost: totalCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) })}
               {' '}{t('cannotBeUndone')}

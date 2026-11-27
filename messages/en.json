@@ -619,7 +619,7 @@
     "sell": "Sell",
     "startAutoOpen": "Start Auto Open?",
     "confirmOpen": "Open {count} Pack(s)?",
-    "confirmCost": "This will cost",
+    "confirmCost": "This will cost {cost} coins.",
     "cannotBeUndone": "This action cannot be undone.",
     "insufficientCoins": "Insufficient Coins",
     "insufficientCoinsDesc": "You need {needed} coins but only have {balance}",
@@ -763,14 +763,14 @@
       "PACK": "How would you rate your pack opening experience?",
       "SHOP": "How would you rate your shop experience?"
     },
-    "category": "Category *",
+    "category": "Category",
     "categoryQuestion": "What type of feedback do you have?",
     "experienceLabel": "{label} Experience",
     "optional": "(optional)",
     "rateExperience": "Rate your experience",
-    "subject": "Subject *",
+    "subject": "Subject",
     "subjectPlaceholder": "Brief summary of your feedback",
-    "description": "Description *",
+    "description": "Description",
     "emailOptional": "Email (optional)",
     "emailHelper": "So we can follow up with you",
     "submittingAs": "Submitting as",
@@ -784,6 +784,16 @@
       "enterDescription": "Please describe your feedback.",
       "submitFailed": "Failed to submit feedback.",
       "networkError": "Network error. Please check your connection and try again."
+    },
+    "messagePlaceholders": {
+      "BUG": "What happened? What did you expect? How can we reproduce the bug?",
+      "FEATURE": "Describe the feature you'd like to see and why it would be useful.",
+      "default": "Describe your feedback in as much detail as possible."
+    },
+    "thanks": {
+      "BUG": "Thanks for your bug report! We'll look into the issue as soon as possible.",
+      "FEATURE": "Thanks for your suggestion! We'll consider your idea for upcoming updates.",
+      "default": "Thanks for your feedback! It helps us make PullForge better."
     },
     "history": {
       "signInRequired": "Sign In Required",
@@ -802,6 +812,7 @@
       "hideOriginal": "Hide original",
       "showOriginal": "Show original",
       "edit": "Edit",
+      "edited": "(edited)",
       "originalMessage": "Original message:",
       "conversation": "Conversation ({count})",
       "you": "You",
@@ -1087,16 +1098,16 @@
     "addedToCartDesc": "Item has been added to your cart",
     "failedToAdd": "Failed to add to cart",
     "categories": {
-      "SINGLE_CARDS": "Single Cards",
-      "BOOSTER_BOXES": "Booster Boxes",
-      "BOOSTER_PACKS": "Booster Packs",
-      "STARTER_DECKS": "Starter Decks",
-      "STRUCTURE_DECKS": "Structure Decks",
+      "SINGLE_CARD": "Single Cards",
+      "BOOSTER_BOX": "Booster Boxes",
+      "BOOSTER_PACK": "Booster Packs",
+      "STARTER_DECK": "Starter Decks",
+      "STRUCTURE_DECK": "Structure Decks",
       "ACCESSORIES": "Accessories",
       "SLEEVES": "Sleeves",
-      "PLAYMATS": "Playmats",
-      "BINDERS": "Binders",
-      "DECK_BOXES": "Deck Boxes",
+      "PLAYMAT": "Playmats",
+      "BINDER": "Binders",
+      "DECK_BOX": "Deck Boxes",
       "OTHER": "Other"
     },
     "conditions": {

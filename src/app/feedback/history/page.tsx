@@ -58,25 +58,32 @@ type Feedback = {
   messages?: FeedbackMsg[];
 };
 
-const categoryConfig: Record<string, { icon: typeof Bug; labelKey: string; color: string }> = {
-  BUG_REPORT: { icon: Bug, labelKey: 'categories.bugReport', color: 'red' },
-  FEATURE_REQUEST: { icon: Lightbulb, labelKey: 'categories.featureRequest', color: 'amber' },
-  GENERAL: { icon: MessageSquare, labelKey: 'categories.general', color: 'blue' },
-  BATTLE_ISSUE: { icon: Swords, labelKey: 'categories.battleIssue', color: 'purple' },
-  PACK_ISSUE: { icon: Package, labelKey: 'categories.packIssue', color: 'green' },
-  SHOP_ISSUE: { icon: Store, labelKey: 'categories.shopIssue', color: 'orange' },
+// `key` is the suffix used in the message files (feedback.categories.*).
+type CategoryMessageKey = 'BUG' | 'FEATURE' | 'GENERAL' | 'BATTLE' | 'PACK' | 'SHOP';
+
+const categoryConfig: Record<string, { icon: typeof Bug; key: CategoryMessageKey; color: string }> = {
+  BUG_REPORT: { icon: Bug, key: 'BUG', color: 'red' },
+  FEATURE_REQUEST: { icon: Lightbulb, key: 'FEATURE', color: 'amber' },
+  GENERAL: { icon: MessageSquare, key: 'GENERAL', color: 'blue' },
+  BATTLE_ISSUE: { icon: Swords, key: 'BATTLE', color: 'purple' },
+  PACK_ISSUE: { icon: Package, key: 'PACK', color: 'green' },
+  SHOP_ISSUE: { icon: Store, key: 'SHOP', color: 'orange' },
 };
 
-const statusConfig: Record<string, { icon: typeof Clock; labelKey: string; color: string }> = {
-  OPEN: { icon: Clock, labelKey: 'history.statusOpen', color: 'blue' },
-  CLAIMED: { icon: UserCheck, labelKey: 'history.statusClaimed', color: 'indigo' },
-  IN_PROGRESS: { icon: Loader2, labelKey: 'history.statusInProgress', color: 'amber' },
-  RESOLVED: { icon: CheckCircle2, labelKey: 'history.statusResolved', color: 'green' },
-  CLOSED: { icon: XCircle, labelKey: 'history.statusClosed', color: 'gray' },
+// `status` is the FeedbackStatus enum value; labels live in feedback.history.statusLabels.*.
+type FeedbackStatusKey = 'OPEN' | 'CLAIMED' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
+
+const statusConfig: Record<string, { icon: typeof Clock; status: FeedbackStatusKey; color: string }> = {
+  OPEN: { icon: Clock, status: 'OPEN', color: 'blue' },
+  CLAIMED: { icon: UserCheck, status: 'CLAIMED', color: 'indigo' },
+  IN_PROGRESS: { icon: Loader2, status: 'IN_PROGRESS', color: 'amber' },
+  RESOLVED: { icon: CheckCircle2, status: 'RESOLVED', color: 'green' },
+  CLOSED: { icon: XCircle, status: 'CLOSED', color: 'gray' },
 };
 
 export default function FeedbackHistoryPage() {
   const t = useTranslations('feedback');
+  const tCommon = useTranslations('common');
   const { data: session, status: sessionStatus } = useSession();
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [loading, setLoading] = useState(true);
@@ -229,7 +236,7 @@ export default function FeedbackHistoryPage() {
         <div className="relative container max-w-2xl pt-20 pb-20 px-4 text-center">
           <History className="w-16 h-16 text-gray-700 mx-auto mb-6" />
           <h1 className="text-2xl font-bold text-white mb-3">{t('history.signInRequired')}</h1>
-          <p className="text-gray-500 mb-6">{t('history.signInRequiredDesc')}</p>
+          <p className="text-gray-500 mb-6">{t('history.signInDesc')}</p>
           <Link
             href="/login"
             className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r bg-[#ff2ea6] text-white font-semibold text-sm rounded-xl transition-all hover:shadow-lg hover:shadow-[0_0_24px_rgba(255,46,166,0.3)]"
@@ -260,7 +267,7 @@ export default function FeedbackHistoryPage() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
           <div>
             <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
-              {t('history.title')}
+              {t('history.myFeedback')}
             </h1>
             <p className="text-gray-500">
               {t('history.submissions', { count: feedbacks.length })}
@@ -340,7 +347,7 @@ export default function FeedbackHistoryPage() {
                     <div className="flex-1 min-w-0">
                       <h3 className="text-sm font-semibold text-white truncate mb-0.5">{fb.subject}</h3>
                       <div className="flex items-center gap-2 text-xs text-gray-500 flex-wrap">
-                        <span>{t(catConf.labelKey)}</span>
+                        <span>{t(`categories.${catConf.key}`)}</span>
                         <span>&middot;</span>
                         <span>{formatDate(fb.createdAt)}</span>
                         {fb.claimedBy && (
@@ -367,7 +374,7 @@ export default function FeedbackHistoryPage() {
                     {/* Status badge */}
                     <span className={`shrink-0 inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-${statConf.color}-500/10 text-${statConf.color}-400 border border-${statConf.color}-500/20`}>
                       <StatIcon className="w-3 h-3" />
-                      {t(statConf.labelKey)}
+                      {t(`history.statusLabels.${statConf.status}`)}
                     </span>
                   </button>
 
@@ -421,7 +428,7 @@ export default function FeedbackHistoryPage() {
                                 className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-[#8888aa] hover:text-white hover:bg-white/[0.06] transition-all"
                               >
                                 <X className="w-3 h-3" />
-                                {t('history.cancel')}
+                                {tCommon('cancel')}
                               </button>
                               <button
                                 type="button"
@@ -434,7 +441,7 @@ export default function FeedbackHistoryPage() {
                                 ) : (
                                   <Save className="w-3 h-3" />
                                 )}
-                                {t('history.save')}
+                                {tCommon('save')}
                               </button>
                             </div>
                           </div>
@@ -452,7 +459,7 @@ export default function FeedbackHistoryPage() {
                       <div className="mt-4 pt-4 border-t border-white/[0.06]">
                         <h4 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
                           <MessageCircle className="w-4 h-4 text-[#E879F9]" />
-                          {t('history.conversation')} ({fb._count.messages})
+                          {t('history.conversation', { count: fb._count.messages })}
                         </h4>
 
                         {loadingMessages === fb.id ? (
@@ -473,7 +480,7 @@ export default function FeedbackHistoryPage() {
                                 <div className="flex items-center gap-2 mb-1.5">
                                   <span className={`text-xs font-semibold ${msg.isAdmin ? 'text-indigo-400' : 'text-[#f0f0f5]'}`}>
                                     {msg.isAdmin && <Shield className="w-3 h-3 inline mr-1" />}
-                                    {msg.isAdmin ? (msg.user.name || t('history.admin')) : t('history.you')}
+                                    {msg.isAdmin ? (msg.user.name || t('history.adminLabel')) : t('history.you')}
                                   </span>
                                   <span className="text-[10px] text-gray-600">{formatDate(msg.createdAt)}</span>
                                 </div>
@@ -517,7 +524,7 @@ export default function FeedbackHistoryPage() {
                         )}
 
                         {fb.status === 'CLOSED' && (
-                          <p className="text-xs text-gray-600 italic">{t('history.feedbackClosed')}</p>
+                          <p className="text-xs text-gray-600 italic">{t('history.closed')}</p>
                         )}
                       </div>
                     </div>

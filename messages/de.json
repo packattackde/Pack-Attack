@@ -619,7 +619,7 @@
     "sell": "Verkaufen",
     "startAutoOpen": "Auto-Öffnen starten?",
     "confirmOpen": "{count} Pack(s) öffnen?",
-    "confirmCost": "Das kostet",
+    "confirmCost": "Das kostet {cost} Coins.",
     "cannotBeUndone": "Diese Aktion kann nicht rückgängig gemacht werden.",
     "insufficientCoins": "Nicht genug Coins",
     "insufficientCoinsDesc": "Du brauchst {needed} Coins, hast aber nur {balance}",
@@ -763,14 +763,14 @@
       "PACK": "Wie bewertest du dein Pack-Öffnungs-Erlebnis?",
       "SHOP": "Wie bewertest du dein Shop-Erlebnis?"
     },
-    "category": "Kategorie *",
+    "category": "Kategorie",
     "categoryQuestion": "Welche Art von Feedback hast du?",
     "experienceLabel": "{label}-Erlebnis",
     "optional": "(optional)",
     "rateExperience": "Bewerte dein Erlebnis",
-    "subject": "Betreff *",
+    "subject": "Betreff",
     "subjectPlaceholder": "Kurze Zusammenfassung deines Feedbacks",
-    "description": "Beschreibung *",
+    "description": "Beschreibung",
     "emailOptional": "E-Mail (optional)",
     "emailHelper": "Damit wir bei dir nachfragen können",
     "submittingAs": "Absenden als",
@@ -784,6 +784,16 @@
       "enterDescription": "Bitte beschreibe dein Feedback.",
       "submitFailed": "Feedback konnte nicht gesendet werden.",
       "networkError": "Netzwerkfehler. Bitte überprüfe deine Verbindung und versuche es erneut."
+    },
+    "messagePlaceholders": {
+      "BUG": "Was ist passiert? Was hast du erwartet? Wie lässt sich der Fehler reproduzieren?",
+      "FEATURE": "Beschreibe die Funktion, die du dir wünschst, und warum sie nützlich wäre.",
+      "default": "Beschreibe dein Feedback so genau wie möglich."
+    },
+    "thanks": {
+      "BUG": "Danke für deinen Fehlerbericht! Wir schauen uns das Problem so schnell wie möglich an.",
+      "FEATURE": "Danke für deinen Vorschlag! Wir prüfen deine Idee für kommende Updates.",
+      "default": "Danke für dein Feedback! Es hilft uns, PullForge besser zu machen."
     },
     "history": {
       "signInRequired": "Anmeldung erforderlich",
@@ -802,6 +812,7 @@
       "hideOriginal": "Original ausblenden",
       "showOriginal": "Original anzeigen",
       "edit": "Bearbeiten",
+      "edited": "(bearbeitet)",
       "originalMessage": "Originalnachricht:",
       "conversation": "Konversation ({count})",
       "you": "Du",
@@ -1087,16 +1098,16 @@
     "addedToCartDesc": "Artikel wurde zum Warenkorb hinzugefügt",
     "failedToAdd": "Konnte nicht hinzugefügt werden",
     "categories": {
-      "SINGLE_CARDS": "Einzelkarten",
-      "BOOSTER_BOXES": "Booster-Boxen",
-      "BOOSTER_PACKS": "Booster-Packs",
-      "STARTER_DECKS": "Starter-Decks",
-      "STRUCTURE_DECKS": "Struktur-Decks",
+      "SINGLE_CARD": "Einzelkarten",
+      "BOOSTER_BOX": "Booster-Boxen",
+      "BOOSTER_PACK": "Booster-Packs",
+      "STARTER_DECK": "Starter-Decks",
+      "STRUCTURE_DECK": "Struktur-Decks",
       "ACCESSORIES": "Zubehör",
       "SLEEVES": "Hüllen",
-      "PLAYMATS": "Spielmatten",
-      "BINDERS": "Ordner",
-      "DECK_BOXES": "Deckboxen",
+      "PLAYMAT": "Spielmatten",
+      "BINDER": "Ordner",
+      "DECK_BOX": "Deckboxen",
       "OTHER": "Sonstiges"
     },
     "conditions": {

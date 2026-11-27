@@ -288,7 +288,7 @@ export default function ShopManagePage() {
               </div>
               <h2 className="text-xl font-bold text-white">{t('productsCard')}</h2>
             </div>
-            <p className="text-[#8888aa]">{t('productsDesc')}</p>
+            <p className="text-[#8888aa]">{t('productsCardDesc')}</p>
           </Link>
 
           <Link href="/shop/manage/orders" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:bg-white/5 transition-colors group">
@@ -298,7 +298,7 @@ export default function ShopManagePage() {
               </div>
               <h2 className="text-xl font-bold text-white">{t('ordersCard')}</h2>
             </div>
-            <p className="text-[#8888aa]">{t('ordersDesc')}</p>
+            <p className="text-[#8888aa]">{t('ordersCardDesc')}</p>
           </Link>
 
           <Link href="/shop/manage/settings" className="bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg rounded-2xl p-6 hover:bg-white/5 transition-colors group">
@@ -308,7 +308,7 @@ export default function ShopManagePage() {
               </div>
               <h2 className="text-xl font-bold text-white">{t('settingsCard')}</h2>
             </div>
-            <p className="text-[#8888aa]">{t('settingsDesc')}</p>
+            <p className="text-[#8888aa]">{t('settingsCardDesc')}</p>
           </Link>
         </div>
       </div>

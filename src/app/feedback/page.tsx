@@ -21,13 +21,15 @@ import {
   History,
 } from 'lucide-react';
 
+// `value` is the FeedbackCategory enum sent to the API. `key` is the suffix used in the
+// message files (feedback.categories.*, .categoryDescriptions.*, .experienceQuestions.*).
 const categoryDefs = [
-  { value: 'BUG_REPORT', labelKey: 'categories.bugReport', icon: Bug, color: 'red', descKey: 'categoryDescriptions.bugReport' },
-  { value: 'FEATURE_REQUEST', labelKey: 'categories.featureRequest', icon: Lightbulb, color: 'amber', descKey: 'categoryDescriptions.featureRequest' },
-  { value: 'GENERAL', labelKey: 'categories.general', icon: MessageSquare, color: 'blue', descKey: 'categoryDescriptions.general' },
-  { value: 'BATTLE_ISSUE', labelKey: 'categories.battleIssue', icon: Swords, color: 'purple', descKey: 'categoryDescriptions.battleIssue' },
-  { value: 'PACK_ISSUE', labelKey: 'categories.packIssue', icon: Package, color: 'green', descKey: 'categoryDescriptions.packIssue' },
-  { value: 'SHOP_ISSUE', labelKey: 'categories.shopIssue', icon: Store, color: 'orange', descKey: 'categoryDescriptions.shopIssue' },
+  { value: 'BUG_REPORT', key: 'BUG', icon: Bug, color: 'red' },
+  { value: 'FEATURE_REQUEST', key: 'FEATURE', icon: Lightbulb, color: 'amber' },
+  { value: 'GENERAL', key: 'GENERAL', icon: MessageSquare, color: 'blue' },
+  { value: 'BATTLE_ISSUE', key: 'BATTLE', icon: Swords, color: 'purple' },
+  { value: 'PACK_ISSUE', key: 'PACK', icon: Package, color: 'green' },
+  { value: 'SHOP_ISSUE', key: 'SHOP', icon: Store, color: 'orange' },
 ] as const;
 
 const colorMap: Record<string, { bg: string; border: string; text: string; activeBg: string; activeBorder: string; glow: string; activeInline: { backgroundColor: string; borderColor: string } }> = {
@@ -39,23 +41,16 @@ const colorMap: Record<string, { bg: string; border: string; text: string; activ
   orange: { bg: 'bg-white/5', border: 'border-white/10', text: 'text-orange-400', activeBg: 'bg-orange-500/15', activeBorder: 'border-orange-500/40', glow: 'shadow-orange-500/20', activeInline: { backgroundColor: 'rgba(249,115,22,0.15)', borderColor: 'rgba(249,115,22,0.4)' } },
 };
 
-const experienceLabelKeys = ['', 'experience.terrible', 'experience.poor', 'experience.okay', 'experience.good', 'experience.excellent'] as const;
-
-const categoryExperienceQuestionKeys: Record<string, string> = {
-  BUG_REPORT: 'experienceQuestions.bugReport',
-  FEATURE_REQUEST: 'experienceQuestions.featureRequest',
-  GENERAL: 'experienceQuestions.general',
-  BATTLE_ISSUE: 'experienceQuestions.battleIssue',
-  PACK_ISSUE: 'experienceQuestions.packIssue',
-  SHOP_ISSUE: 'experienceQuestions.shopIssue',
-};
+// Star ratings; the labels live in feedback.experience.1 … feedback.experience.5.
+const experienceLevels = [1, 2, 3, 4, 5] as const;
+type ExperienceLevel = (typeof experienceLevels)[number];
 
 export default function FeedbackPage() {
   const t = useTranslations('feedback');
   const { data: session, status: sessionStatus } = useSession();
   const [category, setCategory] = useState('');
-  const [experience, setExperience] = useState(0);
-  const [hoverExperience, setHoverExperience] = useState(0);
+  const [experience, setExperience] = useState<0 | ExperienceLevel>(0);
+  const [hoverExperience, setHoverExperience] = useState<0 | ExperienceLevel>(0);
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [email, setEmail] = useState('');
@@ -80,7 +75,7 @@ export default function FeedbackPage() {
       return;
     }
     if (!message.trim()) {
-      setError(t('validation.describeFeedback'));
+      setError(t('validation.enterDescription'));
       return;
     }
 
@@ -102,7 +97,7 @@ export default function FeedbackPage() {
       const data = await res.json();
 
       if (!res.ok || !data.success) {
-        setError(data.error || t('validation.failedToSubmit'));
+        setError(data.error || t('validation.submitFailed'));
         return;
       }
 
@@ -181,10 +176,10 @@ export default function FeedbackPage() {
             <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3" style={{ marginBottom: '0.75rem' }}>{t('thankYou')}</h2>
             <p className="text-[#8888aa] mb-8 max-w-sm" style={{ textAlign: 'center', marginBottom: '2rem' }}>
               {category === 'BUG_REPORT'
-                ? t('validation.thanksBugReport')
+                ? t('thanks.BUG')
                 : category === 'FEATURE_REQUEST'
-                ? t('validation.thanksFeatureRequest')
-                : t('validation.thanksFeedback')}
+                ? t('thanks.FEATURE')
+                : t('thanks.default')}
             </p>
 
             <div className="flex flex-col sm:flex-row justify-center gap-3" style={{ justifyContent: 'center', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
@@ -250,10 +245,10 @@ export default function FeedbackPage() {
                     >
                       <cat.icon className={`w-5 h-5 ${colors.text}`} />
                       <span className={`text-xs font-semibold ${isSelected ? 'text-white' : 'text-[#f0f0f5]'}`}>
-                        {t(cat.labelKey)}
+                        {t(`categories.${cat.key}`)}
                       </span>
                       <span className="text-[10px] text-gray-500 leading-tight text-center hidden sm:block">
-                        {t(cat.descKey)}
+                        {t(`categoryDescriptions.${cat.key}`)}
                       </span>
                       {isSelected && (
                         <div className={`absolute top-2 right-2 w-2 h-2 rounded-full ${colors.text.replace('text-', 'bg-')}`} />
@@ -265,17 +260,17 @@ export default function FeedbackPage() {
             </div>
 
             {/* ---- Category-Based Experience Rating ---- */}
-            {category && (
+            {selectedCat && (
               <div>
                 <label className="block text-sm font-semibold text-white mb-1 ml-1">
-                  {selectedCat ? t(selectedCat.labelKey) : ''} {t('experienceLabel')}
+                  {t('experienceLabel', { label: t(`categories.${selectedCat.key}`) })}
                 </label>
                 <p className="text-xs text-gray-500 mb-3 ml-1">
-                  {categoryExperienceQuestionKeys[category] ? t(categoryExperienceQuestionKeys[category]) : t('rateExperience')} ({t('optional')})
+                  {t(`experienceQuestions.${selectedCat.key}`)} {t('optional')}
                 </p>
                 <div className="flex items-center gap-2">
                   <div className="flex gap-1">
-                    {[1, 2, 3, 4, 5].map((star) => (
+                    {experienceLevels.map((star) => (
                       <button
                         key={star}
                         type="button"
@@ -294,9 +289,9 @@ export default function FeedbackPage() {
                       </button>
                     ))}
                   </div>
-                  {activeExperience > 0 && (
+                  {activeExperience !== 0 && (
                     <span className="text-sm text-amber-400 font-medium ml-2 animate-in fade-in">
-                      {t(experienceLabelKeys[activeExperience])}
+                      {t(`experience.${activeExperience}`)}
                     </span>
                   )}
                 </div>
@@ -343,10 +338,10 @@ export default function FeedbackPage() {
                 className="w-full px-4 py-3 rounded-xl bg-white/4 border border-white/8 text-sm text-white placeholder-gray-600 focus:border-[rgba(255,46,166,0.3)] focus:ring-1 focus:ring-[rgba(255,46,166,0.2)] focus:bg-white/6 outline-none transition-all resize-y min-h-[120px]"
                 placeholder={
                   category === 'BUG_REPORT'
-                    ? t('validation.bugPlaceholder')
+                    ? t('messagePlaceholders.BUG')
                     : category === 'FEATURE_REQUEST'
-                    ? t('validation.featurePlaceholder')
-                    : t('validation.generalPlaceholder')
+                    ? t('messagePlaceholders.FEATURE')
+                    : t('messagePlaceholders.default')
                 }
               />
             </div>
@@ -355,7 +350,7 @@ export default function FeedbackPage() {
             {!session && (
               <div>
                 <label className="block text-sm font-semibold text-white mb-1 ml-1">
-                  {t('emailOptional')} <span className="text-gray-600 font-normal text-xs">({t('optional')})</span>
+                  {t('emailOptional')}
                 </label>
                 <p className="text-xs text-gray-500 mb-2 ml-1">{t('emailHelper')}</p>
                 <input

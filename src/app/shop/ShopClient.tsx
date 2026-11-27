@@ -4,6 +4,7 @@ import { useState, useMemo, useCallback, memo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import type { CardCondition, ProductCategory } from '@prisma/client';
 import { InfoTooltip } from '@/components/InfoTooltip';
 import { useToast } from '@/components/ui/use-toast';
 import { 
@@ -26,9 +27,9 @@ type Product = {
   price: number;
   comparePrice: number | null;
   images: string[];
-  category: string;
+  category: ProductCategory;
   game: string | null;
-  condition: string;
+  condition: CardCondition;
   stock: number;
   featured: boolean;
   shop: {
@@ -39,7 +40,7 @@ type Product = {
 };
 
 type CategoryCount = {
-  category: string;
+  category: ProductCategory;
   _count: number;
 };
 
@@ -59,7 +60,7 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
   const { addToast } = useToast();
   const [products] = useState(initialProducts);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedCategory, setSelectedCategory] = useState<'all' | ProductCategory>('all');
   const [selectedGame, setSelectedGame] = useState<string>('all');
   const [showFilters, setShowFilters] = useState(false);
   const [addingToCart, setAddingToCart] = useState<string | null>(null);
@@ -167,7 +168,7 @@ export function ShopClient({ initialProducts, categories, games }: ShopClientPro
             <div className="relative">
               <select
                 value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
+                onChange={(e) => setSelectedCategory(e.target.value as 'all' | ProductCategory)}
                 className="appearance-none pl-4 pr-10 py-3 rounded-xl bg-[#1e1e55] border border-[rgba(255,255,255,0.15)] shadow-lg text-white border border-[rgba(255,255,255,0.06)] focus:border-[rgba(255,46,166,0.3)] focus:outline-none transition-colors cursor-pointer min-w-[180px]"
               >
                 <option value="all" className="bg-[#0c0a1c]">{t('allCategories')}</option>
