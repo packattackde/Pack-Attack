@@ -9,9 +9,7 @@ import { rateLimit } from '@/lib/rate-limit';
 const registerSchema = z.object({
   name: z.string().min(1).max(100).optional(),
   email: z.string().email().max(255),
-  ageConfirmed: z.literal(true, {
-    errorMap: () => ({ message: 'Age confirmation required' }),
-  }),
+  ageConfirmed: z.literal(true, { message: 'Age confirmation required' }),
   password: z.string()
     .min(8, 'Password must be at least 8 characters')
     .max(128, 'Password must be less than 128 characters')
