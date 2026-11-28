@@ -1,10 +1,23 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback, useEffect, useSyncExternalStore } from 'react';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { Mail, Lock, User, Eye, EyeOff, ChevronRight, AlertCircle, CheckCircle2, Coins, Sparkles } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { AgeGateModal } from '@/components/auth/AgeGateModal';
+
+const AGE_GATE_STORAGE_KEY = 'pullforge-registration-age-verified';
+
+const subscribeNoop = () => () => {};
+
+function readAgeVerified(): boolean {
+  try {
+    return localStorage.getItem(AGE_GATE_STORAGE_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
 
 function TwitchIcon({ className }: { className?: string }) {
   return (
@@ -33,6 +46,23 @@ function PasswordCheck({ met, label }: { met: boolean; label: string }) {
 
 export default function RegisterPage() {
   const t = useTranslations('auth');
+  const isClient = useSyncExternalStore(subscribeNoop, () => true, () => false);
+  const [ageVerified, setAgeVerified] = useState(false);
+  const ageGateOpen = isClient && !ageVerified;
+
+  const confirmAge = useCallback(() => {
+    try {
+      localStorage.setItem(AGE_GATE_STORAGE_KEY, '1');
+    } catch {
+      /* private mode */
+    }
+    setAgeVerified(true);
+  }, []);
+
+  useEffect(() => {
+    if (readAgeVerified()) setAgeVerified(true);
+  }, []);
+
   const [loading, setLoading] = useState(false);
   const [twitchLoading, setTwitchLoading] = useState(false);
   const [discordLoading, setDiscordLoading] = useState(false);
@@ -56,6 +86,7 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!ageVerified) return;
     if (!passwordStrong) {
       setError(t('errors.passwordRequirements'));
       return;
@@ -68,7 +99,7 @@ export default function RegisterPage() {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, ageConfirmed: true }),
       });
 
       const data = await res.json();
@@ -88,11 +119,13 @@ export default function RegisterPage() {
   };
 
   const handleTwitchSignup = () => {
+    if (!ageVerified) return;
     setTwitchLoading(true);
     signIn('twitch', { callbackUrl: '/dashboard' });
   };
 
   const handleDiscordSignup = () => {
+    if (!ageVerified) return;
     setDiscordLoading(true);
     signIn('discord', { callbackUrl: '/dashboard' });
   };
@@ -128,6 +161,7 @@ export default function RegisterPage() {
 
   return (
       <>
+        <div inert={ageGateOpen ? true : undefined} aria-hidden={ageGateOpen}>
         {/* Welcome Bonus */}
         <div className="flex items-center gap-3 p-3.5 mb-5 rounded-xl border border-amber-500/15 bg-amber-500/4">
           <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-amber-500/10 shrink-0">
@@ -283,6 +317,9 @@ export default function RegisterPage() {
             </Link>
           </p>
         </div>
+        </div>
+
+        <AgeGateModal open={ageGateOpen} onConfirm={confirmAge} />
       </>
   );
 }

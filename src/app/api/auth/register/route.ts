@@ -9,6 +9,9 @@ import { rateLimit } from '@/lib/rate-limit';
 const registerSchema = z.object({
   name: z.string().min(1).max(100).optional(),
   email: z.string().email().max(255),
+  ageConfirmed: z.literal(true, {
+    errorMap: () => ({ message: 'Age confirmation required' }),
+  }),
   password: z.string()
     .min(8, 'Password must be at least 8 characters')
     .max(128, 'Password must be less than 128 characters')
@@ -72,6 +75,10 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
+      const missingAge = error.issues.some((issue) => issue.path[0] === 'ageConfirmed');
+      if (missingAge) {
+        return NextResponse.json({ error: 'Age confirmation required', code: 'AGE_NOT_CONFIRMED' }, { status: 400 });
+      }
       return NextResponse.json({ error: 'Invalid input', details: error.issues }, { status: 400 });
     }
     console.error('Registration error:', error);

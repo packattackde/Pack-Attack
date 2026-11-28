@@ -179,13 +179,25 @@
       "invalidCredentials": "Ungültige E-Mail oder ungültiges Passwort. Bitte versuche es erneut.",
       "somethingWrong": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
       "passwordRequirements": "Passwort erfüllt nicht die Anforderungen.",
-      "registrationFailed": "Registrierung fehlgeschlagen"
+      "registrationFailed": "Registrierung fehlgeschlagen",
+      "ageNotConfirmed": "Bitte bestätige, dass du mindestens 18 Jahre alt bist."
     },
     "layout": {
       "pullforge": "PULL",
       "forgeword": "FORGE",
       "tagline": "Trading Card Battles",
       "backToHome": "Zurück zur Startseite"
+    },
+    "ageGate": {
+      "title": "Bist du mindestens 18 Jahre alt?",
+      "description": "PullForge ist nur für Erwachsene. Bitte bestätige dein Alter, bevor du ein Konto erstellst.",
+      "confirm": "Ja, ich bin 18 oder älter",
+      "decline": "Nein, ich bin unter 18",
+      "disclaimer": "Mit deiner Bestätigung versicherst du, dass deine Angabe stimmt. Es gelten unsere <agb>AGB</agb>.",
+      "deniedTitle": "Registrierung nicht möglich",
+      "deniedDescription": "Du musst mindestens 18 Jahre alt sein, um ein PullForge-Konto zu erstellen.",
+      "backToHome": "Zur Startseite",
+      "misclick": "Falsch geklickt? Zurück"
     },
     "verify": {
       "verifying": "E-Mail wird bestätigt",
